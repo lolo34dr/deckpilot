@@ -93,8 +93,10 @@ try {
     $script:phase = 'find application picker'
     $picker = $null
     Wait-Until {
-        $script:picker = [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Children,
-            ([System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::NameProperty, 'Choisir une application')))
+        $windowId = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::AutomationIdProperty, 'ApplicationPickerWindow')
+        $processId = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ProcessIdProperty, $replacement.Id)
+        $condition = [System.Windows.Automation.AndCondition]::new($windowId, $processId)
+        $script:picker = [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
         $null -ne $script:picker
     }
     $list = Find-Control $picker 'InstalledApplications'
