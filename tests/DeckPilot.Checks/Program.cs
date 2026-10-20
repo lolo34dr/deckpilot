@@ -118,4 +118,5 @@ try
     });
 }
 finally { if (Directory.Exists(temp)) Directory.Delete(temp, true); }
+passed += await AdditionalChecks.RunAsync();
 Console.WriteLine($"{passed} checks passed.");

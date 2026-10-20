@@ -10,6 +10,7 @@ public sealed class ButtonAction
     public ActionKind Kind { get; set; }
     public string Target { get; set; } = "";
     public string Arguments { get; set; } = "";
+    public string ApplicationName { get; set; } = "";
     public int Key { get; set; } = 0x41;
     public bool Ctrl { get; set; }
     public bool Alt { get; set; }
@@ -27,6 +28,8 @@ public sealed class Profile
 public sealed class Settings
 {
     public int Version { get; set; } = 1;
+    public bool AutoCheckUpdates { get; set; } = true;
+    public DateTimeOffset UpdateSnoozedUntil { get; set; }
     public List<int> KeyMap { get; set; } = [];
     public List<Profile> Profiles { get; set; } = [new()];
     public Guid ActiveProfileId { get; set; }
@@ -37,7 +40,7 @@ public sealed class Settings
         if (Version != 1 || Profiles is null || Profiles.Count == 0 ||
             Profiles.Any(p => p is null || string.IsNullOrWhiteSpace(p.Name) || p.Id == Guid.Empty ||
                 p.Buttons is null || p.Buttons.Count != 12 || p.Buttons.Any(b => b is null ||
-                    !Enum.IsDefined(b.Kind) || b.Label is null || b.Target is null || b.Arguments is null)) ||
+                    !Enum.IsDefined(b.Kind) || b.Label is null || b.Target is null || b.Arguments is null || b.ApplicationName is null)) ||
             Profiles.Select(p => p.Id).Distinct().Count() != Profiles.Count || KeyMap is null ||
             (KeyMap.Count != 0 && !IsCalibrated))
             throw new InvalidDataException("Le fichier de configuration est incomplet ou incompatible.");

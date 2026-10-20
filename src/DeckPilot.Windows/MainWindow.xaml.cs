@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Interop;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,7 +27,15 @@ public partial class MainWindow : Window
     private int selected;
     private readonly List<int> captured = [];
     private readonly List<Button> deckButtons = [];
-    private readonly List<TextBlock> deckLabels = [], deckKeys = [], deckIcons = [];
+    private readonly List<TextBlock> deckLabels = [], deckKeys = [];
+    private readonly List<Image> deckIcons = [];
+    private readonly UpdateService updateService = new();
+    private readonly CancellationTokenSource lifetime = new();
+    private readonly DispatcherTimer updateTimer = new() { Interval = TimeSpan.FromHours(6) };
+    private bool updateBusy;
+    private DateTimeOffset lastUpdateCheck;
+    private string pickedApplicationName = "";
+    public bool IsOperational => hook != null;
     private readonly List<Button> actionButtons = [];
     private readonly List<Border> calibrationCells = [];
     private readonly List<TextBlock> calibrationLabels = [];
@@ -63,6 +73,9 @@ public partial class MainWindow : Window
         RefreshProfiles();
         LoadEditor();
         StartupCheck.IsChecked = StartupEnabled();
+        AutoUpdateCheck.IsChecked = settings.AutoCheckUpdates;
+        VersionLabel.Text = "v" + UpdateService.DisplayVersion;
+        UpdateStatus.Text = "Recherche au démarrage, puis toutes les 6 h.";
         try { hook = new KeyboardHook(); hook.KeyPressed += OnDeckKey; }
         catch (Win32Exception ex)
         {
@@ -74,12 +87,20 @@ public partial class MainWindow : Window
         CreateTray();
         flashTimer.Tick += (_, _) => { flashTimer.Stop(); RenderGrid(); };
         Closing += WindowClosing;
-        Closed += (_, _) => { flashTimer.Stop(); hook?.Dispose(); tray?.Dispose(); };
+        Closed += (_, _) => { flashTimer.Stop(); updateTimer.Stop(); lifetime.Cancel(); updateService.Dispose(); hook?.Dispose(); tray?.Dispose(); };
         loading = false;
         StatusText.Text = "Prêt · Choisissez un bouton pour le personnaliser.";
-        Loaded += (_, _) => { if (!settings.IsCalibrated) BeginCalibration(); else if (startInBackground) Hide(); };
+        updateTimer.Tick += async (_, _) => await CheckForUpdatesAsync(false);
+        updateTimer.Start();
+        Loaded += async (_, _) =>
+        {
+            if (!settings.IsCalibrated) BeginCalibration(); else if (startInBackground) Hide();
+            Motion.Reveal(WindowContent);
+            try { await Task.Delay(8000, lifetime.Token); await CheckForUpdatesAsync(false); }
+            catch (OperationCanceledException) { }
+        };
+        _ = Task.Run(UpdateService.CleanOldDownloads);
     }
-    private static readonly string[] ActionGlyphs = ["\uE765", "\uE8A5", "\uE8B7", "\uE774", "\uE71B", "\uE768"];
     private void BuildGrid()
     {
         for (int i = 0; i < 12; i++)
@@ -87,7 +108,7 @@ public partial class MainWindow : Window
             int index = i;
             var content = new Grid();
             var key = new TextBlock { FontSize = 9, Foreground = Brush("#919191"), HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Top };
-            var icon = new TextBlock { FontFamily = new FontFamily("Segoe MDL2 Assets"), FontSize = 24, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 0, 7) };
+            var icon = new Image { Width = 27, Height = 27, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 0, 7) };
             var label = new TextBlock { FontSize = 10, HorizontalAlignment = HorizontalAlignment.Stretch, TextAlignment = TextAlignment.Center, VerticalAlignment = VerticalAlignment.Bottom, TextTrimming = TextTrimming.CharacterEllipsis };
             content.Children.Add(icon); content.Children.Add(key); content.Children.Add(label);
             var button = new Button { Content = content, Width = 76, Height = 76, HorizontalContentAlignment = HorizontalAlignment.Stretch, VerticalContentAlignment = VerticalAlignment.Stretch, Padding = new Thickness(7), Margin = new Thickness(5) };
@@ -101,7 +122,7 @@ public partial class MainWindow : Window
         {
             int index = i;
             var row = new StackPanel { Orientation = Orientation.Horizontal };
-            row.Children.Add(new TextBlock { Text = ActionGlyphs[i], FontFamily = new FontFamily("Segoe MDL2 Assets"), FontSize = 16, Width = 30, VerticalAlignment = VerticalAlignment.Center, Foreground = Brush("#B6B6B6") });
+            row.Children.Add(new Image { Source = VectorIcons.ForKind((ActionKind)i), Width = 18, Height = 18, Margin = new Thickness(0, 0, 12, 0), VerticalAlignment = VerticalAlignment.Center });
             row.Children.Add(new TextBlock { Text = ActionNames[i], VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
             var button = new Button { Content = row, HorizontalContentAlignment = HorizontalAlignment.Stretch, Padding = new Thickness(10, 12, 8, 12), Margin = new Thickness(0, 0, 0, 3) };
             button.Click += (_, _) => { ActionPicker.SelectedIndex = index; SaveEditor(); };
@@ -127,8 +148,8 @@ public partial class MainWindow : Window
             string keyName = settings.IsCalibrated ? Calibration.KeyName(settings.KeyMap[i]) : $"{i + 1:00}";
             deckLabels[i].Text = string.IsNullOrWhiteSpace(action.Label) ? keyName : action.Label;
             deckKeys[i].Text = string.IsNullOrWhiteSpace(action.Label) ? "" : keyName;
-            deckIcons[i].Text = ActionGlyphs[(int)action.Kind];
-            deckIcons[i].Foreground = Brush(action.Kind == ActionKind.Passthrough ? "#929292" : "#D9DED9");
+            deckIcons[i].Source = action.Kind == ActionKind.Application ? ApplicationIcons.ForTarget(action.Target) : VectorIcons.ForKind(action.Kind);
+            deckIcons[i].Opacity = action.Kind == ActionKind.Passthrough ? 0.6 : 1;
             deckButtons[i].Background = Brush(i == selected ? "#303632" : "#191B1A");
             deckButtons[i].BorderBrush = Brush(i == selected ? "#81A58B" : "#505350");
             deckButtons[i].ToolTip = $"Ligne {i / 3 + 1}, colonne {i % 3 + 1} · {deckLabels[i].Text} · {keyName} · {ActionNames[(int)action.Kind]}";
@@ -152,24 +173,25 @@ public partial class MainWindow : Window
         SelectedKey.Text = $"Ligne {selected / 3 + 1}, colonne {selected % 3 + 1} · " + (settings.IsCalibrated ? Calibration.KeyName(settings.KeyMap[selected]) : "Calibrage nécessaire");
         LabelEditor.Text = action.Label;
         ActionPicker.SelectedIndex = (int)action.Kind;
+        pickedApplicationName = action.ApplicationName;
         TargetEditor.Text = action.Target;
         ArgumentsEditor.Text = action.Arguments;
         CtrlCheck.IsChecked = action.Ctrl; AltCheck.IsChecked = action.Alt; ShiftCheck.IsChecked = action.Shift; WinCheck.IsChecked = action.Win;
         ShortcutPicker.SelectedItem = ((IEnumerable<Choice>)ShortcutPicker.ItemsSource).FirstOrDefault(c => c.Key == action.Key) ?? ((IEnumerable<Choice>)ShortcutPicker.ItemsSource).First();
         MediaPicker.SelectedItem = ((IEnumerable<Choice>)MediaPicker.ItemsSource).FirstOrDefault(c => c.Key == action.Key) ?? ((IEnumerable<Choice>)MediaPicker.ItemsSource).First();
-        UpdateActionFields(); RenderGrid(); loading = previous;
+        UpdateActionFields(); RenderGrid(); loading = previous; Motion.Reveal(EditorPanel);
     }
-    private void SaveEditor()
+    private bool SaveEditor()
     {
-        if (loading || ActionPicker.SelectedIndex < 0) return;
+        if (loading || ActionPicker.SelectedIndex < 0) return true;
         var action = settings.ActiveProfile.Buttons[selected];
         action.Label = LabelEditor.Text.Trim(); action.Kind = (ActionKind)ActionPicker.SelectedIndex;
-        action.Target = TargetEditor.Text.Trim(); action.Arguments = ArgumentsEditor.Text;
+        action.Target = TargetEditor.Text.Trim(); action.Arguments = ArgumentsEditor.Text; action.ApplicationName = pickedApplicationName;
         action.Ctrl = CtrlCheck.IsChecked == true; action.Alt = AltCheck.IsChecked == true;
         action.Shift = ShiftCheck.IsChecked == true; action.Win = WinCheck.IsChecked == true;
         if (action.Kind == ActionKind.Shortcut && ShortcutPicker.SelectedItem is Choice shortcut) action.Key = shortcut.Key;
         if (action.Kind == ActionKind.Media && MediaPicker.SelectedItem is Choice media) action.Key = media.Key;
-        Persist(); RenderGrid();
+        bool saved = Persist(); RenderGrid(); return saved;
     }
     private bool Persist()
     {
@@ -188,8 +210,12 @@ public partial class MainWindow : Window
             actionButtons[i].Background = Brush(i == (int)kind ? "#343434" : "#222222");
             actionButtons[i].BorderBrush = Brush(i == (int)kind ? "#545454" : "#222222");
         }
+        ApplicationPanel.Visibility = kind == ActionKind.Application ? Visibility.Visible : Visibility.Collapsed;
+        ManualTargetExpander.Visibility = kind is ActionKind.Application or ActionKind.Folder or ActionKind.Website ? Visibility.Visible : Visibility.Collapsed;
+        ManualTargetExpander.Header = kind == ActionKind.Application ? "Choisir un fichier manuellement" : "Destination";
+        ManualTargetExpander.IsExpanded = kind != ActionKind.Application;
         TargetPanel.Visibility = kind is ActionKind.Application or ActionKind.Folder or ActionKind.Website ? Visibility.Visible : Visibility.Collapsed;
-        ArgumentsPanel.Visibility = kind == ActionKind.Application ? Visibility.Visible : Visibility.Collapsed;
+        ArgumentsPanel.Visibility = kind == ActionKind.Application && !ApplicationTarget.IsPackaged(TargetEditor.Text) ? Visibility.Visible : Visibility.Collapsed;
         ShortcutPanel.Visibility = kind == ActionKind.Shortcut ? Visibility.Visible : Visibility.Collapsed;
         MediaPanel.Visibility = kind == ActionKind.Media ? Visibility.Visible : Visibility.Collapsed;
         BrowseButton.Visibility = kind == ActionKind.Website ? Visibility.Collapsed : Visibility.Visible;
@@ -197,12 +223,13 @@ public partial class MainWindow : Window
         ActionHelp.Text = kind switch
         {
             ActionKind.Passthrough => "La touche F13–F24 est transmise normalement. Attribuez-la directement dans votre jeu.",
-            ActionKind.Application => "Lance le programme choisi. La touche physique est interceptée par DeckPilot.",
+            ActionKind.Application => "Choisissez une application installée, ou sélectionnez son fichier manuellement.",
             ActionKind.Folder => "Ouvre le dossier dans l’Explorateur Windows.",
             ActionKind.Website => "Ouvre une adresse http:// ou https:// dans votre navigateur par défaut.",
             ActionKind.Shortcut => "Envoie ce raccourci à la fenêtre active. Les touches F13–F24 simulées ne déclenchent pas d’autres actions DeckPilot.",
             _ => "Contrôle la lecture ou le volume de Windows."
         };
+        UpdateApplicationSummary();
     }
     private void BrowseClick(object sender, RoutedEventArgs e)
     {
@@ -285,6 +312,7 @@ public partial class MainWindow : Window
         {
             settings.KeyMap = [.. captured]; calibrating = false; CalibrationOverlay.Visibility = Visibility.Collapsed;
             bool saved = Persist(); LoadEditor(); if (saved) StatusText.Text = "Calibrage terminé · Vos 12 boutons sont prêts !";
+            _ = CheckForUpdatesAsync(false);
         }
         else { CalibrationError.Text = "Bien reçu. Passez au bouton suivant."; UpdateCalibration(); }
     }
@@ -332,6 +360,77 @@ public partial class MainWindow : Window
         StatusText.Text = message;
         if (!IsVisible && tray != null) { tray.BalloonTipTitle = "DeckPilot"; tray.BalloonTipText = message; tray.ShowBalloonTip(4000); }
     }
+    private void ChooseApplicationClick(object sender, RoutedEventArgs e)
+    {
+        var picker = new ApplicationPicker { Owner = this };
+        if (picker.ShowDialog() != true || picker.SelectedApplication is not { } app) return;
+        TargetEditor.Text = app.Target;
+        pickedApplicationName = app.Name;
+        if (string.IsNullOrWhiteSpace(LabelEditor.Text)) LabelEditor.Text = app.Name[..Math.Min(50, app.Name.Length)];
+        UpdateApplicationSummary(); SaveEditor();
+    }
+    private void TargetChanged(object sender, TextChangedEventArgs e)
+    {
+        if (loading) return;
+        pickedApplicationName = ""; UpdateApplicationSummary();
+    }
+    private void UpdateApplicationSummary()
+    {
+        string target = TargetEditor.Text.Trim();
+        SelectedApplicationName.Text = !string.IsNullOrWhiteSpace(pickedApplicationName) ? pickedApplicationName :
+            target.Length == 0 ? "Parcourir les applications installées" : ApplicationTarget.IsPackaged(target) ? "Application Windows sélectionnée" : Path.GetFileNameWithoutExtension(target);
+        SelectedApplicationIcon.Source = ApplicationIcons.ForTarget(target);
+        bool packaged = ActionPicker.SelectedIndex == (int)ActionKind.Application && ApplicationTarget.IsPackaged(target);
+        TargetEditor.Visibility = packaged ? Visibility.Collapsed : Visibility.Visible;
+        if (ActionPicker.SelectedIndex == (int)ActionKind.Application)
+        {
+            ArgumentsPanel.Visibility = packaged ? Visibility.Collapsed : Visibility.Visible;
+            TargetLabel.Text = packaged ? "Remplacer par un fichier" : "Chemin du programme";
+        }
+    }
+    private async void CheckUpdateClick(object sender, RoutedEventArgs e) => await CheckForUpdatesAsync(true);
+    private void AutoUpdateClick(object sender, RoutedEventArgs e)
+    {
+        settings.AutoCheckUpdates = AutoUpdateCheck.IsChecked == true; Persist();
+        UpdateStatus.Text = settings.AutoCheckUpdates ? "Recherche automatique activée." : "Recherche automatique désactivée.";
+        if (settings.AutoCheckUpdates) _ = CheckForUpdatesAsync(false);
+    }
+    private async Task CheckForUpdatesAsync(bool manual)
+    {
+        if (updateBusy || calibrating || lifetime.IsCancellationRequested || (!manual && (!settings.AutoCheckUpdates || settings.UpdateSnoozedUntil > DateTimeOffset.UtcNow || DateTimeOffset.UtcNow - lastUpdateCheck < TimeSpan.FromMinutes(5)))) return;
+        lastUpdateCheck = DateTimeOffset.UtcNow;
+        updateBusy = true; UpdateCheckButton.IsEnabled = false; UpdateStatus.Text = "Recherche d’une mise à jour…";
+        try
+        {
+            var release = await updateService.CheckAsync(lifetime.Token);
+            if (lifetime.IsCancellationRequested) return;
+            if (release == null) { UpdateStatus.Text = "Vous utilisez la dernière version."; return; }
+            UpdateStatus.Text = $"Version {release.Version} disponible.";
+            var dialog = new UpdateWindow(updateService, release);
+            if (IsVisible) { dialog.Owner = this; dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner; }
+            if (dialog.ShowDialog() != true || dialog.Staged == null)
+            {
+                settings.UpdateSnoozedUntil = DateTimeOffset.UtcNow.AddHours(24); Persist();
+                UpdateStatus.Text = "Rappel demain, ou vérification manuelle."; return;
+            }
+            if (!SaveEditor()) { UpdateStatus.Text = "Mise à jour suspendue : vos réglages n’ont pas pu être enregistrés."; return; }
+            UpdateStatus.Text = "Redémarrage pour installer la mise à jour…";
+            await updateService.StartInstallerAsync(dialog.Staged, !IsVisible);
+            quitting = true;
+            Application.Current.Shutdown();
+        }
+        catch (OperationCanceledException) { if (!lifetime.IsCancellationRequested) UpdateStatus.Text = "La vérification a pris trop de temps. Réessayez plus tard."; }
+        catch (Exception ex)
+        {
+            if (!lifetime.IsCancellationRequested)
+            {
+                UpdateStatus.Text = "Mise à jour indisponible. Réessayez plus tard.";
+                if (manual) ReportError(ex.Message);
+            }
+        }
+        finally { updateBusy = false; if (!quitting) UpdateCheckButton.IsEnabled = true; }
+    }
+    public void ReportUpdateFailure() => ReportError("La mise à jour n’a pas pu démarrer. L’ancienne version a été conservée ou restaurée.");
     private static bool StartupEnabled()
     {
         using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");

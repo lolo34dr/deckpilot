@@ -1,0 +1,28 @@
+<Window x:Class="DeckPilot.Windows.ApplicationPicker" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:DeckPilot.Windows"
+ Title="Choisir une application" Width="590" Height="650" MinWidth="480" MinHeight="460" Background="#232625" FontFamily="Segoe UI" FontSize="13" WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
+ <Window.Resources>
+  <local:ApplicationIconConverter x:Key="AppIcon"/>
+  <Style TargetType="ListBoxItem">
+   <Setter Property="Padding" Value="12,10"/><Setter Property="HorizontalContentAlignment" Value="Stretch"/><Setter Property="Margin" Value="0,0,0,4"/>
+   <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ListBoxItem"><Border x:Name="Item" Background="#292D2B" CornerRadius="7" Padding="{TemplateBinding Padding}"><ContentPresenter/></Border><ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Item" Property="Background" Value="#343B36"/></Trigger><Trigger Property="IsSelected" Value="True"><Setter TargetName="Item" Property="Background" Value="#3D4D42"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
+  </Style>
+ </Window.Resources>
+ <Grid Margin="24">
+  <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+  <StackPanel><TextBlock Text="Vos applications" FontSize="23" FontWeight="SemiBold"/><TextBlock Text="Cherchez un nom, sans retrouver son fichier .exe." Foreground="{StaticResource MutedBrush}" Margin="0,7,0,16"/></StackPanel>
+  <TextBox x:Name="SearchBox" Grid.Row="1" TextChanged="SearchChanged" AutomationProperties.Name="Rechercher une application" ToolTip="Rechercher une application"/>
+  <ListBox x:Name="AppList" AutomationProperties.AutomationId="InstalledApplications" Grid.Row="2" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="SelectionChanged" MouseDoubleClick="AppDoubleClick" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
+   <ListBox.ItemTemplate><DataTemplate>
+    <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="44"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+     <Image Source="{Binding Target, Converter={StaticResource AppIcon}}" Width="28" Height="28" HorizontalAlignment="Left"/>
+     <StackPanel Grid.Column="1"><TextBlock Text="{Binding Name}" FontSize="13" TextTrimming="CharacterEllipsis"/><TextBlock Text="{Binding Source}" Foreground="{StaticResource MutedBrush}" FontSize="11" Margin="0,4,0,0"/></StackPanel>
+    </Grid>
+   </DataTemplate></ListBox.ItemTemplate>
+  </ListBox>
+  <TextBlock x:Name="ResultsText" Grid.Row="3" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,12,0,14"/>
+  <Grid Grid.Row="4"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+   <Button x:Name="RefreshButton" Content="Actualiser" HorizontalAlignment="Left" Click="RefreshClick"/>
+   <StackPanel Grid.Column="1" Orientation="Horizontal"><Button Content="Annuler" IsCancel="True"/><Button x:Name="ChooseButton" AutomationProperties.AutomationId="ChooseInstalledApplication" Content="Choisir l’application" IsDefault="True" IsEnabled="False" Click="ChooseClick" Background="#3E5849"/></StackPanel>
+  </Grid>
+ </Grid>
+</Window>
