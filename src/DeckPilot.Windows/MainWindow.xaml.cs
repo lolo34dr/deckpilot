@@ -443,9 +443,7 @@ public partial class MainWindow : Window
             using var key = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
             if (StartupCheck.IsChecked == true)
             {
-                var executable = Environment.ProcessPath ?? throw new IOException("Exécutable introuvable.");
-                if (!Path.GetFileName(executable).Equals("DeckPilot.exe", StringComparison.OrdinalIgnoreCase))
-                    throw new IOException("Utilisez DeckPilot.exe depuis le dossier publié pour activer le démarrage automatique.");
+                var executable = UpdateService.ExecutablePath();
                 key.SetValue("DeckPilot", "\"" + executable + "\" --background");
             }
             else key.DeleteValue("DeckPilot", throwOnMissingValue: false);
