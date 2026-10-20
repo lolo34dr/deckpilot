@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -23,7 +25,8 @@ public partial class MainWindow : Window
     private int selected;
     private readonly List<int> captured = [];
     private readonly List<Button> deckButtons = [];
-    private readonly List<TextBlock> deckLabels = [], deckKeys = [], deckActions = [];
+    private readonly List<TextBlock> deckLabels = [], deckKeys = [], deckIcons = [];
+    private readonly List<Button> actionButtons = [];
     private readonly List<Border> calibrationCells = [];
     private readonly List<TextBlock> calibrationLabels = [];
     private readonly DispatcherTimer flashTimer = new() { Interval = TimeSpan.FromMilliseconds(220) };
@@ -33,6 +36,7 @@ public partial class MainWindow : Window
     public MainWindow(bool startInBackground = false)
     {
         InitializeComponent();
+        SourceInitialized += (_, _) => EnableDarkTitleBar();
         try { settings = store.Load(); }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or System.Text.Json.JsonException)
         {
@@ -75,37 +79,59 @@ public partial class MainWindow : Window
         StatusText.Text = "Prêt · Choisissez un bouton pour le personnaliser.";
         Loaded += (_, _) => { if (!settings.IsCalibrated) BeginCalibration(); else if (startInBackground) Hide(); };
     }
+    private static readonly string[] ActionGlyphs = ["\uE765", "\uE8A5", "\uE8B7", "\uE774", "\uE71B", "\uE768"];
     private void BuildGrid()
     {
         for (int i = 0; i < 12; i++)
         {
             int index = i;
-            var content = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
-            var number = new TextBlock { Text = $"{i + 1:00}", FontSize = 12, Foreground = Brush("#93A7FF") };
-            var label = new TextBlock { FontSize = 16, FontWeight = FontWeights.SemiBold, Margin = new Thickness(0, 8, 0, 4), TextTrimming = TextTrimming.CharacterEllipsis };
-            var action = new TextBlock { FontSize = 11, Foreground = Brush("#AAB6CD"), TextTrimming = TextTrimming.CharacterEllipsis };
-            var key = new TextBlock { FontSize = 11, Foreground = Brush("#93A7FF"), Margin = new Thickness(0, 5, 0, 0) };
-            content.Children.Add(number); content.Children.Add(label); content.Children.Add(action); content.Children.Add(key);
-            var button = new Button { Content = content, HorizontalContentAlignment = HorizontalAlignment.Stretch, Padding = new Thickness(14), Margin = new Thickness(0, 0, 10, 10) };
+            var content = new Grid();
+            var key = new TextBlock { FontSize = 9, Foreground = Brush("#919191"), HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Top };
+            var icon = new TextBlock { FontFamily = new FontFamily("Segoe MDL2 Assets"), FontSize = 24, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 0, 7) };
+            var label = new TextBlock { FontSize = 10, HorizontalAlignment = HorizontalAlignment.Stretch, TextAlignment = TextAlignment.Center, VerticalAlignment = VerticalAlignment.Bottom, TextTrimming = TextTrimming.CharacterEllipsis };
+            content.Children.Add(icon); content.Children.Add(key); content.Children.Add(label);
+            var button = new Button { Content = content, Width = 76, Height = 76, HorizontalContentAlignment = HorizontalAlignment.Stretch, VerticalContentAlignment = VerticalAlignment.Stretch, Padding = new Thickness(7), Margin = new Thickness(5) };
             button.Click += (_, _) => { SaveEditor(); selected = index; LoadEditor(); };
-            DeckGrid.Children.Add(button); deckButtons.Add(button); deckLabels.Add(label); deckKeys.Add(key); deckActions.Add(action);
-            var calibrationLabel = new TextBlock { Text = $"{i + 1:00}", FontSize = 24, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
-            var cell = new Border { CornerRadius = new CornerRadius(12), Margin = new Thickness(6), Child = calibrationLabel };
+            DeckGrid.Children.Add(button); deckButtons.Add(button); deckLabels.Add(label); deckKeys.Add(key); deckIcons.Add(icon);
+            var calibrationLabel = new TextBlock { Text = $"{i + 1:00}", FontSize = 18, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
+            var cell = new Border { CornerRadius = new CornerRadius(6), BorderThickness = new Thickness(1), Margin = new Thickness(6), Child = calibrationLabel };
             CalibrationGrid.Children.Add(cell); calibrationCells.Add(cell); calibrationLabels.Add(calibrationLabel);
         }
+        for (int i = 0; i < ActionNames.Length; i++)
+        {
+            int index = i;
+            var row = new StackPanel { Orientation = Orientation.Horizontal };
+            row.Children.Add(new TextBlock { Text = ActionGlyphs[i], FontFamily = new FontFamily("Segoe MDL2 Assets"), FontSize = 16, Width = 30, VerticalAlignment = VerticalAlignment.Center, Foreground = Brush("#B6B6B6") });
+            row.Children.Add(new TextBlock { Text = ActionNames[i], VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+            var button = new Button { Content = row, HorizontalContentAlignment = HorizontalAlignment.Stretch, Padding = new Thickness(10, 12, 8, 12), Margin = new Thickness(0, 0, 0, 3) };
+            button.Click += (_, _) => { ActionPicker.SelectedIndex = index; SaveEditor(); };
+            System.Windows.Automation.AutomationProperties.SetName(button, ActionNames[i]);
+            ActionCatalog.Children.Add(button); actionButtons.Add(button);
+        }
     }
+    private void EnableDarkTitleBar()
+    {
+        int enabled = 1;
+        var handle = new WindowInteropHelper(this).Handle;
+        if (DwmSetWindowAttribute(handle, 20, ref enabled, sizeof(int)) != 0)
+            DwmSetWindowAttribute(handle, 19, ref enabled, sizeof(int));
+    }
+    [DllImport("dwmapi.dll")]
+    private static extern int DwmSetWindowAttribute(IntPtr window, int attribute, ref int value, int size);
     private static SolidColorBrush Brush(string color) => new((Color)ColorConverter.ConvertFromString(color));
     private void RenderGrid()
     {
         for (int i = 0; i < 12; i++)
         {
             var action = settings.ActiveProfile.Buttons[i];
-            deckLabels[i].Text = string.IsNullOrWhiteSpace(action.Label) ? $"Bouton {i + 1}" : action.Label;
-            deckActions[i].Text = ActionNames[(int)action.Kind];
-            deckKeys[i].Text = settings.IsCalibrated ? Calibration.KeyName(settings.KeyMap[i]) : "À calibrer";
-            deckButtons[i].Background = Brush(i == selected ? "#2B3862" : "#171D2C");
-            deckButtons[i].BorderBrush = Brush(i == selected ? "#93A7FF" : "#29334A");
-            deckButtons[i].ToolTip = $"Ligne {i / 3 + 1}, colonne {i % 3 + 1} · {deckLabels[i].Text} · {deckKeys[i].Text}";
+            string keyName = settings.IsCalibrated ? Calibration.KeyName(settings.KeyMap[i]) : $"{i + 1:00}";
+            deckLabels[i].Text = string.IsNullOrWhiteSpace(action.Label) ? keyName : action.Label;
+            deckKeys[i].Text = string.IsNullOrWhiteSpace(action.Label) ? "" : keyName;
+            deckIcons[i].Text = ActionGlyphs[(int)action.Kind];
+            deckIcons[i].Foreground = Brush(action.Kind == ActionKind.Passthrough ? "#929292" : "#D9DED9");
+            deckButtons[i].Background = Brush(i == selected ? "#303632" : "#191B1A");
+            deckButtons[i].BorderBrush = Brush(i == selected ? "#81A58B" : "#505350");
+            deckButtons[i].ToolTip = $"Ligne {i / 3 + 1}, colonne {i % 3 + 1} · {deckLabels[i].Text} · {keyName} · {ActionNames[(int)action.Kind]}";
             System.Windows.Automation.AutomationProperties.SetName(deckButtons[i], (string)deckButtons[i].ToolTip);
         }
     }
@@ -156,6 +182,12 @@ public partial class MainWindow : Window
     {
         if (ActionPicker.SelectedIndex < 0) return;
         var kind = (ActionKind)ActionPicker.SelectedIndex;
+        EditorActionTitle.Text = ActionNames[(int)kind];
+        for (int i = 0; i < actionButtons.Count; i++)
+        {
+            actionButtons[i].Background = Brush(i == (int)kind ? "#343434" : "#222222");
+            actionButtons[i].BorderBrush = Brush(i == (int)kind ? "#545454" : "#222222");
+        }
         TargetPanel.Visibility = kind is ActionKind.Application or ActionKind.Folder or ActionKind.Website ? Visibility.Visible : Visibility.Collapsed;
         ArgumentsPanel.Visibility = kind == ActionKind.Application ? Visibility.Visible : Visibility.Collapsed;
         ShortcutPanel.Visibility = kind == ActionKind.Shortcut ? Visibility.Visible : Visibility.Collapsed;
@@ -228,7 +260,7 @@ public partial class MainWindow : Window
         e.Handled = action.Kind != ActionKind.Passthrough;
         Dispatcher.BeginInvoke(() =>
         {
-            deckButtons[index].Background = Brush("#416A60"); flashTimer.Stop(); flashTimer.Start();
+            deckButtons[index].Background = Brush("#4A6150"); flashTimer.Stop(); flashTimer.Start();
             try
             {
                 ActionRunner.Run(action);
@@ -261,7 +293,8 @@ public partial class MainWindow : Window
         CalibrationPrompt.Text = $"Étape {captured.Count + 1}/12 · Appuyez sur le bouton ligne {captured.Count / 3 + 1}, colonne {captured.Count % 3 + 1}.";
         for (int i = 0; i < 12; i++)
         {
-            calibrationCells[i].Background = Brush(i == captured.Count ? "#5267CF" : i < captured.Count ? "#20463E" : "#1C2436");
+            calibrationCells[i].Background = Brush(i == captured.Count ? "#3C4A3F" : i < captured.Count ? "#2D332E" : "#1C1D1C");
+            calibrationCells[i].BorderBrush = Brush(i == captured.Count ? "#91B39A" : "#505350");
             calibrationLabels[i].Text = i < captured.Count ? Calibration.KeyName(captured[i]) + " ✓" : $"{i + 1:00}";
         }
     }
