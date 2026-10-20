@@ -34,9 +34,9 @@ public static class UpdateInstaller
             UpdateService.ProbeWritable(Path.GetDirectoryName(plan.TargetPath)!);
             using var parent = Process.GetProcessById(plan.ParentProcessId);
             if (parent.StartTime.ToUniversalTime().Ticks != plan.ParentStartTicks)
-                throw new InvalidDataException($"L’identité du processus ne correspond pas : départ attendu {plan.ParentStartTicks}, obtenu {parent.StartTime.ToUniversalTime().Ticks}.");
-            if (!string.Equals(parent.MainModule?.FileName, plan.TargetPath, StringComparison.OrdinalIgnoreCase))
-                throw new InvalidDataException($"Le chemin du processus a changé : attendu {plan.TargetPath}, obtenu {parent.MainModule?.FileName}.");
+                throw new InvalidDataException("Le processus d’origine a changé depuis la préparation de la mise à jour.");
+            if (!FileIdentity.SameFile(parent.MainModule?.FileName ?? "", plan.TargetPath))
+                throw new InvalidDataException("Le processus d’origine n’utilise plus le fichier attendu.");
             await File.WriteAllTextAsync(Path.Combine(directory, "ready"), "ready");
             using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(90));
             await parent.WaitForExitAsync(timeout.Token);
