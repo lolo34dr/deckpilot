@@ -23,6 +23,7 @@ public partial class MainWindow : Window
     private Settings settings = new();
     private KeyboardHook? hook;
     private Forms.NotifyIcon? tray;
+    private System.Drawing.Icon? trayIcon;
     private bool loading = true, quitting, calibrating;
     private int selected;
     private readonly List<int> captured = [];
@@ -87,7 +88,7 @@ public partial class MainWindow : Window
         CreateTray();
         flashTimer.Tick += (_, _) => { flashTimer.Stop(); RenderGrid(); };
         Closing += WindowClosing;
-        Closed += (_, _) => { flashTimer.Stop(); updateTimer.Stop(); lifetime.Cancel(); updateService.Dispose(); hook?.Dispose(); tray?.Dispose(); };
+        Closed += (_, _) => { flashTimer.Stop(); updateTimer.Stop(); lifetime.Cancel(); updateService.Dispose(); hook?.Dispose(); tray?.Dispose(); trayIcon?.Dispose(); };
         loading = false;
         StatusText.Text = "Prêt · Choisissez un bouton pour le personnaliser.";
         updateTimer.Tick += async (_, _) => await CheckForUpdatesAsync(false);
@@ -337,7 +338,8 @@ public partial class MainWindow : Window
         var menu = new Forms.ContextMenuStrip();
         menu.Items.Add("Ouvrir DeckPilot", null, (_, _) => Dispatcher.Invoke(ShowMain));
         menu.Items.Add("Quitter", null, (_, _) => Dispatcher.Invoke(() => { quitting = true; Close(); }));
-        tray = new Forms.NotifyIcon { Icon = System.Drawing.SystemIcons.Application, Text = "DeckPilot", ContextMenuStrip = menu, Visible = true };
+        trayIcon = BrandAssets.CreateTrayIcon();
+        tray = new Forms.NotifyIcon { Icon = trayIcon, Text = "DeckPilot", ContextMenuStrip = menu, Visible = true };
         tray.DoubleClick += (_, _) => Dispatcher.Invoke(ShowMain);
     }
     private void ShowMain() { Show(); WindowState = WindowState.Normal; Activate(); }

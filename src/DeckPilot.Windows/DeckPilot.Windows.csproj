@@ -6,5 +6,6 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AssemblyName>DeckPilot</AssemblyName><Version>0.2.0</Version>
   </PropertyGroup>
+  <ItemGroup><Resource Include="../../deckpilotlogo.png" Link="Assets/DeckPilot.png" /></ItemGroup>
   <ItemGroup><ProjectReference Include="../DeckPilot.Core/DeckPilot.Core.csproj" /></ItemGroup>
 </Project>

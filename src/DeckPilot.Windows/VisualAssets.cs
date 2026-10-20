@@ -96,3 +96,17 @@ public static class DarkChrome
     }
     [DllImport("dwmapi.dll")] private static extern int DwmSetWindowAttribute(IntPtr window, int attribute, ref int value, int size);
 }
+
+public static class BrandAssets
+{
+    public static System.Drawing.Icon CreateTrayIcon()
+    {
+        using var stream = Application.GetResourceStream(new Uri("pack://application:,,,/Assets/DeckPilot.png"))!.Stream;
+        using var original = new System.Drawing.Bitmap(stream);
+        using var small = new System.Drawing.Bitmap(original, new System.Drawing.Size(32, 32));
+        IntPtr handle = small.GetHicon();
+        try { using var borrowed = System.Drawing.Icon.FromHandle(handle); return (System.Drawing.Icon)borrowed.Clone(); }
+        finally { DestroyIcon(handle); }
+    }
+    [DllImport("user32.dll")] private static extern bool DestroyIcon(IntPtr icon);
+}

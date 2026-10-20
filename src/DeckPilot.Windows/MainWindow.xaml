@@ -1,16 +1,16 @@
 <Window x:Class="DeckPilot.Windows.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
- Title="DeckPilot" Width="1000" Height="820" MinWidth="880" MinHeight="720" Background="#242725" FontFamily="Segoe UI" FontSize="12" WindowStartupLocation="CenterScreen">
+ Icon="/Assets/DeckPilot.png" Title="DeckPilot" Width="1000" Height="820" MinWidth="880" MinHeight="720" Background="#242725" FontFamily="Segoe UI" FontSize="12" WindowStartupLocation="CenterScreen">
  <Grid x:Name="WindowContent">
   <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="28"/></Grid.RowDefinitions>
   <Grid>
    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="260"/></Grid.ColumnDefinitions>
    <Grid>
-    <Grid.RowDefinitions><RowDefinition Height="436"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+    <Grid.RowDefinitions><RowDefinition Height="444"/><RowDefinition Height="*"/></Grid.RowDefinitions>
     <Grid Margin="24,16,24,12">
      <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
      <Grid>
       <StackPanel>
-       <StackPanel Orientation="Horizontal"><TextBlock Text="DeckPilot" FontWeight="SemiBold" FontSize="17"/><Border Background="#353D37" CornerRadius="4" Padding="6,2" Margin="9,1,0,0" VerticalAlignment="Center"><TextBlock x:Name="VersionLabel" Foreground="#AAC2B2" FontSize="10"/></Border></StackPanel>
+       <StackPanel Orientation="Horizontal"><Image Source="/Assets/DeckPilot.png" Width="28" Height="28" Margin="0,0,8,0"/><TextBlock VerticalAlignment="Center" Text="DeckPilot" FontWeight="SemiBold" FontSize="17"/><Border Background="#353D37" CornerRadius="4" Padding="6,2" Margin="9,1,0,0" VerticalAlignment="Center"><TextBlock x:Name="VersionLabel" Foreground="#AAC2B2" FontSize="10"/></Border></StackPanel>
        <StackPanel Orientation="Horizontal" Margin="0,7,0,0">
         <TextBlock Text="Profil" Foreground="{StaticResource MutedBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
         <ComboBox x:Name="ProfilePicker" Width="190" Margin="0" SelectionChanged="ProfileChanged" AutomationProperties.Name="Profil actif"/>
@@ -51,9 +51,10 @@
         </DockPanel>
        </StackPanel>
        </Expander>
-       <StackPanel x:Name="ArgumentsPanel">
-        <TextBlock Text="Arguments (facultatifs)" Foreground="{StaticResource MutedBrush}"/>
-        <TextBox x:Name="ArgumentsEditor" AutomationProperties.Name="Arguments du programme"/>
+       <StackPanel x:Name="ArgumentsPanel" Margin="0,0,0,10">
+        <Expander Header="Options avancées" Foreground="#A7B2AB">
+         <StackPanel Margin="0,10,0,0"><TextBlock Text="Arguments (facultatifs)" Foreground="{StaticResource MutedBrush}"/><TextBox x:Name="ArgumentsEditor" AutomationProperties.Name="Arguments du programme"/></StackPanel>
+        </Expander>
        </StackPanel>
        <StackPanel x:Name="ShortcutPanel">
         <TextBlock Text="Touche du raccourci" Foreground="{StaticResource MutedBrush}"/>
