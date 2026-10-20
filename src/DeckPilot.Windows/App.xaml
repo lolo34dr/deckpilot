@@ -1,0 +1,47 @@
+<Application x:Class="DeckPilot.Windows.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+ <Application.Resources>
+  <SolidColorBrush x:Key="PanelBrush" Color="#171D2C"/>
+  <SolidColorBrush x:Key="MutedBrush" Color="#AAB6CD"/>
+  <Style TargetType="TextBlock"><Setter Property="Foreground" Value="#F0F4FF"/></Style>
+  <Style TargetType="Button">
+   <Setter Property="Foreground" Value="#F0F4FF"/><Setter Property="Background" Value="#29334C"/>
+   <Setter Property="Padding" Value="14,10"/><Setter Property="Margin" Value="0,0,8,8"/>
+   <Setter Property="Cursor" Value="Hand"/><Setter Property="BorderThickness" Value="1"/><Setter Property="BorderBrush" Value="#3C4C6C"/>
+   <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
+    <Border x:Name="Chrome" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="10" Padding="{TemplateBinding Padding}">
+     <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+    </Border>
+    <ControlTemplate.Triggers>
+     <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Chrome" Property="BorderBrush" Value="#90A5FF"/></Trigger>
+     <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Chrome" Property="BorderBrush" Value="#C3CEFF"/><Setter TargetName="Chrome" Property="BorderThickness" Value="2"/></Trigger>
+     <Trigger Property="IsEnabled" Value="False"><Setter TargetName="Chrome" Property="Opacity" Value="0.4"/></Trigger>
+    </ControlTemplate.Triggers>
+   </ControlTemplate></Setter.Value></Setter>
+  </Style>
+  <Style TargetType="TextBox"><Setter Property="Background" Value="#0F1422"/><Setter Property="Foreground" Value="#F0F4FF"/><Setter Property="CaretBrush" Value="White"/><Setter Property="BorderBrush" Value="#3C4C6C"/><Setter Property="Padding" Value="10"/><Setter Property="Margin" Value="0,6,0,14"/></Style>
+  <Style TargetType="ComboBoxItem">
+   <Setter Property="Foreground" Value="#F0F4FF"/><Setter Property="Padding" Value="12,9"/>
+   <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ComboBoxItem">
+    <Border x:Name="ItemBorder" Padding="{TemplateBinding Padding}" Background="#171D2C"><ContentPresenter/></Border>
+    <ControlTemplate.Triggers><Trigger Property="IsHighlighted" Value="True"><Setter TargetName="ItemBorder" Property="Background" Value="#344372"/></Trigger><Trigger Property="IsSelected" Value="True"><Setter TargetName="ItemBorder" Property="Background" Value="#2B3862"/></Trigger></ControlTemplate.Triggers>
+   </ControlTemplate></Setter.Value></Setter>
+  </Style>
+  <Style TargetType="ComboBox">
+   <Setter Property="Foreground" Value="#F0F4FF"/><Setter Property="Margin" Value="0,6,0,14"/><Setter Property="MinWidth" Value="140"/>
+   <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ComboBox">
+    <Grid>
+     <ToggleButton Focusable="False" IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+      <ToggleButton.Template><ControlTemplate TargetType="ToggleButton"><Border Background="#0F1422" BorderBrush="#4C5D80" BorderThickness="1" CornerRadius="8"><TextBlock Text="⌄" HorizontalAlignment="Right" Margin="0,8,12,8"/></Border></ControlTemplate></ToggleButton.Template>
+     </ToggleButton>
+     <ContentPresenter Margin="12,10,32,10" IsHitTestVisible="False" Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"/>
+     <Popup x:Name="PART_Popup" Placement="Bottom" AllowsTransparency="True" IsOpen="{TemplateBinding IsDropDownOpen}" Focusable="False">
+      <Border Background="#171D2C" BorderBrush="#4C5D80" BorderThickness="1" MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}" MaxHeight="320">
+       <ScrollViewer CanContentScroll="True"><ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained"/></ScrollViewer>
+      </Border>
+     </Popup>
+    </Grid>
+   </ControlTemplate></Setter.Value></Setter>
+  </Style>
+  <Style TargetType="CheckBox"><Setter Property="Foreground" Value="#F0F4FF"/><Setter Property="Margin" Value="0,8,16,12"/><Setter Property="VerticalContentAlignment" Value="Center"/></Style>
+ </Application.Resources>
+</Application>

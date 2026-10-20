@@ -1,0 +1,64 @@
+name: Publish Windows release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Build and verify
+        shell: pwsh
+        run: |
+          dotnet build DeckPilot.sln -c Release
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          dotnet run --project tests/DeckPilot.Checks -c Release --no-build
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Publish portable folder
+        run: dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o artifacts/win-x64
+      - name: Publish standalone executable
+        run: dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o artifacts/standalone
+      - name: Package downloads and checksums
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force artifacts/release | Out-Null
+          Compress-Archive -Path artifacts/win-x64/* -DestinationPath artifacts/release/DeckPilot-win-x64.zip
+          Copy-Item artifacts/standalone/DeckPilot.exe artifacts/release/DeckPilot.exe
+          Get-ChildItem artifacts/release -File | ForEach-Object {
+            $hash = (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+            "$hash  $($_.Name)"
+          } | Set-Content artifacts/release/SHA256SUMS.txt -Encoding ascii
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DeckPilot-release-${{ github.ref_name }}
+          path: artifacts/release/*
+          if-no-files-found: error
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: |
+          @'
+          Première version de DeckPilot pour Windows 10/11 x64.
+
+          - Interface sombre avec grille de 4 lignes et 3 colonnes.
+          - Calibrage guidé des 12 boutons F13 à F24.
+          - Profils manuels et actions : touche libre, application, dossier, site, raccourci et multimédia.
+          - Zone de notification et démarrage Windows facultatif.
+          - Aucun pilote ni changement du programme du Leonardo.
+
+          Téléchargez **DeckPilot.exe** pour la version autonome, ou **DeckPilot-win-x64.zip** pour le dossier complet à extraire. Aucun runtime .NET à installer.
+
+          Le code est compilé et les vérifications automatiques sont exécutées par ce workflow. Le fonctionnement matériel et l’interface restent à valider sur un PC Windows avec le Leonardo. Les exécutables ne sont pas signés.
+          '@ | Set-Content artifacts/release-notes.md -Encoding utf8
+          gh release create "$env:GITHUB_REF_NAME" artifacts/release/DeckPilot.exe artifacts/release/DeckPilot-win-x64.zip artifacts/release/SHA256SUMS.txt --verify-tag --title "DeckPilot $env:GITHUB_REF_NAME" --notes-file artifacts/release-notes.md
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

@@ -1,0 +1,5 @@
+* text=auto
+*.sln text eol=lf
+*.cs text eol=lf
+*.xaml text eol=lf
+*.yml text eol=lf
