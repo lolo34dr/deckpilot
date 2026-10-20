@@ -50,10 +50,10 @@ public sealed class UpdateService : IDisposable
         if (!worker.HasExited) worker.Kill(entireProcessTree: true);
         throw new IOException("La préparation de la mise à jour a pris trop de temps. DeckPilot reste ouvert.");
     }
-    private static string ExecutablePath()
+    public static string ExecutablePath()
     {
         string path = Environment.ProcessPath ?? "";
-        if (!Path.GetFileName(path).Equals("DeckPilot.exe", StringComparison.OrdinalIgnoreCase))
+        if (!Path.GetExtension(path).Equals(".exe", StringComparison.OrdinalIgnoreCase) || Path.GetFileNameWithoutExtension(path).Equals("dotnet", StringComparison.OrdinalIgnoreCase))
             throw new IOException("La mise à jour automatique est disponible depuis la version publiée DeckPilot.exe.");
         return Path.GetFullPath(path);
     }

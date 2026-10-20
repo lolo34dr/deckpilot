@@ -25,7 +25,7 @@ public static class UpdateInstaller
                 throw new InvalidDataException("Dossier de mise à jour invalide.");
             plan = JsonSerializer.Deserialize<UpdatePlan>(await File.ReadAllTextAsync(planPath)) ?? throw new InvalidDataException("Plan de mise à jour vide.");
             plan.TargetPath = Path.GetFullPath(plan.TargetPath);
-            if (!Path.GetFileName(plan.TargetPath).Equals("DeckPilot.exe", StringComparison.OrdinalIgnoreCase) ||
+            if (!Path.GetExtension(plan.TargetPath).Equals(".exe", StringComparison.OrdinalIgnoreCase) ||
                 string.Equals(source, plan.TargetPath, StringComparison.OrdinalIgnoreCase) ||
                 plan.NewVersion != UpdateService.CurrentVersion.ToString(3) || plan.ParentProcessId == Environment.ProcessId)
                 throw new InvalidDataException("La mise à jour ne correspond pas à l’application attendue.");
@@ -33,7 +33,7 @@ public static class UpdateInstaller
             await UpdateRelease.VerifyFileAsync(plan.TargetPath, plan.OriginalHash);
             UpdateService.ProbeWritable(Path.GetDirectoryName(plan.TargetPath)!);
             using var parent = Process.GetProcessById(plan.ParentProcessId);
-            if (parent.StartTime.ToUniversalTime().Ticks != plan.ParentStartTicks)
+            if (parent.StartTime.ToUniversalTime().Ticks != plan.ParentStartTicks || !string.Equals(parent.MainModule?.FileName, plan.TargetPath, StringComparison.OrdinalIgnoreCase))
                 throw new InvalidDataException("Le processus d’origine a changé.");
             await File.WriteAllTextAsync(Path.Combine(directory, "ready"), "ready");
             using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(90));
