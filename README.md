@@ -8,15 +8,19 @@ Windows 10/11, PC x64. Le dossier publié autonome contient le runtime .NET : au
 
 1. Depuis les [releases GitHub](https://github.com/lolo34dr/streamdeck-diy/releases), télécharger `DeckPilot.exe` et le placer dans un dossier permanent. Sinon, extraire entièrement `DeckPilot-win-x64.zip`, puis lancer le `DeckPilot.exe` contenu dans ce dossier.
 2. Brancher le Leonardo. Au premier lancement, suivre le calibrage : appuyer sur les boutons physiques de gauche à droite, ligne par ligne. L’ordre des F13–F24 peut être quelconque, mais chaque bouton doit envoyer une touche distincte.
-3. Cliquer sur un bouton à l’écran, choisir une action, puis **Enregistrer l’action**. Changer de bouton ou de profil enregistre aussi les modifications de ce bouton.
+3. Cliquer sur une touche dans la grille, puis sur une action dans la colonne de droite. Ses réglages apparaissent sous la grille ; cliquer sur **Enregistrer** après modification. Changer de touche ou de profil enregistre aussi les réglages en cours.
 4. Pour un jeu, choisir **Touche libre**, puis attribuer la touche directement dans les paramètres du jeu.
-5. Pour créer un profil, saisir son nom sous la grille et cliquer sur **Créer**. La liste en haut permet de choisir le profil actif. Le calibrage est partagé entre tous les profils.
+5. Pour créer un profil, ouvrir **Gérer les profils** à droite, saisir son nom et cliquer sur **Créer**. La liste en haut permet de choisir le profil actif. Le calibrage est partagé entre tous les profils.
 
 Actions disponibles : touche libre, programme avec arguments facultatifs, dossier, site HTTP(S), raccourci clavier et commandes multimédias. Un bouton maintenu déclenche une action une seule fois ; en mode libre, les répétitions du clavier restent disponibles. Les arguments sont transmis au programme choisi ; saisissez-les selon les règles de ce programme.
 
 La croix de fermeture masque la fenêtre. Double-cliquer sur l’icône près de l’horloge pour la rouvrir, ou clic droit → **Quitter** pour arrêter réellement l’application. L’option **Lancer avec Windows** est facultative et agit seulement pour l’utilisateur Windows courant. Elle référence l’emplacement de `DeckPilot.exe` : désactiver cette option avant de déplacer le dossier, puis la réactiver.
 
 Le calibrage et les profils sont enregistrés dans `%APPDATA%\DeckPilot\settings.json`, hors du dossier de l’application. Quitter DeckPilot avant de copier ce fichier pour le sauvegarder ou de le restaurer. Une configuration illisible est sauvegardée avec le suffixe `.backup-<date>` avant utilisation d’une nouvelle configuration. Aucun compte, service réseau ou système de mise à jour automatique dans cette version.
+
+## Interface
+
+La version 0.1.1 utilise un fond anthracite, des touches compactes avec pictogrammes, une liste d’actions à droite et un éditeur sous la grille. La sélection est signalée par une bordure vert discret. Les profils et le calibrage de la version précédente sont conservés.
 
 ## Développer et compiler
 
