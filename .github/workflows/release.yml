@@ -11,11 +11,17 @@ permissions:
 jobs:
   release:
     runs-on: windows-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
+      - name: Verify release version
+        shell: pwsh
+        run: |
+          [xml]$project = Get-Content src/DeckPilot.Windows/DeckPilot.Windows.csproj
+          if ("v$($project.Project.PropertyGroup.Version)" -ne $env:GITHUB_REF_NAME) { throw "Le tag ne correspond pas à la version de l’application." }
       - name: Build and verify
         shell: pwsh
         run: |
@@ -27,13 +33,16 @@ jobs:
         run: dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o artifacts/win-x64
       - name: Publish standalone executable
         run: dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o artifacts/standalone
+      - name: Verify native update and application picker
+        shell: powershell
+        run: ./tests/windows-update-smoke.ps1 -Executable artifacts/standalone/DeckPilot.exe
       - name: Package downloads and checksums
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force artifacts/release | Out-Null
           Compress-Archive -Path artifacts/win-x64/* -DestinationPath artifacts/release/DeckPilot-win-x64.zip
           Copy-Item artifacts/standalone/DeckPilot.exe artifacts/release/DeckPilot.exe
-          Get-ChildItem artifacts/release -File | ForEach-Object {
+          Get-ChildItem artifacts/release -File | Where-Object { $_.Name -in @("DeckPilot.exe", "DeckPilot-win-x64.zip") } | ForEach-Object {
             $hash = (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
             "$hash  $($_.Name)"
           } | Set-Content artifacts/release/SHA256SUMS.txt -Encoding ascii

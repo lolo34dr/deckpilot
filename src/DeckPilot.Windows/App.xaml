@@ -1,19 +1,35 @@
 <Application x:Class="DeckPilot.Windows.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
  <Application.Resources>
+  <CubicEase x:Key="SoftEase" EasingMode="EaseOut"/>
   <SolidColorBrush x:Key="PanelBrush" Color="#252525"/>
-  <SolidColorBrush x:Key="MutedBrush" Color="#A0A0A0"/>
-  <SolidColorBrush x:Key="LineBrush" Color="#383838"/>
+  <SolidColorBrush x:Key="MutedBrush" Color="#A4ADA7"/>
+  <SolidColorBrush x:Key="LineBrush" Color="#383F3A"/>
   <Style TargetType="TextBlock"><Setter Property="Foreground" Value="#E5E5E5"/></Style>
   <Style TargetType="Button">
    <Setter Property="Foreground" Value="#E5E5E5"/><Setter Property="Background" Value="#343434"/><Setter Property="VerticalContentAlignment" Value="Center"/>
    <Setter Property="Padding" Value="10,7"/><Setter Property="Margin" Value="0,0,6,6"/>
    <Setter Property="Cursor" Value="Hand"/><Setter Property="BorderThickness" Value="1"/><Setter Property="BorderBrush" Value="#494949"/>
    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
-    <Border x:Name="Chrome" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5" Padding="{TemplateBinding Padding}">
+    <Border x:Name="Chrome" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="7" Padding="{TemplateBinding Padding}" RenderTransformOrigin="0.5,0.5">
+     <Border.RenderTransform><ScaleTransform x:Name="HoverScale"/></Border.RenderTransform>
      <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
     </Border>
     <ControlTemplate.Triggers>
-     <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Chrome" Property="BorderBrush" Value="#888888"/></Trigger>
+     <MultiDataTrigger>
+      <MultiDataTrigger.Conditions>
+       <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True"/>
+       <Condition Binding="{Binding Source={x:Static SystemParameters.ClientAreaAnimation}}" Value="True"/>
+      </MultiDataTrigger.Conditions>
+      <MultiDataTrigger.EnterActions><BeginStoryboard><Storyboard>
+       <DoubleAnimation Storyboard.TargetName="HoverScale" Storyboard.TargetProperty="ScaleX" To="1.025" Duration="0:0:0.12" EasingFunction="{StaticResource SoftEase}"/>
+       <DoubleAnimation Storyboard.TargetName="HoverScale" Storyboard.TargetProperty="ScaleY" To="1.025" Duration="0:0:0.12" EasingFunction="{StaticResource SoftEase}"/>
+      </Storyboard></BeginStoryboard></MultiDataTrigger.EnterActions>
+      <MultiDataTrigger.ExitActions><BeginStoryboard><Storyboard>
+       <DoubleAnimation Storyboard.TargetName="HoverScale" Storyboard.TargetProperty="ScaleX" To="1" Duration="0:0:0.12"/>
+       <DoubleAnimation Storyboard.TargetName="HoverScale" Storyboard.TargetProperty="ScaleY" To="1" Duration="0:0:0.12"/>
+      </Storyboard></BeginStoryboard></MultiDataTrigger.ExitActions>
+     </MultiDataTrigger>
+     <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Chrome" Property="BorderBrush" Value="#90AA99"/></Trigger>
      <Trigger Property="IsPressed" Value="True"><Setter TargetName="Chrome" Property="Opacity" Value="0.7"/></Trigger>
      <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Chrome" Property="BorderBrush" Value="#C0C0C0"/></Trigger>
      <Trigger Property="IsEnabled" Value="False"><Setter TargetName="Chrome" Property="Opacity" Value="0.4"/></Trigger>

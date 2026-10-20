@@ -5,6 +5,7 @@ permissions:
 jobs:
   build:
     runs-on: windows-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -13,6 +14,11 @@ jobs:
       - run: dotnet build DeckPilot.sln -c Release
       - run: dotnet run --project tests/DeckPilot.Checks -c Release --no-build
       - run: dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o artifacts/win-x64
+      - name: Publish standalone executable for Windows smoke checks
+        run: dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o artifacts/standalone
+      - name: Verify native update and application picker
+        shell: powershell
+        run: ./tests/windows-update-smoke.ps1 -Executable artifacts/standalone/DeckPilot.exe
       - shell: pwsh
         run: Compress-Archive -Path artifacts/win-x64/* -DestinationPath artifacts/DeckPilot-win-x64.zip
       - uses: actions/upload-artifact@v4

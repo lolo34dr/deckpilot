@@ -16,6 +16,13 @@ public static class ActionRunner
         {
             case ActionKind.Passthrough: return;
             case ActionKind.Application:
+                if (ApplicationTarget.IsPackaged(action.Target))
+                {
+                    var launcher = new ProcessStartInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe")) { UseShellExecute = false };
+                    launcher.ArgumentList.Add("shell:AppsFolder\\" + ApplicationTarget.GetAppId(action.Target));
+                    Process.Start(launcher);
+                    break;
+                }
                 if (!File.Exists(action.Target)) throw new IOException("Le programme sélectionné est introuvable.");
                 Process.Start(new ProcessStartInfo(action.Target) { UseShellExecute = true, Arguments = action.Arguments, WorkingDirectory = Path.GetDirectoryName(action.Target)! });
                 break;
