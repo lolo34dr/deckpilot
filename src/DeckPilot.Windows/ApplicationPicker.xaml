@@ -1,5 +1,5 @@
 <Window x:Class="DeckPilot.Windows.ApplicationPicker" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:DeckPilot.Windows"
- Title="Choisir une application" Width="590" Height="650" MinWidth="480" MinHeight="460" Background="#232625" FontFamily="Segoe UI" FontSize="13" WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
+ Icon="/Assets/DeckPilot.png" Title="Choisir une application" Width="590" Height="650" MinWidth="480" MinHeight="460" Background="#232625" FontFamily="Segoe UI" FontSize="13" WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
  <Window.Resources>
   <local:ApplicationIconConverter x:Key="AppIcon"/>
   <Style TargetType="ListBoxItem">
