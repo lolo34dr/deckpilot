@@ -14,7 +14,7 @@ public partial class UpdateWindow : Window
     public UpdateWindow(UpdateService service, UpdateRelease release)
     {
         InitializeComponent(); DarkChrome.Attach(this); this.service = service; this.release = release;
-        VersionText.Text = $"Version {UpdateService.DisplayVersion} → {release.Version} · {release.Size / 1024d / 1024d:0.#} Mo";
+        VersionText.Text = $"Version {UpdateService.DisplayVersion} → {release.Version} · {(UpdateService.IsInstalled ? release.InstallerSize : release.Size) / 1024d / 1024d:0.#} Mo";
         Closing += OnClosing;
         Loaded += (_, _) => Motion.Reveal(this);
     }

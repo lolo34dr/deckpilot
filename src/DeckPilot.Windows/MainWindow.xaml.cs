@@ -25,6 +25,7 @@ public partial class MainWindow : Window
     private Forms.NotifyIcon? tray;
     private System.Drawing.Icon? trayIcon;
     private bool loading = true, quitting, calibrating;
+    private bool layoutChanged;
     private int selected;
     private readonly List<int> captured = [];
     private readonly List<Button> deckButtons = [];
@@ -62,6 +63,7 @@ public partial class MainWindow : Window
                 }
             }
         }
+        layoutChanged = settings.MigrateLayout();
         ActionPicker.ItemsSource = ActionNames;
         var keys = new List<Choice>();
         for (int k = 0x41; k <= 0x5A; k++) keys.Add(new(((char)k).ToString(), k));
@@ -73,7 +75,9 @@ public partial class MainWindow : Window
         BuildGrid();
         RefreshProfiles();
         LoadEditor();
-        StartupCheck.IsChecked = StartupEnabled();
+        try { StartupService.Initialize(); }
+        catch (Exception ex) { StatusText.Text = "Démarrage Windows : " + ex.Message; }
+        StartupCheck.IsChecked = StartupService.Enabled;
         AutoUpdateCheck.IsChecked = settings.AutoCheckUpdates;
         VersionLabel.Text = "v" + UpdateService.DisplayVersion;
         UpdateStatus.Text = "Recherche au démarrage, puis toutes les 6 h.";
@@ -153,7 +157,7 @@ public partial class MainWindow : Window
             deckIcons[i].Opacity = action.Kind == ActionKind.Passthrough ? 0.6 : 1;
             deckButtons[i].Background = Brush(i == selected ? "#303632" : "#191B1A");
             deckButtons[i].BorderBrush = Brush(i == selected ? "#81A58B" : "#505350");
-            deckButtons[i].ToolTip = $"Ligne {i / 3 + 1}, colonne {i % 3 + 1} · {deckLabels[i].Text} · {keyName} · {ActionNames[(int)action.Kind]}";
+            deckButtons[i].ToolTip = $"Ligne {i / 4 + 1}, colonne {i % 4 + 1} · {deckLabels[i].Text} · {keyName} · {ActionNames[(int)action.Kind]}";
             System.Windows.Automation.AutomationProperties.SetName(deckButtons[i], (string)deckButtons[i].ToolTip);
         }
     }
@@ -171,7 +175,7 @@ public partial class MainWindow : Window
         bool previous = loading; loading = true;
         var action = settings.ActiveProfile.Buttons[selected];
         SelectedTitle.Text = $"Bouton {selected + 1:00}";
-        SelectedKey.Text = $"Ligne {selected / 3 + 1}, colonne {selected % 3 + 1} · " + (settings.IsCalibrated ? Calibration.KeyName(settings.KeyMap[selected]) : "Calibrage nécessaire");
+        SelectedKey.Text = $"Ligne {selected / 4 + 1}, colonne {selected % 4 + 1} · " + (settings.IsCalibrated ? Calibration.KeyName(settings.KeyMap[selected]) : "Calibrage nécessaire");
         LabelEditor.Text = action.Label;
         ActionPicker.SelectedIndex = (int)action.Kind;
         pickedApplicationName = action.ApplicationName;
@@ -310,7 +314,7 @@ public partial class MainWindow : Window
     private void BeginCalibration()
     {
         SaveEditor(); captured.Clear(); calibrating = true;
-        CalibrationOverlay.Visibility = Visibility.Visible; CalibrationError.Text = "Les actions personnalisées sont suspendues pendant le calibrage.";
+        CalibrationOverlay.Visibility = Visibility.Visible; CalibrationError.Text = layoutChanged ? "Disposition corrigée : 3 lignes de 4. Recalibrez les positions ; vos profils sont conservés." : "Les actions personnalisées sont suspendues pendant le calibrage.";
         UpdateCalibration();
     }
     private void CaptureKey(int key)
@@ -320,7 +324,7 @@ public partial class MainWindow : Window
         captured.Add(key);
         if (captured.Count == 12)
         {
-            settings.KeyMap = [.. captured]; calibrating = false; CalibrationOverlay.Visibility = Visibility.Collapsed;
+            settings.KeyMap = [.. captured]; layoutChanged = false; calibrating = false; CalibrationOverlay.Visibility = Visibility.Collapsed;
             bool saved = Persist(); LoadEditor(); if (saved) StatusText.Text = "Calibrage terminé · Vos 12 boutons sont prêts !";
             _ = CheckForUpdatesAsync(false);
         }
@@ -328,7 +332,7 @@ public partial class MainWindow : Window
     }
     private void UpdateCalibration()
     {
-        CalibrationPrompt.Text = $"Étape {captured.Count + 1}/12 · Appuyez sur le bouton ligne {captured.Count / 3 + 1}, colonne {captured.Count % 3 + 1}.";
+        CalibrationPrompt.Text = $"Étape {captured.Count + 1}/12 · Appuyez sur le bouton ligne {captured.Count / 4 + 1}, colonne {captured.Count % 4 + 1}.";
         for (int i = 0; i < 12; i++)
         {
             calibrationCells[i].Background = Brush(i == captured.Count ? "#3C4A3F" : i < captured.Count ? "#2D332E" : "#1C1D1C");
@@ -427,9 +431,9 @@ public partial class MainWindow : Window
             }
             if (!SaveEditor()) { UpdateStatus.Text = "Mise à jour suspendue : vos réglages n’ont pas pu être enregistrés."; return; }
             UpdateStatus.Text = "Redémarrage pour installer la mise à jour…";
-            await updateService.StartInstallerAsync(dialog.Staged, !IsVisible);
-            quitting = true;
-            Application.Current.Shutdown();
+            bool shutdown = await updateService.StartInstallerAsync(dialog.Staged, !IsVisible);
+            if (shutdown) { quitting = true; Application.Current.Shutdown(); }
+            else UpdateStatus.Text = "L’installateur prendra le relais. Vos réglages seront conservés.";
         }
         catch (OperationCanceledException) { if (!lifetime.IsCancellationRequested) UpdateStatus.Text = "La vérification a pris trop de temps. Réessayez plus tard."; }
         catch (Exception ex)
@@ -443,24 +447,18 @@ public partial class MainWindow : Window
         finally { updateBusy = false; if (!quitting) UpdateCheckButton.IsEnabled = true; }
     }
     public void ReportUpdateFailure() => ReportError("La mise à jour n’a pas pu démarrer. L’ancienne version a été conservée ou restaurée.");
-    private static bool StartupEnabled()
+    public void RequestInstallerExit()
     {
-        using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
-        return key?.GetValue("DeckPilot") != null;
+        if (firmwareOpen || updateBusy || !SaveEditor()) return;
+        quitting = true; Close();
     }
     private void StartupClick(object sender, RoutedEventArgs e)
     {
         try
         {
-            using var key = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
-            if (StartupCheck.IsChecked == true)
-            {
-                var executable = UpdateService.ExecutablePath();
-                key.SetValue("DeckPilot", "\"" + executable + "\" --background");
-            }
-            else key.DeleteValue("DeckPilot", throwOnMissingValue: false);
+            StartupService.Set(StartupCheck.IsChecked == true);
             StatusText.Text = StartupCheck.IsChecked == true ? "Démarrage avec Windows activé." : "Démarrage avec Windows désactivé.";
         }
-        catch (Exception ex) { StartupCheck.IsChecked = StartupEnabled(); ReportError("Démarrage automatique : " + ex.Message); }
+        catch (Exception ex) { StartupCheck.IsChecked = StartupService.Enabled; ReportError("Démarrage automatique : " + ex.Message); }
     }
 }

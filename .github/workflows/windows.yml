@@ -22,6 +22,17 @@ jobs:
       - run: dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true -p:RequireFirmwareBundle=true -p:PublishSingleFile=false -o artifacts/win-x64
       - name: Publish standalone executable for Windows smoke checks
         run: dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true -p:RequireFirmwareBundle=true -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o artifacts/standalone
+      - name: Build Windows installer
+        shell: pwsh
+        run: |
+          if (!(Test-Path "${env:ProgramFiles(x86)}/Inno Setup 6/ISCC.exe")) {
+            choco install innosetup --no-progress -y
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+          ./installer/build.ps1
+      - name: Verify Windows installation, upgrade and uninstall
+        shell: powershell
+        run: ./tests/windows-installer-smoke.ps1 -Installer artifacts/installer/DeckPilot-Setup.exe
       - name: Verify native update and application picker
         shell: powershell
         run: ./tests/windows-update-smoke.ps1 -Executable artifacts/standalone/DeckPilot.exe
@@ -31,4 +42,9 @@ jobs:
         with:
           name: DeckPilot-win-x64
           path: artifacts/DeckPilot-win-x64.zip
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DeckPilot-Setup
+          path: artifacts/installer/DeckPilot-Setup.exe
           if-no-files-found: error

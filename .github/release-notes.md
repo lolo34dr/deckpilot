@@ -1,11 +1,9 @@
-DeckPilot can now install firmware on the DIY Pro Micro macropad directly from the app.
+DeckPilot now installs like a regular Windows application, with the correct **3 rows × 4 columns** macropad layout.
 
-- New **Firmware du macropad…** dialog with device selection and confirmation before flashing.
-- Bundled firmware **1.0.0** preserves F13–F24 and adds a DeckPilot identity/version response over USB serial.
-- Bundled AVRDUDE: no Arduino IDE installation needed for normal updates.
-- Validated firmware checksum and memory boundaries, physical USB connection matching, write verification and post-flash version check.
-- Existing PC profiles and calibration are preserved. Updating the app never flashes hardware automatically.
+- Download **DeckPilot-Setup.exe** to install into **Program Files\DeckPilot**, with Start menu and desktop shortcuts and a Windows uninstall entry.
+- Windows startup is enabled by default and can be disabled during installation or from the app. Updates preserve that choice.
+- Installed app updates download and verify the setup package, request normal Windows administrator permission, then install and restart the app.
+- The main grid, position labels and guided calibration now use three rows of four keys. Existing profiles/actions are kept; the previous layout requires one new calibration.
+- Firmware 1.0.0 is unchanged. The owner has confirmed successful flashing, version identification and all twelve keys on the reference macropad. This app update does not flash hardware.
 
-**First hardware test still required:** the original firmware's Caterina upload procedure is confirmed; the new firmware/updater must still be tried on the actual macropad. For Pro Micro **ATmega32U4, 5 V / 16 MHz**, wired on **2–10, 14, 15, 16**, with Leonardo USB IDs and Caterina bootloader only. Keep the original sketch and RST/GND access for recovery. No firmware backup or automatic rollback.
-
-Windows 10/11 x64. Download **DeckPilot.exe** or **DeckPilot-win-x64.zip**. The firmware/tools are embedded in the app and also available in **DeckPilot-firmware.zip**; AVRDUDE has its own GPL license and bundled source.
+Windows 10/11 x64. The standalone **DeckPilot.exe** and portable ZIP remain available for older updater compatibility. Personal profiles remain in `%APPDATA%\DeckPilot` and are retained on uninstall.

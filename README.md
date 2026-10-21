@@ -26,7 +26,7 @@
 
 ---
 
-DeckPilot configures Arduino Leonardo-compatible macropads that already send **F13–F24** as USB keyboard inputs, arranged in **4 rows of 3 keys**. The physical key order can be arbitrary: a guided calibration maps each button to its position.
+DeckPilot configures Arduino Leonardo-compatible macropads that already send **F13–F24** as USB keyboard inputs, arranged in **3 rows of 4 keys**. The physical key order can be arbitrary: a guided calibration maps each button to its position.
 
 **No additional driver or firmware changes are required.** The current application interface is in French; this documentation is in English.
 
@@ -38,7 +38,7 @@ DeckPilot configures Arduino Leonardo-compatible macropads that already send **F
 - **Free keys:** keep F13–F24 available for shortcuts configured directly in a game or another application.
 - **Local profiles:** create, duplicate, rename, delete, and select profiles. Calibration is shared across profiles.
 - **Compact dark interface:** vector icons, application icons where available, and subtle animations that respect Windows animation preferences.
-- **Background operation:** keep DeckPilot in the notification area, with optional startup at Windows sign-in.
+- **Background operation:** keep DeckPilot in the notification area, with startup at Windows sign-in enabled by default (can be disabled).
 - **Automatic updates:** approve a new release, then let DeckPilot download, verify, replace, and restart itself.
 
 ## Getting started
@@ -51,12 +51,18 @@ DeckPilot configures Arduino Leonardo-compatible macropads that already send **F
 
 The published downloads include the .NET runtime. **You do not need to install .NET to use DeckPilot.**
 
-### Download and launch
+### Install and launch
 
-1. Download **[DeckPilot.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot.exe)** and place it in a permanent, writable folder, such as `%LOCALAPPDATA%\Programs\DeckPilot`.
-2. Alternatively, download **[DeckPilot-win-x64.zip](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-win-x64.zip)**, extract the entire archive, and run the included `DeckPilot.exe`.
-3. Connect your macropad and launch DeckPilot.
-4. Follow the first-run calibration, pressing the highlighted physical button from left to right, row by row. Every button must send a different F13–F24 key.
+1. Download **[DeckPilot-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** and run the installer. Windows asks for administrator permission to install into **Program Files\DeckPilot**.
+2. The installer adds DeckPilot to Windows **Installed apps**, creates a Start menu shortcut, and selects the desktop shortcut and Windows startup options by default. You can deselect these optional tasks.
+3. Connect your macropad and open DeckPilot from its shortcut.
+4. Follow calibration from left to right across **four columns**, then the next row, for **three rows**. Every button must send a different F13–F24 key.
+
+When upgrading from the former 4-row layout, DeckPilot preserves profiles/actions and requests one new calibration for the corrected positions. Installing over an existing portable setup also preserves the settings in `%APPDATA%\DeckPilot`; quit the old copy if setup asks you to.
+
+A portable [DeckPilot.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot.exe) and [ZIP](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-win-x64.zip) remain available for compatibility. For portable use, keep the executable in a writable personal folder.
+
+Uninstall from Windows **Installed apps**. Uninstallation removes the program and its shortcuts, while retaining personal profiles so a later reinstall can reuse them.
 
 The single-file executable extracts its bundled dependencies into the user's .NET cache on first launch, which can take a little longer. Published executables are currently unsigned, so Windows may display a SmartScreen warning.
 
@@ -89,7 +95,7 @@ Calibration applies to all profiles and can be repeated from the sidebar.
 
 Closing the window hides DeckPilot while keeping its actions active. Double-click its notification-area icon near the clock to reopen it, or right-click the icon and choose the quit command to stop it completely.
 
-Optional Windows startup applies only to the current user and references the executable's location. Disable it before moving the application, then enable it again from the new location.
+Windows startup is enabled by default for the current user. You can disable it with **Lancer avec Windows**; later app updates preserve that choice. Installation and subsequent launches refresh an enabled entry to the current executable path.
 
 ## Installed applications
 
@@ -103,7 +109,9 @@ Windows launches the selected shortcuts. Catalog entries use `shell:AppsFolder`.
 
 Available since **0.2.0**, automatic update checks run at startup after calibration, then every six hours. They can be disabled in the sidebar. A manual check remains available.
 
-When a newer stable GitHub release is found, DeckPilot asks whether to update. After confirmation, it:
+When a newer stable GitHub release is found, DeckPilot asks whether to update. **Installed copies** download and SHA-256 verify `DeckPilot-Setup.exe`, then launch the installer. Windows asks for administrator permission to update Program Files. The installer closes DeckPilot gracefully when ready, preserves profiles and startup preferences, installs the new version and relaunches the app. Cancelling the Windows permission prompt leaves the app open. Setup refuses to interrupt an open firmware session.
+
+**Portable copies** retain the existing update mechanism. After confirmation, it:
 
 1. Downloads the executable with progress reporting and cancellation support.
 2. Verifies its SHA-256 hash against `SHA256SUMS.txt` from the same GitHub release.
@@ -115,7 +123,7 @@ Choosing to update later postpones automatic prompts for 24 hours. Manual checks
 
 Downloads use HTTPS, with redirects restricted to the expected GitHub hosts. Temporary files are stored in `%LOCALAPPDATA%\DeckPilot\Updates`; downloads older than seven days are cleaned up. The Windows startup entry continues to use the same executable path after an update.
 
-Use a writable personal folder. A protected installation directory or a file lock from another application can prevent replacement; DeckPilot does not elevate its privileges.
+Portable copies require a writable personal folder. Installed copies use the installer for protected directories; the DeckPilot app itself continues to run without administrator rights.
 
 **Upgrading from 0.1.x?** Quit the old version from the notification area and manually replace the executable with the latest release once. Those older versions do not contain the updater. Later updates can be installed from within DeckPilot.
 
@@ -164,7 +172,7 @@ The console checks exit with a nonzero status on the first failed assertion. The
 
 The file-lock check runs only on Windows.
 
-GitHub Actions also runs `tests/windows-update-smoke.ps1` against the standalone executable. It starts the update helper, exits the original process, verifies replacement and startup confirmation, checks settings preservation, then opens the installed application picker through UI Automation and saves a selection. It also exercises renamed executables and paths containing spaces. This script is reserved for the disposable GitHub Actions test account.
+GitHub Actions also runs `tests/windows-update-smoke.ps1` against the standalone executable. It starts the update helper, exits the original process, verifies replacement and startup confirmation, checks settings preservation, then opens the installed application picker through UI Automation and saves a selection. It also exercises renamed executables and paths containing spaces. This script is reserved for the disposable GitHub Actions test account. CI also runs `tests/windows-installer-smoke.ps1`: real Program Files installation, desktop/Start menu shortcuts, default startup, upgrade with the app open, disabled-startup preservation, and uninstallation without deleting profiles.
 
 ### Publish a standalone Windows folder
 
@@ -233,4 +241,8 @@ Suggested credit:
 
 DeckPilot 1.1.0 includes a **Firmware du macropad…** dialog and firmware 1.0.0 for the Pro Micro ATmega32U4 **5 V / 16 MHz**, using the Leonardo/Caterina configuration confirmed by the owner's upload log. The bundled Windows flashing tool does not require Arduino IDE. Device selection and confirmation are mandatory; app updates never silently flash the board. Existing F13–F24 mappings, profiles and calibration remain compatible.
 
-**The new firmware and integrated flashing still need a first test on the physical board.** Keep the original sketch and access to RST/GND for recovery. Firmware flashing cannot be rolled back automatically. See [firmware documentation](firmware/README.md) for compatibility, validation, recovery, build steps and third-party licenses. Per-button USB modes and native media controls are not part of this firmware release.
+**The owner has confirmed successful in-app flashing, firmware 1.0.0 identification and all 12 buttons on the reference board.** Keep the original sketch and access to RST/GND for recovery. Firmware flashing cannot be rolled back automatically. See [firmware documentation](firmware/README.md) for compatibility, validation, recovery, build steps and third-party licenses. Per-button USB modes and native media controls are not part of this firmware release.
+
+### Building the Windows installer
+
+After producing `artifacts/standalone/DeckPilot.exe` with the embedded firmware bundle, install Inno Setup 6 and run `./installer/build.ps1` from the repository root. The output is `artifacts/installer/DeckPilot-Setup.exe`. CI builds and tests this installer before attaching it to a release. The installer uses a stable application ID so future versions upgrade the same installation.
