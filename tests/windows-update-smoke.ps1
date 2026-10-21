@@ -175,8 +175,8 @@ finally {
     if ($null -ne $existingSettings) { [IO.File]::WriteAllBytes($settingsPath, $existingSettings) }
     elseif (Test-Path $settingsPath) { Remove-Item $settingsPath }
     if ($null -ne $startupBefore) { Set-ItemProperty $startupKey DeckPilot $startupBefore }
-    else { Remove-ItemProperty $startupKey DeckPilot -ErrorAction SilentlyContinue }
+    else { try { Remove-ItemProperty $startupKey DeckPilot -ErrorAction Stop } catch { } }
     if ($null -ne $preferenceBefore) { Set-ItemProperty 'HKCU:\Software\DeckPilot' StartupConfigured $preferenceBefore }
-    else { Remove-ItemProperty 'HKCU:\Software\DeckPilot' StartupConfigured -ErrorAction SilentlyContinue }
+    else { try { Remove-ItemProperty 'HKCU:\Software\DeckPilot' StartupConfigured -ErrorAction Stop } catch { } }
     Remove-Item $stage, $installed -Recurse -Force -ErrorAction SilentlyContinue
 }

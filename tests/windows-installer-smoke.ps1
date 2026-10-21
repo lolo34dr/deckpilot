@@ -89,7 +89,7 @@ finally {
     if ($null -ne $oldSettings) { [IO.File]::WriteAllBytes($settingsPath, $oldSettings) }
     elseif (Test-Path $settingsPath) { Remove-Item $settingsPath }
     if ($null -ne $oldStartup) { Set-ItemProperty $startupKey DeckPilot $oldStartup }
-    else { Remove-ItemProperty $startupKey DeckPilot -ErrorAction SilentlyContinue }
+    else { try { Remove-ItemProperty $startupKey DeckPilot -ErrorAction Stop } catch { } }
     if ($null -ne $oldPreference) { Set-ItemProperty 'HKCU:\Software\DeckPilot' StartupConfigured $oldPreference }
-    else { Remove-ItemProperty 'HKCU:\Software\DeckPilot' StartupConfigured -ErrorAction SilentlyContinue }
+    else { try { Remove-ItemProperty 'HKCU:\Software\DeckPilot' StartupConfigured -ErrorAction Stop } catch { } }
 }
