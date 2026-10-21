@@ -89,6 +89,18 @@ internal static class AdditionalChecks
             await Reject(() => { UpdateRelease.ExecutableHash(new string('0', 64) + " DeckPilot-win-x64.zip"); return Task.CompletedTask; });
             await Reject(() => { UpdateRelease.ExecutableHash(manifest + manifest); return Task.CompletedTask; });
         });
+        await Check("Installer updates validate the exact GitHub asset and its own checksum", async () => {
+            var node = System.Text.Json.Nodes.JsonNode.Parse(ReleaseJson())!;
+            node["assets"]!.AsArray().Add(System.Text.Json.Nodes.JsonNode.Parse(JsonSerializer.Serialize(new { name = "DeckPilot-Setup.exe", browser_download_url = $"https://github.com/{UpdateRelease.Repository}/releases/download/v0.2.0/DeckPilot-Setup.exe", size = 2048 })));
+            var installed = UpdateRelease.Parse(node.ToJsonString(), current)!;
+            Expect(installed.Installer?.AbsolutePath.EndsWith("/DeckPilot-Setup.exe") == true && installed.InstallerSize == 2048);
+            Expect(UpdateRelease.Parse(ReleaseJson(), current)!.Installer == null);
+            string installerManifest = hash + "  DeckPilot-Setup.exe\n" + new string('a', 64) + "  DeckPilot.exe\n";
+            Expect(UpdateRelease.ExecutableHash(installerManifest, "DeckPilot-Setup.exe") == hash);
+            await Reject(() => { UpdateRelease.ExecutableHash(manifest, "DeckPilot-Setup.exe"); return Task.CompletedTask; });
+            await Reject(() => { UpdateRelease.Parse(node.ToJsonString().Replace("/v0.2.0/DeckPilot-Setup.exe", "/v0.2.0/other.exe"), current); return Task.CompletedTask; });
+            await Reject(() => { UpdateRelease.ExecutableHash(installerManifest, "../anything.exe"); return Task.CompletedTask; });
+        });
         string directory = Path.Combine(Path.GetTempPath(), "DeckPilot-v2-check-" + Guid.NewGuid());
         Directory.CreateDirectory(directory);
         try
@@ -103,6 +115,19 @@ internal static class AdditionalChecks
                 string downloadedHash = await client.DownloadAsync(release, path, progress, default);
                 Expect(downloadedHash == hash && progress.Last == 1);
                 Expect(File.ReadAllBytes(Path.Combine(path, "DeckPilot.exe")).SequenceEqual(bytes));
+            });
+            await Check("Installed update downloads and verifies the setup rather than the portable executable", async () => {
+                var installerUri = new Uri($"https://github.com/{UpdateRelease.Repository}/releases/download/v0.2.0/DeckPilot-Setup.exe");
+                var installed = release with { Executable = installerUri };
+                using var client = new ReleaseClient(new FakeHandler(request => {
+                    string name = request.RequestUri!.AbsolutePath;
+                    if (name.EndsWith("SHA256SUMS.txt")) return new(HttpStatusCode.OK) { Content = new StringContent(hash + "  DeckPilot-Setup.exe\n") };
+                    Expect(request.RequestUri == installerUri);
+                    return new(HttpStatusCode.OK) { Content = new ByteArrayContent(bytes) };
+                }));
+                string path = Path.Combine(directory, "setup");
+                Expect(await client.DownloadAsync(installed, path, null, default, "DeckPilot-Setup.exe") == hash);
+                Expect(File.Exists(Path.Combine(path, "DeckPilot-Setup.exe")) && !File.Exists(Path.Combine(path, "DeckPilot.exe")));
             });
             await Check("A checksum mismatch removes the damaged download", async () => {
                 byte[] corrupted = bytes.ToArray(); corrupted[400] = 1;
@@ -222,6 +247,22 @@ internal static class AdditionalChecks
             });
         }
         finally { Directory.Delete(directory, recursive: true); }
+        await Check("Legacy layout requests recalibration without losing profile actions", () => {
+            string path = Path.Combine(Path.GetTempPath(), "deckpilot-layout-" + Guid.NewGuid() + ".json");
+            try {
+                var settings = new Settings { KeyMap = Enumerable.Range(Calibration.FirstKey, 12).ToList() };
+                settings.ActiveProfile.Buttons[3].Label = "Fourth button";
+                var node = System.Text.Json.Nodes.JsonNode.Parse(JsonSerializer.Serialize(settings))!;
+                node.AsObject().Remove("LayoutColumns"); File.WriteAllText(path, node.ToJsonString());
+                var migrated = new SettingsStore(path).Load();
+                Expect(migrated.LayoutColumns == 3 && migrated.IsCalibrated);
+                Expect(migrated.MigrateLayout() && migrated.LayoutColumns == 4 && !migrated.IsCalibrated);
+                Expect(migrated.ActiveProfile.Id == settings.ActiveProfile.Id && migrated.ActiveProfile.Buttons[3].Label == "Fourth button");
+                new SettingsStore(path).Save(migrated);
+                Expect(!new SettingsStore(path).Load().MigrateLayout());
+            } finally { File.Delete(path); }
+            return Task.CompletedTask;
+        });
         return count;
     }
     private sealed class InlineProgress : IProgress<double> { public double Last; public void Report(double value) => Last = value; }

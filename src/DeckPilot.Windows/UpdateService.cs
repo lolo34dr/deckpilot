@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using DeckPilot.Core;
 
 namespace DeckPilot.Windows;
-public sealed record StagedUpdate(string Directory, string Hash, UpdateRelease Release);
+public sealed record StagedUpdate(string Directory, string Hash, UpdateRelease Release, bool Installed = false);
 public sealed class UpdateService : IDisposable
 {
     private readonly ReleaseClient client = new();
@@ -16,16 +16,30 @@ public sealed class UpdateService : IDisposable
     public static Version CurrentVersion => Assembly.GetExecutingAssembly().GetName().Version!;
     public static string DisplayVersion => CurrentVersion.ToString(3);
     public Task<UpdateRelease?> CheckAsync(CancellationToken cancellation) => client.CheckAsync(CurrentVersion, cancellation);
+    public static bool IsInstalled => File.Exists(Path.Combine(Path.GetDirectoryName(ExecutablePath())!, "DeckPilot.install"));
     public async Task<StagedUpdate> StageAsync(UpdateRelease release, IProgress<double> progress, CancellationToken cancellation)
     {
         string executable = ExecutablePath();
-        ProbeWritable(Path.GetDirectoryName(executable)!);
+        bool installed = IsInstalled;
+        if (!installed) ProbeWritable(Path.GetDirectoryName(executable)!);
+        if (installed && release.Installer == null) throw new IOException("Cette version ne propose pas d’installateur. Consultez la page GitHub des versions.");
         string directory = Path.Combine(UpdatesRoot, Guid.NewGuid().ToString("N"));
-        string hash = await client.DownloadAsync(release, directory, progress, cancellation);
-        return new(directory, hash, release);
+        var download = installed ? release with { Executable = release.Installer!, Size = release.InstallerSize } : release;
+        string hash = await client.DownloadAsync(download, directory, progress, cancellation, installed ? "DeckPilot-Setup.exe" : "DeckPilot.exe");
+        return new(directory, hash, release, installed);
     }
-    public async Task StartInstallerAsync(StagedUpdate staged, bool background)
+    public async Task<bool> StartInstallerAsync(StagedUpdate staged, bool background)
     {
+        if (staged.Installed)
+        {
+            string installer = Path.Combine(staged.Directory, "DeckPilot-Setup.exe");
+            await UpdateRelease.VerifyFileAsync(installer, staged.Hash);
+            var setup = new ProcessStartInfo(installer) { UseShellExecute = true, WorkingDirectory = staged.Directory };
+            setup.ArgumentList.Add("/UPDATE=1"); setup.ArgumentList.Add("/SILENT"); setup.ArgumentList.Add("/NORESTART");
+            setup.ArgumentList.Add("/DIR=" + Path.GetDirectoryName(ExecutablePath())!);
+            using var process = Process.Start(setup) ?? throw new IOException("Impossible de démarrer l’installateur.");
+            return false; // Setup asks the running app to exit only when it is ready to install.
+        }
         using var parent = Process.GetCurrentProcess();
         string target = ExecutablePath();
         string planPath = Path.Combine(staged.Directory, "update.json");
@@ -38,7 +52,7 @@ public sealed class UpdateService : IDisposable
         string ready = Path.Combine(staged.Directory, "ready");
         for (int attempt = 0; attempt < 300; attempt++)
         {
-            if (File.Exists(ready)) return;
+            if (File.Exists(ready)) return true;
             if (worker.HasExited)
             {
                 string error = Path.Combine(staged.Directory, "error.txt");

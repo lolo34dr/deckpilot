@@ -28,6 +28,7 @@ public sealed class Profile
 public sealed class Settings
 {
     public int Version { get; set; } = 1;
+    public int LayoutColumns { get; set; } = 4;
     public bool AutoCheckUpdates { get; set; } = true;
     public DateTimeOffset UpdateSnoozedUntil { get; set; }
     public List<int> KeyMap { get; set; } = [];
@@ -35,9 +36,15 @@ public sealed class Settings
     public Guid ActiveProfileId { get; set; }
     [JsonIgnore] public Profile ActiveProfile => Profiles.FirstOrDefault(p => p.Id == ActiveProfileId) ?? Profiles[0];
     [JsonIgnore] public bool IsCalibrated => Calibration.IsValid(KeyMap);
+    public bool MigrateLayout()
+    {
+        if (LayoutColumns == 4) return false;
+        LayoutColumns = 4; KeyMap.Clear();
+        return true;
+    }
     public void Validate()
     {
-        if (Version != 1 || Profiles is null || Profiles.Count == 0 ||
+        if (Version != 1 || LayoutColumns is not (3 or 4) || Profiles is null || Profiles.Count == 0 ||
             Profiles.Any(p => p is null || string.IsNullOrWhiteSpace(p.Name) || p.Id == Guid.Empty ||
                 p.Buttons is null || p.Buttons.Count != 12 || p.Buttons.Any(b => b is null ||
                     !Enum.IsDefined(b.Kind) || b.Label is null || b.Target is null || b.Arguments is null || b.ApplicationName is null)) ||
@@ -60,8 +67,11 @@ public sealed class SettingsStore(string path)
     public Settings Load()
     {
         if (!File.Exists(path)) return new();
-        var settings = JsonSerializer.Deserialize<Settings>(File.ReadAllText(path), Options)
+        string json = File.ReadAllText(path);
+        var settings = JsonSerializer.Deserialize<Settings>(json, Options)
             ?? throw new InvalidDataException("Configuration vide.");
+        using var document = JsonDocument.Parse(json);
+        if (!document.RootElement.TryGetProperty("LayoutColumns", out _)) settings.LayoutColumns = 3;
         settings.Validate();
         return settings;
     }

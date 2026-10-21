@@ -1,6 +1,6 @@
 # DeckPilot firmware 1.0.0
 
-For the tested hardware configuration only: **Pro Micro ATmega32U4, 5 V / 16 MHz**, using the **Arduino Leonardo** board profile and a **Caterina / AVR109** bootloader. USB-C describes the connector, not board compatibility. The owner's original sketch was successfully uploaded with the 1200-baud reset and AVR109 at 57600 baud. This new firmware and the application's flash sequence still require a first test on that physical board.
+For the tested hardware configuration only: **Pro Micro ATmega32U4, 5 V / 16 MHz**, using the **Arduino Leonardo** board profile and a **Caterina / AVR109** bootloader. USB-C describes the connector, not board compatibility. The owner's original sketch was successfully uploaded with the 1200-baud reset and AVR109 at 57600 baud. The owner has also confirmed successful in-app flashing, firmware 1.0.0 identification and operation of all 12 buttons on that reference board.
 
 ## Wiring and behavior
 

@@ -29,16 +29,17 @@ public sealed class ReleaseClient : IDisposable
         response.EnsureSuccessStatusCode();
         return UpdateRelease.Parse(await ReadTextAsync(response, 1024 * 1024, cancellation), current);
     }
-    public async Task<string> DownloadAsync(UpdateRelease release, string directory, IProgress<double>? progress, CancellationToken cancellation)
+    public async Task<string> DownloadAsync(UpdateRelease release, string directory, IProgress<double>? progress, CancellationToken cancellation, string assetName = "DeckPilot.exe")
     {
+        if (assetName is not ("DeckPilot.exe" or "DeckPilot-Setup.exe")) throw new InvalidDataException("Fichier de mise à jour non autorisé.");
         Directory.CreateDirectory(directory);
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellation);
         timeout.CancelAfter(TimeSpan.FromMinutes(10));
         var token = timeout.Token;
         using var manifestResponse = await RequestAsync(release.Checksums, token);
         manifestResponse.EnsureSuccessStatusCode();
-        string expected = UpdateRelease.ExecutableHash(await ReadTextAsync(manifestResponse, 64 * 1024, token));
-        string path = Path.Combine(directory, "DeckPilot.exe");
+        string expected = UpdateRelease.ExecutableHash(await ReadTextAsync(manifestResponse, 64 * 1024, token), assetName);
+        string path = Path.Combine(directory, assetName);
         bool created = false;
         try
         {

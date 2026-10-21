@@ -34,6 +34,9 @@ $stage = Join-Path $env:LOCALAPPDATA ('DeckPilot\Updates\' + [Guid]::NewGuid().T
 $installed = Join-Path $env:TEMP ('DeckPilot smoke with spaces ' + [Guid]::NewGuid().ToString('N'))
 $settingsPath = Join-Path $env:APPDATA 'DeckPilot\settings.json'
 $existingSettings = if (Test-Path $settingsPath) { [IO.File]::ReadAllBytes($settingsPath) } else { $null }
+$startupKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
+$startupBefore = Get-ItemPropertyValue $startupKey DeckPilot -ErrorAction SilentlyContinue
+$preferenceBefore = Get-ItemPropertyValue 'HKCU:\Software\DeckPilot' StartupConfigured -ErrorAction SilentlyContinue
 $parent = $null; $worker = $null; $replacement = $null
 try {
     New-Item -ItemType Directory -Force $stage, $installed, (Split-Path $settingsPath) | Out-Null
@@ -43,7 +46,7 @@ try {
     Copy-Item $source $downloaded
     $profileId = [Guid]::NewGuid().ToString()
     $buttons = @(1..12 | ForEach-Object { @{ Label = ''; Kind = 'Passthrough'; Target = ''; Arguments = ''; Key = 65; Ctrl = $false; Alt = $false; Shift = $false; Win = $false } })
-    @{ Version = 1; AutoCheckUpdates = $false; KeyMap = @(124..135); ActiveProfileId = $profileId; Profiles = @(@{ Id = $profileId; Name = 'Profil test de mise à jour'; Buttons = $buttons }) } |
+    @{ Version = 1; LayoutColumns = 4; AutoCheckUpdates = $false; KeyMap = @(124..135); ActiveProfileId = $profileId; Profiles = @(@{ Id = $profileId; Name = 'Profil test de mise à jour'; Buttons = $buttons }) } |
         ConvertTo-Json -Depth 10 | Set-Content -Path $settingsPath -Encoding UTF8
     $script:phase = 'start original app'
     $parent = Start-Process $target -ArgumentList '--background' -PassThru
@@ -84,6 +87,11 @@ try {
     $buttonType = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::Button)
     $deckButtons = @($root.FindAll([System.Windows.Automation.TreeScope]::Descendants, $buttonType) | Where-Object { $_.Current.Name -like 'Ligne *colonne*' })
     if ($deckButtons.Count -ne 12) { throw "Grille inaccessible ou incomplète : $($deckButtons.Count) boutons." }
+    $rowCount = @($deckButtons | ForEach-Object { $_.Current.BoundingRectangle.Top } | Sort-Object -Unique).Count
+    $columnCount = @($deckButtons | ForEach-Object { $_.Current.BoundingRectangle.Left } | Sort-Object -Unique).Count
+    if ($rowCount -ne 3 -or $columnCount -ne 4) { throw 'The rendered keypad must contain three rows of four keys' }
+    $positions = @($deckButtons | ForEach-Object { $_.Current.Name })
+    if (!($positions -like 'Ligne 1, colonne 4*') -or !($positions -like 'Ligne 3, colonne 4*') -or ($positions -like 'Ligne 4,*')) { throw 'Deck layout must have three rows and four columns' }
     $applicationAction = $root.FindFirst([System.Windows.Automation.TreeScope]::Descendants,
         ([System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::NameProperty, 'Ouvrir une application')))
     $script:phase = 'select application action'
@@ -162,5 +170,9 @@ finally {
     if ($parent -and !$parent.HasExited) { Stop-Process -Id $parent.Id -Force; $parent.WaitForExit() }
     if ($null -ne $existingSettings) { [IO.File]::WriteAllBytes($settingsPath, $existingSettings) }
     elseif (Test-Path $settingsPath) { Remove-Item $settingsPath }
+    if ($null -ne $startupBefore) { Set-ItemProperty $startupKey DeckPilot $startupBefore }
+    else { Remove-ItemProperty $startupKey DeckPilot -ErrorAction SilentlyContinue }
+    if ($null -ne $preferenceBefore) { Set-ItemProperty 'HKCU:\Software\DeckPilot' StartupConfigured $preferenceBefore }
+    else { Remove-ItemProperty 'HKCU:\Software\DeckPilot' StartupConfigured -ErrorAction SilentlyContinue }
     Remove-Item $stage, $installed -Recurse -Force -ErrorAction SilentlyContinue
 }

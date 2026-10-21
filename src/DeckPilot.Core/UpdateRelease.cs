@@ -6,6 +6,8 @@ namespace DeckPilot.Core;
 
 public sealed record UpdateRelease(string Tag, Version Version, Uri Executable, Uri Checksums, long Size)
 {
+    public Uri? Installer { get; init; }
+    public long InstallerSize { get; init; }
     public const string Repository = "lolo34dr/deckpilot";
     public const string LegacyRepository = "lolo34dr/streamdeck-diy";
     public static UpdateRelease? Parse(string json, Version current)
@@ -32,11 +34,16 @@ public sealed record UpdateRelease(string Tag, Version Version, Uri Executable, 
         var checksums = Asset("SHA256SUMS.txt");
         long size = assets.Single(a => a.GetProperty("name").GetString() == "DeckPilot.exe").GetProperty("size").GetInt64();
         if (size < 1024 || size > 512L * 1024 * 1024) throw new InvalidDataException("Taille de mise à jour invalide.");
-        return new(tag, version, executable, checksums, size);
+        var installerAssets = assets.Where(a => a.GetProperty("name").GetString() == "DeckPilot-Setup.exe").ToArray();
+        Uri? installer = installerAssets.Length == 0 ? null : Asset("DeckPilot-Setup.exe");
+        long installerSize = installer == null ? 0 : installerAssets[0].GetProperty("size").GetInt64();
+        if (installer != null && (installerSize < 1024 || installerSize > 512L * 1024 * 1024)) throw new InvalidDataException("Taille de l’installateur invalide.");
+        return new(tag, version, executable, checksums, size) { Installer = installer, InstallerSize = installerSize };
     }
-    public static string ExecutableHash(string manifest)
+    public static string ExecutableHash(string manifest, string assetName = "DeckPilot.exe")
     {
-        var matches = manifest.Split('\n').Select(line => Regex.Match(line.Trim(), @"^([a-fA-F0-9]{64})[ \t]+\*?DeckPilot\.exe$"))
+        if (assetName is not ("DeckPilot.exe" or "DeckPilot-Setup.exe")) throw new InvalidDataException("Fichier de mise à jour non autorisé.");
+        var matches = manifest.Split('\n').Select(line => Regex.Match(line.Trim(), @"^([a-fA-F0-9]{64})[ \t]+\*?" + Regex.Escape(assetName) + "$"))
             .Where(m => m.Success).ToArray();
         if (matches.Length != 1) throw new InvalidDataException("L’empreinte de DeckPilot.exe est absente ou ambiguë.");
         return matches[0].Groups[1].Value.ToLowerInvariant();
