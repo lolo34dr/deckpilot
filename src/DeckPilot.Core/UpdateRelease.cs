@@ -45,7 +45,7 @@ public sealed record UpdateRelease(string Tag, Version Version, Uri Executable, 
         if (assetName is not ("DeckPilot.exe" or "DeckPilot-Setup.exe")) throw new InvalidDataException("Fichier de mise à jour non autorisé.");
         var matches = manifest.Split('\n').Select(line => Regex.Match(line.Trim(), @"^([a-fA-F0-9]{64})[ \t]+\*?" + Regex.Escape(assetName) + "$"))
             .Where(m => m.Success).ToArray();
-        if (matches.Length != 1) throw new InvalidDataException("L’empreinte de DeckPilot.exe est absente ou ambiguë.");
+        if (matches.Length != 1) throw new InvalidDataException($"L’empreinte de {assetName} est absente ou ambiguë.");
         return matches[0].Groups[1].Value.ToLowerInvariant();
     }
     public static async Task VerifyFileAsync(string path, string expected, CancellationToken cancellation = default)

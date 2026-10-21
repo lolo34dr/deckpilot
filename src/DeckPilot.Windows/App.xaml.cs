@@ -22,6 +22,7 @@ public partial class App : Application
         {
             try { using var signal = EventWaitHandle.OpenExisting(@"Local\DeckPilot.InstallExit"); signal.Set(); }
             catch (WaitHandleCannotBeOpenedException) { }
+            catch (UnauthorizedAccessException) { Shutdown(1); return; }
             Shutdown(); return;
         }
         if (e.Args.Length == 2 && e.Args[0] == "--configure-startup")
