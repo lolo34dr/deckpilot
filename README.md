@@ -121,9 +121,9 @@ Use a writable personal folder. A protected installation directory or a file loc
 
 ### Repository rename compatibility
 
-Version **1.0.1** prepares the move from `lolo34dr/streamdeck-diy` to `lolo34dr/deckpilot`. Update checks use the new name, with a fallback to the original repository while the rename is pending. Release downloads are validated against these two exact repository paths.
+Version **1.0.1** prepares the move from `lolo34dr/streamdeck-diy` to `lolo34dr/deckpilot`. The repository is now `lolo34dr/deckpilot`. Update checks use the new name and retain compatibility with the original name. Release downloads are validated against these two exact repository paths.
 
-Install **1.0.1 or later before renaming the repository**. Versions 0.2.0 and 1.0.0 strictly validate the original asset paths and may need a manual update if the repository has already been renamed. Documentation links continue to use the existing name until the rename is complete.
+Use **1.0.1 or later** with the renamed repository. Versions 0.2.0 and 1.0.0 strictly validate the original asset paths and may need a manual update. Download the current executable from the releases page if an older version cannot update itself.
 
 ## Settings and backups
 
