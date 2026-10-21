@@ -1,4 +1,4 @@
-DeckPilot 1.3.0 improves the USB connection and checks macropad firmware at startup.
+DeckPilot 1.3.1 improves the USB connection and checks macropad firmware at startup.
 
 - Connection dashboard with automatic reconnect, detected firmware, live button state/USB diagnostics and explicit board selection when several devices are present.
 - Startup firmware checks and update proposals, with a 24-hour reminder delay and an option to disable firmware notifications. Installation still needs confirmation.

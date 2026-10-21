@@ -60,7 +60,13 @@ public sealed class BoardConnectionService : IDisposable
     }
     public void Select(string id)
     {
-        lock (sync) { if (preferred == id) return; preferred = id; CancelSession(); }
+        lock (sync)
+        {
+            if (preferred == id) return;
+            preferred = id; CancelSession();
+            state = new(BoardConnectionKind.Searching, "Changement de macropad…", state.Devices);
+            progress?.Report(state);
+        }
     }
     private void CancelSession()
     {
@@ -104,8 +110,9 @@ public sealed class BoardConnectionService : IDisposable
                         {
                             if (paused) continue;
                             using var session = CancellationTokenSource.CreateLinkedTokenSource(cancellation);
-                            lock (sync) sessionCancellation = session;
-                            Publish(_ => new(BoardConnectionKind.Connecting, "Connexion au macropad…", devices, device));
+                            lock (sync) { sessionCancellation = session; if (preferred != selected) session.Cancel(); }
+                            session.Token.ThrowIfCancellationRequested();
+                            Publish(s => session.IsCancellationRequested ? s : new(BoardConnectionKind.Connecting, "Connexion au macropad…", devices, device));
                             using var transport = new SerialBoardTransport(device.Port);
                             var client = new BoardProtocolClient(transport);
                             BoardInfo info;
@@ -115,7 +122,8 @@ public sealed class BoardConnectionService : IDisposable
                                 Publish(_ => new(BoardConnectionKind.Unidentified, "Carte non identifiée : " + ex.Message, devices, device));
                                 await Task.Delay(1500, session.Token); continue;
                             }
-                            Publish(_ => new(BoardConnectionKind.Connected, "Macropad connecté", devices, device, info));
+                            session.Token.ThrowIfCancellationRequested();
+                            Publish(s => session.IsCancellationRequested ? s : new(BoardConnectionKind.Connected, "Macropad connecté", devices, device, info));
                             var run = Task.Run(() => client.Run(telemetry => Publish(s => s with { Telemetry = telemetry }), session.Token), session.Token);
                             try
                             {
