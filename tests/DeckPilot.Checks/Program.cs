@@ -119,4 +119,5 @@ try
 }
 finally { if (Directory.Exists(temp)) Directory.Delete(temp, true); }
 passed += await AdditionalChecks.RunAsync();
+passed += FirmwareChecks.Run();
 Console.WriteLine($"{passed} checks passed.");

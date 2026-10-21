@@ -33,7 +33,7 @@ public partial class MainWindow : Window
     private readonly UpdateService updateService = new();
     private readonly CancellationTokenSource lifetime = new();
     private readonly DispatcherTimer updateTimer = new() { Interval = TimeSpan.FromHours(6) };
-    private bool updateBusy;
+    private bool updateBusy, firmwareOpen;
     private DateTimeOffset lastUpdateCheck;
     private string pickedApplicationName = "";
     public bool IsOperational => hook != null;
@@ -274,6 +274,7 @@ public partial class MainWindow : Window
     }
     private void OnDeckKey(object? sender, DeckKeyEventArgs e)
     {
+        if (firmwareOpen) return;
         if (calibrating)
         {
             e.Handled = true;
@@ -296,6 +297,14 @@ public partial class MainWindow : Window
             }
             catch (Exception ex) { ReportError("Action impossible : " + ex.Message); }
         });
+    }
+    private void FirmwareClick(object sender, RoutedEventArgs e)
+    {
+        if (updateBusy || firmwareOpen || calibrating) return;
+        if (!SaveEditor()) return;
+        firmwareOpen = true;
+        try { new FirmwareWindow { Owner = this }.ShowDialog(); }
+        finally { firmwareOpen = false; }
     }
     private void CalibrateClick(object sender, RoutedEventArgs e) => BeginCalibration();
     private void BeginCalibration()
@@ -345,6 +354,7 @@ public partial class MainWindow : Window
     private void ShowMain() { Show(); WindowState = WindowState.Normal; Activate(); }
     private void WindowClosing(object? sender, CancelEventArgs e)
     {
+        if (firmwareOpen) { e.Cancel = true; return; }
         SaveEditor();
         if (!quitting)
         {
@@ -399,7 +409,7 @@ public partial class MainWindow : Window
     }
     private async Task CheckForUpdatesAsync(bool manual)
     {
-        if (updateBusy || calibrating || lifetime.IsCancellationRequested || (!manual && (!settings.AutoCheckUpdates || settings.UpdateSnoozedUntil > DateTimeOffset.UtcNow || DateTimeOffset.UtcNow - lastUpdateCheck < TimeSpan.FromMinutes(5)))) return;
+        if (updateBusy || firmwareOpen || calibrating || lifetime.IsCancellationRequested || (!manual && (!settings.AutoCheckUpdates || settings.UpdateSnoozedUntil > DateTimeOffset.UtcNow || DateTimeOffset.UtcNow - lastUpdateCheck < TimeSpan.FromMinutes(5)))) return;
         lastUpdateCheck = DateTimeOffset.UtcNow;
         updateBusy = true; UpdateCheckButton.IsEnabled = false; UpdateStatus.Text = "Recherche d’une mise à jour…";
         try

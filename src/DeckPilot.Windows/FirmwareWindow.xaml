@@ -1,0 +1,37 @@
+<Window x:Class="DeckPilot.Windows.FirmwareWindow"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ Title="Firmware · DeckPilot" Width="620" Height="590" MinWidth="560" MinHeight="550"
+ Background="#242424" Foreground="#EEEEEE" WindowStartupLocation="CenterOwner"
+ AutomationProperties.AutomationId="FirmwareWindow">
+ <Grid Margin="24">
+  <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+  <StackPanel>
+   <TextBlock Text="Votre DeckPilot, à jour" FontSize="22" FontWeight="SemiBold"/>
+   <TextBlock Text="Pro Micro ATmega32U4 · Leonardo · 16 MHz" Foreground="#A5B9AA" Margin="0,8,0,16"/>
+  </StackPanel>
+  <StackPanel Grid.Row="1">
+   <TextBlock Text="Fermez l’IDE Arduino et son moniteur série. Branchez uniquement le macropad à mettre à jour, puis sélectionnez sa carte." TextWrapping="Wrap" Margin="0,0,0,12"/>
+   <ComboBox x:Name="Devices" SelectionChanged="DeviceChanged" MinHeight="34" AutomationProperties.AutomationId="FirmwareDevices"/>
+   <Button x:Name="RefreshButton" Content="Actualiser les cartes" Click="RefreshClick" HorizontalAlignment="Left" Margin="0,8,0,12"/>
+   <TextBlock x:Name="DeviceStatus" TextWrapping="Wrap" Foreground="#A5B9AA"/>
+   <TextBlock x:Name="PackageStatus" TextWrapping="Wrap" Margin="0,8,0,12"/>
+  </StackPanel>
+  <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Margin="0,10,0,16">
+   <StackPanel>
+    <Border Background="#30302B" Padding="12" CornerRadius="6">
+     <TextBlock Text="Première version du firmware DeckPilot : un essai sur votre carte reste nécessaire. Les touches F13–F24 et la sécurité de démarrage sont conservées. Gardez RST et GND accessibles pour une éventuelle récupération." TextWrapping="Wrap" Foreground="#DBD0AC"/>
+    </Border>
+    <CheckBox x:Name="BoardConfirmed" Click="ConfirmationChanged" Margin="0,16,0,8">
+     <TextBlock Text="Je confirme que cette carte est mon macropad Pro Micro ATmega32U4, 5 V / 16 MHz, câblé sur 2–10, 14, 15 et 16." TextWrapping="Wrap" MaxWidth="490"/>
+    </CheckBox>
+    <TextBlock x:Name="ProgressText" Text="Aucune écriture sans votre confirmation." TextWrapping="Wrap" Margin="0,12,0,0"/>
+    <ProgressBar x:Name="Progress" Height="4" IsIndeterminate="False" Margin="0,12,0,0"/>
+   </StackPanel>
+  </ScrollViewer>
+  <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+   <Button x:Name="InstallButton" Content="Installer le firmware" Click="InstallClick" IsEnabled="False" AutomationProperties.AutomationId="InstallFirmware"/>
+   <Button x:Name="CloseButton" Content="Fermer" Click="CloseClick" Margin="10,0,0,0"/>
+  </StackPanel>
+ </Grid>
+</Window>

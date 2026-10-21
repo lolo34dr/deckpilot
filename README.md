@@ -228,3 +228,9 @@ If you build on DeckPilot, a small visible credit and a link to this repository 
 Suggested credit:
 
 > Based on [DeckPilot](https://github.com/lolo34dr/streamdeck-diy) by [lolo34dr](https://github.com/lolo34dr).
+
+## Macropad firmware updates
+
+DeckPilot 1.1.0 includes a **Firmware du macropad…** dialog and firmware 1.0.0 for the Pro Micro ATmega32U4 **5 V / 16 MHz**, using the Leonardo/Caterina configuration confirmed by the owner's upload log. The bundled Windows flashing tool does not require Arduino IDE. Device selection and confirmation are mandatory; app updates never silently flash the board. Existing F13–F24 mappings, profiles and calibration remain compatible.
+
+**The new firmware and integrated flashing still need a first test on the physical board.** Keep the original sketch and access to RST/GND for recovery. Firmware flashing cannot be rolled back automatically. See [firmware documentation](firmware/README.md) for compatibility, validation, recovery, build steps and third-party licenses. Per-button USB modes and native media controls are not part of this firmware release.

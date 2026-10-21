@@ -11,9 +11,15 @@ permissions:
 jobs:
   release:
     runs-on: windows-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+      - uses: arduino/setup-arduino-cli@v2
+        with:
+          version: '1.2.2'
+      - name: Compile firmware and bundle verified AVRDUDE
+        shell: pwsh
+        run: ./firmware/tools/build.ps1
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
@@ -25,14 +31,14 @@ jobs:
       - name: Build and verify
         shell: pwsh
         run: |
-          dotnet build DeckPilot.sln -c Release
+          dotnet build DeckPilot.sln -c Release -p:RequireFirmwareBundle=true
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           dotnet run --project tests/DeckPilot.Checks -c Release --no-build
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Publish portable folder
-        run: dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o artifacts/win-x64
+        run: dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true -p:RequireFirmwareBundle=true -p:PublishSingleFile=false -o artifacts/win-x64
       - name: Publish standalone executable
-        run: dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o artifacts/standalone
+        run: dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true -p:RequireFirmwareBundle=true -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o artifacts/standalone
       - name: Verify native update and application picker
         shell: powershell
         run: ./tests/windows-update-smoke.ps1 -Executable artifacts/standalone/DeckPilot.exe
@@ -42,7 +48,8 @@ jobs:
           New-Item -ItemType Directory -Force artifacts/release | Out-Null
           Compress-Archive -Path artifacts/win-x64/* -DestinationPath artifacts/release/DeckPilot-win-x64.zip
           Copy-Item artifacts/standalone/DeckPilot.exe artifacts/release/DeckPilot.exe
-          Get-ChildItem artifacts/release -File | Where-Object { $_.Name -in @("DeckPilot.exe", "DeckPilot-win-x64.zip") } | ForEach-Object {
+          Copy-Item artifacts/firmware/DeckPilot-firmware.zip artifacts/release/DeckPilot-firmware.zip
+          Get-ChildItem artifacts/release -File | Where-Object { $_.Name -in @("DeckPilot.exe", "DeckPilot-win-x64.zip", "DeckPilot-firmware.zip") } | ForEach-Object {
             $hash = (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
             "$hash  $($_.Name)"
           } | Set-Content artifacts/release/SHA256SUMS.txt -Encoding ascii
@@ -56,5 +63,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         shell: pwsh
         run: |
-          gh release create "$env:GITHUB_REF_NAME" artifacts/release/DeckPilot.exe artifacts/release/DeckPilot-win-x64.zip artifacts/release/SHA256SUMS.txt --verify-tag --title "DeckPilot $env:GITHUB_REF_NAME" --notes-file .github/release-notes.md
+          gh release create "$env:GITHUB_REF_NAME" artifacts/release/DeckPilot.exe artifacts/release/DeckPilot-win-x64.zip artifacts/release/DeckPilot-firmware.zip artifacts/release/SHA256SUMS.txt --verify-tag --title "DeckPilot $env:GITHUB_REF_NAME" --notes-file .github/release-notes.md
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
