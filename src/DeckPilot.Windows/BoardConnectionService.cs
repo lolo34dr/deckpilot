@@ -27,7 +27,8 @@ internal sealed class SerialBoardTransport : IBoardTransport
     public void WriteLine(string value) => port.WriteLine(value);
     public string ReadLine()
     {
-        while (true)
+        long deadline = Environment.TickCount64 + 100;
+        while (Environment.TickCount64 < deadline)
         {
             int value = port.ReadByte(); // The partial frame survives the bounded serial timeout.
             if (value == '\n') { string result = line.ToString(); line.Clear(); return result; }
@@ -35,6 +36,7 @@ internal sealed class SerialBoardTransport : IBoardTransport
             if (value < 32 || value > 126 || line.Length >= 127) throw new IOException("Trame USB invalide. Reconnexion en cours…");
             line.Append((char)value);
         }
+        throw new TimeoutException();
     }
     public void Dispose() => port.Dispose();
 }

@@ -41,6 +41,7 @@ public partial class MainWindow : Window
     private string bundledFirmwareError = "";
     private readonly DispatcherTimer firmwareTimer = new() { Interval = TimeSpan.FromSeconds(5) };
     private readonly DispatcherTimer boardUiTimer = new() { Interval = TimeSpan.FromMilliseconds(100) };
+    private long firmwareQuietUntil;
     private readonly long startedAt = Environment.TickCount64;
     private readonly HashSet<string> firmwareOffered = [];
     private string deviceListSignature = "";
@@ -500,7 +501,7 @@ public partial class MainWindow : Window
     }
     private async Task OfferFirmwareUpdateAsync()
     {
-        if (Environment.TickCount64 - startedAt < 15000 || !settings.AutoCheckFirmware || settings.FirmwareSnoozedUntil > DateTimeOffset.UtcNow || bundledFirmware == null || boardState?.Kind != BoardConnectionKind.Connected || boardState.Info == null || calibrating || updateBusy || firmwareOpen || firmwarePromptActive || OwnedWindows.Count > 0 || lifetime.IsCancellationRequested) return;
+        if (Environment.TickCount64 < firmwareQuietUntil || Environment.TickCount64 - startedAt < 15000 || !settings.AutoCheckFirmware || settings.FirmwareSnoozedUntil > DateTimeOffset.UtcNow || bundledFirmware == null || boardState?.Kind != BoardConnectionKind.Connected || boardState.Info == null || calibrating || updateBusy || firmwareOpen || firmwarePromptActive || OwnedWindows.Count > 0 || lifetime.IsCancellationRequested) return;
         var current = boardState.Info.Firmware;
         if (Version.Parse(current.Version) >= Version.Parse(bundledFirmware.Version)) return;
         string offer = boardState.Device!.DeviceId + "|" + bundledFirmware.Version;
@@ -553,7 +554,11 @@ public partial class MainWindow : Window
             UpdateStatus.Text = "Redémarrage pour installer la mise à jour…";
             bool shutdown = await updateService.StartInstallerAsync(dialog.Staged, !IsVisible);
             if (shutdown) { quitting = true; Application.Current.Shutdown(); }
-            else UpdateStatus.Text = "L’installateur prendra le relais. Vos réglages seront conservés.";
+            else
+            {
+                firmwareQuietUntil = Environment.TickCount64 + 300000;
+                UpdateStatus.Text = "L’installateur prendra le relais. Vos réglages seront conservés.";
+            }
         }
         catch (OperationCanceledException) { if (!lifetime.IsCancellationRequested) UpdateStatus.Text = "La vérification a pris trop de temps. Réessayez plus tard."; }
         catch (Exception ex)
