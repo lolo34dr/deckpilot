@@ -18,7 +18,7 @@
       </StackPanel>
       <TextBlock Text="F13 – F24" Foreground="#898989" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,2,0,0"/>
      </Grid>
-     <Viewbox Grid.Row="1" Stretch="Uniform" StretchDirection="DownOnly" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+     <Viewbox Grid.Row="1" Margin="0,20,0,0" Stretch="Uniform" StretchDirection="DownOnly" HorizontalAlignment="Center" VerticalAlignment="Bottom">
      <Border Width="490" CornerRadius="16" BorderThickness="1" BorderBrush="#424A44" Padding="16,12,16,12">
       <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="0,1"><GradientStop Color="#303631" Offset="0"/><GradientStop Color="#191E1B" Offset="1"/></LinearGradientBrush></Border.Background>
       <Border.Effect><DropShadowEffect Color="#000000" BlurRadius="18" ShadowDepth="5" Opacity="0.22"/></Border.Effect>
