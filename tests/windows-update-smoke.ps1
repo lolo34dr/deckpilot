@@ -96,6 +96,16 @@ try {
     if ($rowCount -ne 3 -or $columnCount -ne 4) { throw 'The rendered keypad must contain three rows of four keys' }
     $positions = @($deckButtons | ForEach-Object { $_.Current.Name })
     if (!($positions -like 'Ligne 1, colonne 4*') -or !($positions -like 'Ligne 3, colonne 4*') -or ($positions -like 'Ligne 4,*')) { throw 'Deck layout must have three rows and four columns' }
+    $script:phase = 'check connection dashboard without a physical board'
+    $connection = Find-Control $root 'BoardConnectionStatus'
+    if (!$connection) { throw 'Connection dashboard is missing' }
+    Wait-Until { $connection.Current.Name -like 'Macropad d*connect*' }
+    $script:phase = 'check firmware startup preference'
+    $details = Find-Control $root 'BoardDiagnosticExpander'
+    $details.GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern).Expand()
+    $firmwareCheck = Find-Control $root 'AutoFirmwareCheck'
+    if ($firmwareCheck.GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern).Current.ToggleState -ne [System.Windows.Automation.ToggleState]::On) { throw 'Firmware checking should default to enabled' }
+    $details.GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern).Collapse()
     $applicationAction = $root.FindFirst([System.Windows.Automation.TreeScope]::Descendants,
         ([System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::NameProperty, 'Ouvrir une application')))
     $script:phase = 'select application action'
@@ -137,7 +147,7 @@ try {
     $script:phase = 'verify embedded firmware bundle and disabled flash'
     Wait-Until {
         $label = Find-Control $firmwareWindow 'PackageStatus'
-        $label -and $label.Current.Name -like 'Firmware inclus : 1.0.0*'
+        $label -and $label.Current.Name -like 'Firmware inclus : 1.1.0*'
     }
     $installFirmware = Find-Control $firmwareWindow 'InstallFirmware'
     if ($installFirmware.Current.IsEnabled) { throw 'Flash enabled without explicit device selection and confirmation' }

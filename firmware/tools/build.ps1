@@ -34,6 +34,12 @@ try {
 } finally { $source.Dispose() }
 Copy-Item firmware/README.md "$stage/README.md"
 Copy-Item firmware/Original/Original.ino "$stage/Original.ino"
+Copy-Item LICENSE "$stage/DECKPILOT-LICENSE.txt"
+New-Item -ItemType Directory -Force "$stage/source/DeckPilot" | Out-Null
+Copy-Item firmware/DeckPilot/*.ino, firmware/DeckPilot/*.h "$stage/source/DeckPilot"
+$versionMatch = [regex]::Match((Get-Content firmware/DeckPilot/DeckPilotProtocol.h -Raw), '#define DECKPILOT_FIRMWARE_VERSION "([0-9]+\.[0-9]+\.[0-9]+)"')
+if (!$versionMatch.Success) { throw 'Firmware version is missing' }
+$firmwareVersion = $versionMatch.Groups[1].Value
 $hash = (Get-FileHash "$stage/DeckPilot.hex" -Algorithm SHA256).Hash.ToLowerInvariant()
-@{ Board = 'promicro-32u4-16mhz'; Version = '1.0.0'; Sha256 = $hash } | ConvertTo-Json | Set-Content "$stage/manifest.json" -Encoding utf8
+@{ Board = 'promicro-32u4-16mhz'; Version = $firmwareVersion; Sha256 = $hash } | ConvertTo-Json | Set-Content "$stage/manifest.json" -Encoding utf8
 Compress-Archive -Path "$stage/*" -DestinationPath artifacts/firmware/DeckPilot-firmware.zip -Force

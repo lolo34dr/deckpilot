@@ -9,7 +9,16 @@ permissions:
   contents: write
 
 jobs:
+  firmware-protocol:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify firmware protocol without hardware
+        run: |
+          g++ -std=c++11 -Wall -Wextra -Werror tests/firmware-protocol.cpp -o /tmp/deckpilot-firmware-check
+          /tmp/deckpilot-firmware-check
   release:
+    needs: firmware-protocol
     runs-on: windows-latest
     timeout-minutes: 25
     steps:

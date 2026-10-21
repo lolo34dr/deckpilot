@@ -27,6 +27,18 @@ public sealed record PreparedFirmware(string Directory, FirmwareManifest Manifes
 public static class FirmwareService
 {
     public static bool BundleAvailable => Assembly.GetExecutingAssembly().GetManifestResourceInfo("DeckPilot.FirmwareBundle.zip") != null;
+    public static FirmwareManifest ReadBundledManifest()
+    {
+        using var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("DeckPilot.FirmwareBundle.zip")
+            ?? throw new IOException("Firmware inclus indisponible dans ce build.");
+        using var archive = new ZipArchive(resource, ZipArchiveMode.Read);
+        var image = archive.GetEntry("DeckPilot.hex") ?? throw new InvalidDataException("Image firmware absente.");
+        var manifest = archive.GetEntry("manifest.json") ?? throw new InvalidDataException("Manifeste firmware absent.");
+        if (image.Length > 128 * 1024 || manifest.Length > 4096) throw new InvalidDataException("Métadonnées firmware invalides.");
+        using var input = image.Open(); using var bytes = new MemoryStream(); input.CopyTo(bytes);
+        using var reader = new StreamReader(manifest.Open());
+        return FirmwareManifest.Read(reader.ReadToEnd(), bytes.ToArray());
+    }
     public static PreparedFirmware Prepare()
     {
         using var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("DeckPilot.FirmwareBundle.zip")
@@ -59,6 +71,7 @@ public static class FirmwareService
     {
         var result = new List<FirmwareDevice>();
         using var search = new ManagementObjectSearcher("SELECT DeviceID, Name, PNPDeviceID FROM Win32_SerialPort");
+        search.Options.Timeout = TimeSpan.FromSeconds(3);
         using var objects = search.Get();
         foreach (ManagementObject item in objects)
         {
@@ -107,12 +120,12 @@ public static class FirmwareService
         if (device.Bootloader) return null;
         try
         {
-            using var port = new SerialPort(device.Port, 115200) { DtrEnable = true, ReadTimeout = 1000, WriteTimeout = 1000, NewLine = "\n" };
-            port.Open(); port.DiscardInBuffer(); port.WriteLine("DECKPILOT?");
-            return FirmwareIdentity.Parse(port.ReadLine());
+            using var transport = new SerialBoardTransport(device.Port);
+            return new BoardProtocolClient(transport).Identify(CancellationToken.None);
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or TimeoutException or InvalidOperationException) { return null; }
     }
+
     public static async Task FlashAsync(FirmwareDevice selected, PreparedFirmware package, IProgress<string> progress)
     {
         var current = await Task.Run(Discover);

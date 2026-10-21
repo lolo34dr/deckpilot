@@ -14,8 +14,11 @@ public partial class FirmwareWindow : Window
     private bool identifying;
     private int selectionRevision;
     private FirmwareIdentity? detectedIdentity;
-    public FirmwareWindow()
+    private string preferredDeviceId;
+    public string? SelectedDeviceId => (Devices.SelectedItem as FirmwareDevice)?.DeviceId;
+    public FirmwareWindow(string preferredDeviceId = "")
     {
+        this.preferredDeviceId = preferredDeviceId;
         InitializeComponent();
         discovering = true; CloseButton.IsEnabled = RefreshButton.IsEnabled = false;
         Loaded += async (_, _) =>
@@ -46,7 +49,7 @@ public partial class FirmwareWindow : Window
             var devices = await Task.Run(FirmwareService.Discover);
             var runtime = devices.FindAll(d => !d.Bootloader);
             Devices.ItemsSource = runtime;
-            Devices.SelectedIndex = -1;
+            Devices.SelectedItem = runtime.Find(d => d.DeviceId == preferredDeviceId);
             DeviceStatus.Text = runtime.Count == 0 ? "Aucune carte compatible détectée. Vérifiez le câble USB et le pilote Windows." : "Sélectionnez votre macropad. Les identifiants Leonardo sont partagés par d’autres cartes.";
         }
         catch (Exception ex) { DeviceStatus.Text = "Détection impossible : " + ex.Message; }
@@ -77,7 +80,9 @@ public partial class FirmwareWindow : Window
     private void ConfirmationChanged(object sender, RoutedEventArgs e) => UpdateInstallButton();
     private void UpdateInstallButton()
     {
-        InstallButton.Content = detectedIdentity?.Version == package?.Manifest.Version ? "Réinstaller le firmware" : "Installer le firmware";
+        bool blocked = busy || discovering || identifying;
+        Devices.IsEnabled = RefreshButton.IsEnabled = CloseButton.IsEnabled = BoardConfirmed.IsEnabled = !blocked;
+        InstallButton.Content = detectedIdentity != null && detectedIdentity.Version == package?.Manifest.Version ? "Réinstaller le firmware" : "Installer le firmware";
         bool downgrade = detectedIdentity != null && package != null && Version.Parse(detectedIdentity.Version) > Version.Parse(package.Manifest.Version);
         InstallButton.IsEnabled = !downgrade && !busy && !discovering && !identifying && package != null && BoardConfirmed.IsChecked == true && Devices.SelectedItem is FirmwareDevice { Location.Length: > 0 };
     }
@@ -85,12 +90,14 @@ public partial class FirmwareWindow : Window
     {
         if (package == null || Devices.SelectedItem is not FirmwareDevice device) return;
         if (MessageBox.Show(this, $"Installer DeckPilot {package.Manifest.Version} sur {device.Port} ?\n\nLe programme actuel de cette carte sera remplacé. Ne débranchez pas le câble pendant l’opération. Les profils enregistrés sur le PC sont conservés.", "Confirmer le flash", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) != MessageBoxResult.Yes) return;
+        preferredDeviceId = device.DeviceId;
+        bool installed = false;
         busy = true; Devices.IsEnabled = RefreshButton.IsEnabled = CloseButton.IsEnabled = BoardConfirmed.IsEnabled = false;
         UpdateInstallButton(); Progress.IsIndeterminate = true;
         try
         {
             await FirmwareService.FlashAsync(device, package, new Progress<string>(text => ProgressText.Text = text));
-            BoardConfirmed.IsChecked = false;
+            BoardConfirmed.IsChecked = false; installed = true;
         }
         catch (Exception ex)
         {
@@ -102,6 +109,7 @@ public partial class FirmwareWindow : Window
             Devices.IsEnabled = RefreshButton.IsEnabled = CloseButton.IsEnabled = BoardConfirmed.IsEnabled = true;
             UpdateInstallButton();
         }
+        if (installed) await RefreshAsync();
     }
     private void CloseClick(object sender, RoutedEventArgs e) => Close();
 }

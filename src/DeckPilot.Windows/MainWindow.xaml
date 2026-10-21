@@ -81,12 +81,27 @@
       <Button x:Name="UpdateCheckButton" Content="Vérifier maintenant" Click="CheckUpdateClick" HorizontalAlignment="Left"/>
       <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,10,0,12"/>
       <CheckBox x:Name="StartupCheck" Content="Lancer avec Windows" Click="StartupClick"/>
-      <Button Content="Firmware du macropad…" AutomationProperties.AutomationId="OpenFirmware" Click="FirmwareClick" HorizontalAlignment="Left" Margin="0,0,0,6"/>
       <Button Content="Calibrer les touches" Click="CalibrateClick" HorizontalAlignment="Left"/>
       <TextBlock Text="Fermer la fenêtre garde DeckPilot actif près de l’horloge." Foreground="#8E8E8E" FontSize="11" TextWrapping="Wrap" Margin="0,8,0,0"/>
      </StackPanel>
      <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
       <StackPanel Margin="0,0,4,0">
+       <Border Background="#292E2A" BorderBrush="#414B43" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,16">
+        <StackPanel>
+         <TextBlock Text="Votre macropad" FontWeight="SemiBold" Margin="0,0,0,8"/>
+         <TextBlock x:Name="BoardConnectionStatus" Text="Recherche du macropad…" TextWrapping="Wrap" MaxHeight="40" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" Foreground="#A8C4AF" AutomationProperties.AutomationId="BoardConnectionStatus"/>
+         <TextBlock x:Name="BoardFirmwareStatus" Text="Vérification du firmware…" FontSize="11" TextWrapping="Wrap" Margin="0,6,0,0"/>
+         <Button x:Name="FirmwareButton" Content="Firmware du macropad…" AutomationProperties.AutomationId="OpenFirmware" Click="FirmwareClick" HorizontalAlignment="Stretch" FontSize="11" Margin="0,8,0,6"/>
+         <Expander x:Name="BoardDiagnosticExpander" Header="Connexion et diagnostic" FontSize="11" Foreground="#C1CDC4">
+          <StackPanel Margin="0,6,0,0">
+           <ComboBox x:Name="BoardDevicePicker" SelectionChanged="BoardDeviceChanged" Visibility="Collapsed" Margin="0,4,0,0" AutomationProperties.AutomationId="BoardDevicePicker"/>
+           <TextBlock x:Name="BoardLinkDetails" Foreground="#A4ADA6" FontSize="11" TextWrapping="Wrap" Margin="0,4,0,6"/>
+           <CheckBox x:Name="AutoFirmwareCheck" Click="AutoFirmwareClick" Margin="0,6,0,6"><TextBlock Text="Proposer les mises à jour du firmware" FontSize="11" TextWrapping="Wrap"/></CheckBox>
+           <Button Content="Copier le diagnostic" Click="CopyDiagnosticClick" HorizontalAlignment="Left" FontSize="11"/>
+          </StackPanel>
+         </Expander>
+        </StackPanel>
+       </Border>
        <TextBlock Text="Actions" FontSize="13" FontWeight="SemiBold"/>
        <TextBlock Text="Choisissez une touche, puis une action." Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,7,0,16"/>
        <StackPanel x:Name="ActionCatalog"/>

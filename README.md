@@ -246,3 +246,15 @@ DeckPilot 1.1.0 includes a **Firmware du macropad…** dialog and firmware 1.0.0
 ### Building the Windows installer
 
 After producing `artifacts/standalone/DeckPilot.exe` with the embedded firmware bundle, install Inno Setup 6 and run `./installer/build.ps1` from the repository root. The output is `artifacts/installer/DeckPilot-Setup.exe`. CI builds and tests this installer before attaching it to a release. The installer uses a stable application ID so future versions upgrade the same installation.
+
+## Connection dashboard and firmware checks (1.3.0)
+
+The **Votre macropad** card shows connection state, the detected firmware and any available bundled update. **Connexion et diagnostic** exposes board selection when several Leonardos are connected, the live USB link status, physical button counts, firmware-notification preferences and a copyable diagnostic summary. Diagnostics do not copy profile actions or USB serial identifiers. The monitor reconnects after unplugging and gives up its serial port automatically while the firmware manager is open. F13–F24 keyboard actions continue to work with firmware 1.0.0 and without the diagnostic link.
+
+Startup firmware checks are enabled by default. After the app update check and calibration are out of the way, an older identified firmware can prompt to open installation; postponing delays reminders for 24 hours. Unknown boards and multiple unselected candidates are not flashed automatically. Firmware releases are bundled with app updates from GitHub, rather than fetched from an independent firmware feed.
+
+Firmware **1.1.0** adds session identification, correlated heartbeat replies, bounded messages and physical key-state events. These events animate the mapped buttons and update diagnostics; they never invoke actions a second time. Its first physical-board validation is still required, although the earlier firmware 1.0.0 and flash procedure have been confirmed by the owner. See the [protocol and compatibility documentation](firmware/README.md).
+
+The notification-area menu now switches profiles directly. **Ctrl+S** saves the current button configuration. Invalid configuration files are backed up before a fresh configuration is used. App installation, desktop/Start menu icons, startup preferences and the existing automatic updater are retained.
+
+For manual Arduino IDE uploads, **quit DeckPilot from its tray menu** to free the serial port. Closing the main window keeps it running in the background.

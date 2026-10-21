@@ -29,6 +29,9 @@ public sealed class Settings
 {
     public int Version { get; set; } = 1;
     public int LayoutColumns { get; set; } = 4;
+    public bool AutoCheckFirmware { get; set; } = true;
+    public DateTimeOffset FirmwareSnoozedUntil { get; set; }
+    public string PreferredBoardDeviceId { get; set; } = "";
     public bool AutoCheckUpdates { get; set; } = true;
     public DateTimeOffset UpdateSnoozedUntil { get; set; }
     public List<int> KeyMap { get; set; } = [];
@@ -44,7 +47,7 @@ public sealed class Settings
     }
     public void Validate()
     {
-        if (Version != 1 || LayoutColumns is not (3 or 4) || Profiles is null || Profiles.Count == 0 ||
+        if (PreferredBoardDeviceId is null || PreferredBoardDeviceId.Length > 512 || Version != 1 || LayoutColumns is not (3 or 4) || Profiles is null || Profiles.Count == 0 ||
             Profiles.Any(p => p is null || string.IsNullOrWhiteSpace(p.Name) || p.Id == Guid.Empty ||
                 p.Buttons is null || p.Buttons.Count != 12 || p.Buttons.Any(b => b is null ||
                     !Enum.IsDefined(b.Kind) || b.Label is null || b.Target is null || b.Arguments is null || b.ApplicationName is null)) ||

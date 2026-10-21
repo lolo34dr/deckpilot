@@ -34,7 +34,17 @@ public partial class MainWindow : Window
     private readonly UpdateService updateService = new();
     private readonly CancellationTokenSource lifetime = new();
     private readonly DispatcherTimer updateTimer = new() { Interval = TimeSpan.FromHours(6) };
-    private bool updateBusy, firmwareOpen;
+    private bool updateBusy, firmwareOpen, firmwarePromptActive, loadingBoardPicker;
+    private BoardConnectionService? boardConnection;
+    private BoardConnectionState? boardState;
+    private FirmwareManifest? bundledFirmware;
+    private string bundledFirmwareError = "";
+    private readonly DispatcherTimer firmwareTimer = new() { Interval = TimeSpan.FromSeconds(5) };
+    private readonly DispatcherTimer boardUiTimer = new() { Interval = TimeSpan.FromMilliseconds(100) };
+    private readonly long startedAt = Environment.TickCount64;
+    private readonly HashSet<string> firmwareOffered = [];
+    private string deviceListSignature = "";
+    private Forms.ToolStripMenuItem? trayProfiles;
     private DateTimeOffset lastUpdateCheck;
     private string pickedApplicationName = "";
     public bool IsOperational => hook != null;
@@ -50,7 +60,7 @@ public partial class MainWindow : Window
         InitializeComponent();
         SourceInitialized += (_, _) => EnableDarkTitleBar();
         try { settings = store.Load(); }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or System.Text.Json.JsonException)
+        catch (Exception ex) when (ex is IOException or InvalidDataException or UnauthorizedAccessException or System.Text.Json.JsonException)
         {
             MessageBox.Show($"Impossible de lire la configuration : {ex.Message}\nLe fichier original va être conservé. Une configuration neuve sera utilisée.", "DeckPilot");
             if (File.Exists(ConfigPath))
@@ -79,6 +89,7 @@ public partial class MainWindow : Window
         catch (Exception ex) { StatusText.Text = "Démarrage Windows : " + ex.Message; }
         StartupCheck.IsChecked = StartupService.Enabled;
         AutoUpdateCheck.IsChecked = settings.AutoCheckUpdates;
+        AutoFirmwareCheck.IsChecked = settings.AutoCheckFirmware;
         VersionLabel.Text = "v" + UpdateService.DisplayVersion;
         UpdateStatus.Text = "Recherche au démarrage, puis toutes les 6 h.";
         try { hook = new KeyboardHook(); hook.KeyPressed += OnDeckKey; }
@@ -92,15 +103,24 @@ public partial class MainWindow : Window
         CreateTray();
         flashTimer.Tick += (_, _) => { flashTimer.Stop(); RenderGrid(); };
         Closing += WindowClosing;
-        Closed += (_, _) => { flashTimer.Stop(); updateTimer.Stop(); lifetime.Cancel(); updateService.Dispose(); hook?.Dispose(); tray?.Dispose(); trayIcon?.Dispose(); };
+        Closed += (_, _) => { boardUiTimer.Stop(); firmwareTimer.Stop(); boardConnection?.Dispose(); flashTimer.Stop(); updateTimer.Stop(); lifetime.Cancel(); updateService.Dispose(); hook?.Dispose(); tray?.Dispose(); trayIcon?.Dispose(); };
         loading = false;
         StatusText.Text = "Prêt · Choisissez un bouton pour le personnaliser.";
         updateTimer.Tick += async (_, _) => await CheckForUpdatesAsync(false);
         updateTimer.Start();
+        firmwareTimer.Tick += async (_, _) => await OfferFirmwareUpdateAsync();
+        firmwareTimer.Start();
+        boardUiTimer.Tick += (_, _) => { if (boardConnection is { } connection) { var state = connection.State; if (!ReferenceEquals(state, boardState)) ApplyBoardState(state); } };
+        boardUiTimer.Start();
+        CommandBindings.Add(new System.Windows.Input.CommandBinding(System.Windows.Input.ApplicationCommands.Save, (_, e) => { SaveEditor(); e.Handled = true; }));
+        InputBindings.Add(new System.Windows.Input.KeyBinding(System.Windows.Input.ApplicationCommands.Save, System.Windows.Input.Key.S, System.Windows.Input.ModifierKeys.Control));
         Loaded += async (_, _) =>
         {
             if (!settings.IsCalibrated) BeginCalibration(); else if (startInBackground) Hide();
             Motion.Reveal(WindowContent);
+            boardConnection = new BoardConnectionService(settings.PreferredBoardDeviceId);
+            try { bundledFirmware = await Task.Run(FirmwareService.ReadBundledManifest); ApplyBoardState(boardConnection.State); }
+            catch (Exception ex) { bundledFirmwareError = ex.Message; BoardFirmwareStatus.Text = ex.Message; }
             try { await Task.Delay(8000, lifetime.Token); await CheckForUpdatesAsync(false); }
             catch (OperationCanceledException) { }
         };
@@ -160,6 +180,17 @@ public partial class MainWindow : Window
             deckButtons[i].ToolTip = $"Ligne {i / 4 + 1}, colonne {i % 4 + 1} · {deckLabels[i].Text} · {keyName} · {ActionNames[(int)action.Kind]}";
             System.Windows.Automation.AutomationProperties.SetName(deckButtons[i], (string)deckButtons[i].ToolTip);
         }
+        ApplyHardwareHighlights();
+    }
+    private void ApplyHardwareHighlights()
+    {
+        int mask = boardState?.Kind == BoardConnectionKind.Connected ? boardState.Telemetry?.Mask ?? 0 : 0;
+        for (int i = 0; i < deckButtons.Count; i++)
+        {
+            int key = settings.IsCalibrated ? settings.KeyMap[i] : Calibration.FirstKey + i;
+            bool down = (mask & (1 << (key - Calibration.FirstKey))) != 0;
+            deckButtons[i].Background = Brush(down ? "#4A6150" : i == selected ? "#303632" : "#191B1A");
+        }
     }
     private void RefreshProfiles()
     {
@@ -168,7 +199,7 @@ public partial class MainWindow : Window
         ProfilePicker.ItemsSource = settings.Profiles;
         ProfilePicker.SelectedItem = settings.ActiveProfile;
         ProfileName.Text = settings.ActiveProfile.Name;
-        loading = previous;
+        loading = previous; RefreshTrayProfiles();
     }
     private void LoadEditor()
     {
@@ -253,6 +284,7 @@ public partial class MainWindow : Window
     {
         if (loading || ProfilePicker.SelectedItem is not Profile next) return;
         SaveEditor(); settings.ActiveProfileId = next.Id; LoadEditor(); ProfileName.Text = next.Name; Persist();
+        RefreshTrayProfiles();
         if (tray != null) tray.Text = "DeckPilot · " + next.Name[..Math.Min(next.Name.Length, 45)];
     }
     private string NewProfileName() => string.IsNullOrWhiteSpace(ProfileName.Text) ? "Nouveau profil" : ProfileName.Text.Trim();
@@ -302,13 +334,26 @@ public partial class MainWindow : Window
             catch (Exception ex) { ReportError("Action impossible : " + ex.Message); }
         });
     }
-    private void FirmwareClick(object sender, RoutedEventArgs e)
+    private async void FirmwareClick(object sender, RoutedEventArgs e) => await OpenFirmwareAsync();
+    private async Task OpenFirmwareAsync()
     {
-        if (updateBusy || firmwareOpen || calibrating) return;
+        if (updateBusy || firmwareOpen || firmwarePromptActive || OwnedWindows.Count > 0 || calibrating || lifetime.IsCancellationRequested) return;
         if (!SaveEditor()) return;
+        string preferredId = boardState?.Device?.DeviceId ?? settings.PreferredBoardDeviceId;
         firmwareOpen = true;
-        try { new FirmwareWindow { Owner = this }.ShowDialog(); }
-        finally { firmwareOpen = false; }
+        try
+        {
+            if (boardConnection != null) await boardConnection.PauseAsync();
+            ShowMain();
+            var dialog = new FirmwareWindow(preferredId) { Owner = this };
+            dialog.ShowDialog();
+            if (dialog.SelectedDeviceId is { Length: > 0 } id)
+            {
+                settings.PreferredBoardDeviceId = id; Persist(); boardConnection?.Select(id);
+            }
+        }
+        catch (Exception ex) { ReportError("Firmware : " + ex.Message); }
+        finally { firmwareOpen = false; boardConnection?.Resume(); }
     }
     private void CalibrateClick(object sender, RoutedEventArgs e) => BeginCalibration();
     private void BeginCalibration()
@@ -350,10 +395,12 @@ public partial class MainWindow : Window
     {
         var menu = new Forms.ContextMenuStrip();
         menu.Items.Add("Ouvrir DeckPilot", null, (_, _) => Dispatcher.Invoke(ShowMain));
+        trayProfiles = new Forms.ToolStripMenuItem("Profils"); menu.Items.Add(trayProfiles);
         menu.Items.Add("Quitter", null, (_, _) => Dispatcher.Invoke(() => { quitting = true; Close(); }));
         trayIcon = BrandAssets.CreateTrayIcon();
         tray = new Forms.NotifyIcon { Icon = trayIcon, Text = "DeckPilot", ContextMenuStrip = menu, Visible = true };
         tray.DoubleClick += (_, _) => Dispatcher.Invoke(ShowMain);
+        RefreshTrayProfiles();
     }
     private void ShowMain() { Show(); WindowState = WindowState.Normal; Activate(); }
     private void WindowClosing(object? sender, CancelEventArgs e)
@@ -404,6 +451,79 @@ public partial class MainWindow : Window
             TargetLabel.Text = packaged ? "Remplacer par un fichier" : "Chemin du programme";
         }
     }
+    private void RefreshTrayProfiles()
+    {
+        if (trayProfiles == null) return;
+        trayProfiles.DropDownItems.Clear();
+        foreach (var profile in settings.Profiles)
+        {
+            var item = new Forms.ToolStripMenuItem(profile.Name.Replace("&", "&&")) { Checked = profile.Id == settings.ActiveProfile.Id };
+            item.Click += (_, _) => Dispatcher.Invoke(() => { if (!firmwareOpen && !calibrating && OwnedWindows.Count == 0) ProfilePicker.SelectedItem = profile; });
+            trayProfiles.DropDownItems.Add(item);
+        }
+    }
+    private void ApplyBoardState(BoardConnectionState state)
+    {
+        if (lifetime.IsCancellationRequested) return;
+        boardState = state;
+        BoardConnectionStatus.Text = state.Message;
+        BoardConnectionStatus.Foreground = Brush(state.Kind == BoardConnectionKind.Connected ? "#A8C4AF" : state.Kind is BoardConnectionKind.Error or BoardConnectionKind.Unidentified ? "#D1B18C" : "#A5AAA6");
+        string signature = string.Join("|", state.Devices.Select(d => d.DeviceId + ":" + d.Port));
+        if (signature != deviceListSignature)
+        {
+            deviceListSignature = signature; loadingBoardPicker = true;
+            BoardDevicePicker.ItemsSource = state.Devices;
+            BoardDevicePicker.SelectedItem = state.Devices.FirstOrDefault(d => d.DeviceId == (state.Device?.DeviceId ?? settings.PreferredBoardDeviceId));
+            BoardDevicePicker.Visibility = state.Devices.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
+            if (state.Kind == BoardConnectionKind.ChooseDevice) BoardDiagnosticExpander.IsExpanded = true;
+            loadingBoardPicker = false;
+        }
+        string installed = state.Info?.Firmware.Version ?? "";
+        bool upgrade = bundledFirmware != null && state.Info != null && Version.Parse(installed) < Version.Parse(bundledFirmware.Version);
+        BoardFirmwareStatus.Text = installed.Length > 0 ? $"Firmware {installed}" + (upgrade ? $" · {bundledFirmware!.Version} disponible" : bundledFirmware != null && installed == bundledFirmware.Version ? " · À jour" : "") : bundledFirmware == null ? bundledFirmwareError.Length > 0 ? bundledFirmwareError : "Lecture du firmware inclus…" : $"Firmware inclus : {bundledFirmware.Version}";
+        FirmwareButton.Content = upgrade ? $"Installer le firmware {bundledFirmware!.Version}…" : "Firmware du macropad…";
+        BoardLinkDetails.Text = state.Info?.Protocol == 2
+            ? state.Telemetry is { } t ? $"USB actif · {(t.LatencyMilliseconds >= 0 ? t.LatencyMilliseconds + " ms" : "Synchronisation")} · {System.Numerics.BitOperations.PopCount((uint)t.Mask)}/12 enfoncés" : "Liaison USB identifiée · Synchronisation…"
+            : state.Info != null ? "Liaison classique · Diagnostic en direct disponible avec le nouveau firmware."
+            : state.Kind == BoardConnectionKind.Error ? "Fermez les autres outils qui utilisent la carte. DeckPilot tente de se reconnecter automatiquement."
+            : "Les touches F13–F24 restent utilisables en mode clavier.";
+        ApplyHardwareHighlights();
+    }
+    private void BoardDeviceChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (loadingBoardPicker || BoardDevicePicker.SelectedItem is not FirmwareDevice device || firmwareOpen) return;
+        settings.PreferredBoardDeviceId = device.DeviceId; Persist(); boardConnection?.Select(device.DeviceId);
+    }
+    private void AutoFirmwareClick(object sender, RoutedEventArgs e)
+    {
+        settings.AutoCheckFirmware = AutoFirmwareCheck.IsChecked == true; Persist();
+    }
+    private async Task OfferFirmwareUpdateAsync()
+    {
+        if (Environment.TickCount64 - startedAt < 15000 || !settings.AutoCheckFirmware || settings.FirmwareSnoozedUntil > DateTimeOffset.UtcNow || bundledFirmware == null || boardState?.Kind != BoardConnectionKind.Connected || boardState.Info == null || calibrating || updateBusy || firmwareOpen || firmwarePromptActive || OwnedWindows.Count > 0 || lifetime.IsCancellationRequested) return;
+        var current = boardState.Info.Firmware;
+        if (Version.Parse(current.Version) >= Version.Parse(bundledFirmware.Version)) return;
+        string offer = boardState.Device!.DeviceId + "|" + bundledFirmware.Version;
+        if (!firmwareOffered.Add(offer)) return;
+        firmwarePromptActive = true;
+        try
+        {
+            string message = $"Le firmware {bundledFirmware.Version} est disponible pour votre DeckPilot (version actuelle : {current.Version}).\n\nOuvrir l’installation ? Le flash nécessitera votre confirmation.";
+            var answer = IsVisible ? MessageBox.Show(this, message, "Mise à jour du firmware", MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No)
+                : MessageBox.Show(message, "Mise à jour du firmware", MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No);
+            settings.FirmwareSnoozedUntil = DateTimeOffset.UtcNow.AddHours(24); Persist();
+            if (answer == MessageBoxResult.Yes) await OpenFirmwareAsync();
+        }
+        finally { firmwarePromptActive = false; }
+    }
+    private void CopyDiagnosticClick(object sender, RoutedEventArgs e)
+    {
+        var state = boardState;
+        string latency = state?.Telemetry is { LatencyMilliseconds: >= 0 } telemetry ? telemetry.LatencyMilliseconds.ToString() : "Inconnue";
+        string text = $"DeckPilot {UpdateService.DisplayVersion}\nÉtat : {state?.Message ?? "Initialisation"}\nPort : {state?.Device?.Port ?? "Aucun"}\nFirmware : {state?.Info?.Firmware.Version ?? "Non identifié"}\nFirmware inclus : {bundledFirmware?.Version ?? "Indisponible"}\nProtocole : {state?.Info?.Protocol.ToString() ?? "Non identifié"}\nLatence : {latency} ms\nTemps de fonctionnement : {TimeSpan.FromMilliseconds(state?.Telemetry?.Uptime ?? 0)}\n";
+        try { Clipboard.SetText(text); StatusText.Text = "Diagnostic copié. Vous pouvez le joindre à un signalement de problème."; }
+        catch (Exception ex) { ReportError("Copie impossible : " + ex.Message); }
+    }
     private async void CheckUpdateClick(object sender, RoutedEventArgs e) => await CheckForUpdatesAsync(true);
     private void AutoUpdateClick(object sender, RoutedEventArgs e)
     {
@@ -413,7 +533,7 @@ public partial class MainWindow : Window
     }
     private async Task CheckForUpdatesAsync(bool manual)
     {
-        if (updateBusy || firmwareOpen || calibrating || lifetime.IsCancellationRequested || (!manual && (!settings.AutoCheckUpdates || settings.UpdateSnoozedUntil > DateTimeOffset.UtcNow || DateTimeOffset.UtcNow - lastUpdateCheck < TimeSpan.FromMinutes(5)))) return;
+        if (updateBusy || firmwareOpen || firmwarePromptActive || OwnedWindows.Count > 0 || calibrating || lifetime.IsCancellationRequested || (!manual && (!settings.AutoCheckUpdates || settings.UpdateSnoozedUntil > DateTimeOffset.UtcNow || DateTimeOffset.UtcNow - lastUpdateCheck < TimeSpan.FromMinutes(5)))) return;
         lastUpdateCheck = DateTimeOffset.UtcNow;
         updateBusy = true; UpdateCheckButton.IsEnabled = false; UpdateStatus.Text = "Recherche d’une mise à jour…";
         try
