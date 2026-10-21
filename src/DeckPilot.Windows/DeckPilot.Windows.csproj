@@ -4,7 +4,8 @@
     <UseWPF>true</UseWPF><UseWindowsForms>true</UseWindowsForms><EnableWindowsTargeting>true</EnableWindowsTargeting>
     <ImplicitUsings>disable</ImplicitUsings><Nullable>enable</Nullable>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <AssemblyName>DeckPilot</AssemblyName><Version>1.2.0</Version>
+    <ApplicationIcon>Assets/DeckPilot.ico</ApplicationIcon>
+    <AssemblyName>DeckPilot</AssemblyName><Version>1.2.1</Version>
   </PropertyGroup>
   <ItemGroup><Resource Include="../../deckpilotlogo.png" Link="Assets/DeckPilot.png" /></ItemGroup>
   <ItemGroup>

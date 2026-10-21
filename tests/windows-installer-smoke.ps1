@@ -37,15 +37,31 @@ $app = $null; $updatedApp = $null
 try {
     $phase = 'fresh installation into Program Files'
     Run-Setup $setup @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART',('/LOG="' + (Join-Path $env:TEMP 'deckpilot-install.log') + '"'))
-    foreach ($file in @($executable, (Join-Path $directory 'DeckPilot.install'), $uninstaller, $desktop, $startMenu)) {
+    foreach ($file in @($executable, (Join-Path $directory 'DeckPilot.install'), (Join-Path $directory 'DeckPilot.ico'), $uninstaller, $desktop, $startMenu)) {
         if (!(Test-Path $file)) { throw "Missing installed file: $file" }
     }
     if (!(Test-Path $uninstallKey)) { throw 'Missing Windows uninstall registration' }
     $shell = New-Object -ComObject WScript.Shell
     foreach ($shortcut in @($desktop, $startMenu)) {
-        if ($shell.CreateShortcut($shortcut).TargetPath -ne $executable) { throw 'Shortcut points to the wrong executable' }
+        $link = $shell.CreateShortcut($shortcut)
+        if ($link.TargetPath -ne $executable) { throw 'Shortcut points to the wrong executable' }
+        if ($link.IconLocation -ne ((Join-Path $directory 'DeckPilot.ico') + ',0')) { throw 'Shortcut does not use the DeckPilot icon' }
     }
     if ((Read-RegistryValue $startupKey DeckPilot) -ne ('"' + $executable + '" --background')) { throw 'Startup is not enabled by default for the installing user' }
+    Add-Type -AssemblyName System.Drawing
+    $actualIcon = [Drawing.Icon]::ExtractAssociatedIcon($executable)
+    $expectedIcon = [Drawing.Icon]::new((Join-Path $directory 'DeckPilot.ico'),32,32)
+    try {
+        $actual = $actualIcon.ToBitmap(); $expected = $expectedIcon.ToBitmap()
+        try {
+            if ($actual.Width -ne $expected.Width -or $actual.Height -ne $expected.Height) { throw 'Embedded icon dimensions differ from the brand icon' }
+            for ($y = 0; $y -lt $expected.Height; $y++) {
+                for ($x = 0; $x -lt $expected.Width; $x++) {
+                    if ($actual.GetPixel($x,$y).ToArgb() -ne $expected.GetPixel($x,$y).ToArgb()) { throw 'The executable does not embed the DeckPilot brand icon' }
+                }
+            }
+        } finally { $actual.Dispose(); $expected.Dispose() }
+    } finally { $actualIcon.Dispose(); $expectedIcon.Dispose() }
     Write-Host 'PASS installer: Program Files, desktop and Start menu shortcuts, Windows uninstall registration and default startup'
 
     $profileId = [Guid]::NewGuid().ToString()
