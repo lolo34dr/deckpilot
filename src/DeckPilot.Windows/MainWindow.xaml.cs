@@ -340,7 +340,8 @@ public partial class MainWindow : Window
     {
         if (updateBusy || firmwareOpen || firmwarePromptActive || OwnedWindows.Count > 0 || calibrating || lifetime.IsCancellationRequested) return;
         if (!SaveEditor()) return;
-        string preferredId = boardState?.Device?.DeviceId ?? settings.PreferredBoardDeviceId;
+        string preferredId = boardState?.Devices.Any(d => d.DeviceId == settings.PreferredBoardDeviceId) == true
+            ? settings.PreferredBoardDeviceId : boardState?.Device?.DeviceId ?? settings.PreferredBoardDeviceId;
         firmwareOpen = true;
         try
         {
@@ -469,15 +470,20 @@ public partial class MainWindow : Window
         boardState = state;
         BoardConnectionStatus.Text = state.Message;
         BoardConnectionStatus.Foreground = Brush(state.Kind == BoardConnectionKind.Connected ? "#A8C4AF" : state.Kind is BoardConnectionKind.Error or BoardConnectionKind.Unidentified ? "#D1B18C" : "#A5AAA6");
-        string signature = string.Join("|", state.Devices.Select(d => d.DeviceId + ":" + d.Port));
+        string signature = string.Join("|", state.Devices.Select(d => d.DeviceId + ":" + d.Port + ":" + d.Location + ":" + d.Name));
         if (signature != deviceListSignature)
         {
             deviceListSignature = signature; loadingBoardPicker = true;
             BoardDevicePicker.ItemsSource = state.Devices;
-            BoardDevicePicker.SelectedItem = state.Devices.FirstOrDefault(d => d.DeviceId == (state.Device?.DeviceId ?? settings.PreferredBoardDeviceId));
             BoardDevicePicker.Visibility = state.Devices.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
             if (state.Kind == BoardConnectionKind.ChooseDevice) BoardDiagnosticExpander.IsExpanded = true;
             loadingBoardPicker = false;
+        }
+        var target = state.Devices.FirstOrDefault(d => d.DeviceId == settings.PreferredBoardDeviceId)
+            ?? state.Devices.FirstOrDefault(d => d.DeviceId == state.Device?.DeviceId);
+        if ((BoardDevicePicker.SelectedItem as FirmwareDevice)?.DeviceId != target?.DeviceId)
+        {
+            loadingBoardPicker = true; BoardDevicePicker.SelectedItem = target; loadingBoardPicker = false;
         }
         string installed = state.Info?.Firmware.Version ?? "";
         bool upgrade = bundledFirmware != null && state.Info != null && Version.Parse(installed) < Version.Parse(bundledFirmware.Version);
@@ -494,6 +500,7 @@ public partial class MainWindow : Window
     {
         if (loadingBoardPicker || BoardDevicePicker.SelectedItem is not FirmwareDevice device || firmwareOpen) return;
         settings.PreferredBoardDeviceId = device.DeviceId; Persist(); boardConnection?.Select(device.DeviceId);
+        if (boardConnection != null) ApplyBoardState(boardConnection.State);
     }
     private void AutoFirmwareClick(object sender, RoutedEventArgs e)
     {
