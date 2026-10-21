@@ -62,6 +62,10 @@ public partial class MainWindow : Window
     public MainWindow(bool startInBackground = false)
     {
         InitializeComponent();
+        // Fit the first window to the usable desktop; the keypad scales down on smaller screens.
+        Width = Math.Min(Width, SystemParameters.WorkArea.Width);
+        Height = Math.Min(Height, SystemParameters.WorkArea.Height);
+        MinWidth = Math.Min(MinWidth, Width); MinHeight = Math.Min(MinHeight, Height);
         SourceInitialized += (_, _) => EnableDarkTitleBar();
         try { settings = store.Load(); }
         catch (Exception ex) when (ex is IOException or InvalidDataException or UnauthorizedAccessException or System.Text.Json.JsonException)
