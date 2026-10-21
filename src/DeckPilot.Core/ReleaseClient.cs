@@ -10,7 +10,7 @@ public sealed class ReleaseClient : IDisposable
     public ReleaseClient(HttpMessageHandler? handler = null)
     {
         http = new HttpClient(handler ?? new HttpClientHandler { AllowAutoRedirect = false }) { Timeout = TimeSpan.FromSeconds(30) };
-        http.DefaultRequestHeaders.UserAgent.ParseAdd("DeckPilot/0.2 (+https://github.com/lolo34dr/streamdeck-diy)");
+        http.DefaultRequestHeaders.UserAgent.ParseAdd("DeckPilot/1.0 (+https://github.com/lolo34dr/deckpilot)");
     }
     public async Task<UpdateRelease?> CheckAsync(Version current, CancellationToken cancellation = default)
     {
@@ -18,7 +18,14 @@ public sealed class ReleaseClient : IDisposable
         timeout.CancelAfter(TimeSpan.FromSeconds(30));
         cancellation = timeout.Token;
         using var response = await RequestAsync(new Uri($"https://api.github.com/repos/{UpdateRelease.Repository}/releases/latest"), cancellation);
-        if (response.StatusCode == HttpStatusCode.NotFound) return null;
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            // The transition release works before the repository is renamed as well as afterward.
+            using var legacy = await RequestAsync(new Uri($"https://api.github.com/repos/{UpdateRelease.LegacyRepository}/releases/latest"), cancellation);
+            if (legacy.StatusCode == HttpStatusCode.NotFound) return null;
+            legacy.EnsureSuccessStatusCode();
+            return UpdateRelease.Parse(await ReadTextAsync(legacy, 1024 * 1024, cancellation), current);
+        }
         response.EnsureSuccessStatusCode();
         return UpdateRelease.Parse(await ReadTextAsync(response, 1024 * 1024, cancellation), current);
     }

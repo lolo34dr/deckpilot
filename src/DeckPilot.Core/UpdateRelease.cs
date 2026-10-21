@@ -6,7 +6,8 @@ namespace DeckPilot.Core;
 
 public sealed record UpdateRelease(string Tag, Version Version, Uri Executable, Uri Checksums, long Size)
 {
-    public const string Repository = "lolo34dr/streamdeck-diy";
+    public const string Repository = "lolo34dr/deckpilot";
+    public const string LegacyRepository = "lolo34dr/streamdeck-diy";
     public static UpdateRelease? Parse(string json, Version current)
     {
         using var document = JsonDocument.Parse(json);
@@ -22,7 +23,8 @@ public sealed record UpdateRelease(string Tag, Version Version, Uri Executable, 
             if (matches.Length != 1) throw new InvalidDataException($"Fichier de mise à jour absent ou ambigu : {name}");
             var url = new Uri(matches[0].GetProperty("browser_download_url").GetString()!);
             string path = $"/{Repository}/releases/download/{tag}/{name}";
-            if (url.Scheme != "https" || url.Host != "github.com" || url.AbsolutePath != path || url.Query.Length != 0 || url.UserInfo.Length != 0 || !url.IsDefaultPort)
+            string legacyPath = $"/{LegacyRepository}/releases/download/{tag}/{name}";
+            if (url.Scheme != "https" || url.Host != "github.com" || (url.AbsolutePath != path && url.AbsolutePath != legacyPath) || url.Query.Length != 0 || url.UserInfo.Length != 0 || !url.IsDefaultPort)
                 throw new InvalidDataException("La mise à jour ne provient pas du dépôt GitHub attendu.");
             return url;
         }
