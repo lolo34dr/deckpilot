@@ -53,6 +53,31 @@ internal static class AdditionalChecks
         await Check("An executable without a checksum asset is refused", async () => {
             await Reject(() => { UpdateRelease.Parse(ReleaseJson().Replace("SHA256SUMS.txt", "missing.txt"), current); return Task.CompletedTask; });
         });
+        await Check("Repository migration accepts only the exact old and new asset paths", async () => {
+            var legacy = UpdateRelease.Parse(ReleaseJson().Replace(UpdateRelease.Repository, UpdateRelease.LegacyRepository), current);
+            Expect(legacy?.Executable.AbsolutePath.StartsWith("/" + UpdateRelease.LegacyRepository + "/") == true);
+            Expect(UpdateRelease.Parse(ReleaseJson(), current)?.Executable.AbsolutePath.StartsWith("/" + UpdateRelease.Repository + "/") == true);
+            await Reject(() => { UpdateRelease.Parse(ReleaseJson().Replace(UpdateRelease.Repository, UpdateRelease.Repository + "-other"), current); return Task.CompletedTask; });
+        });
+        await Check("Before the rename, a missing new repository falls back to the legacy repository", async () => {
+            var requested = new List<string>();
+            using var client = new ReleaseClient(new FakeHandler(request => {
+                requested.Add(request.RequestUri!.AbsolutePath);
+                return request.RequestUri.AbsolutePath == $"/repos/{UpdateRelease.Repository}/releases/latest"
+                    ? new(HttpStatusCode.NotFound)
+                    : new(HttpStatusCode.OK) { Content = new StringContent(ReleaseJson().Replace(UpdateRelease.Repository, UpdateRelease.LegacyRepository)) };
+            }));
+            Expect((await client.CheckAsync(current))?.Tag == "v0.2.0");
+            Expect(requested.SequenceEqual(new[] { $"/repos/{UpdateRelease.Repository}/releases/latest", $"/repos/{UpdateRelease.LegacyRepository}/releases/latest" }));
+        });
+        await Check("After the rename, the new repository is used directly", async () => {
+            int requests = 0;
+            using var client = new ReleaseClient(new FakeHandler(request => {
+                requests++; Expect(request.RequestUri!.AbsolutePath == $"/repos/{UpdateRelease.Repository}/releases/latest");
+                return new(HttpStatusCode.OK) { Content = new StringContent(ReleaseJson()) };
+            }));
+            Expect((await client.CheckAsync(current))?.Tag == "v0.2.0" && requests == 1);
+        });
         byte[] bytes = new byte[2048]; bytes[0] = (byte)'M'; bytes[1] = (byte)'Z'; bytes[300] = 42;
         string hash = Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant();
         string manifest = hash + "  DeckPilot.exe\r\n" + new string('0', 64) + "  DeckPilot-win-x64.zip\r\n";

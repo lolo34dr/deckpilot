@@ -1,7 +1,9 @@
-Version 1.0.0 publiée uniquement pour tester la mise à jour automatique depuis 0.2.0.
+Repository rename preparation: `streamdeck-diy` → `deckpilot`.
 
-Aucun changement fonctionnel ni visuel. Seul le numéro de version de l’application change ; les profils et le calibrage sont conservés.
+- Update checks support both repository names, before and after the rename.
+- Download validation accepts only the exact release asset paths belonging to these two repositories.
+- Profiles, calibration, and application actions are unchanged.
 
-Dans DeckPilot 0.2.0, utilisez **Vérifier maintenant**, puis confirmez **Mettre à jour**, ou attendez la recherche automatique. Aucun téléchargement manuel n’est nécessaire pour ce test.
+**Install this version before renaming the GitHub repository.** Versions 0.2.0 and 1.0.0 validate the original repository name strictly and may require a manual update if the repository has already been renamed.
 
-Téléchargements également disponibles : **DeckPilot.exe**, **DeckPilot-win-x64.zip** et **SHA256SUMS.txt**. Windows 10/11 x64.
+Windows 10/11 x64. Download **DeckPilot.exe** or **DeckPilot-win-x64.zip**. Updates remain available from within the app while the original repository name is active.

@@ -119,6 +119,12 @@ Use a writable personal folder. A protected installation directory or a file loc
 
 **Upgrading from 0.1.x?** Quit the old version from the notification area and manually replace the executable with the latest release once. Those older versions do not contain the updater. Later updates can be installed from within DeckPilot.
 
+### Repository rename compatibility
+
+Version **1.0.1** prepares the move from `lolo34dr/streamdeck-diy` to `lolo34dr/deckpilot`. Update checks use the new name, with a fallback to the original repository while the rename is pending. Release downloads are validated against these two exact repository paths.
+
+Install **1.0.1 or later before renaming the repository**. Versions 0.2.0 and 1.0.0 strictly validate the original asset paths and may need a manual update if the repository has already been renamed. Documentation links continue to use the existing name until the rename is complete.
+
 ## Settings and backups
 
 Profiles and calibration are stored outside the application folder:
