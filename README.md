@@ -1,46 +1,141 @@
-# DeckPilot
+<p align="center">
+  <img src="deckpilotbanner.png#gh-light-mode-only" alt="DeckPilot banner" width="760">
+  <img src="deckpilotlogo.png#gh-dark-mode-only" alt="DeckPilot logo" width="112">
+</p>
 
-Application Windows pour configurer un clavier DIY Arduino Leonardo de **12 touches F13 à F24**, disposées en **4 lignes de 3**. Aucun pilote ni changement du programme du microcontrôleur n’est nécessaire.
+<h1 align="center">DeckPilot</h1>
 
-## Utiliser l’application
+<p align="center">
+  A Windows companion for your 12-key DIY macropad.<br>
+  Configure your keys, launch applications, control media, and switch profiles.
+</p>
 
-Windows 10/11, PC x64. Le dossier publié autonome contient le runtime .NET : aucune installation de .NET n’est nécessaire pour l’utilisateur.
+<p align="center">
+  <a href="https://github.com/lolo34dr/streamdeck-diy/releases/latest">Download the latest release</a>
+  &nbsp;·&nbsp;
+  <a href="#getting-started">Getting started</a>
+  &nbsp;·&nbsp;
+  <a href="#development">Development</a>
+</p>
 
-1. Depuis les [releases GitHub](https://github.com/lolo34dr/streamdeck-diy/releases), télécharger `DeckPilot.exe` et le placer dans un dossier permanent. Sinon, extraire entièrement `DeckPilot-win-x64.zip`, puis lancer le `DeckPilot.exe` contenu dans ce dossier.
-2. Brancher le Leonardo. Au premier lancement, suivre le calibrage : appuyer sur les boutons physiques de gauche à droite, ligne par ligne. L’ordre des F13–F24 peut être quelconque, mais chaque bouton doit envoyer une touche distincte.
-3. Cliquer sur une touche dans la grille, puis sur une action dans la colonne de droite. Pour **Ouvrir une application**, utiliser **Choisir une application** et chercher son nom ; **Choisir un fichier manuellement** reste disponible. Ses réglages apparaissent sous la grille ; cliquer sur **Enregistrer** après modification. Changer de touche ou de profil enregistre aussi les réglages en cours.
-4. Pour un jeu, choisir **Touche libre**, puis attribuer la touche directement dans les paramètres du jeu.
-5. Pour créer un profil, ouvrir **Gérer les profils** à droite, saisir son nom et cliquer sur **Créer**. La liste en haut permet de choisir le profil actif. Le calibrage est partagé entre tous les profils.
+<p align="center">
+  <a href="https://github.com/lolo34dr/streamdeck-diy/actions/workflows/windows.yml">
+    <img src="https://github.com/lolo34dr/streamdeck-diy/actions/workflows/windows.yml/badge.svg" alt="Windows build status">
+  </a>
+</p>
 
-Actions disponibles : touche libre, programme avec arguments facultatifs, dossier, site HTTP(S), raccourci clavier et commandes multimédias. Un bouton maintenu déclenche une action une seule fois ; en mode libre, les répétitions du clavier restent disponibles. Les arguments sont transmis au programme choisi ; saisissez-les selon les règles de ce programme.
+---
 
-La croix de fermeture masque la fenêtre. Double-cliquer sur l’icône près de l’horloge pour la rouvrir, ou clic droit → **Quitter** pour arrêter réellement l’application. L’option **Lancer avec Windows** est facultative et agit seulement pour l’utilisateur Windows courant. Elle référence l’emplacement de `DeckPilot.exe` : désactiver cette option avant de déplacer le dossier, puis la réactiver.
+DeckPilot configures Arduino Leonardo-compatible macropads that already send **F13–F24** as USB keyboard inputs, arranged in **4 rows of 3 keys**. The physical key order can be arbitrary: a guided calibration maps each button to its position.
 
-Le calibrage et les profils sont enregistrés dans `%APPDATA%\DeckPilot\settings.json`, hors du dossier de l’application. Quitter DeckPilot avant de copier ce fichier pour le sauvegarder ou de le restaurer. Une configuration illisible est sauvegardée avec le suffixe `.backup-<date>` avant utilisation d’une nouvelle configuration. Aucun compte n’est nécessaire. La recherche de mises à jour contacte uniquement GitHub et peut être désactivée dans l’interface.
+**No additional driver or firmware changes are required.** The current application interface is in French; this documentation is in English.
 
-## Interface
+## Features
 
-La version 0.2.0 conserve la palette anthracite et la grille compacte, avec des pictogrammes vectoriels, les icônes des applications disponibles, des effets de survol et des transitions discrètes. Les animations respectent le réglage d’animation de Windows. Les actions sont à droite et les réglages sous la grille.
+- **Guided calibration:** identify all 12 physical buttons without rewiring your macropad.
+- **Installed application picker:** search Start menu shortcuts and the Windows application catalog, including Microsoft Store entries. Manual file selection remains available.
+- **Custom actions:** launch applications, open folders or websites, send shortcuts, and control media.
+- **Free keys:** keep F13–F24 available for shortcuts configured directly in a game or another application.
+- **Local profiles:** create, duplicate, rename, delete, and select profiles. Calibration is shared across profiles.
+- **Compact dark interface:** vector icons, application icons where available, and subtle animations that respect Windows animation preferences.
+- **Background operation:** keep DeckPilot in the notification area, with optional startup at Windows sign-in.
+- **Automatic updates:** approve a new release, then let DeckPilot download, verify, replace, and restart itself.
 
-## Applications installées
+## Getting started
 
-Le sélecteur lit les raccourcis du menu Démarrer de l’utilisateur et du système, puis complète la liste avec `Get-StartApps` (applications Windows, dont Microsoft Store). La recherche ignore la casse et les accents. Les doublons de noms sont regroupés en privilégiant le menu Démarrer. Les applications portables ou dépourvues de raccourci peuvent être ajoutées manuellement. Une indisponibilité du catalogue Windows n’empêche pas d’utiliser les raccourcis lisibles.
+### Requirements
 
-Les raccourcis sont lancés par Windows ; les applications du catalogue Windows utilisent `shell:AppsFolder`. Les arguments facultatifs concernent les programmes et raccourcis choisis par fichier, et sont masqués pour les identifiants AppsFolder. La lecture de la liste ne lance aucun des programmes détectés.
+- Windows 10 or Windows 11, **x64**.
+- An Arduino Leonardo-compatible macropad sending 12 distinct keys from **F13 to F24**.
+- A USB data connection.
 
-## Mises à jour automatiques
+The published downloads include the .NET runtime. **You do not need to install .NET to use DeckPilot.**
 
-À partir de **0.2.0**, DeckPilot recherche une release GitHub stable au démarrage (après le calibrage), puis toutes les six heures. Une fenêtre propose **Mettre à jour** ou **Plus tard**. Après confirmation : téléchargement avec progression et annulation possible, vérification SHA-256, enregistrement des réglages, fermeture, remplacement de l’exécutable et redémarrage. **Plus tard** reporte les invitations automatiques de 24 heures ; **Vérifier maintenant** reste disponible.
+### Download and launch
 
-Le téléchargement est vérifié contre `SHA256SUMS.txt` de la même release GitHub, via HTTPS. Les redirections sont limitées aux hôtes GitHub prévus. L’ancien exécutable reste sauvegardé jusqu’à ce que le nouveau confirme son initialisation ; en cas d’échec de démarrage, il est restauré et relancé. Les réglages dans `%APPDATA%` ne sont pas remplacés. Les fichiers temporaires sont dans `%LOCALAPPDATA%\DeckPilot\Updates` et les téléchargements de plus de sept jours sont nettoyés.
+1. Download **[DeckPilot.exe](https://github.com/lolo34dr/streamdeck-diy/releases/latest/download/DeckPilot.exe)** and place it in a permanent, writable folder, such as `%LOCALAPPDATA%\Programs\DeckPilot`.
+2. Alternatively, download **[DeckPilot-win-x64.zip](https://github.com/lolo34dr/streamdeck-diy/releases/latest/download/DeckPilot-win-x64.zip)**, extract the entire archive, and run the included `DeckPilot.exe`.
+3. Connect your macropad and launch DeckPilot.
+4. Follow the first-run calibration, pressing the highlighted physical button from left to right, row by row. Every button must send a different F13–F24 key.
 
-Placez le programme dans un dossier personnel modifiable, par exemple `%LOCALAPPDATA%\Programs\DeckPilot`. Un emplacement protégé ou un verrouillage par un autre logiciel peut empêcher le remplacement ; DeckPilot n’élève pas ses droits. L’option de démarrage Windows continue à utiliser le même chemin après mise à jour.
+The single-file executable extracts its bundled dependencies into the user's .NET cache on first launch, which can take a little longer. Published executables are currently unsigned, so Windows may display a SmartScreen warning.
 
-**Depuis 0.1.x, télécharger et remplacer manuellement l’exécutable une fois pour obtenir 0.2.0.** Les versions précédentes ne contiennent pas encore ce mécanisme. Les mises à jour suivantes seront proposées par l’application.
+### Configure a key
 
-## Développer et compiler
+1. Select a key in the grid.
+2. Choose an action in the right sidebar.
+3. Configure its settings below the grid and save. Switching keys or profiles also saves the current key's settings.
 
-Installer le SDK .NET 8 (version 8.0.415 ou plus récente compatible avec `global.json`). Visual Studio 2022 avec les outils de développement Desktop .NET est facultatif. Depuis la racine du dépôt :
+| Action | Behavior |
+| --- | --- |
+| Free key | Passes F13–F24 through normally. Assign it directly in your game or application. |
+| Application | Launches an installed application or a manually selected program or shortcut. |
+| Folder | Opens a folder in Windows Explorer. |
+| Website | Opens an HTTP or HTTPS address in your default browser. |
+| Keyboard shortcut | Sends a key combination to the active window. |
+| Media | Controls playback, tracks, volume, or mute. |
+
+For application actions, open the application picker and search by name. The manual file selector remains available, with optional program arguments under advanced options. Enter arguments according to the target application's syntax.
+
+Holding a button triggers a configured action only once until release. In free-key mode, normal keyboard repeat events remain available.
+
+### Manage profiles
+
+Open the profile management section in the right sidebar to create, duplicate, rename, or delete a profile. Use the selector above the key grid to choose the active profile. At least one profile must remain.
+
+Calibration applies to all profiles and can be repeated from the sidebar.
+
+### Background operation
+
+Closing the window hides DeckPilot while keeping its actions active. Double-click its notification-area icon near the clock to reopen it, or right-click the icon and choose the quit command to stop it completely.
+
+Optional Windows startup applies only to the current user and references the executable's location. Disable it before moving the application, then enable it again from the new location.
+
+## Installed applications
+
+The picker reads shortcuts from the current user's and system-wide Start menus, then supplements them with `Get-StartApps` results from the Windows application catalog.
+
+Search ignores case and accents. Duplicate names are grouped, with Start menu entries taking priority. Portable applications and programs without registered shortcuts can still be selected manually. If the Windows catalog is unavailable, readable Start menu shortcuts remain usable.
+
+Windows launches the selected shortcuts. Catalog entries use `shell:AppsFolder`. Optional arguments apply to file-based programs and shortcuts; they are hidden for AppsFolder entries. Listing applications does not launch them.
+
+## Automatic updates
+
+Available since **0.2.0**, automatic update checks run at startup after calibration, then every six hours. They can be disabled in the sidebar. A manual check remains available.
+
+When a newer stable GitHub release is found, DeckPilot asks whether to update. After confirmation, it:
+
+1. Downloads the executable with progress reporting and cancellation support.
+2. Verifies its SHA-256 hash against `SHA256SUMS.txt` from the same GitHub release.
+3. Saves your settings and prepares the update helper.
+4. Exits, replaces the executable, and restarts.
+5. Keeps the previous executable until the new process confirms successful initialization; if startup fails, it restores and relaunches the previous version.
+
+Choosing to update later postpones automatic prompts for 24 hours. Manual checks bypass that postponement.
+
+Downloads use HTTPS, with redirects restricted to the expected GitHub hosts. Temporary files are stored in `%LOCALAPPDATA%\DeckPilot\Updates`; downloads older than seven days are cleaned up. The Windows startup entry continues to use the same executable path after an update.
+
+Use a writable personal folder. A protected installation directory or a file lock from another application can prevent replacement; DeckPilot does not elevate its privileges.
+
+**Upgrading from 0.1.x?** Quit the old version from the notification area and manually replace the executable with the latest release once. Those older versions do not contain the updater. Later updates can be installed from within DeckPilot.
+
+## Settings and backups
+
+Profiles and calibration are stored outside the application folder:
+
+```text
+%APPDATA%\DeckPilot\settings.json
+```
+
+Quit DeckPilot before copying this file to back up or restore your configuration. If a settings file cannot be read, DeckPilot preserves a copy with a `.backup-<date>` suffix before using a fresh configuration.
+
+No account is required. Update checks contact GitHub and can be disabled in the interface.
+
+## Development
+
+Install the **.NET 8 SDK**, version 8.0.415 or a newer compatible version allowed by `global.json`. Visual Studio 2022 with the .NET desktop development workload is optional.
+
+Run these commands from the repository root:
 
 ```powershell
 dotnet restore DeckPilot.sln
@@ -49,40 +144,71 @@ dotnet run --project tests/DeckPilot.Checks -c Release
 dotnet run --project src/DeckPilot.Windows -c Release
 ```
 
-Les tests console retournent un code non nul dès la première assertion en échec. Ils couvrent la correspondance des touches, les répétitions et relâchements, les changements de profils, la copie des actions, la validation et la persistance. Le cœur et ces tests fonctionnent aussi sous Linux ; l’interface et les API clavier exigent Windows. Les nouvelles vérifications couvrent aussi le catalogue, la sélection des versions, les téléchargements tronqués/corrompus, les redirections, l’annulation, la migration des réglages et le retour à l’ancien exécutable. Le test de verrouillage de fichier s’exécute uniquement sous Windows.
+The core library and console checks also run on Linux. The WPF interface and Windows input APIs require Windows.
 
-GitHub Actions exécute également `tests/windows-update-smoke.ps1` avec l’exécutable autonome : lancement de l’assistant, fermeture du processus parent, remplacement, confirmation du démarrage, puis ouverture du sélecteur d’applications par UI Automation et sauvegarde d’un choix. Ce script est réservé au compte de test éphémère de GitHub Actions.
+### Validation
 
-### Produire un dossier Windows autonome
+The console checks exit with a nonzero status on the first failed assertion. They cover:
+
+- Key mapping, held-key repeats, releases, profile switching, and action copying.
+- Settings validation, persistence, and migration from older configurations.
+- Application search and target handling.
+- Release selection, checksums, truncated or corrupted downloads, redirects, and cancellation.
+- Executable replacement, backup preservation, and rollback.
+
+The file-lock check runs only on Windows.
+
+GitHub Actions also runs `tests/windows-update-smoke.ps1` against the standalone executable. It starts the update helper, exits the original process, verifies replacement and startup confirmation, checks settings preservation, then opens the installed application picker through UI Automation and saves a selection. It also exercises renamed executables and paths containing spaces. This script is reserved for the disposable GitHub Actions test account.
+
+### Publish a standalone Windows folder
 
 ```powershell
 dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o artifacts/win-x64
 Compress-Archive -Path artifacts/win-x64/* -DestinationPath artifacts/DeckPilot-win-x64.zip -Force
 ```
 
-Distribuer l’archive complète. Le workflow GitHub Actions compile, exécute les tests et produit aussi cette archive. Lors de la publication d’un tag `v*`, le workflow `release.yml` crée une release GitHub avec un exécutable autonome `DeckPilot.exe`, cette archive et leurs empreintes SHA-256. Le premier lancement de la version en fichier unique extrait ses dépendances dans le cache .NET de l’utilisateur ; il peut prendre un peu plus de temps. Les exécutables ne sont pas signés : Windows peut afficher un avertissement SmartScreen. Pour Windows ARM64, publier séparément avec `-r win-arm64` et valider sur la machine cible.
+Distribute the complete archive. The Windows build workflow also produces this package.
 
-## Vérifications à faire avec le Leonardo sous Windows
+### Publish a GitHub release
 
-- Calibrer les 12 positions dans un ordre F13–F24 aléatoire ; vérifier qu’une touche déjà utilisée est refusée et qu’**Annuler** conserve le précédent calibrage.
-- Attribuer une touche libre dans un jeu : elle doit être reçue normalement.
-- Configurer un programme, le lancer avec le bouton, puis maintenir le bouton : un seul lancement jusqu’au relâchement. Tester les chemins avec espaces et les arguments.
-- Tester un dossier, un site, un raccourci dans une application ordinaire et les commandes multimédias.
-- Envoyer F13–F24 via une action raccourci : aucune boucle d’actions DeckPilot ne doit se produire.
-- Créer deux profils avec des actions différentes, changer de profil, quitter et relancer : profils et calibrage doivent être conservés.
-- Fermer la fenêtre, déclencher une action, puis rouvrir et quitter depuis l’icône. Une fois l’application quittée, toutes les touches redeviennent libres.
-- Activer le démarrage Windows et tester après reconnexion à la session ; désactiver ensuite si ce n’est pas souhaité.
+Update the application version and `.github/release-notes.md`, then push a matching `v*` tag, such as `v1.0.0`. The release workflow checks that the tag matches the project version and runs validation before publishing:
 
-## Limites de cette première version
+| Download | Contents |
+| --- | --- |
+| `DeckPilot.exe` | Self-contained, single-file Windows x64 application. |
+| `DeckPilot-win-x64.zip` | Complete self-contained application folder. |
+| `SHA256SUMS.txt` | SHA-256 hashes for both downloads. |
 
-- L’écoute est globale à la session Windows. Les F13–F24 provenant d’un autre clavier physique suivent les mêmes règles. Les événements clavier injectés par logiciel sont ignorés par DeckPilot pour éviter les boucles.
-- Certains jeux, systèmes anti-triche ou logiciels qui lisent directement les périphériques peuvent recevoir les touches même si l’application les intercepte. Le mode libre reste disponible. L’écran de connexion, le bureau sécurisé et les autres sessions ne sont pas contrôlés.
-- Windows peut empêcher un raccourci envoyé vers un programme lancé comme administrateur. L’application fonctionne sans droits administrateur ; elle ne contourne pas cette restriction.
-- Relâcher Ctrl, Alt, Maj et Windows avant de déclencher une action raccourci. Un raccourci comme Alt+Tab reste dépendant des règles de Windows.
-- La détection du débranchement, les profils automatiques par jeu et un installeur signé sont des évolutions futures. Les profils actuels sont choisis manuellement.
+For Windows ARM64, publish separately with `-r win-arm64` and validate on the target machine.
 
-## Organisation
+## Hardware checks on Windows
 
-- `src/DeckPilot.Core` : configuration, état des touches, recherche, contrat GitHub, téléchargement vérifié et transaction de remplacement.
-- `src/DeckPilot.Windows` : interface WPF, catalogue Windows, icônes, actions, zone de notification et assistant de mise à jour.
-- `tests/DeckPilot.Checks` : vérifications exécutables sans framework de test externe.
+With the Leonardo connected:
+
+- Calibrate all 12 positions in an arbitrary F13–F24 order. Confirm duplicate keys are rejected and canceling preserves the previous mapping.
+- Assign a free key in a game and check that the game receives it normally.
+- Launch a configured program, then hold the button: it should launch once until release. Include paths containing spaces and optional arguments.
+- Test a folder, a website, a shortcut in an ordinary application, and media controls.
+- Send F13–F24 through a shortcut action and confirm there is no loop of DeckPilot actions.
+- Create two profiles with different actions, switch between them, quit, and relaunch. Profiles and calibration should persist.
+- Close the window, trigger an action, then reopen and quit through the notification-area icon. Once DeckPilot exits, all keys should pass through normally.
+- Enable Windows startup and test after signing in again; disable it afterward if unwanted.
+
+## Current limitations
+
+- Key listening is global to the Windows session. Physical F13–F24 keys from another keyboard follow the same configuration. Software-injected keyboard events are ignored to prevent action loops.
+- Some games, anti-cheat systems, or programs using direct device input may still receive intercepted keys. Free-key mode remains available. The sign-in screen, secure desktop, and other sessions are outside the application's control.
+- Windows may block shortcuts sent to applications running with administrator privileges. DeckPilot runs without administrator rights and does not bypass this restriction.
+- Release Ctrl, Alt, Shift, and Windows before triggering a shortcut action. Combinations such as Alt+Tab remain subject to Windows behavior.
+- Disconnect detection, automatic per-game profiles, and a signed installer are future improvements. Profiles are currently selected manually.
+
+## Project structure
+
+| Path | Purpose |
+| --- | --- |
+| `src/DeckPilot.Core` | Settings, key state, search, GitHub release validation, verified downloads, and replacement transactions. |
+| `src/DeckPilot.Windows` | WPF interface, application catalog, icons, Windows actions, notification-area integration, and update helper. |
+| `tests/DeckPilot.Checks` | Executable checks without an external test framework. |
+| `tests/windows-update-smoke.ps1` | Native Windows update and application-picker smoke test used by CI. |
+| `deckpilotlogo.png` | Application logo. |
+| `deckpilotbanner.png` | Project banner. |
