@@ -94,7 +94,8 @@ public static class FirmwareService
                 if (CM_Get_DevNode_Registry_PropertyW(node, 0xE, out _, buffer, ref size, 0) != 0 || CM_Get_Parent(out uint parent, node, 0) != 0) return "";
                 var parentId = new StringBuilder(512);
                 if (CM_Get_Device_IDW(parent, parentId, parentId.Capacity, 0) != 0) return "";
-                return parentId + "|" + Encoding.Unicode.GetString(buffer, 0, (int)size).TrimEnd('\0');
+                string connection = Encoding.Unicode.GetString(buffer, 0, (int)size).TrimEnd('\0');
+                return string.IsNullOrWhiteSpace(connection) ? "" : parentId + "|" + connection;
             }
             if (CM_Get_Parent(out uint next, node, 0) != 0) return "";
             node = next;

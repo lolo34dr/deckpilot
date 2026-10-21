@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/lolo34dr/streamdeck-diy/releases/latest">Download the latest release</a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases/latest">Download the latest release</a>
   &nbsp;·&nbsp;
   <a href="#getting-started">Getting started</a>
   &nbsp;·&nbsp;
@@ -19,8 +19,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/lolo34dr/streamdeck-diy/actions/workflows/windows.yml">
-    <img src="https://github.com/lolo34dr/streamdeck-diy/actions/workflows/windows.yml/badge.svg" alt="Windows build status">
+  <a href="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml">
+    <img src="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml/badge.svg" alt="Windows build status">
   </a>
 </p>
 
@@ -53,8 +53,8 @@ The published downloads include the .NET runtime. **You do not need to install .
 
 ### Download and launch
 
-1. Download **[DeckPilot.exe](https://github.com/lolo34dr/streamdeck-diy/releases/latest/download/DeckPilot.exe)** and place it in a permanent, writable folder, such as `%LOCALAPPDATA%\Programs\DeckPilot`.
-2. Alternatively, download **[DeckPilot-win-x64.zip](https://github.com/lolo34dr/streamdeck-diy/releases/latest/download/DeckPilot-win-x64.zip)**, extract the entire archive, and run the included `DeckPilot.exe`.
+1. Download **[DeckPilot.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot.exe)** and place it in a permanent, writable folder, such as `%LOCALAPPDATA%\Programs\DeckPilot`.
+2. Alternatively, download **[DeckPilot-win-x64.zip](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-win-x64.zip)**, extract the entire archive, and run the included `DeckPilot.exe`.
 3. Connect your macropad and launch DeckPilot.
 4. Follow the first-run calibration, pressing the highlighted physical button from left to right, row by row. Every button must send a different F13–F24 key.
 
@@ -227,7 +227,7 @@ If you build on DeckPilot, a small visible credit and a link to this repository 
 
 Suggested credit:
 
-> Based on [DeckPilot](https://github.com/lolo34dr/streamdeck-diy) by [lolo34dr](https://github.com/lolo34dr).
+> Based on [DeckPilot](https://github.com/lolo34dr/deckpilot) by [lolo34dr](https://github.com/lolo34dr).
 
 ## Macropad firmware updates
 
