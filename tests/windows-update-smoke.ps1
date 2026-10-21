@@ -50,6 +50,10 @@ try {
     Copy-Item $source $downloaded
     $profileId = [Guid]::NewGuid().ToString()
     $buttons = @(1..12 | ForEach-Object { @{ Label = ''; Kind = 'Passthrough'; Target = ''; Arguments = ''; Key = 65; Ctrl = $false; Alt = $false; Shift = $false; Win = $false } })
+    $buttons[1].Label = 'Terminal test'
+    $buttons[1].Kind = 'Application'
+    $buttons[1].Target = Join-Path $env:SystemRoot 'System32\cmd.exe'
+    $buttons[1].Arguments = '/c exit 0'
     @{ Version = 1; LayoutColumns = 4; AutoCheckUpdates = $false; KeyMap = @(124..135); ActiveProfileId = $profileId; Profiles = @(@{ Id = $profileId; Name = 'Profil test de mise à jour'; Buttons = $buttons }) } |
         ConvertTo-Json -Depth 10 | Set-Content -Path $settingsPath -Encoding UTF8
     $script:phase = 'start original app'
@@ -100,6 +104,33 @@ try {
     $connection = Find-Control $root 'BoardConnectionStatus'
     if (!$connection) { throw 'Connection dashboard is missing' }
     Wait-Until { $connection.Current.Name -like 'Macropad d*connect*' }
+    if ((Find-Control $root 'DeckAvailabilityStatus').Current.Name -ne 'Hors ligne') { throw 'The keypad must clearly show its offline state' }
+    if ((Find-Control $root 'DeckAvailabilityHint').Current.Name -notlike '*Modifiez et testez*') { throw 'Offline configuration guidance is missing' }
+    if (@($deckButtons | Where-Object { !$_.Current.IsEnabled -or $_.Current.BoundingRectangle.Width -lt 100 -or $_.Current.BoundingRectangle.Height -lt 90 }).Count -gt 0) { throw 'Keys must stay editable offline and use the larger keypad layout' }
+    $script:phase = 'test collapsed advanced settings and offline action feedback'
+    $secondKey = Find-Control $root 'DeckKey02'
+    Invoke-Control $secondKey
+    $advanced = Find-Control $root 'AdvancedOptionsExpander'
+    $expand = $advanced.GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern)
+    if ($expand.Current.ExpandCollapseState -ne [System.Windows.Automation.ExpandCollapseState]::Collapsed) { throw 'Advanced application settings must start collapsed' }
+    $testAction = Find-Control $root 'TestActionButton'
+    if (!$testAction.Current.IsEnabled) { throw 'Actions should be testable without the physical board' }
+    Invoke-Control $testAction
+    Wait-Until { $secondKey.Current.ItemStatus -eq 'Action envoyée' }
+    if ((Find-Control $root 'ActionExecutionStatus').Current.Name -notlike 'Action envoyée*') { throw 'Successful action feedback is missing from the editor' }
+    $expand.Expand()
+    $targetEditor = Find-Control $root 'TargetEditor'
+    $targetEditor.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue((Join-Path $installed 'missing-app.exe'))
+    $expand.Collapse()
+    Invoke-Control $testAction
+    Wait-Until { $secondKey.Current.ItemStatus -eq 'Échec de l’action' }
+    if ((Find-Control $root 'ActionExecutionStatus').Current.Name -notlike '*introuvable*') { throw 'Failed action feedback should explain the problem' }
+    Invoke-Control (Find-Control $root 'DeckKey03')
+    if ((Find-Control $root 'DeckKey03').Current.ItemStatus -ne 'Prêt') { throw 'Action feedback leaked into another key' }
+    $savedSettings = Get-Content $settingsPath -Raw | ConvertFrom-Json
+    if ($savedSettings.Profiles[0].Buttons[1].Arguments -ne '/c exit 0') { throw 'Collapsing advanced options lost existing arguments' }
+    Invoke-Control (Find-Control $root 'DeckKey01')
+    Write-Host 'PASS offline keypad: 3x4 large keys, editable configuration, collapsed advanced options, actual action success and failure feedback'
     $script:phase = 'check firmware startup preference'
     $details = Find-Control $root 'BoardDiagnosticExpander'
     $details.GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern).Expand()

@@ -28,9 +28,12 @@ public partial class MainWindow : Window
     private bool layoutChanged;
     private int selected;
     private readonly List<int> captured = [];
-    private readonly List<Button> deckButtons = [];
-    private readonly List<TextBlock> deckLabels = [], deckKeys = [];
-    private readonly List<Image> deckIcons = [];
+    private readonly List<DeckKeyButton> deckButtons = [];
+    private readonly DeckKeyFeedback[] feedback = new DeckKeyFeedback[12];
+    private readonly string[] feedbackMessages = new string[12];
+    private readonly long[] feedbackUntil = new long[12], pressedUntil = new long[12];
+    private readonly int[] executionTickets = new int[12];
+    private Guid feedbackProfile;
     private readonly UpdateService updateService = new();
     private readonly CancellationTokenSource lifetime = new();
     private readonly DispatcherTimer updateTimer = new() { Interval = TimeSpan.FromHours(6) };
@@ -52,7 +55,7 @@ public partial class MainWindow : Window
     private readonly List<Button> actionButtons = [];
     private readonly List<Border> calibrationCells = [];
     private readonly List<TextBlock> calibrationLabels = [];
-    private readonly DispatcherTimer flashTimer = new() { Interval = TimeSpan.FromMilliseconds(220) };
+    private readonly DispatcherTimer feedbackTimer = new() { Interval = TimeSpan.FromMilliseconds(60) };
     private record Choice(string Name, int Key);
     private static readonly string[] ActionNames = ["Touche libre", "Ouvrir une application", "Ouvrir un dossier", "Ouvrir un site web", "Raccourci clavier", "Multimédia"];
 
@@ -102,9 +105,9 @@ public partial class MainWindow : Window
             return;
         }
         CreateTray();
-        flashTimer.Tick += (_, _) => { flashTimer.Stop(); RenderGrid(); };
+        feedbackTimer.Tick += (_, _) => RefreshFeedback();
         Closing += WindowClosing;
-        Closed += (_, _) => { boardUiTimer.Stop(); firmwareTimer.Stop(); boardConnection?.Dispose(); flashTimer.Stop(); updateTimer.Stop(); lifetime.Cancel(); updateService.Dispose(); hook?.Dispose(); tray?.Dispose(); trayIcon?.Dispose(); };
+        Closed += (_, _) => { boardUiTimer.Stop(); firmwareTimer.Stop(); boardConnection?.Dispose(); feedbackTimer.Stop(); updateTimer.Stop(); lifetime.Cancel(); updateService.Dispose(); hook?.Dispose(); tray?.Dispose(); trayIcon?.Dispose(); };
         loading = false;
         StatusText.Text = "Prêt · Choisissez un bouton pour le personnaliser.";
         updateTimer.Tick += async (_, _) => await CheckForUpdatesAsync(false);
@@ -132,14 +135,10 @@ public partial class MainWindow : Window
         for (int i = 0; i < 12; i++)
         {
             int index = i;
-            var content = new Grid();
-            var key = new TextBlock { FontSize = 9, Foreground = Brush("#919191"), HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Top };
-            var icon = new Image { Width = 27, Height = 27, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 0, 7) };
-            var label = new TextBlock { FontSize = 10, HorizontalAlignment = HorizontalAlignment.Stretch, TextAlignment = TextAlignment.Center, VerticalAlignment = VerticalAlignment.Bottom, TextTrimming = TextTrimming.CharacterEllipsis };
-            content.Children.Add(icon); content.Children.Add(key); content.Children.Add(label);
-            var button = new Button { Content = content, Width = 76, Height = 76, HorizontalContentAlignment = HorizontalAlignment.Stretch, VerticalContentAlignment = VerticalAlignment.Stretch, Padding = new Thickness(7), Margin = new Thickness(5) };
+            var button = new DeckKeyButton();
+            System.Windows.Automation.AutomationProperties.SetAutomationId(button, $"DeckKey{i + 1:00}");
             button.Click += (_, _) => { SaveEditor(); selected = index; LoadEditor(); };
-            DeckGrid.Children.Add(button); deckButtons.Add(button); deckLabels.Add(label); deckKeys.Add(key); deckIcons.Add(icon);
+            DeckGrid.Children.Add(button); deckButtons.Add(button);
             var calibrationLabel = new TextBlock { Text = $"{i + 1:00}", FontSize = 18, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
             var cell = new Border { CornerRadius = new CornerRadius(6), BorderThickness = new Thickness(1), Margin = new Thickness(6), Child = calibrationLabel };
             CalibrationGrid.Children.Add(cell); calibrationCells.Add(cell); calibrationLabels.Add(calibrationLabel);
@@ -168,20 +167,28 @@ public partial class MainWindow : Window
     private static SolidColorBrush Brush(string color) => new((Color)ColorConverter.ConvertFromString(color));
     private void RenderGrid()
     {
+        if (feedbackProfile != settings.ActiveProfile.Id)
+        {
+            feedbackProfile = settings.ActiveProfile.Id;
+            for (int i = 0; i < 12; i++)
+            {
+                feedback[i] = DeckKeyFeedback.Ready; feedbackMessages[i] = "";
+                feedbackUntil[i] = pressedUntil[i] = 0; executionTickets[i]++;
+            }
+        }
         for (int i = 0; i < 12; i++)
         {
             var action = settings.ActiveProfile.Buttons[i];
             string keyName = settings.IsCalibrated ? Calibration.KeyName(settings.KeyMap[i]) : $"{i + 1:00}";
-            deckLabels[i].Text = string.IsNullOrWhiteSpace(action.Label) ? keyName : action.Label;
-            deckKeys[i].Text = string.IsNullOrWhiteSpace(action.Label) ? "" : keyName;
-            deckIcons[i].Source = action.Kind == ActionKind.Application ? ApplicationIcons.ForTarget(action.Target) : VectorIcons.ForKind(action.Kind);
-            deckIcons[i].Opacity = action.Kind == ActionKind.Passthrough ? 0.6 : 1;
-            deckButtons[i].Background = Brush(i == selected ? "#303632" : "#191B1A");
-            deckButtons[i].BorderBrush = Brush(i == selected ? "#81A58B" : "#505350");
-            deckButtons[i].ToolTip = $"Ligne {i / 4 + 1}, colonne {i % 4 + 1} · {deckLabels[i].Text} · {keyName} · {ActionNames[(int)action.Kind]}";
+            deckButtons[i].Label = string.IsNullOrWhiteSpace(action.Label) ? keyName : action.Label;
+            deckButtons[i].KeyCaption = keyName;
+            deckButtons[i].IconSource = action.Kind == ActionKind.Application ? ApplicationIcons.ForTarget(action.Target) : VectorIcons.ForKind(action.Kind);
+            deckButtons[i].KindSource = VectorIcons.ForKind(action.Kind);
+            deckButtons[i].IsSelected = i == selected;
+            deckButtons[i].ToolTip = $"Ligne {i / 4 + 1}, colonne {i % 4 + 1} · {deckButtons[i].Label} · {keyName} · {ActionNames[(int)action.Kind]}";
             System.Windows.Automation.AutomationProperties.SetName(deckButtons[i], (string)deckButtons[i].ToolTip);
         }
-        ApplyHardwareHighlights();
+        RefreshFeedback();
     }
     private void ApplyHardwareHighlights()
     {
@@ -190,8 +197,38 @@ public partial class MainWindow : Window
         {
             int key = settings.IsCalibrated ? settings.KeyMap[i] : Calibration.FirstKey + i;
             bool down = (mask & (1 << (key - Calibration.FirstKey))) != 0;
-            deckButtons[i].Background = Brush(down ? "#4A6150" : i == selected ? "#303632" : "#191B1A");
+            deckButtons[i].IsHardwarePressed = down || pressedUntil[i] > Environment.TickCount64;
         }
+    }
+    private void RefreshFeedback()
+    {
+        long now = Environment.TickCount64;
+        bool pending = false;
+        for (int i = 0; i < 12; i++)
+        {
+            if (feedbackUntil[i] > 0 && feedbackUntil[i] <= now)
+            {
+                feedback[i] = DeckKeyFeedback.Ready; feedbackMessages[i] = ""; feedbackUntil[i] = 0;
+            }
+            pending |= feedback[i] == DeckKeyFeedback.Running || feedbackUntil[i] > now || pressedUntil[i] > now;
+            deckButtons[i].Feedback = feedback[i];
+            string state = feedback[i] switch { DeckKeyFeedback.Running => "Action en cours", DeckKeyFeedback.Success => "Action envoyée", DeckKeyFeedback.Error => "Échec de l’action", _ => "Prêt" };
+            System.Windows.Automation.AutomationProperties.SetItemStatus(deckButtons[i], state);
+            System.Windows.Automation.AutomationProperties.SetHelpText(deckButtons[i], feedbackMessages[i] ?? "");
+        }
+        ApplyHardwareHighlights();
+        ActionExecutionStatus.Text = !string.IsNullOrEmpty(feedbackMessages[selected]) ? feedbackMessages[selected] :
+            settings.ActiveProfile.Buttons[selected].Kind == ActionKind.Passthrough ? "Touche libre · À attribuer directement dans votre jeu ou application." : "Prêt à tester · L’action sera exécutée sur ce PC.";
+        ActionExecutionStatus.Foreground = Brush(feedback[selected] == DeckKeyFeedback.Error ? "#E1A398" : feedback[selected] == DeckKeyFeedback.Success ? "#AED3B8" : "#A8B6AC");
+        TestActionButton.IsEnabled = settings.ActiveProfile.Buttons[selected].Kind != ActionKind.Passthrough && feedback[selected] != DeckKeyFeedback.Running && !firmwareOpen && !calibrating;
+        if (pending) feedbackTimer.Start(); else feedbackTimer.Stop();
+    }
+    private void SetFeedback(int index, DeckKeyFeedback state, string message)
+    {
+        feedback[index] = state; feedbackMessages[index] = message;
+        feedbackUntil[index] = state is DeckKeyFeedback.Success or DeckKeyFeedback.Error ? Environment.TickCount64 + (state == DeckKeyFeedback.Error ? 6000 : 3000) : 0;
+        RefreshFeedback();
+        if (index == selected) Motion.Reveal(ActionExecutionStatus);
     }
     private void RefreshProfiles()
     {
@@ -248,9 +285,9 @@ public partial class MainWindow : Window
             actionButtons[i].BorderBrush = Brush(i == (int)kind ? "#545454" : "#222222");
         }
         ApplicationPanel.Visibility = kind == ActionKind.Application ? Visibility.Visible : Visibility.Collapsed;
-        ManualTargetExpander.Visibility = kind is ActionKind.Application or ActionKind.Folder or ActionKind.Website ? Visibility.Visible : Visibility.Collapsed;
-        ManualTargetExpander.Header = kind == ActionKind.Application ? "Choisir un fichier manuellement" : "Destination";
-        ManualTargetExpander.IsExpanded = kind != ActionKind.Application;
+        AdvancedOptionsExpander.Visibility = kind is ActionKind.Application or ActionKind.Folder or ActionKind.Website ? Visibility.Visible : Visibility.Collapsed;
+        AdvancedOptionsExpander.Header = kind == ActionKind.Application ? "Options avancées · fichier et arguments" : "Destination";
+        AdvancedOptionsExpander.IsExpanded = kind != ActionKind.Application;
         TargetPanel.Visibility = kind is ActionKind.Application or ActionKind.Folder or ActionKind.Website ? Visibility.Visible : Visibility.Collapsed;
         ArgumentsPanel.Visibility = kind == ActionKind.Application && !ApplicationTarget.IsPackaged(TargetEditor.Text) ? Visibility.Visible : Visibility.Collapsed;
         ShortcutPanel.Visibility = kind == ActionKind.Shortcut ? Visibility.Visible : Visibility.Collapsed;
@@ -324,16 +361,43 @@ public partial class MainWindow : Window
         if (index < 0) return;
         var action = settings.ActiveProfile.Buttons[index].Copy();
         e.Handled = action.Kind != ActionKind.Passthrough;
-        Dispatcher.BeginInvoke(() =>
+        Dispatcher.BeginInvoke(async () =>
         {
-            deckButtons[index].Background = Brush("#4A6150"); flashTimer.Stop(); flashTimer.Start();
-            try
-            {
-                ActionRunner.Run(action);
-                if (action.Kind != ActionKind.Passthrough) StatusText.Text = $"Action exécutée · {deckLabels[index].Text}";
-            }
-            catch (Exception ex) { ReportError("Action impossible : " + ex.Message); }
+            pressedUntil[index] = Environment.TickCount64 + 180; RefreshFeedback();
+            await ExecuteActionAsync(index, action);
         });
+    }
+    private async void TestActionClick(object sender, RoutedEventArgs e)
+    {
+        if (calibrating || firmwareOpen || !SaveEditor()) return;
+        await ExecuteActionAsync(selected, settings.ActiveProfile.Buttons[selected].Copy());
+    }
+    private async Task ExecuteActionAsync(int index, ButtonAction action)
+    {
+        if (action.Kind == ActionKind.Passthrough || lifetime.IsCancellationRequested) return;
+        int ticket = ++executionTickets[index];
+        long dispatchedAt = Environment.TickCount64;
+        SetFeedback(index, DeckKeyFeedback.Running, "Action en cours…");
+        try
+        {
+            // Let WPF render feedback before dispatching; keyboard commands stay on the UI thread.
+            await Dispatcher.Yield(DispatcherPriority.Render);
+            if (action.Kind is ActionKind.Application or ActionKind.Folder or ActionKind.Website)
+                await Task.Run(() => ActionRunner.Run(action));
+            else ActionRunner.Run(action);
+            // Keep short actions readable, without delaying their actual execution.
+            int remaining = (int)Math.Max(0, 300 - (Environment.TickCount64 - dispatchedAt));
+            if (remaining > 0) await Task.Delay(remaining, lifetime.Token);
+            if (lifetime.IsCancellationRequested || executionTickets[index] != ticket) return;
+            SetFeedback(index, DeckKeyFeedback.Success, "Action envoyée ✓");
+            StatusText.Text = $"Action envoyée · {deckButtons[index].Label}";
+        }
+        catch (Exception ex)
+        {
+            if (lifetime.IsCancellationRequested || executionTickets[index] != ticket) return;
+            SetFeedback(index, DeckKeyFeedback.Error, "Échec · " + ex.Message);
+            ReportError("Action impossible : " + ex.Message);
+        }
     }
     private async void FirmwareClick(object sender, RoutedEventArgs e) => await OpenFirmwareAsync();
     private async Task OpenFirmwareAsync()
@@ -468,6 +532,22 @@ public partial class MainWindow : Window
     {
         if (lifetime.IsCancellationRequested) return;
         boardState = state;
+        bool connected = state.Kind == BoardConnectionKind.Connected;
+        DeckAvailabilityStatus.Text = state.Kind switch
+        {
+            BoardConnectionKind.Connected => "Connecté",
+            BoardConnectionKind.Disconnected => "Hors ligne",
+            BoardConnectionKind.ChooseDevice => "Choisir la carte",
+            BoardConnectionKind.Paused => "Firmware",
+            BoardConnectionKind.Unidentified => "Carte à identifier",
+            BoardConnectionKind.Error => "Liaison indisponible",
+            _ => "Connexion…"
+        };
+        DeckConnectionDot.Fill = Brush(connected ? "#A5D1B1" : "#ADB6AF");
+        DeckConnectionPill.Background = Brush(connected ? "#304639" : "#363C37");
+        DeckAvailabilityHint.Text = connected ? "Configuration sur ce PC · Cliquez sur une touche pour la modifier."
+            : state.Kind == BoardConnectionKind.Disconnected ? "Carte débranchée · Modifiez et testez vos actions sur ce PC."
+            : "Vos profils restent modifiables et testables pendant la connexion.";
         BoardConnectionStatus.Text = state.Message;
         BoardConnectionStatus.Foreground = Brush(state.Kind == BoardConnectionKind.Connected ? "#A8C4AF" : state.Kind is BoardConnectionKind.Error or BoardConnectionKind.Unidentified ? "#D1B18C" : "#A5AAA6");
         string signature = string.Join("|", state.Devices.Select(d => d.DeviceId + ":" + d.Port + ":" + d.Location + ":" + d.Name));

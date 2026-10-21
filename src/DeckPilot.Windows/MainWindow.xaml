@@ -1,11 +1,11 @@
 <Window x:Class="DeckPilot.Windows.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
- Icon="/Assets/DeckPilot.png" Title="DeckPilot" Width="1000" Height="820" MinWidth="880" MinHeight="720" Background="#242725" FontFamily="Segoe UI" FontSize="12" WindowStartupLocation="CenterScreen">
+ Icon="/Assets/DeckPilot.png" Title="DeckPilot" Width="1080" Height="920" MinWidth="960" MinHeight="820" Background="#242725" FontFamily="Segoe UI" FontSize="12" WindowStartupLocation="CenterScreen">
  <Grid x:Name="WindowContent">
   <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="28"/></Grid.RowDefinitions>
   <Grid>
-   <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="260"/></Grid.ColumnDefinitions>
+   <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="280"/></Grid.ColumnDefinitions>
    <Grid>
-    <Grid.RowDefinitions><RowDefinition Height="370"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+    <Grid.RowDefinitions><RowDefinition Height="490"/><RowDefinition Height="*"/></Grid.RowDefinitions>
     <Grid Margin="24,16,24,12">
      <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
      <Grid>
@@ -18,7 +18,20 @@
       </StackPanel>
       <TextBlock Text="F13 – F24" Foreground="#898989" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,2,0,0"/>
      </Grid>
-     <UniformGrid x:Name="DeckGrid" Grid.Row="1" Rows="3" Columns="4" Width="344" Height="258" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+     <Border Grid.Row="1" Width="490" HorizontalAlignment="Center" VerticalAlignment="Bottom" CornerRadius="16" BorderThickness="1" BorderBrush="#424A44" Padding="16,12,16,12">
+      <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="0,1"><GradientStop Color="#303631" Offset="0"/><GradientStop Color="#191E1B" Offset="1"/></LinearGradientBrush></Border.Background>
+      <Border.Effect><DropShadowEffect Color="#000000" BlurRadius="18" ShadowDepth="5" Opacity="0.22"/></Border.Effect>
+      <StackPanel>
+       <Grid Margin="6,0,6,10">
+        <TextBlock Text="DECKPILOT / 12 TOUCHES" FontSize="9" FontWeight="SemiBold" Foreground="#A3AEA6" VerticalAlignment="Center"/>
+        <Border x:Name="DeckConnectionPill" Background="#363C37" CornerRadius="9" Padding="8,3" HorizontalAlignment="Right">
+         <StackPanel Orientation="Horizontal"><Ellipse x:Name="DeckConnectionDot" Width="5" Height="5" Fill="#ADB6AF" Margin="0,0,6,0"/><TextBlock x:Name="DeckAvailabilityStatus" Text="Recherche…" FontSize="10" Foreground="#C8D1CA" AutomationProperties.AutomationId="DeckAvailabilityStatus"/></StackPanel>
+        </Border>
+       </Grid>
+       <UniformGrid x:Name="DeckGrid" Rows="3" Columns="4" Width="456" Height="318"/>
+       <TextBlock x:Name="DeckAvailabilityHint" Text="Vos profils restent modifiables pendant la connexion." FontSize="10" Foreground="#A6B1A9" Margin="6,10,6,0" TextWrapping="Wrap" AutomationProperties.AutomationId="DeckAvailabilityHint"/>
+      </StackPanel>
+     </Border>
     </Grid>
     <Border x:Name="EditorPanel" Grid.Row="1" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Background="#242424" Padding="24,16,24,12">
      <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
@@ -42,7 +55,8 @@
          </Grid>
         </Button>
        </StackPanel>
-       <Expander x:Name="ManualTargetExpander" Foreground="#A7B2AB" Header="Choisir un fichier manuellement" Margin="0,0,0,10">
+       <Expander x:Name="AdvancedOptionsExpander" Foreground="#A7B2AB" Header="Options avancées" Margin="0,0,0,10" IsExpanded="False" AutomationProperties.AutomationId="AdvancedOptionsExpander">
+       <StackPanel>
        <StackPanel x:Name="TargetPanel" Margin="0,10,0,0">
         <TextBlock x:Name="TargetLabel" Foreground="{StaticResource MutedBrush}"/>
         <DockPanel>
@@ -50,12 +64,11 @@
          <TextBox x:Name="TargetEditor" TextChanged="TargetChanged" AutomationProperties.Name="Cible de l’action"/>
         </DockPanel>
        </StackPanel>
-       </Expander>
        <StackPanel x:Name="ArgumentsPanel" Margin="0,0,0,10">
-        <Expander Header="Options avancées" Foreground="#A7B2AB">
-         <StackPanel Margin="0,10,0,0"><TextBlock Text="Arguments (facultatifs)" Foreground="{StaticResource MutedBrush}"/><TextBox x:Name="ArgumentsEditor" AutomationProperties.Name="Arguments du programme"/></StackPanel>
-        </Expander>
+        <TextBlock Text="Arguments (facultatifs)" Foreground="{StaticResource MutedBrush}"/><TextBox x:Name="ArgumentsEditor" AutomationProperties.Name="Arguments du programme"/>
        </StackPanel>
+       </StackPanel>
+       </Expander>
        <StackPanel x:Name="ShortcutPanel">
         <TextBlock Text="Touche du raccourci" Foreground="{StaticResource MutedBrush}"/>
         <ComboBox x:Name="ShortcutPicker" DisplayMemberPath="Name" AutomationProperties.Name="Touche du raccourci"/>
@@ -66,7 +79,11 @@
         <ComboBox x:Name="MediaPicker" DisplayMemberPath="Name" AutomationProperties.Name="Commande multimédia"/>
        </StackPanel>
        <TextBlock x:Name="ActionHelp" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,0,0,12"/>
-       <Button Content="Enregistrer" Click="SaveClick" HorizontalAlignment="Left" Padding="18,7" ToolTip="Les changements sont aussi enregistrés en changeant de touche ou de profil."/>
+       <WrapPanel>
+        <Button Content="Enregistrer" Click="SaveClick" Padding="18,7" ToolTip="Les changements sont aussi enregistrés en changeant de touche ou de profil."/>
+        <Button x:Name="TestActionButton" Content="Tester l’action" Click="TestActionClick" Padding="16,7" AutomationProperties.AutomationId="TestActionButton" ToolTip="Enregistre et exécute cette action sur ce PC, même sans la carte."/>
+       </WrapPanel>
+       <TextBlock x:Name="ActionExecutionStatus" Text="" Foreground="#A8B6AC" TextWrapping="Wrap" FontSize="11" Margin="0,3,0,0" AutomationProperties.AutomationId="ActionExecutionStatus"/>
       </StackPanel>
      </ScrollViewer>
     </Border>
@@ -75,12 +92,17 @@
     <DockPanel>
      <StackPanel DockPanel.Dock="Bottom">
       <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,16,0,12"/>
+      <Expander Header="Préférences de l’application" Foreground="#C1CDC4" IsExpanded="False" AutomationProperties.AutomationId="ApplicationPreferences">
+       <StackPanel Margin="0,10,0,0">
       <TextBlock Text="Mises à jour" FontWeight="SemiBold" Margin="0,0,0,6"/>
       <CheckBox x:Name="AutoUpdateCheck" Content="Rechercher automatiquement" Click="AutoUpdateClick"/>
       <TextBlock x:Name="UpdateStatus" Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,8"/>
       <Button x:Name="UpdateCheckButton" Content="Vérifier maintenant" Click="CheckUpdateClick" HorizontalAlignment="Left"/>
       <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,10,0,12"/>
       <CheckBox x:Name="StartupCheck" Content="Lancer avec Windows" Click="StartupClick"/>
+       </StackPanel>
+      </Expander>
+      <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,12,0,12"/>
       <Button Content="Calibrer les touches" Click="CalibrateClick" HorizontalAlignment="Left"/>
       <TextBlock Text="Fermer la fenêtre garde DeckPilot actif près de l’horloge." Foreground="#8E8E8E" FontSize="11" TextWrapping="Wrap" Margin="0,8,0,0"/>
      </StackPanel>

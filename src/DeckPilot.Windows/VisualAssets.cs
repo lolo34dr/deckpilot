@@ -48,7 +48,7 @@ public static class ApplicationIcons
         if (string.IsNullOrWhiteSpace(target) || ApplicationTarget.IsPackaged(target) || !File.Exists(target)) return VectorIcons.ForKind(ActionKind.Application);
         if (Cache.TryGetValue(target, out var cached)) return cached;
         var info = new ShellFileInfo();
-        if (SHGetFileInfo(target, 0, ref info, (uint)Marshal.SizeOf<ShellFileInfo>(), 0x100 | 0x1) != IntPtr.Zero && info.Icon != IntPtr.Zero)
+        if (SHGetFileInfo(target, 0, ref info, (uint)Marshal.SizeOf<ShellFileInfo>(), 0x100) != IntPtr.Zero && info.Icon != IntPtr.Zero)
         {
             try
             {
