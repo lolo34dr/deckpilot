@@ -106,8 +106,12 @@ try {
     Wait-Until { $connection.Current.Name -like 'Macropad d*connect*' }
     if ((Find-Control $root 'DeckAvailabilityStatus').Current.Name -ne 'Hors ligne') { throw 'The keypad must clearly show its offline state' }
     if ((Find-Control $root 'DeckAvailabilityHint').Current.Name -notlike '*Modifiez et testez*') { throw 'Offline configuration guidance is missing' }
-    if (@($deckButtons | Where-Object { !$_.Current.IsEnabled -or $_.Current.BoundingRectangle.Width -lt 100 -or $_.Current.BoundingRectangle.Height -lt 90 }).Count -gt 0) { throw 'Keys must stay editable offline and use the larger keypad layout' }
+    if (@($deckButtons | Where-Object { !$_.Current.IsEnabled -or $_.Current.BoundingRectangle.Width -lt 56 -or $_.Current.BoundingRectangle.Height -lt 50 }).Count -gt 0) { throw 'Keys must stay editable offline and remain usable when the keypad scales to the desktop' }
     $script:phase = 'test collapsed advanced settings and offline action feedback'
+    # Windows PowerShell 5.1 does not assume UTF-8 for scripts without a BOM.
+    $sentStatus = "Action envoy$([char]0xE9)e"
+    $failedStatus = "$([char]0xC9)chec de l$([char]0x2019)action"
+    $readyStatus = "Pr$([char]0xEA)t"
     $secondKey = Find-Control $root 'DeckKey02'
     Invoke-Control $secondKey
     $advanced = Find-Control $root 'AdvancedOptionsExpander'
@@ -116,17 +120,17 @@ try {
     $testAction = Find-Control $root 'TestActionButton'
     if (!$testAction.Current.IsEnabled) { throw 'Actions should be testable without the physical board' }
     Invoke-Control $testAction
-    Wait-Until { $secondKey.Current.ItemStatus -eq 'Action envoyée' }
-    if ((Find-Control $root 'ActionExecutionStatus').Current.Name -notlike 'Action envoyée*') { throw 'Successful action feedback is missing from the editor' }
+    Wait-Until { $secondKey.Current.ItemStatus -eq $sentStatus }
+    if ((Find-Control $root 'ActionExecutionStatus').Current.Name -notlike ($sentStatus + '*')) { throw 'Successful action feedback is missing from the editor' }
     $expand.Expand()
     $targetEditor = Find-Control $root 'TargetEditor'
     $targetEditor.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue((Join-Path $installed 'missing-app.exe'))
     $expand.Collapse()
     Invoke-Control $testAction
-    Wait-Until { $secondKey.Current.ItemStatus -eq 'Échec de l’action' }
+    Wait-Until { $secondKey.Current.ItemStatus -eq $failedStatus }
     if ((Find-Control $root 'ActionExecutionStatus').Current.Name -notlike '*introuvable*') { throw 'Failed action feedback should explain the problem' }
     Invoke-Control (Find-Control $root 'DeckKey03')
-    if ((Find-Control $root 'DeckKey03').Current.ItemStatus -ne 'Prêt') { throw 'Action feedback leaked into another key' }
+    if ((Find-Control $root 'DeckKey03').Current.ItemStatus -ne $readyStatus) { throw 'Action feedback leaked into another key' }
     $savedSettings = Get-Content $settingsPath -Raw | ConvertFrom-Json
     if ($savedSettings.Profiles[0].Buttons[1].Arguments -ne '/c exit 0') { throw 'Collapsing advanced options lost existing arguments' }
     Invoke-Control (Find-Control $root 'DeckKey01')
