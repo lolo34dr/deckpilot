@@ -1,5 +1,7 @@
 <Application x:Class="DeckPilot.Windows.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
  <Application.Resources>
+ <ResourceDictionary>
+  <ResourceDictionary.MergedDictionaries><ResourceDictionary Source="DeckKeyStyles.xaml"/></ResourceDictionary.MergedDictionaries>
   <CubicEase x:Key="SoftEase" EasingMode="EaseOut"/>
   <SolidColorBrush x:Key="PanelBrush" Color="#252525"/>
   <SolidColorBrush x:Key="MutedBrush" Color="#A4ADA7"/>
@@ -99,5 +101,6 @@
     </Track>
    </ControlTemplate></Setter.Value></Setter>
   </Style>
+ </ResourceDictionary>
  </Application.Resources>
 </Application>

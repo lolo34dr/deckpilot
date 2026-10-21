@@ -255,6 +255,14 @@ Startup firmware checks are enabled by default. After the app update check and c
 
 Firmware **1.1.1** adds session identification, correlated heartbeat replies, bounded messages and physical key-state events. These events animate the mapped buttons and update diagnostics; they never invoke actions a second time. Its first physical-board validation is still required, although the earlier firmware 1.0.0 and flash procedure have been confirmed by the owner. See the [protocol and compatibility documentation](firmware/README.md).
 
+## Keypad interface (1.4.0)
+
+The larger 3 × 4 keypad follows the physical enclosure and black keycaps. Each key shows its main icon, label, F13–F24 mapping and a small action-type icon; tooltips retain the full label and position. Press feedback, running actions, successful dispatch and errors have distinct appearances, including symbols rather than color alone. Animations follow the Windows animation preference.
+
+Choose a key to edit it. **Options avancées · fichier et arguments** keeps manual application paths and launch arguments collapsed by default, while essential folder and website destinations remain expanded. Collapsing settings does not clear their values. **Tester l’action** saves and dispatches the selected action on the current PC; a success indicator confirms dispatch, not completion inside another app. Keyboard shortcuts target the active window. Free F13–F24 keys have no test action.
+
+When the macropad is disconnected, **Hors ligne** and the accompanying hint explain that profiles can still be edited and actions tested. Configuration is stored on the PC and remains available throughout disconnects and reconnects. These interface improvements work with the existing firmware and require no additional flash.
+
 The notification-area menu now switches profiles directly. **Ctrl+S** saves the current button configuration. Invalid configuration files are backed up before a fresh configuration is used. App installation, desktop/Start menu icons, startup preferences and the existing automatic updater are retained.
 
 For manual Arduino IDE uploads, **quit DeckPilot from its tray menu** to free the serial port. Closing the main window keeps it running in the background.

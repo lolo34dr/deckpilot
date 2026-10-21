@@ -1,11 +1,9 @@
-DeckPilot 1.3.2 improves the USB connection and checks macropad firmware at startup.
+DeckPilot 1.4.0 refreshes the keypad interface around the physical macropad's black keycaps.
 
-- Connection dashboard with automatic reconnect, detected firmware, live button state/USB diagnostics and explicit board selection when several devices are present.
-- Startup firmware checks and update proposals, with a 24-hour reminder delay and an option to disable firmware notifications. Installation still needs confirmation.
-- New firmware **1.1.1**: bounded protocol messages, fresh session tokens, correlated heartbeat replies and key-state events. The F13–F24 mapping remains unchanged, including standalone use.
-- Firmware manager automatically releases the monitor's serial port before identification/flashing and reconnects afterward. Firmware 1.0.0 and legacy identity queries remain supported.
-- Profiles can be selected from the tray menu; Ctrl+S saves changes; connection diagnostics can be copied for support.
+- Larger 3 × 4 keys in a dark enclosure, with a 36 px icon, a short label, an F13–F24 caption and a small action-type icon. Full labels remain available in tooltips.
+- Independent feedback for physical presses, actions in progress, successful dispatch and errors. Subtle animations respect Windows' animation setting; errors include an explanation in the editor.
+- A **Tester l’action** button saves and runs the selected action on the PC, including without a connected board. A success indicator means the action was dispatched, not that the launched application finished its work.
+- Manual application paths and arguments are grouped under collapsed advanced options. Folder and website destinations stay expanded. App preferences are also collapsed by default.
+- The keypad clearly shows its connection state and explains that profiles remain editable and actions testable offline. Reconnecting restores live button feedback without changing configuration.
 
-Firmware updates are delivered in app releases; startup checks compare the detected version against the included bundle. No hardware is flashed silently. **Firmware 1.1.1 still needs a first physical-board test:** firmware 1.0.0 and the earlier flash procedure were validated by the owner, while this new protocol is covered by host tests and AVR compilation.
-
-Download **DeckPilot-Setup.exe** or update from the app. Profiles, calibration and startup preferences are retained. Quit DeckPilot before using Arduino IDE or another serial monitor; opening the in-app firmware manager releases the connection automatically.
+Download **DeckPilot-Setup.exe** or update from the app. Profiles, calibration and startup preferences are retained. This release keeps firmware **1.1.1**; no new firmware flash is needed for the interface changes. Firmware 1.1.1 still needs physical-board validation; the earlier 1.0.0 firmware and flashing procedure were confirmed by the owner.
