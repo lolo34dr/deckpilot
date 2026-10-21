@@ -1,5 +1,9 @@
 param([Parameter(Mandatory = $true)][string]$Executable)
 $ErrorActionPreference = 'Stop'
+function Read-RegistryValue([string]$Path, [string]$Name) {
+    try { return (Get-ItemProperty -LiteralPath $Path -ErrorAction Stop).$Name }
+    catch { return $null }
+}
 $script:phase = 'initialization'
 $script:smokePassed = $false
 $testStarted = Get-Date
@@ -35,8 +39,8 @@ $installed = Join-Path $env:TEMP ('DeckPilot smoke with spaces ' + [Guid]::NewGu
 $settingsPath = Join-Path $env:APPDATA 'DeckPilot\settings.json'
 $existingSettings = if (Test-Path $settingsPath) { [IO.File]::ReadAllBytes($settingsPath) } else { $null }
 $startupKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
-$startupBefore = Get-ItemPropertyValue $startupKey DeckPilot -ErrorAction SilentlyContinue
-$preferenceBefore = Get-ItemPropertyValue 'HKCU:\Software\DeckPilot' StartupConfigured -ErrorAction SilentlyContinue
+$startupBefore = Read-RegistryValue $startupKey DeckPilot
+$preferenceBefore = Read-RegistryValue 'HKCU:\Software\DeckPilot' StartupConfigured
 $parent = $null; $worker = $null; $replacement = $null
 try {
     New-Item -ItemType Directory -Force $stage, $installed, (Split-Path $settingsPath) | Out-Null
