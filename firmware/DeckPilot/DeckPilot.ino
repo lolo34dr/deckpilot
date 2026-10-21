@@ -76,7 +76,7 @@ void loop() {
     if (stable[i]) mask |= (uint16_t)1 << i;
   }
   protocol.buttons(mask);
-  if (!Serial || (unsigned long)(now - lastByte) > 500) { commandLength = 0; commandOverflow = false; }
+  if (!Serial.dtr() || (unsigned long)(now - lastByte) > 500) { commandLength = 0; commandOverflow = false; }
   for (uint8_t n = 0; n < 32 && Serial.available() && protocol.readyForCommand(); ++n) {
     char c = Serial.read(); lastByte = now;
     if (c == '\n') {

@@ -253,7 +253,7 @@ The **Votre macropad** card shows connection state, the detected firmware and an
 
 Startup firmware checks are enabled by default. After the app update check and calibration are out of the way, an older identified firmware can prompt to open installation; postponing delays reminders for 24 hours. Unknown boards and multiple unselected candidates are not flashed automatically. Firmware releases are bundled with app updates from GitHub, rather than fetched from an independent firmware feed.
 
-Firmware **1.1.0** adds session identification, correlated heartbeat replies, bounded messages and physical key-state events. These events animate the mapped buttons and update diagnostics; they never invoke actions a second time. Its first physical-board validation is still required, although the earlier firmware 1.0.0 and flash procedure have been confirmed by the owner. See the [protocol and compatibility documentation](firmware/README.md).
+Firmware **1.1.1** adds session identification, correlated heartbeat replies, bounded messages and physical key-state events. These events animate the mapped buttons and update diagnostics; they never invoke actions a second time. Its first physical-board validation is still required, although the earlier firmware 1.0.0 and flash procedure have been confirmed by the owner. See the [protocol and compatibility documentation](firmware/README.md).
 
 The notification-area menu now switches profiles directly. **Ctrl+S** saves the current button configuration. Invalid configuration files are backed up before a fresh configuration is used. App installation, desktop/Start menu icons, startup preferences and the existing automatic updater are retained.
 

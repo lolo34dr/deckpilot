@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define DECKPILOT_FIRMWARE_VERSION "1.1.0"
+#define DECKPILOT_FIRMWARE_VERSION "1.1.1"
 #define DECKPILOT_BOARD_ID "promicro-32u4-16mhz"
 
 // No dynamic allocations, blocking serial reads or unconditional serial writes.
@@ -60,7 +60,8 @@ public:
     }
   }
   template<class SerialType> void tick(SerialType& serial, uint32_t now) {
-    if (!serial) { active = false; pendingKeys = false; length = offset = 0; return; }
+    // AVR core 1.8.6 bool(Serial) sleeps for 10 ms; dtr() is an immediate read.
+    if (!serial.dtr()) { active = false; pendingKeys = false; length = offset = 0; return; }
     if (active && (uint32_t)(now - lastPing) > 6000) { active = false; pendingKeys = false; }
     if (!busy() && active && pendingKeys) {
       ready(snprintf(tx, sizeof(tx), "DP2|KEYS|%s|%lu|%u\r\n", token, (unsigned long)sequence, (unsigned int)mask));
