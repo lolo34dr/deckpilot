@@ -147,7 +147,7 @@ try {
     $script:phase = 'verify embedded firmware bundle and disabled flash'
     Wait-Until {
         $label = Find-Control $firmwareWindow 'PackageStatus'
-        $label -and $label.Current.Name -like 'Firmware inclus : 1.1.0*'
+        $label -and $label.Current.Name -like 'Firmware inclus : 1.1.1*'
     }
     $installFirmware = Find-Control $firmwareWindow 'InstallFirmware'
     if ($installFirmware.Current.IsEnabled) { throw 'Flash enabled without explicit device selection and confirmation' }

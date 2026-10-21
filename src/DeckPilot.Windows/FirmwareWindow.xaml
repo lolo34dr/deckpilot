@@ -20,7 +20,7 @@
   <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Margin="0,10,0,16">
    <StackPanel>
     <Border Background="#30302B" Padding="12" CornerRadius="6">
-     <TextBlock Text="Nouveau firmware 1.1.0 : liaison USB et diagnostic améliorés. Cette version nécessite une validation sur votre carte après installation. Les touches F13–F24 et la sécurité de démarrage sont conservées. Gardez RST et GND accessibles pour une éventuelle récupération." TextWrapping="Wrap" Foreground="#DBD0AC"/>
+     <TextBlock Text="Nouveau firmware 1.1.1 : liaison USB et diagnostic améliorés. Cette version nécessite une validation sur votre carte après installation. Les touches F13–F24 et la sécurité de démarrage sont conservées. Gardez RST et GND accessibles pour une éventuelle récupération." TextWrapping="Wrap" Foreground="#DBD0AC"/>
     </Border>
     <CheckBox x:Name="BoardConfirmed" Click="ConfirmationChanged" Margin="0,16,0,8">
      <TextBlock Text="Je confirme que cette carte est mon macropad Pro Micro ATmega32U4, 5 V / 16 MHz, câblé sur 2–10, 14, 15 et 16." TextWrapping="Wrap" MaxWidth="490"/>
