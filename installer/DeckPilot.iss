@@ -19,8 +19,9 @@ OutputBaseFilename=DeckPilot-Setup
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
+SetupIconFile=..\src\DeckPilot.Windows\Assets\DeckPilot.ico
 LicenseFile=..\LICENSE
-UninstallDisplayIcon={app}\DeckPilot.exe
+UninstallDisplayIcon={app}\DeckPilot.ico
 CloseApplications=no
 RestartApplications=no
 SetupMutex=DeckPilot.Setup
@@ -36,12 +37,13 @@ Name: "startup"; Description: "Lancer DeckPilot avec Windows"; Flags: checkedonc
 
 [Files]
 Source: "..\artifacts\standalone\DeckPilot.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\src\DeckPilot.Windows\Assets\DeckPilot.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "DeckPilot.install"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\LICENSE"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
-Name: "{autoprograms}\DeckPilot"; Filename: "{app}\DeckPilot.exe"; WorkingDir: "{app}"
-Name: "{autodesktop}\DeckPilot"; Filename: "{app}\DeckPilot.exe"; WorkingDir: "{app}"; Tasks: desktopicon
+Name: "{autoprograms}\DeckPilot"; Filename: "{app}\DeckPilot.exe"; WorkingDir: "{app}"; IconFilename: "{app}\DeckPilot.ico"
+Name: "{autodesktop}\DeckPilot"; Filename: "{app}\DeckPilot.exe"; WorkingDir: "{app}"; IconFilename: "{app}\DeckPilot.ico"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\DeckPilot.exe"; Parameters: "--configure-startup on"; Flags: runhidden waituntilterminated runasoriginaluser; Tasks: startup; Check: ConfigureStartup
