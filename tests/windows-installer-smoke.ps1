@@ -48,20 +48,47 @@ try {
         if ($link.IconLocation -ne ((Join-Path $directory 'DeckPilot.ico') + ',0')) { throw 'Shortcut does not use the DeckPilot icon' }
     }
     if ((Read-RegistryValue $startupKey DeckPilot) -ne ('"' + $executable + '" --background')) { throw 'Startup is not enabled by default for the installing user' }
-    Add-Type -AssemblyName System.Drawing
-    $actualIcon = [Drawing.Icon]::ExtractAssociatedIcon($executable)
-    $expectedIcon = [Drawing.Icon]::new((Join-Path $directory 'DeckPilot.ico'),32,32)
-    try {
-        $actual = $actualIcon.ToBitmap(); $expected = $expectedIcon.ToBitmap()
+    # Compare the actual PE icon resources, not GDI's rendered bitmap: Windows may
+    # select a different resolution or alter transparent RGB pixels when rendering.
+    Add-Type -TypeDefinition @'
+using System;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
+public static class DeckPilotIconResource {
+    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    static extern IntPtr LoadLibraryExW(string path, IntPtr file, uint flags);
+    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    static extern IntPtr FindResourceW(IntPtr module, IntPtr name, IntPtr type);
+    [DllImport("kernel32.dll")] static extern uint SizeofResource(IntPtr module, IntPtr resource);
+    [DllImport("kernel32.dll")] static extern IntPtr LoadResource(IntPtr module, IntPtr resource);
+    [DllImport("kernel32.dll")] static extern IntPtr LockResource(IntPtr resource);
+    [DllImport("kernel32.dll")] static extern bool FreeLibrary(IntPtr module);
+    public static byte[] Read(string path, int id) {
+        var module = LoadLibraryExW(path, IntPtr.Zero, 2);
+        if (module == IntPtr.Zero) throw new Win32Exception(Marshal.GetLastWin32Error());
         try {
-            if ($actual.Width -ne $expected.Width -or $actual.Height -ne $expected.Height) { throw 'Embedded icon dimensions differ from the brand icon' }
-            for ($y = 0; $y -lt $expected.Height; $y++) {
-                for ($x = 0; $x -lt $expected.Width; $x++) {
-                    if ($actual.GetPixel($x,$y).ToArgb() -ne $expected.GetPixel($x,$y).ToArgb()) { throw 'The executable does not embed the DeckPilot brand icon' }
-                }
-            }
-        } finally { $actual.Dispose(); $expected.Dispose() }
-    } finally { $actualIcon.Dispose(); $expectedIcon.Dispose() }
+            var resource = FindResourceW(module, (IntPtr)id, (IntPtr)3);
+            if (resource == IntPtr.Zero) throw new Exception("Missing PE icon resource " + id);
+            var size = SizeofResource(module, resource);
+            var pointer = LockResource(LoadResource(module, resource));
+            if (size == 0 || pointer == IntPtr.Zero) throw new Exception("Empty PE icon resource " + id);
+            var bytes = new byte[size]; Marshal.Copy(pointer, bytes, 0, bytes.Length); return bytes;
+        } finally { FreeLibrary(module); }
+    }
+}
+'@
+    $ico = [IO.File]::ReadAllBytes((Join-Path $directory 'DeckPilot.ico'))
+    $count = [BitConverter]::ToUInt16($ico, 4)
+    if ($count -lt 7) { throw 'Missing high-resolution Windows icon frames' }
+    for ($index = 0; $index -lt $count; $index++) {
+        $entry = 6 + 16 * $index
+        $length = [BitConverter]::ToUInt32($ico, $entry + 8)
+        $offset = [BitConverter]::ToUInt32($ico, $entry + 12)
+        $expected = New-Object byte[] $length
+        [Array]::Copy($ico, $offset, $expected, 0, $length)
+        $actual = [DeckPilotIconResource]::Read($executable, $index + 1)
+        if ([Convert]::ToBase64String($actual) -ne [Convert]::ToBase64String($expected)) { throw "PE icon frame $index does not match the DeckPilot logo" }
+    }
     Write-Host 'PASS installer: Program Files, desktop and Start menu shortcuts, Windows uninstall registration and default startup'
 
     $profileId = [Guid]::NewGuid().ToString()
