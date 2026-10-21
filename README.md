@@ -212,3 +212,13 @@ With the Leonardo connected:
 | `tests/windows-update-smoke.ps1` | Native Windows update and application-picker smoke test used by CI. |
 | `deckpilotlogo.png` | Application logo. |
 | `deckpilotbanner.png` | Project banner. |
+
+## License and credit
+
+DeckPilot is released under the **[MIT License](LICENSE)**. You may use, copy, modify, and redistribute it, including commercially, as long as you retain the copyright and license notices required by the license.
+
+If you build on DeckPilot, a small visible credit and a link to this repository would be appreciated. This additional credit is optional; keeping the MIT notices is still required.
+
+Suggested credit:
+
+> Based on [DeckPilot](https://github.com/lolo34dr/streamdeck-diy) by [lolo34dr](https://github.com/lolo34dr).
