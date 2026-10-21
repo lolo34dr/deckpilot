@@ -137,6 +137,7 @@ try {
     $imageHash = (Get-FileHash (Join-Path $firmwareStage 'DeckPilot.hex') -Algorithm SHA256).Hash
     if ($manifest.Sha256 -ne $imageHash -or $manifest.Board -ne 'promicro-32u4-16mhz') { throw 'Embedded firmware manifest mismatch' }
     if (!(Test-Path (Join-Path $firmwareStage 'avrdude-source.zip'))) { throw 'AVRDUDE source was not bundled' }
+    Wait-Until { (Find-Control $firmwareWindow 'RefreshButton').Current.IsEnabled }
     Invoke-Control (Find-Control $firmwareWindow 'CloseButton')
     Wait-Until { !(Test-Path $firmwareStage) }
     Write-Host 'PASS firmware dialog: embedded tools and image validated, flash disabled without a selected board, temporary files cleaned'

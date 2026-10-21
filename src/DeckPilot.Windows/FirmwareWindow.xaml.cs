@@ -13,10 +13,11 @@ public partial class FirmwareWindow : Window
     private bool discovering;
     private bool identifying;
     private int selectionRevision;
+    private FirmwareIdentity? detectedIdentity;
     public FirmwareWindow()
     {
         InitializeComponent();
-        discovering = true;
+        discovering = true; CloseButton.IsEnabled = RefreshButton.IsEnabled = false;
         Loaded += async (_, _) =>
         {
             try
@@ -26,7 +27,7 @@ public partial class FirmwareWindow : Window
                 await RefreshAsync();
             }
             catch (Exception ex) { PackageStatus.Text = ex.Message; }
-            finally { discovering = false; UpdateInstallButton(); }
+            finally { discovering = false; CloseButton.IsEnabled = RefreshButton.IsEnabled = true; UpdateInstallButton(); }
         };
         Closing += (_, e) =>
         {
@@ -37,39 +38,48 @@ public partial class FirmwareWindow : Window
     }
     private async Task RefreshAsync()
     {
-        discovering = true; RefreshButton.IsEnabled = false; Devices.IsEnabled = false;
+        discovering = true; CloseButton.IsEnabled = RefreshButton.IsEnabled = false; Devices.IsEnabled = false;
         InstallButton.IsEnabled = false; DeviceStatus.Text = "Recherche des cartes Leonardo…";
         selectionRevision++;
         try
         {
             var devices = await Task.Run(FirmwareService.Discover);
-            Devices.ItemsSource = devices.FindAll(d => !d.Bootloader);
+            var runtime = devices.FindAll(d => !d.Bootloader);
+            Devices.ItemsSource = runtime;
             Devices.SelectedIndex = -1;
-            DeviceStatus.Text = devices.Count == 0 ? "Aucune carte compatible détectée. Vérifiez le câble USB et le pilote Windows." : "Sélectionnez votre macropad. Les identifiants Leonardo sont partagés par d’autres cartes.";
+            DeviceStatus.Text = runtime.Count == 0 ? "Aucune carte compatible détectée. Vérifiez le câble USB et le pilote Windows." : "Sélectionnez votre macropad. Les identifiants Leonardo sont partagés par d’autres cartes.";
         }
         catch (Exception ex) { DeviceStatus.Text = "Détection impossible : " + ex.Message; }
-        finally { discovering = false; RefreshButton.IsEnabled = true; Devices.IsEnabled = true; UpdateInstallButton(); }
+        finally { discovering = false; CloseButton.IsEnabled = RefreshButton.IsEnabled = true; Devices.IsEnabled = true; UpdateInstallButton(); }
     }
     private async void RefreshClick(object sender, RoutedEventArgs e) => await RefreshAsync();
     private async void DeviceChanged(object sender, SelectionChangedEventArgs e)
     {
         int revision = ++selectionRevision;
-        BoardConfirmed.IsChecked = false;
+        BoardConfirmed.IsChecked = false; detectedIdentity = null;
         UpdateInstallButton();
         if (Devices.SelectedItem is not FirmwareDevice device) return;
-        identifying = true; Devices.IsEnabled = RefreshButton.IsEnabled = false; UpdateInstallButton();
+        identifying = true; CloseButton.IsEnabled = Devices.IsEnabled = RefreshButton.IsEnabled = false; UpdateInstallButton();
         DeviceStatus.Text = "Lecture de l’identité du firmware…";
         var identity = await Task.Run(() => FirmwareService.Identify(device));
         if (revision != selectionRevision) return;
-        identifying = false; Devices.IsEnabled = RefreshButton.IsEnabled = true;
+        detectedIdentity = identity;
+        identifying = false; CloseButton.IsEnabled = Devices.IsEnabled = RefreshButton.IsEnabled = true;
         DeviceStatus.Text = identity != null ? $"DeckPilot identifié · firmware {identity.Version} · {device.Port}" : $"Firmware d’origine ou non identifié · {device.Port}. Une première installation remplacera son programme.";
+        if (identity != null && package != null)
+        {
+            int comparison = Version.Parse(identity.Version).CompareTo(Version.Parse(package.Manifest.Version));
+            DeviceStatus.Text += comparison == 0 ? " · Déjà à jour." : comparison < 0 ? $" · Mise à jour {package.Manifest.Version} disponible." : " · Firmware plus récent que cette application.";
+        }
         if (device.Location.Length == 0) DeviceStatus.Text += " Connexion physique non identifiable : installation bloquée.";
         UpdateInstallButton();
     }
     private void ConfirmationChanged(object sender, RoutedEventArgs e) => UpdateInstallButton();
     private void UpdateInstallButton()
     {
-        InstallButton.IsEnabled = !busy && !discovering && !identifying && package != null && BoardConfirmed.IsChecked == true && Devices.SelectedItem is FirmwareDevice { Location.Length: > 0 };
+        InstallButton.Content = detectedIdentity?.Version == package?.Manifest.Version ? "Réinstaller le firmware" : "Installer le firmware";
+        bool downgrade = detectedIdentity != null && package != null && Version.Parse(detectedIdentity.Version) > Version.Parse(package.Manifest.Version);
+        InstallButton.IsEnabled = !downgrade && !busy && !discovering && !identifying && package != null && BoardConfirmed.IsChecked == true && Devices.SelectedItem is FirmwareDevice { Location.Length: > 0 };
     }
     private async void InstallClick(object sender, RoutedEventArgs e)
     {
