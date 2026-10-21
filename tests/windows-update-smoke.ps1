@@ -112,6 +112,34 @@ try {
     Wait-Until {
         try { $data = Get-Content $settingsPath -Raw | ConvertFrom-Json; return ![string]::IsNullOrWhiteSpace($data.Profiles[0].Buttons[0].Target) } catch { return $false }
     }
+    $script:phase = 'open firmware dialog without hardware'
+    Invoke-Control (Find-Control $root 'OpenFirmware')
+    $firmwareWindow = $null
+    Wait-Until {
+        $windowId = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::AutomationIdProperty, 'FirmwareWindow')
+        $processId = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ProcessIdProperty, $replacement.Id)
+        $condition = [System.Windows.Automation.AndCondition]::new($windowId, $processId)
+        $script:firmwareWindow = [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
+        $null -ne $script:firmwareWindow
+    }
+    $script:phase = 'verify embedded firmware bundle and disabled flash'
+    Wait-Until {
+        $label = Find-Control $firmwareWindow 'PackageStatus'
+        $label -and $label.Current.Name -like 'Firmware inclus : 1.0.0*'
+    }
+    $installFirmware = Find-Control $firmwareWindow 'InstallFirmware'
+    if ($installFirmware.Current.IsEnabled) { throw 'Flash enabled without explicit device selection and confirmation' }
+    $firmwareRoot = Join-Path $env:LOCALAPPDATA 'DeckPilot\Firmware'
+    $firmwareStages = @(Get-ChildItem $firmwareRoot -Directory | Where-Object { Test-Path (Join-Path $_.FullName 'manifest.json') })
+    if ($firmwareStages.Count -ne 1) { throw 'Expected exactly one extracted firmware bundle' }
+    $firmwareStage = $firmwareStages[0].FullName
+    $manifest = Get-Content (Join-Path $firmwareStage 'manifest.json') -Raw | ConvertFrom-Json
+    $imageHash = (Get-FileHash (Join-Path $firmwareStage 'DeckPilot.hex') -Algorithm SHA256).Hash
+    if ($manifest.Sha256 -ne $imageHash -or $manifest.Board -ne 'promicro-32u4-16mhz') { throw 'Embedded firmware manifest mismatch' }
+    if (!(Test-Path (Join-Path $firmwareStage 'avrdude-source.zip'))) { throw 'AVRDUDE source was not bundled' }
+    Invoke-Control (Find-Control $firmwareWindow 'CloseButton')
+    Wait-Until { !(Test-Path $firmwareStage) }
+    Write-Host 'PASS firmware dialog: embedded tools and image validated, flash disabled without a selected board, temporary files cleaned'
     $script:smokePassed = $true
     Write-Host 'PASS Windows UI and installed apps: twelve keys, vector templates, application catalog and persisted selection'
 }

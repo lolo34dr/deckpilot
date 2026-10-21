@@ -4,8 +4,16 @@
     <UseWPF>true</UseWPF><UseWindowsForms>true</UseWindowsForms><EnableWindowsTargeting>true</EnableWindowsTargeting>
     <ImplicitUsings>disable</ImplicitUsings><Nullable>enable</Nullable>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <AssemblyName>DeckPilot</AssemblyName><Version>1.0.1</Version>
+    <AssemblyName>DeckPilot</AssemblyName><Version>1.1.0</Version>
   </PropertyGroup>
   <ItemGroup><Resource Include="../../deckpilotlogo.png" Link="Assets/DeckPilot.png" /></ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.IO.Ports" Version="8.0.0" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
+    <EmbeddedResource Include="../../artifacts/firmware/DeckPilot-firmware.zip" LogicalName="DeckPilot.FirmwareBundle.zip" Condition="Exists('../../artifacts/firmware/DeckPilot-firmware.zip')" />
+  </ItemGroup>
+  <Target Name="RequireFirmwareBundle" BeforeTargets="PrepareForBuild" Condition="'$(RequireFirmwareBundle)' == 'true' And !Exists('../../artifacts/firmware/DeckPilot-firmware.zip')">
+    <Error Text="Build the firmware bundle with firmware/tools/build.ps1 before publishing." />
+  </Target>
   <ItemGroup><ProjectReference Include="../DeckPilot.Core/DeckPilot.Core.csproj" /></ItemGroup>
 </Project>
