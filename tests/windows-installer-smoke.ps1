@@ -1,5 +1,9 @@
 param([Parameter(Mandatory=$true)][string]$Installer)
 $ErrorActionPreference = 'Stop'
+function Read-RegistryValue([string]$Path, [string]$Name) {
+    try { return (Get-ItemProperty -LiteralPath $Path -ErrorAction Stop).$Name }
+    catch { return $null }
+}
 if ($env:GITHUB_ACTIONS -ne 'true') { throw 'This installation test must run on the disposable GitHub Actions Windows runner.' }
 $phase = 'initialize'
 trap {
@@ -27,8 +31,8 @@ $startMenu = Join-Path ([Environment]::GetFolderPath('CommonPrograms')) 'DeckPil
 $settingsPath = Join-Path $env:APPDATA 'DeckPilot/settings.json'
 $oldSettings = if (Test-Path $settingsPath) { [IO.File]::ReadAllBytes($settingsPath) } else { $null }
 $startupKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
-$oldStartup = Get-ItemPropertyValue $startupKey DeckPilot -ErrorAction SilentlyContinue
-$oldPreference = Get-ItemPropertyValue 'HKCU:\Software\DeckPilot' StartupConfigured -ErrorAction SilentlyContinue
+$oldStartup = Read-RegistryValue $startupKey DeckPilot
+$oldPreference = Read-RegistryValue 'HKCU:\Software\DeckPilot' StartupConfigured
 $app = $null; $updatedApp = $null
 try {
     $phase = 'fresh installation into Program Files'
@@ -41,7 +45,7 @@ try {
     foreach ($shortcut in @($desktop, $startMenu)) {
         if ($shell.CreateShortcut($shortcut).TargetPath -ne $executable) { throw 'Shortcut points to the wrong executable' }
     }
-    if ((Get-ItemPropertyValue $startupKey DeckPilot) -ne ('"' + $executable + '" --background')) { throw 'Startup is not enabled by default for the installing user' }
+    if ((Read-RegistryValue $startupKey DeckPilot) -ne ('"' + $executable + '" --background')) { throw 'Startup is not enabled by default for the installing user' }
     Write-Host 'PASS installer: Program Files, desktop and Start menu shortcuts, Windows uninstall registration and default startup'
 
     $profileId = [Guid]::NewGuid().ToString()
@@ -53,7 +57,7 @@ try {
     $app = Start-Process $executable '--background' -PassThru
     if (!$app.WaitForInputIdle(30000)) { throw 'Installed app did not start' }
     Run-Setup $executable @('--configure-startup','off')
-    if ($null -ne (Get-ItemPropertyValue $startupKey DeckPilot -ErrorAction SilentlyContinue)) { throw 'Startup preference could not be disabled' }
+    if ($null -ne (Read-RegistryValue $startupKey DeckPilot)) { throw 'Startup preference could not be disabled' }
 
     $phase = 'upgrade while the installed app is running'
     Run-Setup $setup @('/UPDATE=1','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART')
@@ -63,7 +67,7 @@ try {
         $null -ne $script:updatedApp
     }
     if (!$updatedApp.WaitForInputIdle(30000)) { throw 'Updated app did not restart' }
-    if ($null -ne (Get-ItemPropertyValue $startupKey DeckPilot -ErrorAction SilentlyContinue)) { throw 'Upgrade overwrote the disabled startup preference' }
+    if ($null -ne (Read-RegistryValue $startupKey DeckPilot)) { throw 'Upgrade overwrote the disabled startup preference' }
     $settings = Get-Content $settingsPath -Raw | ConvertFrom-Json
     if ($settings.Profiles[0].Id -ne $profileId -or $settings.KeyMap.Count -ne 12) { throw 'Upgrade lost profiles or calibration' }
     Write-Host 'PASS installed upgrade: graceful app shutdown, successful replacement and restart, profiles preserved, disabled startup preference respected'
@@ -73,7 +77,7 @@ try {
     Run-Setup $uninstaller @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART')
     Wait-Until { !(Test-Path $executable) }
     if ((Test-Path $desktop) -or (Test-Path $startMenu) -or (Test-Path $uninstallKey)) { throw 'Uninstall left shortcuts or Windows registration' }
-    if ($null -ne (Get-ItemPropertyValue $startupKey DeckPilot -ErrorAction SilentlyContinue)) { throw 'Uninstall left the installed startup entry' }
+    if ($null -ne (Read-RegistryValue $startupKey DeckPilot)) { throw 'Uninstall left the installed startup entry' }
     if (!(Test-Path $settingsPath)) { throw 'Uninstall deleted personal profiles' }
     Write-Host 'PASS uninstall: app and shortcuts removed, startup entry removed, personal profiles retained'
 }
