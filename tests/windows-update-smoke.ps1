@@ -89,8 +89,12 @@ function Select-ComboItem($Root, [string]$Id, [string]$Name, [int]$ProcessId) {
     $typeCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::ListItem)
     $comboCondition = [System.Windows.Automation.AndCondition]::new([System.Windows.Automation.Condition[]]@($nameCondition, $processCondition, $typeCondition))
     Wait-Until { $script:gestureItem = [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $comboCondition); $null -ne $script:gestureItem }
-    $script:gestureItem.GetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern).Select()
-    $expand.Collapse()
+    $itemBounds = $script:gestureItem.Current.BoundingRectangle
+    if ($itemBounds.IsEmpty -or $script:gestureItem.Current.IsOffscreen) { throw 'Gesture option is not visible' }
+    [void][DeckPilotDragMouse]::SetCursorPos([int]($itemBounds.Left + $itemBounds.Width / 2), [int]($itemBounds.Top + $itemBounds.Height / 2))
+    [DeckPilotDragMouse]::mouse_event(2,0,0,0,[UIntPtr]::Zero)
+    [DeckPilotDragMouse]::mouse_event(4,0,0,0,[UIntPtr]::Zero)
+    Wait-Until { $expand.Current.ExpandCollapseState -eq [System.Windows.Automation.ExpandCollapseState]::Collapsed }
 }
 
 $source = (Resolve-Path $Executable).Path
