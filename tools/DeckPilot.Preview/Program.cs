@@ -35,7 +35,13 @@ internal static class Program
             {
                 window.UpdateLayout();
                 var content = (FrameworkElement)window.Content;
+                content.Measure(new Size(1080, 952));
+                content.Arrange(new Rect(0, 0, 1080, 952));
+                content.UpdateLayout();
                 var image = new RenderTargetBitmap((int)Math.Ceiling(content.ActualWidth), (int)Math.Ceiling(content.ActualHeight), 96, 96, PixelFormats.Pbgra32);
+                var background = new DrawingVisual();
+                using (var drawing = background.RenderOpen()) drawing.DrawRectangle(window.Background, null, new Rect(0, 0, image.PixelWidth, image.PixelHeight));
+                image.Render(background);
                 image.Render(content);
                 var png = new PngBitmapEncoder(); png.Frames.Add(BitmapFrame.Create(image));
                 Directory.CreateDirectory("docs/previews");
