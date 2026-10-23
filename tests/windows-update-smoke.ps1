@@ -87,8 +87,8 @@ function Select-ComboItem($Root, [string]$Id, [string]$Name, [int]$ProcessId) {
     $nameCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::NameProperty, $Name)
     $processCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ProcessIdProperty, $ProcessId)
     $typeCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::ListItem)
-    $condition = [System.Windows.Automation.AndCondition]::new([System.Windows.Automation.Condition[]]@($nameCondition, $processCondition, $typeCondition))
-    Wait-Until { $script:gestureItem = [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition); $null -ne $script:gestureItem }
+    $comboCondition = [System.Windows.Automation.AndCondition]::new([System.Windows.Automation.Condition[]]@($nameCondition, $processCondition, $typeCondition))
+    Wait-Until { $script:gestureItem = [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $comboCondition); $null -ne $script:gestureItem }
     $script:gestureItem.GetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern).Select()
     $expand.Collapse()
 }

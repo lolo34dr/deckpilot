@@ -95,14 +95,16 @@ public partial class MainWindow
         if (!SaveEditor()) { bool was = loading; loading = true; GesturePicker.SelectedIndex = editingLong ? 1 : 0; loading = was; return; }
         editingLong = next; LoadEditor();
     }
-    private void ExportProfileClick(object sender, RoutedEventArgs e)
+    private void ExportProfileClick(object sender, RoutedEventArgs e) => ExportProfiles(false);
+    private void ExportAllProfilesClick(object sender, RoutedEventArgs e) => ExportProfiles(true);
+    private void ExportProfiles(bool all)
     {
         if (!SaveEditor()) return;
-        var dialog = new SaveFileDialog { Title = "Exporter le profil", Filter = "Profils DeckPilot|*.deckpilot.json", FileName = "DeckPilot-profil.deckpilot.json", AddExtension = true, DefaultExt = ".deckpilot.json" };
+        var dialog = new SaveFileDialog { Title = all ? "Exporter tous les profils" : "Exporter le profil", Filter = "Profils DeckPilot|*.deckpilot.json", FileName = "DeckPilot-profil.deckpilot.json", AddExtension = true, DefaultExt = ".deckpilot.json" };
         if (dialog.ShowDialog(this) != true) return;
         try
         {
-            string json = ProfileExchange.Export(new[] { settings.ActiveProfile });
+            string json = ProfileExchange.Export(all ? settings.Profiles : new[] { settings.ActiveProfile });
             string temporary = dialog.FileName + "." + Guid.NewGuid().ToString("N") + ".tmp";
             try { File.WriteAllText(temporary, json); File.Move(temporary, dialog.FileName, true); }
             finally { if (File.Exists(temporary)) File.Delete(temporary); }
