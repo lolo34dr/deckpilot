@@ -117,7 +117,11 @@ public partial class MainWindow
     private void ReadProfiles(bool restore)
     {
         if (calibrating || firmwareOpen || !SaveEditor()) return;
-        if (restore) Directory.CreateDirectory(store.BackupsPath);
+        if (restore)
+        {
+            try { Directory.CreateDirectory(store.BackupsPath); }
+            catch (Exception ex) { ReportError("Accès aux sauvegardes impossible : " + ex.Message); return; }
+        }
         var dialog = new OpenFileDialog { Title = restore ? "Restaurer les profils depuis une sauvegarde" : "Importer des profils", Filter = "Profils DeckPilot|*.deckpilot.json|JSON|*.json", InitialDirectory = restore ? store.BackupsPath : Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) };
         if (dialog.ShowDialog(this) != true) return;
         try
