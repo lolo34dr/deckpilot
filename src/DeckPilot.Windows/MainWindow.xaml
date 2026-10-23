@@ -116,6 +116,7 @@
        </Border>
        <TextBlock Text="Actions" FontSize="13" FontWeight="SemiBold"/>
        <TextBlock Text="Choisissez une touche, cliquez sur une action ou glissez-la sur la grille." Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,7,0,8"/>
+       <TextBlock Text="Rechercher" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
        <TextBox x:Name="ActionSearchBox" TextChanged="ActionSearchChanged" AutomationProperties.Name="Rechercher une action ou une application" ToolTip="Exemples : volume, Spotify, Discord ou le nom d’une application."/>
        <TextBlock x:Name="ActionSearchStatus" Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,8"/>
        <StackPanel x:Name="ActionCatalog"/>
