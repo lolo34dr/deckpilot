@@ -14,6 +14,7 @@ public static class ActionRunner
     {
         switch (action.Kind)
         {
+            case ActionKind.Spotify: throw new InvalidOperationException("Les commandes Spotify utilisent la session dédiée.");
             case ActionKind.Passthrough: return;
             case ActionKind.Application:
                 if (ApplicationTarget.IsPackaged(action.Target))

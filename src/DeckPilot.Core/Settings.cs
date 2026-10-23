@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace DeckPilot.Core;
 
-public enum ActionKind { Passthrough, Application, Folder, Website, Shortcut, Media }
+public enum ActionKind { Passthrough, Application, Folder, Website, Shortcut, Media, Spotify }
 public sealed class ButtonAction
 {
     public string Label { get; set; } = "";

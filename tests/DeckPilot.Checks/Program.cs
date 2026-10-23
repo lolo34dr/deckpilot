@@ -121,4 +121,5 @@ finally { if (Directory.Exists(temp)) Directory.Delete(temp, true); }
 passed += await AdditionalChecks.RunAsync();
 passed += FirmwareChecks.Run();
 passed += BoardProtocolChecks.Run();
+passed += await ActionToolsChecks.RunAsync();
 Console.WriteLine($"{passed} checks passed.");

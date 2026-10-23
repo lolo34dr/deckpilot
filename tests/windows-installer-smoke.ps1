@@ -33,6 +33,9 @@ $oldSettings = if (Test-Path $settingsPath) { [IO.File]::ReadAllBytes($settingsP
 $startupKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
 $oldStartup = Read-RegistryValue $startupKey DeckPilot
 $oldPreference = Read-RegistryValue 'HKCU:\Software\DeckPilot' StartupConfigured
+$oldStartupEnabled = Read-RegistryValue 'HKCU:\Software\DeckPilot' StartupEnabled
+$approvalPaths = @('HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run', 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run32')
+$oldApprovals = @($approvalPaths | ForEach-Object { ,(Read-RegistryValue $_ DeckPilot) })
 $app = $null; $updatedApp = $null
 try {
     $phase = 'fresh installation into Program Files'
@@ -96,9 +99,28 @@ public static class DeckPilotIconResource {
     @{ Version = 1; LayoutColumns = 4; AutoCheckUpdates = $false; KeyMap = @(124..135); ActiveProfileId = $profileId; Profiles = @(@{
         Id = $profileId; Name = 'Installer test'; Buttons = @(1..12 | ForEach-Object { @{ Kind = 'Passthrough'; Label = 'Keep me'; Target = ''; Arguments = ''; Key = 65 } })
     }) } | ConvertTo-Json -Depth 10 | Set-Content $settingsPath -Encoding UTF8
-    $phase = 'launch installed app and disable startup'
+    $phase = 'respect a Windows startup block until explicit activation'
+    New-Item -Path $approvalPaths[0] -Force | Out-Null
+    $disabled = New-Object byte[] 12; $disabled[0] = 3
+    New-ItemProperty -Path $approvalPaths[0] -Name DeckPilot -PropertyType Binary -Value $disabled -Force | Out-Null
     $app = Start-Process $executable '--background' -PassThru
     if (!$app.WaitForInputIdle(30000)) { throw 'Installed app did not start' }
+    if ((Read-RegistryValue $approvalPaths[0] DeckPilot)[0] -ne 3) { throw 'Normal initialization overrode the Windows startup block' }
+    Run-Setup $executable @('--configure-startup','on')
+    if ($null -ne (Read-RegistryValue $approvalPaths[0] DeckPilot)) { throw 'Explicit activation did not clear the known Windows disable flag' }
+    $phase = 'repair a missing startup entry and launch silently'
+    Remove-ItemProperty $startupKey DeckPilot
+    Run-Setup $executable @('--exit-for-install')
+    Wait-Until { $app.Refresh(); $app.HasExited }
+    $app = Start-Process $executable '--background' -PassThru
+    if (!$app.WaitForInputIdle(30000)) { throw 'Background app did not restart' }
+    Wait-Until { (Read-RegistryValue $startupKey DeckPilot) -eq ('"' + $executable + '" --background') }
+    $app.Refresh()
+    if ($app.MainWindowHandle -ne [IntPtr]::Zero) { throw 'Startup unexpectedly displayed a main window' }
+    $duplicate = Start-Process $executable '--background' -PassThru
+    if (!$duplicate.WaitForExit(10000)) { Stop-Process $duplicate.Id; throw 'Duplicate startup showed a blocking prompt' }
+    Write-Host 'PASS startup repair: Windows block respected, explicit activation repairs it, missing entry restored, background launch and duplicate startup are silent'
+    $phase = 'disable startup'
     Run-Setup $executable @('--configure-startup','off')
     if ($null -ne (Read-RegistryValue $startupKey DeckPilot)) { throw 'Startup preference could not be disabled' }
 
@@ -135,4 +157,10 @@ finally {
     else { try { Remove-ItemProperty $startupKey DeckPilot -ErrorAction Stop } catch { } }
     if ($null -ne $oldPreference) { Set-ItemProperty 'HKCU:\Software\DeckPilot' StartupConfigured $oldPreference }
     else { try { Remove-ItemProperty 'HKCU:\Software\DeckPilot' StartupConfigured -ErrorAction Stop } catch { } }
+    if ($null -ne $oldStartupEnabled) { Set-ItemProperty 'HKCU:\Software\DeckPilot' StartupEnabled $oldStartupEnabled }
+    else { try { Remove-ItemProperty 'HKCU:\Software\DeckPilot' StartupEnabled -ErrorAction Stop } catch { } }
+    for ($i = 0; $i -lt $approvalPaths.Count; $i++) {
+        if ($null -ne $oldApprovals[$i]) { New-Item -Path $approvalPaths[$i] -Force | Out-Null; New-ItemProperty -Path $approvalPaths[$i] -Name DeckPilot -PropertyType Binary -Value $oldApprovals[$i] -Force | Out-Null }
+        else { try { Remove-ItemProperty $approvalPaths[$i] DeckPilot -ErrorAction Stop } catch { } }
+    }
 }

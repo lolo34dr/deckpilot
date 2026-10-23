@@ -40,11 +40,11 @@ public partial class App : Application
         instance = new Mutex(true, @"Local\DeckPilot.Windows", out bool first);
         if (!first)
         {
-            MessageBox.Show("DeckPilot fonctionne déjà. Ouvrez-le depuis son icône près de l’horloge.", "DeckPilot");
+            if (!e.Args.Contains("--background")) MessageBox.Show("DeckPilot fonctionne déjà. Ouvrez-le depuis son icône près de l’horloge.", "DeckPilot");
             Shutdown();
             return;
         }
-        var window = new MainWindow(e.Args.Contains("--background"));
+        var window = new MainWindow(e.Args.Contains("--background")) { ShowActivated = !e.Args.Contains("--background") };
         installerExit = new EventWaitHandle(false, EventResetMode.AutoReset, @"Local\DeckPilot.InstallExit");
         installerWait = ThreadPool.RegisterWaitForSingleObject(installerExit, (_, _) => Dispatcher.BeginInvoke(window.RequestInstallerExit), null, Timeout.Infinite, false);
         int healthArgument = Array.IndexOf(e.Args, "--update-health");

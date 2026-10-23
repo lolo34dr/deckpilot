@@ -81,6 +81,10 @@
         <TextBlock Text="Commande multimédia" Foreground="{StaticResource MutedBrush}"/>
         <ComboBox x:Name="MediaPicker" DisplayMemberPath="Name" AutomationProperties.Name="Commande multimédia"/>
        </StackPanel>
+       <StackPanel x:Name="SpotifyPanel" Visibility="Collapsed">
+        <TextBlock Text="Commande Spotify" Foreground="{StaticResource MutedBrush}"/>
+        <ComboBox x:Name="SpotifyPicker" DisplayMemberPath="Name" AutomationProperties.Name="Commande Spotify"/>
+       </StackPanel>
        <TextBlock x:Name="ActionHelp" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,0,0,12"/>
        <WrapPanel>
         <Button x:Name="SaveActionButton" Content="Enregistrer" Click="SaveClick" Padding="18,7" ToolTip="Les changements sont aussi enregistrés en changeant de touche ou de profil."/>
@@ -111,8 +115,11 @@
         </StackPanel>
        </Border>
        <TextBlock Text="Actions" FontSize="13" FontWeight="SemiBold"/>
-       <TextBlock Text="Choisissez une touche, puis une action." Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,7,0,16"/>
+       <TextBlock Text="Choisissez une touche, cliquez sur une action ou glissez-la sur la grille." Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,7,0,8"/>
+       <TextBox x:Name="ActionSearchBox" TextChanged="ActionSearchChanged" AutomationProperties.Name="Rechercher une action ou une application" ToolTip="Exemples : volume, Spotify, Discord ou le nom d’une application."/>
+       <TextBlock x:Name="ActionSearchStatus" Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,8"/>
        <StackPanel x:Name="ActionCatalog"/>
+       <StackPanel x:Name="ActionSearchResults" Visibility="Collapsed"/>
        <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,18,0,16"/>
        <Expander x:Name="ProfilesExpander" Foreground="#D2D2D2" Header="Gérer les profils" IsExpanded="False">
         <StackPanel Margin="0,12,0,0">
@@ -131,6 +138,7 @@
       <Button x:Name="UpdateCheckButton" Content="Vérifier maintenant" Click="CheckUpdateClick" HorizontalAlignment="Left"/>
       <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,10,0,12"/>
       <CheckBox x:Name="StartupCheck" Content="Lancer avec Windows" Click="StartupClick"/>
+      <TextBlock x:Name="StartupStatus" Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,10"/>
        </StackPanel>
       </Expander>
       <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,12,0,12"/>

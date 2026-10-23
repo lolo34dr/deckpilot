@@ -32,6 +32,34 @@ function Invoke-Control($Element) {
     if ($null -eq $Element) { throw 'Contrôle introuvable.' }
     $Element.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
 }
+function Find-ButtonLike($Root, [string]$Name) {
+    $type = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::Button)
+    return @($Root.FindAll([System.Windows.Automation.TreeScope]::Descendants, $type) | Where-Object { $_.Current.Name -like $Name }) | Select-Object -First 1
+}
+Add-Type -TypeDefinition @'
+using System;
+using System.Runtime.InteropServices;
+public static class DeckPilotDragMouse {
+    [DllImport("user32.dll")] public static extern bool SetCursorPos(int x, int y);
+    [DllImport("user32.dll")] public static extern void mouse_event(uint flags, uint dx, uint dy, uint data, UIntPtr extra);
+}
+'@
+function Drag-Control($Source, $Destination) {
+    if (!$Source -or !$Destination) { throw 'Drag source or target is missing' }
+    $a = $Source.Current.BoundingRectangle; $b = $Destination.Current.BoundingRectangle
+    $x = [int]($a.Left + $a.Width / 2); $y = [int]($a.Top + $a.Height / 2)
+    $toX = [int]($b.Left + $b.Width / 2); $toY = [int]($b.Top + $b.Height / 2)
+    [void][DeckPilotDragMouse]::SetCursorPos($x, $y)
+    Start-Sleep -Milliseconds 100
+    [DeckPilotDragMouse]::mouse_event(2,0,0,0,[UIntPtr]::Zero)
+    try {
+        for ($step = 1; $step -le 16; $step++) {
+            [void][DeckPilotDragMouse]::SetCursorPos([int]($x + ($toX - $x) * $step / 16), [int]($y + ($toY - $y) * $step / 16))
+            Start-Sleep -Milliseconds 35
+        }
+    }
+    finally { [DeckPilotDragMouse]::mouse_event(4,0,0,0,[UIntPtr]::Zero) }
+}
 
 $source = (Resolve-Path $Executable).Path
 $stage = Join-Path $env:LOCALAPPDATA ('DeckPilot\Updates\' + [Guid]::NewGuid().ToString('N'))
@@ -41,6 +69,7 @@ $existingSettings = if (Test-Path $settingsPath) { [IO.File]::ReadAllBytes($sett
 $startupKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
 $startupBefore = Read-RegistryValue $startupKey DeckPilot
 $preferenceBefore = Read-RegistryValue 'HKCU:\Software\DeckPilot' StartupConfigured
+$startupEnabledBefore = Read-RegistryValue 'HKCU:\Software\DeckPilot' StartupEnabled
 $parent = $null; $worker = $null; $replacement = $null
 try {
     New-Item -ItemType Directory -Force $stage, $installed, (Split-Path $settingsPath) | Out-Null
@@ -198,6 +227,35 @@ try {
     Invoke-Control (Find-Control $firmwareWindow 'CloseButton')
     Wait-Until { !(Test-Path $firmwareStage) }
     Write-Host 'PASS firmware dialog: embedded tools and image validated, flash disabled without a selected board, temporary files cleaned'
+    $script:phase = 'search and drag dedicated Spotify actions'
+    $sidebarPattern = (Find-Control $root 'SidebarScroll').GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern)
+    if ($sidebarPattern.Current.VerticallyScrollable) { $sidebarPattern.SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 0) }
+    $search = (Find-Control $root 'ActionSearchBox').GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern)
+    $search.SetValue('volume')
+    Wait-Until { $null -ne (Find-ButtonLike $root 'Multim*Volume +') }
+    $search.SetValue('spotify')
+    Wait-Until { $null -ne (Find-ButtonLike $root 'Spotify*Piste suivante') }
+    Drag-Control (Find-ButtonLike $root 'Spotify*Piste suivante') (Find-Control $root 'DeckKey04')
+    Wait-Until {
+        $data = Get-Content $settingsPath -Raw | ConvertFrom-Json
+        $data.Profiles[0].Buttons[3].Kind -eq 'Spotify' -and $data.Profiles[0].Buttons[3].Key -eq 176
+    }
+    Drag-Control (Find-Control $root 'DeckKey04') (Find-Control $root 'DeckKey05')
+    Wait-Until {
+        $data = Get-Content $settingsPath -Raw | ConvertFrom-Json
+        $data.Profiles[0].Buttons[4].Kind -eq 'Spotify' -and $data.Profiles[0].Buttons[3].Kind -eq 'Passthrough'
+    }
+    $data = Get-Content $settingsPath -Raw | ConvertFrom-Json
+    if (($data.KeyMap -join ',') -ne ((124..135) -join ',')) { throw 'Dragging actions changed physical calibration' }
+    $script:phase = 'search for an installed application and assign it'
+    $knownName = $data.Profiles[0].Buttons[0].ApplicationName
+    if ([string]::IsNullOrWhiteSpace($knownName)) { throw 'The earlier application picker did not save its application name' }
+    $search.SetValue($knownName)
+    Wait-Until { $null -ne (Find-ButtonLike $root ([WildcardPattern]::Escape($knownName))) }
+    Invoke-Control (Find-ButtonLike $root ([WildcardPattern]::Escape($knownName)))
+    Wait-Until { (Get-Content $settingsPath -Raw | ConvertFrom-Json).Profiles[0].Buttons[4].Kind -eq 'Application' }
+    $search.SetValue('')
+    Write-Host 'PASS action tools: volume search, Spotify-specific preset drag, swapping keys without recalibration, installed app search and assignment'
     $script:phase = 'resize with all sidebar sections expanded'
     foreach ($id in @('BoardDiagnosticExpander', 'ProfilesExpander', 'ApplicationPreferences')) {
         (Find-Control $root $id).GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern).Expand()
@@ -242,5 +300,7 @@ finally {
     else { try { Remove-ItemProperty $startupKey DeckPilot -ErrorAction Stop } catch { } }
     if ($null -ne $preferenceBefore) { Set-ItemProperty 'HKCU:\Software\DeckPilot' StartupConfigured $preferenceBefore }
     else { try { Remove-ItemProperty 'HKCU:\Software\DeckPilot' StartupConfigured -ErrorAction Stop } catch { } }
+    if ($null -ne $startupEnabledBefore) { Set-ItemProperty 'HKCU:\Software\DeckPilot' StartupEnabled $startupEnabledBefore }
+    else { try { Remove-ItemProperty 'HKCU:\Software\DeckPilot' StartupEnabled -ErrorAction Stop } catch { } }
     Remove-Item $stage, $installed -Recurse -Force -ErrorAction SilentlyContinue
 }

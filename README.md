@@ -266,3 +266,13 @@ When the macropad is disconnected, **Hors ligne** and the accompanying hint expl
 The notification-area menu now switches profiles directly. **Ctrl+S** saves the current button configuration. Invalid configuration files are backed up before a fresh configuration is used. App installation, desktop/Start menu icons, startup preferences and the existing automatic updater are retained.
 
 For manual Arduino IDE uploads, **quit DeckPilot from its tray menu** to free the serial port. Closing the main window keeps it running in the background.
+
+## Spotify, action search and drag-and-drop (1.5.0)
+
+**Spotify** is separate from **Multimédia**. Its play/pause, next and previous commands address the Spotify desktop app's Windows media session, even while a browser is playing YouTube. Spotify must be open and have an available playback session; start a track once if necessary. Spotify in a browser is not supported. Missing or refusing Spotify sessions produce an error, with no fallback to global media keys or another player. No Spotify account authorization, Premium subscription or stored token is needed by DeckPilot. Windows 10 version 2004 or later, or Windows 11, is required by this build.
+
+Use **Rechercher une action ou une application** for queries such as `volume`, `skip`, `Spotify` or an installed app's name. The installed-app index loads on the first search and is cached for the current app session; manual file selection remains available. Click a result to configure the selected key or drag it onto another key.
+
+Drag an action from the catalog or search results onto a key to assign it. Drag one configured key onto another to **swap their actions**; the physical calibration stays unchanged. You can also drop one `.exe`, `.lnk`, `.appref-ms`, folder or HTTP(S) URL onto a key. Dropping only configures the key and never executes the action. Complete any missing settings in the editor.
+
+Windows startup now keeps an explicit per-user preference, repairs a stale or missing Run entry, and reports known Windows startup disable flags. Normal launches respect Windows disabling; explicitly enabling **Lancer avec Windows** clears the known DeckPilot disable flag for the current user. Background launches remain hidden even before calibration, and duplicate background launches exit quietly. After updating, open **Préférences de l’application**, check the startup status and reactivate the option if Windows blocked it. A real sign-out/sign-in on the user's PC remains the final check for Windows policies or machine-specific restrictions.
