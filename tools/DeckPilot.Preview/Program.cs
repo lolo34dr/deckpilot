@@ -21,6 +21,7 @@ internal static class Program
     private static int Capture()
     {
         RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
+        Application.ResourceAssembly = typeof(DeckPilot.Windows.App).Assembly;
         var app = new PreviewApplication();
         app.DispatcherUnhandledException += (_, e) => { Console.WriteLine("::error::" + e.Exception.ToString().Replace("\r", " ").Replace("\n", " ")); e.Handled = true; app.Shutdown(1); };
         app.InitializeComponent();
