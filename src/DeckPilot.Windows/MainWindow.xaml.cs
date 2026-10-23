@@ -57,7 +57,7 @@ public partial class MainWindow : Window
     private readonly List<TextBlock> calibrationLabels = [];
     private readonly DispatcherTimer feedbackTimer = new() { Interval = TimeSpan.FromMilliseconds(60) };
     private record Choice(string Name, int Key);
-    private static readonly string[] ActionNames = ["Touche libre", "Ouvrir une application", "Ouvrir un dossier", "Ouvrir un site web", "Raccourci clavier", "Multimédia"];
+    private static readonly string[] ActionNames = ActionSearch.KindNames;
 
     public MainWindow(bool startInBackground = false)
     {
@@ -90,12 +90,15 @@ public partial class MainWindow : Window
         keys.AddRange(new Choice[] { new("Entrée", 0x0D), new("Échap", 0x1B), new("Espace", 0x20), new("Tabulation", 0x09), new("Retour arrière", 0x08), new("Page précédente", 0x21), new("Page suivante", 0x22), new("Fin", 0x23), new("Début", 0x24), new("Gauche", 0x25), new("Haut", 0x26), new("Droite", 0x27), new("Bas", 0x28), new("Insérer", 0x2D), new("Supprimer", 0x2E) });
         ShortcutPicker.ItemsSource = keys;
         MediaPicker.ItemsSource = new Choice[] { new("Lecture / pause", 0xB3), new("Piste suivante", 0xB0), new("Piste précédente", 0xB1), new("Volume +", 0xAF), new("Volume −", 0xAE), new("Muet", 0xAD) };
+        SpotifyPicker.ItemsSource = new Choice[] { new("Lecture / pause", 0xB3), new("Piste suivante", 0xB0), new("Piste précédente", 0xB1) };
         BuildGrid();
+        InitializeActionTools();
         RefreshProfiles();
         LoadEditor();
         try { StartupService.Initialize(); }
         catch (Exception ex) { StatusText.Text = "Démarrage Windows : " + ex.Message; }
-        StartupCheck.IsChecked = StartupService.Enabled;
+        RefreshStartupState();
+        Activated += (_, _) => RefreshStartupState();
         AutoUpdateCheck.IsChecked = settings.AutoCheckUpdates;
         AutoFirmwareCheck.IsChecked = settings.AutoCheckFirmware;
         VersionLabel.Text = "v" + UpdateService.DisplayVersion;
@@ -124,7 +127,7 @@ public partial class MainWindow : Window
         InputBindings.Add(new System.Windows.Input.KeyBinding(System.Windows.Input.ApplicationCommands.Save, System.Windows.Input.Key.S, System.Windows.Input.ModifierKeys.Control));
         Loaded += async (_, _) =>
         {
-            if (!settings.IsCalibrated) BeginCalibration(); else if (startInBackground) Hide();
+            if (startInBackground) Hide(); else if (!settings.IsCalibrated) BeginCalibration();
             Motion.Reveal(WindowContent);
             boardConnection = new BoardConnectionService(settings.PreferredBoardDeviceId);
             try { bundledFirmware = await Task.Run(FirmwareService.ReadBundledManifest); ApplyBoardState(boardConnection.State); }
@@ -141,7 +144,7 @@ public partial class MainWindow : Window
             int index = i;
             var button = new DeckKeyButton();
             System.Windows.Automation.AutomationProperties.SetAutomationId(button, $"DeckKey{i + 1:00}");
-            button.Click += (_, _) => { SaveEditor(); selected = index; LoadEditor(); };
+            button.Click += (_, _) => { if (Environment.TickCount64 < ignoreClickUntil) return; SaveEditor(); selected = index; LoadEditor(); };
             DeckGrid.Children.Add(button); deckButtons.Add(button);
             var calibrationLabel = new TextBlock { Text = $"{i + 1:00}", FontSize = 18, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
             var cell = new Border { CornerRadius = new CornerRadius(6), BorderThickness = new Thickness(1), Margin = new Thickness(6), Child = calibrationLabel };
@@ -154,7 +157,7 @@ public partial class MainWindow : Window
             row.Children.Add(new Image { Source = VectorIcons.ForKind((ActionKind)i), Width = 18, Height = 18, Margin = new Thickness(0, 0, 12, 0), VerticalAlignment = VerticalAlignment.Center });
             row.Children.Add(new TextBlock { Text = ActionNames[i], VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
             var button = new Button { Content = row, HorizontalContentAlignment = HorizontalAlignment.Stretch, Padding = new Thickness(10, 12, 8, 12), Margin = new Thickness(0, 0, 0, 3) };
-            button.Click += (_, _) => { ActionPicker.SelectedIndex = index; SaveEditor(); };
+            button.Click += (_, _) => { if (Environment.TickCount64 < ignoreClickUntil) return; bool changed = ActionPicker.SelectedIndex != index; ActionPicker.SelectedIndex = index; if (changed && (ActionKind)index is ActionKind.Media or ActionKind.Spotify) { MediaPicker.SelectedIndex = 0; SpotifyPicker.SelectedIndex = 0; } SaveEditor(); };
             System.Windows.Automation.AutomationProperties.SetName(button, ActionNames[i]);
             ActionCatalog.Children.Add(button); actionButtons.Add(button);
         }
@@ -257,6 +260,7 @@ public partial class MainWindow : Window
         CtrlCheck.IsChecked = action.Ctrl; AltCheck.IsChecked = action.Alt; ShiftCheck.IsChecked = action.Shift; WinCheck.IsChecked = action.Win;
         ShortcutPicker.SelectedItem = ((IEnumerable<Choice>)ShortcutPicker.ItemsSource).FirstOrDefault(c => c.Key == action.Key) ?? ((IEnumerable<Choice>)ShortcutPicker.ItemsSource).First();
         MediaPicker.SelectedItem = ((IEnumerable<Choice>)MediaPicker.ItemsSource).FirstOrDefault(c => c.Key == action.Key) ?? ((IEnumerable<Choice>)MediaPicker.ItemsSource).First();
+        SpotifyPicker.SelectedItem = ((IEnumerable<Choice>)SpotifyPicker.ItemsSource).FirstOrDefault(c => c.Key == action.Key) ?? ((IEnumerable<Choice>)SpotifyPicker.ItemsSource).First();
         UpdateActionFields(); RenderGrid(); loading = previous; Motion.Reveal(EditorPanel);
     }
     private bool SaveEditor()
@@ -269,6 +273,7 @@ public partial class MainWindow : Window
         action.Shift = ShiftCheck.IsChecked == true; action.Win = WinCheck.IsChecked == true;
         if (action.Kind == ActionKind.Shortcut && ShortcutPicker.SelectedItem is Choice shortcut) action.Key = shortcut.Key;
         if (action.Kind == ActionKind.Media && MediaPicker.SelectedItem is Choice media) action.Key = media.Key;
+        if (action.Kind == ActionKind.Spotify && SpotifyPicker.SelectedItem is Choice spotify) action.Key = spotify.Key;
         bool saved = Persist(); RenderGrid(); return saved;
     }
     private bool Persist()
@@ -296,6 +301,7 @@ public partial class MainWindow : Window
         ArgumentsPanel.Visibility = kind == ActionKind.Application && !ApplicationTarget.IsPackaged(TargetEditor.Text) ? Visibility.Visible : Visibility.Collapsed;
         ShortcutPanel.Visibility = kind == ActionKind.Shortcut ? Visibility.Visible : Visibility.Collapsed;
         MediaPanel.Visibility = kind == ActionKind.Media ? Visibility.Visible : Visibility.Collapsed;
+        SpotifyPanel.Visibility = kind == ActionKind.Spotify ? Visibility.Visible : Visibility.Collapsed;
         BrowseButton.Visibility = kind == ActionKind.Website ? Visibility.Collapsed : Visibility.Visible;
         TargetLabel.Text = kind == ActionKind.Website ? "Adresse du site" : kind == ActionKind.Folder ? "Chemin du dossier" : "Chemin du programme";
         ActionHelp.Text = kind switch
@@ -305,7 +311,8 @@ public partial class MainWindow : Window
             ActionKind.Folder => "Ouvre le dossier dans l’Explorateur Windows.",
             ActionKind.Website => "Ouvre une adresse http:// ou https:// dans votre navigateur par défaut.",
             ActionKind.Shortcut => "Envoie ce raccourci à la fenêtre active. Les touches F13–F24 simulées ne déclenchent pas d’autres actions DeckPilot.",
-            _ => "Contrôle la lecture ou le volume de Windows."
+            ActionKind.Spotify => "Contrôle uniquement Spotify pour Windows, même si YouTube est actif. Ouvrez Spotify et lancez une lecture. Le lecteur Spotify dans un navigateur n’est pas pris en charge.",
+            _ => "Contrôles multimédias généraux de Windows : peuvent agir sur YouTube ou un autre lecteur actif."
         };
         UpdateApplicationSummary();
     }
@@ -386,7 +393,9 @@ public partial class MainWindow : Window
         {
             // Let WPF render feedback before dispatching; keyboard commands stay on the UI thread.
             await Dispatcher.Yield(DispatcherPriority.Render);
-            if (action.Kind is ActionKind.Application or ActionKind.Folder or ActionKind.Website)
+            if (action.Kind == ActionKind.Spotify)
+                await SpotifyController.RunAsync(action.Key, lifetime.Token);
+            else if (action.Kind is ActionKind.Application or ActionKind.Folder or ActionKind.Website)
                 await Task.Run(() => ActionRunner.Run(action));
             else ActionRunner.Run(action);
             // Keep short actions readable, without delaying their actual execution.
@@ -673,8 +682,9 @@ public partial class MainWindow : Window
         try
         {
             StartupService.Set(StartupCheck.IsChecked == true);
-            StatusText.Text = StartupCheck.IsChecked == true ? "Démarrage avec Windows activé." : "Démarrage avec Windows désactivé.";
+            RefreshStartupState();
+            StatusText.Text = StartupStatus.Text;
         }
-        catch (Exception ex) { StartupCheck.IsChecked = StartupService.Enabled; ReportError("Démarrage automatique : " + ex.Message); }
+        catch (Exception ex) { RefreshStartupState(); ReportError("Démarrage automatique : " + ex.Message); }
     }
 }

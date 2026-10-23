@@ -19,6 +19,8 @@ public sealed class DeckKeyButton : Button
     public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(DeckKeyButton), new PropertyMetadata(false));
     public static readonly DependencyProperty IsHardwarePressedProperty = DependencyProperty.Register(nameof(IsHardwarePressed), typeof(bool), typeof(DeckKeyButton), new PropertyMetadata(false, VisualChanged));
     public static readonly DependencyProperty FeedbackProperty = DependencyProperty.Register(nameof(Feedback), typeof(DeckKeyFeedback), typeof(DeckKeyButton), new PropertyMetadata(DeckKeyFeedback.Ready, VisualChanged));
+    public static readonly DependencyProperty IsDropTargetProperty = DependencyProperty.Register(nameof(IsDropTarget), typeof(bool), typeof(DeckKeyButton), new PropertyMetadata(false));
+    public bool IsDropTarget { get => (bool)GetValue(IsDropTargetProperty); set => SetValue(IsDropTargetProperty, value); }
     public string Label { get => (string)GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
     public string KeyCaption { get => (string)GetValue(KeyCaptionProperty); set => SetValue(KeyCaptionProperty, value); }
     public ImageSource IconSource { get => (ImageSource)GetValue(IconSourceProperty); set => SetValue(IconSourceProperty, value); }

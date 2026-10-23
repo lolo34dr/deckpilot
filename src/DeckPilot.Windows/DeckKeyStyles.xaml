@@ -32,6 +32,7 @@
     <Trigger Property="Feedback" Value="{x:Static local:DeckKeyFeedback.Success}"><Setter TargetName="StateBadge" Property="Visibility" Value="Visible"/><Setter TargetName="KeyBody" Property="BorderBrush" Value="#82B892"/></Trigger>
     <Trigger Property="Feedback" Value="{x:Static local:DeckKeyFeedback.Error}"><Setter TargetName="StateBadge" Property="Visibility" Value="Visible"/><Setter TargetName="StateBadge" Property="Background" Value="#5D3533"/><Setter TargetName="StateGlyph" Property="Text" Value="!"/><Setter TargetName="StateGlyph" Property="Foreground" Value="#FFD1C9"/><Setter TargetName="KeyBody" Property="BorderBrush" Value="#D38D80"/></Trigger>
     <Trigger Property="IsEnabled" Value="False"><Setter TargetName="KeyBody" Property="Opacity" Value="0.45"/></Trigger>
+    <Trigger Property="IsDropTarget" Value="True"><Setter TargetName="KeyBody" Property="BorderBrush" Value="#A8D7ED"/><Setter TargetName="KeyFace" Property="Background" Value="#344E5C"/></Trigger>
    </ControlTemplate.Triggers>
   </ControlTemplate></Setter.Value></Setter>
  </Style>
