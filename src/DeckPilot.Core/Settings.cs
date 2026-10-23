@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace DeckPilot.Core;
 
-public enum ActionKind { Passthrough, Application, Folder, Website, Shortcut, Media, Spotify }
+public enum ActionKind { Passthrough, Application, Folder, Website, Shortcut, Media, Spotify, Microphone, AudioOutput }
 public sealed class ButtonAction
 {
     public string Label { get; set; } = "";
@@ -16,7 +16,26 @@ public sealed class ButtonAction
     public bool Alt { get; set; }
     public bool Shift { get; set; }
     public bool Win { get; set; }
-    public ButtonAction Copy() => (ButtonAction)MemberwiseClone();
+    public bool LongPressEnabled { get; set; }
+    public int LongPressMilliseconds { get; set; } = 600;
+    public ButtonAction? LongPressAction { get; set; }
+    public ButtonAction Copy()
+    {
+        var copy = (ButtonAction)MemberwiseClone();
+        copy.LongPressAction = LongPressAction?.CopyBasic();
+        return copy;
+    }
+    public ButtonAction CopyBasic()
+    {
+        var copy = (ButtonAction)MemberwiseClone();
+        copy.LongPressEnabled = false; copy.LongPressAction = null;
+        return copy;
+    }
+    public bool IsValid(bool nested = false) => Enum.IsDefined(Kind) && Label != null && Target != null && Arguments != null && ApplicationName != null
+        && LongPressMilliseconds is >= 200 and <= 3000
+        && (!nested || (!LongPressEnabled && LongPressAction == null))
+        && (LongPressAction == null || LongPressAction.IsValid(true))
+        && (!LongPressEnabled || (!nested && Kind != ActionKind.Passthrough && LongPressAction is { Kind: not ActionKind.Passthrough }));
 }
 public sealed class Profile
 {
@@ -50,7 +69,7 @@ public sealed class Settings
         if (PreferredBoardDeviceId is null || PreferredBoardDeviceId.Length > 512 || Version != 1 || LayoutColumns is not (3 or 4) || Profiles is null || Profiles.Count == 0 ||
             Profiles.Any(p => p is null || string.IsNullOrWhiteSpace(p.Name) || p.Id == Guid.Empty ||
                 p.Buttons is null || p.Buttons.Count != 12 || p.Buttons.Any(b => b is null ||
-                    !Enum.IsDefined(b.Kind) || b.Label is null || b.Target is null || b.Arguments is null || b.ApplicationName is null)) ||
+                    !b.IsValid())) ||
             Profiles.Select(p => p.Id).Distinct().Count() != Profiles.Count || KeyMap is null ||
             (KeyMap.Count != 0 && !IsCalibrated))
             throw new InvalidDataException("Le fichier de configuration est incomplet ou incompatible.");
@@ -66,6 +85,7 @@ public static class Calibration
 }
 public sealed class SettingsStore(string path)
 {
+    public string BackupsPath => Path.Combine(Path.GetDirectoryName(path)!, "Backups");
     private static readonly JsonSerializerOptions Options = new() { WriteIndented = true, Converters = { new JsonStringEnumConverter() } };
     public Settings Load()
     {
@@ -82,8 +102,24 @@ public sealed class SettingsStore(string path)
     {
         settings.Validate();
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
-        var temporary = path + ".tmp";
-        File.WriteAllText(temporary, JsonSerializer.Serialize(settings, Options));
-        File.Move(temporary, path, overwrite: true);
+        if (File.Exists(path))
+        {
+            Settings? previous = null;
+            try { previous = Load(); }
+            catch (Exception ex) when (ex is JsonException or InvalidDataException)
+            {
+                Directory.CreateDirectory(BackupsPath);
+                File.Copy(path, Path.Combine(BackupsPath, "recovered-settings-" + Guid.NewGuid().ToString("N") + ".json"));
+            }
+            if (previous != null && ProfileExchange.Export(previous.Profiles) != ProfileExchange.Export(settings.Profiles))
+                ProfileBackups.Save(BackupsPath, previous.Profiles);
+        }
+        var temporary = path + "." + Guid.NewGuid().ToString("N") + ".tmp";
+        try
+        {
+            File.WriteAllText(temporary, JsonSerializer.Serialize(settings, Options));
+            File.Move(temporary, path, overwrite: true);
+        }
+        finally { if (File.Exists(temporary)) File.Delete(temporary); }
     }
 }

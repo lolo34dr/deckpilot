@@ -1,10 +1,12 @@
-DeckPilot 1.5.0 adds Spotify-specific controls, action search and drag-and-drop, and repairs Windows startup registration.
+DeckPilot 1.6.0 fixes soft keypad rendering and adds profile recovery, Windows audio controls and short/long presses.
 
-- **Spotify** play/pause, next and previous address only the Spotify desktop media session, keeping browser/YouTube playback separate. Open Spotify and start playback once. Spotify in a browser is not supported; there is no global-media fallback if Spotify is missing or refuses a command.
-- Search actions and installed apps by name or keywords such as volume, skip, Spotify or Discord. Click results or drag them onto a key.
-- Drag catalog/search actions onto keys, swap two keys' actions without changing calibration, or drop an executable, shortcut, folder or HTTP(S) link. Drops configure actions without running them.
-- Startup keeps a saved per-user preference, repairs missing/stale paths, detects known Windows disable flags and supports explicit reactivation. Background and duplicate startup launches remain silent, including before calibration.
+- Native-size keypad text: removed whole-deck scaling and content shadow effects, added per-monitor DPI awareness and larger desktop app icons. Small windows scroll instead of shrinking keys.
+- Undo/redo for profile edits, including drag-and-drop (50 changes per app session); text fields keep native Ctrl+Z/Ctrl+Y.
+- Profile import/export and 20 automatic previous-version backups. Imports add new copies; restore and undo preserve calibration. Imported actions are never executed automatically.
+- Global Windows microphone toggle with a header indicator and live endpoint status. All active capture endpoints are muted/unmuted together.
+- Toggle between two chosen connected output devices, for all Windows default audio roles. Missing devices fail without silently choosing another output.
+- Two configured actions per key with a 200–3000 ms threshold. Short runs on release, long replaces short and runs once. Existing immediate actions and free F13–F24 keys keep their behavior. No firmware flash required.
 
-The build requires Windows 10 version 2004 or later, or Windows 11. Download **DeckPilot-Setup.exe** or update from DeckPilot. Profiles and calibration are preserved; no firmware flash is needed. To repair a previously blocked startup, check its status under **Préférences de l’application** and enable **Lancer avec Windows** again.
+Download **DeckPilot-Setup.exe** or update from the app. Profiles and calibration are preserved. Audio endpoint choices may need adjusting after importing profiles on another PC. Windows endpoint state differs from an application's own mute or a hardware mute switch; fixed-output applications may not follow default output changes.
 
-Validation includes simulated Spotify/browser isolation, search and settings checks, Windows installer/startup repair tests, real mouse drag-and-drop and native update/UI checks. Spotify playback alongside YouTube and a real Windows sign-in still need confirmation on the user's PC.
+Validation: core profile/gesture/audio tests (audio endpoints simulated), Windows installer/update/UI tests, native mouse drag undo/redo and long-action editing. Physical key holds, actual microphone drivers and headset/speaker switching still need confirmation on the owner's hardware.

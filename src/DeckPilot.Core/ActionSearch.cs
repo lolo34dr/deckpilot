@@ -7,7 +7,7 @@ public sealed record ActionPreset(string Name, string Details, ButtonAction Acti
 
 public static class ActionSearch
 {
-    public static readonly string[] KindNames = ["Touche libre", "Ouvrir une application", "Ouvrir un dossier", "Ouvrir un site web", "Raccourci clavier", "Multimédia", "Spotify"];
+    public static readonly string[] KindNames = ["Touche libre", "Ouvrir une application", "Ouvrir un dossier", "Ouvrir un site web", "Raccourci clavier", "Multimédia", "Spotify", "Microphone Windows", "Changer de sortie audio"];
     public static IReadOnlyList<ActionPreset> Find(string query, IEnumerable<InstalledApplication> applications)
     {
         if (string.IsNullOrWhiteSpace(query)) return [];

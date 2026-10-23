@@ -17,6 +17,7 @@ public sealed class KeyboardHook : IDisposable
     private readonly DeckKeyState state = new();
     private IntPtr handle;
     public event EventHandler<DeckKeyEventArgs>? KeyPressed;
+    public event EventHandler<DeckKeyEventArgs>? KeyReleased;
     public KeyboardHook()
     {
         callback = OnKey;
@@ -40,7 +41,7 @@ public sealed class KeyboardHook : IDisposable
                 var args = new DeckKeyEventArgs(pressedKey);
                 KeyPressed?.Invoke(this, args);
                 return args.Handled;
-            });
+            }, releasedKey => KeyReleased?.Invoke(this, new DeckKeyEventArgs(releasedKey)));
             if (suppress) return (IntPtr)1;
         }
         return CallNextHookEx(handle, code, message, data);

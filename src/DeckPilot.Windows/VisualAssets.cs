@@ -22,7 +22,9 @@ public static class VectorIcons
         "M12,2 A10,10 0 1 1 11.99,2 M2,12 L22,12 M12,2 C5,8 5,16 12,22 M12,2 C19,8 19,16 12,22",
         "M5,5 L10,5 10,10 5,10 Z M14,14 L19,14 19,19 14,19 Z M10,7.5 L16.5,7.5 16.5,14 M13,11 L16.5,14 20,11",
         "M8,4 L20,12 8,20 Z",
-        "M12,2 A10,10 0 1 1 11.99,2 M6,9 C10,7 15,7 18,10 M7,12 C10,10 14,10 17,13 M8,15 C11,14 13,14 16,16"
+        "M12,2 A10,10 0 1 1 11.99,2 M6,9 C10,7 15,7 18,10 M7,12 C10,10 14,10 17,13 M8,15 C11,14 13,14 16,16",
+        "M9,5 A3,3 0 0 1 15,5 L15,12 A3,3 0 0 1 9,12 Z M6,11 L6,12 A6,6 0 0 0 18,12 L18,11 M12,18 L12,22 M8,22 L16,22",
+        "M3,10 L7,10 12,5 12,19 7,14 3,14 Z M16,7 C21,10 21,14 16,17 M16,11 L18,13 21,10"
     ];
     private static readonly ImageSource[] Images = Create();
     private static ImageSource[] Create()
@@ -49,14 +51,17 @@ public static class ApplicationIcons
         if (string.IsNullOrWhiteSpace(target) || ApplicationTarget.IsPackaged(target) || !File.Exists(target)) return VectorIcons.ForKind(ActionKind.Application);
         if (Cache.TryGetValue(target, out var cached)) return cached;
         var info = new ShellFileInfo();
-        if (SHGetFileInfo(target, 0, ref info, (uint)Marshal.SizeOf<ShellFileInfo>(), 0x100) != IntPtr.Zero && info.Icon != IntPtr.Zero)
+        if (SHGetFileInfo(target, 0, ref info, (uint)Marshal.SizeOf<ShellFileInfo>(), 0x100 | 0x4000) != IntPtr.Zero && info.Icon != IntPtr.Zero)
         {
+            IntPtr largeIcon = IntPtr.Zero; IImageList? list = null;
             try
             {
-                var bitmap = Imaging.CreateBitmapSourceFromHIcon(info.Icon, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(32, 32));
+                var iid = typeof(IImageList).GUID;
+                if (SHGetImageList(2, ref iid, out list) >= 0) list.GetIcon(info.IconIndex, 1, out largeIcon);
+                var bitmap = Imaging.CreateBitmapSourceFromHIcon(largeIcon != IntPtr.Zero ? largeIcon : info.Icon, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
                 bitmap.Freeze(); Cache[target] = bitmap; return bitmap;
             }
-            finally { DestroyIcon(info.Icon); }
+            finally { if (largeIcon != IntPtr.Zero) DestroyIcon(largeIcon); if (list != null) Marshal.ReleaseComObject(list); DestroyIcon(info.Icon); }
         }
         return VectorIcons.ForKind(ActionKind.Application);
     }
@@ -68,6 +73,19 @@ public static class ApplicationIcons
     }
     [DllImport("shell32.dll", CharSet = CharSet.Unicode)] private static extern IntPtr SHGetFileInfo(string path, uint attributes, ref ShellFileInfo info, uint size, uint flags);
     [DllImport("user32.dll")] private static extern bool DestroyIcon(IntPtr icon);
+    [DllImport("shell32.dll")] private static extern int SHGetImageList(int size, ref Guid iid, out IImageList list);
+    [ComImport, Guid("46EB5926-582E-4017-9FDF-E8998DAA0950"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    private interface IImageList
+    {
+        [PreserveSig] int Add(IntPtr image, IntPtr mask, out int index);
+        [PreserveSig] int ReplaceIcon(int index, IntPtr icon, out int result);
+        [PreserveSig] int SetOverlayImage(int image, int overlay);
+        [PreserveSig] int Replace(int index, IntPtr image, IntPtr mask);
+        [PreserveSig] int AddMasked(IntPtr image, uint color, out int index);
+        [PreserveSig] int Draw(IntPtr parameters);
+        [PreserveSig] int Remove(int index);
+        [PreserveSig] int GetIcon(int index, uint flags, out IntPtr icon);
+    }
 }
 public sealed class ApplicationIconConverter : IValueConverter
 {
@@ -79,7 +97,7 @@ public static class Motion
     public static void Reveal(UIElement element)
     {
         if (!SystemParameters.ClientAreaAnimation) return;
-        element.BeginAnimation(UIElement.OpacityProperty, new DoubleAnimation(0.55, 1, TimeSpan.FromMilliseconds(180)) { EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut } });
+        element.BeginAnimation(UIElement.OpacityProperty, new DoubleAnimation(0.55, 1, TimeSpan.FromMilliseconds(180)) { FillBehavior = FillBehavior.Stop, EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut } });
     }
 }
 

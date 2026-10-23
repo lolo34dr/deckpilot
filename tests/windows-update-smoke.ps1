@@ -40,12 +40,17 @@ Add-Type -TypeDefinition @'
 using System;
 using System.Runtime.InteropServices;
 public static class DeckPilotDragMouse {
+    [DllImport("user32.dll")] public static extern uint GetDpiForWindow(IntPtr window);
     [DllImport("user32.dll")] public static extern bool SetCursorPos(int x, int y);
     [DllImport("user32.dll")] public static extern void mouse_event(uint flags, uint dx, uint dy, uint data, UIntPtr extra);
 }
 '@
 function Drag-Control($Source, $Destination) {
     if (!$Source -or !$Destination) { throw 'Drag source or target is missing' }
+    $left = (Find-Control $root 'DeckEditorScroll').GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern)
+    if ($left.Current.VerticallyScrollable) { $left.SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 0) }
+    $sidebar = Find-Control $root 'SidebarScroll'
+    if ($Source.Current.BoundingRectangle.Left -ge $sidebar.Current.BoundingRectangle.Left -or $Source.Current.IsOffscreen) { Show-InScroll $root $Source 'SidebarScroll' }
     $a = $Source.Current.BoundingRectangle; $b = $Destination.Current.BoundingRectangle
     $x = [int]($a.Left + $a.Width / 2); $y = [int]($a.Top + $a.Height / 2)
     $toX = [int]($b.Left + $b.Width / 2); $toY = [int]($b.Top + $b.Height / 2)
@@ -59,6 +64,33 @@ function Drag-Control($Source, $Destination) {
         }
     }
     finally { [DeckPilotDragMouse]::mouse_event(4,0,0,0,[UIntPtr]::Zero) }
+}
+function Show-InScroll($Root, $Control, [string]$Id) {
+    $viewer = Find-Control $Root $Id
+    $pattern = $viewer.GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern)
+    for ($i = 0; $i -lt 25; $i++) {
+        $bounds = $Control.Current.BoundingRectangle; $viewport = $viewer.Current.BoundingRectangle
+        $center = $bounds.Top + $bounds.Height / 2
+        if (!$Control.Current.IsOffscreen -and $center -gt $viewport.Top + 4 -and $center -lt $viewport.Bottom - 4) { return }
+        if (!$pattern.Current.VerticallyScrollable) { return }
+        $direction = if ($bounds.Height -gt 0 -and $center -lt $viewport.Top) { [System.Windows.Automation.ScrollAmount]::SmallDecrement } else { [System.Windows.Automation.ScrollAmount]::SmallIncrement }
+        $pattern.Scroll([System.Windows.Automation.ScrollAmount]::NoAmount, $direction)
+        Start-Sleep -Milliseconds 50
+    }
+    throw 'Control did not become visible in its scroll viewer'
+}
+function Select-ComboItem($Root, [string]$Id, [string]$Name, [int]$ProcessId) {
+    $combo = Find-Control $Root $Id
+    Show-InScroll $Root $combo 'DeckEditorScroll'
+    $expand = $combo.GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern)
+    $expand.Expand()
+    $nameCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::NameProperty, $Name)
+    $processCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ProcessIdProperty, $ProcessId)
+    $typeCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::ListItem)
+    $condition = [System.Windows.Automation.AndCondition]::new([System.Windows.Automation.Condition[]]@($nameCondition, $processCondition, $typeCondition))
+    Wait-Until { $script:gestureItem = [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition); $null -ne $script:gestureItem }
+    $script:gestureItem.GetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern).Select()
+    $expand.Collapse()
 }
 
 $source = (Resolve-Path $Executable).Path
@@ -247,6 +279,27 @@ try {
     }
     $data = Get-Content $settingsPath -Raw | ConvertFrom-Json
     if (($data.KeyMap -join ',') -ne ((124..135) -join ',')) { throw 'Dragging actions changed physical calibration' }
+    $script:phase = 'undo and redo an actual key swap'
+    Invoke-Control (Find-Control $root 'UndoProfileButton')
+    Wait-Until { (Get-Content $settingsPath -Raw | ConvertFrom-Json).Profiles[0].Buttons[3].Kind -eq 'Spotify' }
+    Invoke-Control (Find-Control $root 'RedoProfileButton')
+    Wait-Until { (Get-Content $settingsPath -Raw | ConvertFrom-Json).Profiles[0].Buttons[4].Kind -eq 'Spotify' }
+    $script:phase = 'configure short and long actions with a custom threshold'
+    $longCheck = Find-Control $root 'LongPressCheck'
+    $longCheck.GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern).Toggle()
+    Invoke-Control (Find-Control $root 'SaveActionButton')
+    (Find-Control $root 'LongPressThreshold').GetCurrentPattern([System.Windows.Automation.RangeValuePattern]::Pattern).SetValue(850)
+    Invoke-Control (Find-Control $root 'SaveActionButton')
+    Select-ComboItem $root 'GesturePicker' 'Appui long' $replacement.Id
+    $search.SetValue('microphone')
+    Wait-Until { $null -ne (Find-ButtonLike $root 'Microphone Windows') }
+    Invoke-Control (Find-ButtonLike $root 'Microphone Windows')
+    Wait-Until {
+        $configured = (Get-Content $settingsPath -Raw | ConvertFrom-Json).Profiles[0].Buttons[4]
+        $configured.Kind -eq 'Spotify' -and $configured.LongPressEnabled -and $configured.LongPressMilliseconds -eq 850 -and $configured.LongPressAction.Kind -eq 'Microphone'
+    }
+    Select-ComboItem $root 'GesturePicker' 'Appui court' $replacement.Id
+    $data = Get-Content $settingsPath -Raw | ConvertFrom-Json
     $script:phase = 'search for an installed application and assign it'
     $knownName = $data.Profiles[0].Buttons[0].ApplicationName
     if ([string]::IsNullOrWhiteSpace($knownName)) { throw 'The earlier application picker did not save its application name' }
@@ -255,6 +308,9 @@ try {
     Invoke-Control (Find-ButtonLike $root ([WildcardPattern]::Escape($knownName)))
     Wait-Until { (Get-Content $settingsPath -Raw | ConvertFrom-Json).Profiles[0].Buttons[4].Kind -eq 'Application' }
     $search.SetValue('')
+    if (!(Find-Control $root 'HeaderMicrophoneStatus')) { throw 'Global microphone status is missing from the header' }
+    $backups = @(Get-ChildItem (Join-Path $env:APPDATA 'DeckPilot\Backups') -Filter '*.deckpilot.json')
+    if ($backups.Count -eq 0 -or $backups.Count -gt 20) { throw 'Automatic profile backup retention is not active' }
     Write-Host 'PASS action tools: volume search, Spotify-specific preset drag, swapping keys without recalibration, installed app search and assignment'
     $script:phase = 'resize with all sidebar sections expanded'
     foreach ($id in @('BoardDiagnosticExpander', 'ProfilesExpander', 'ApplicationPreferences')) {
@@ -263,6 +319,8 @@ try {
     $transform = $root.GetCurrentPattern([System.Windows.Automation.TransformPattern]::Pattern)
     foreach ($size in @(@(960,720), @(1280,1000))) {
         $transform.Resize($size[0], $size[1])
+        $deckScroll = (Find-Control $root 'DeckEditorScroll').GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern)
+        if ($deckScroll.Current.VerticallyScrollable) { $deckScroll.SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 0) }
         $sidebar = (Find-Control $root 'SidebarScroll').GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern)
         Wait-Until { $sidebar.Current.VerticallyScrollable }
         $sidebar.SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 100)
@@ -271,6 +329,8 @@ try {
         if ($bounds.Bottom -gt $root.Current.BoundingRectangle.Bottom -or $bounds.Left -lt $root.Current.BoundingRectangle.Left) { throw 'Calibration button overflows after expanding sidebar sections' }
         $profileBounds = (Find-Control $root 'ProfilePicker').Current.BoundingRectangle
         $keyBounds = (Find-Control $root 'DeckKey01').Current.BoundingRectangle
+        $dpi = [DeckPilotDragMouse]::GetDpiForWindow($replacement.MainWindowHandle)
+        if ([Math]::Abs($keyBounds.Width * 96 / $dpi - 104) -gt 1) { throw 'Key text is being fractionally resized with the window rather than rendered at native size' }
         if ($keyBounds.Top -lt $profileBounds.Bottom + 20) { throw 'Profile selector overlaps the keypad after resizing' }
         $sidebar.SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 0)
     }
