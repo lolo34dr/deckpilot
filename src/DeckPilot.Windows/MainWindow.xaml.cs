@@ -222,7 +222,7 @@ public partial class MainWindow : Window
         }
         ApplyHardwareHighlights();
         ActionExecutionStatus.Text = !string.IsNullOrEmpty(feedbackMessages[selected]) ? feedbackMessages[selected] :
-            settings.ActiveProfile.Buttons[selected].Kind == ActionKind.Passthrough ? "Touche libre · À attribuer directement dans votre jeu ou application." : "Prêt à tester · L’action sera exécutée sur ce PC.";
+            settings.ActiveProfile.Buttons[selected].Kind == ActionKind.Passthrough ? "Aucune action à tester pour une touche libre." : "Prêt à tester · L’action sera exécutée sur ce PC.";
         ActionExecutionStatus.Foreground = Brush(feedback[selected] == DeckKeyFeedback.Error ? "#E1A398" : feedback[selected] == DeckKeyFeedback.Success ? "#AED3B8" : "#A8B6AC");
         TestActionButton.IsEnabled = settings.ActiveProfile.Buttons[selected].Kind != ActionKind.Passthrough && feedback[selected] != DeckKeyFeedback.Running && !firmwareOpen && !calibrating;
         if (pending) feedbackTimer.Start(); else feedbackTimer.Stop();
@@ -285,8 +285,8 @@ public partial class MainWindow : Window
         EditorActionTitle.Text = ActionNames[(int)kind];
         for (int i = 0; i < actionButtons.Count; i++)
         {
-            actionButtons[i].Background = Brush(i == (int)kind ? "#343434" : "#222222");
-            actionButtons[i].BorderBrush = Brush(i == (int)kind ? "#545454" : "#222222");
+            actionButtons[i].Background = Brush(i == (int)kind ? "#344B3B" : "#222622");
+            actionButtons[i].BorderBrush = Brush(i == (int)kind ? "#90B89B" : "#222622");
         }
         ApplicationPanel.Visibility = kind == ActionKind.Application ? Visibility.Visible : Visibility.Collapsed;
         AdvancedOptionsExpander.Visibility = kind is ActionKind.Application or ActionKind.Folder or ActionKind.Website ? Visibility.Visible : Visibility.Collapsed;
@@ -300,7 +300,7 @@ public partial class MainWindow : Window
         TargetLabel.Text = kind == ActionKind.Website ? "Adresse du site" : kind == ActionKind.Folder ? "Chemin du dossier" : "Chemin du programme";
         ActionHelp.Text = kind switch
         {
-            ActionKind.Passthrough => "La touche F13–F24 est transmise normalement. Attribuez-la directement dans votre jeu.",
+            ActionKind.Passthrough => settings.IsCalibrated ? "Cette touche F13–F24 reste libre. Attribuez-la directement dans votre jeu ou application." : "Le clavier F13–F24 fonctionne sans calibrage. Calibrez les positions pour que DeckPilot puisse exécuter vos actions personnalisées.",
             ActionKind.Application => "Choisissez une application installée, ou sélectionnez son fichier manuellement.",
             ActionKind.Folder => "Ouvre le dossier dans l’Explorateur Windows.",
             ActionKind.Website => "Ouvre une adresse http:// ou https:// dans votre navigateur par défaut.",

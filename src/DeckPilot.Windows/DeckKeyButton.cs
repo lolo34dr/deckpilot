@@ -39,7 +39,7 @@ public sealed class DeckKeyButton : Button
     private void AnimatePress()
     {
         if (Template?.FindName("KeyScale", this) is not ScaleTransform scale) return;
-        double target = IsHardwarePressed ? 0.965 : IsMouseOver ? 1.015 : 1;
+        double target = IsHardwarePressed ? 0.965 : 1;
         foreach (var property in new[] { ScaleTransform.ScaleXProperty, ScaleTransform.ScaleYProperty })
         {
             if (SystemParameters.ClientAreaAnimation)
