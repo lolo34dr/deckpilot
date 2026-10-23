@@ -8,11 +8,15 @@ using System.Windows.Threading;
 
 internal static class Program
 {
+    private sealed class PreviewApplication : DeckPilot.Windows.App
+    {
+        protected override void OnStartup(StartupEventArgs e) { }
+    }
     [STAThread]
     private static int Main()
     {
         RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
-        var app = new DeckPilot.Windows.App();
+        var app = new PreviewApplication();
         app.InitializeComponent();
         var window = new DeckPilot.Windows.MainWindow();
         window.MinWidth = 960; window.MinHeight = 720;
