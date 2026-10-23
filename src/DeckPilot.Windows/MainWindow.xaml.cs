@@ -82,6 +82,8 @@ public partial class MainWindow : Window
             }
         }
         layoutChanged = settings.MigrateLayout();
+        InitializeProfileTools();
+        InitializeAudioGestures();
         ActionPicker.ItemsSource = ActionNames;
         var keys = new List<Choice>();
         for (int k = 0x41; k <= 0x5A; k++) keys.Add(new(((char)k).ToString(), k));
@@ -103,7 +105,7 @@ public partial class MainWindow : Window
         AutoFirmwareCheck.IsChecked = settings.AutoCheckFirmware;
         VersionLabel.Text = "v" + UpdateService.DisplayVersion;
         UpdateStatus.Text = "Recherche au démarrage, puis toutes les 6 h.";
-        try { hook = new KeyboardHook(); hook.KeyPressed += OnDeckKey; }
+        try { hook = new KeyboardHook(); hook.KeyPressed += OnDeckKey; hook.KeyReleased += OnDeckRelease; }
         catch (Win32Exception ex)
         {
             MessageBox.Show("Impossible d’écouter les touches : " + ex.Message, "DeckPilot");
@@ -144,7 +146,7 @@ public partial class MainWindow : Window
             int index = i;
             var button = new DeckKeyButton();
             System.Windows.Automation.AutomationProperties.SetAutomationId(button, $"DeckKey{i + 1:00}");
-            button.Click += (_, _) => { if (Environment.TickCount64 < ignoreClickUntil) return; SaveEditor(); selected = index; LoadEditor(); };
+            button.Click += (_, _) => { if (Environment.TickCount64 < ignoreClickUntil) return; SaveEditor(); editingLong = false; selected = index; LoadEditor(); };
             DeckGrid.Children.Add(button); deckButtons.Add(button);
             var calibrationLabel = new TextBlock { Text = $"{i + 1:00}", FontSize = 18, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
             var cell = new Border { CornerRadius = new CornerRadius(6), BorderThickness = new Thickness(1), Margin = new Thickness(6), Child = calibrationLabel };
@@ -157,7 +159,7 @@ public partial class MainWindow : Window
             row.Children.Add(new Image { Source = VectorIcons.ForKind((ActionKind)i), Width = 18, Height = 18, Margin = new Thickness(0, 0, 12, 0), VerticalAlignment = VerticalAlignment.Center });
             row.Children.Add(new TextBlock { Text = ActionNames[i], VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
             var button = new Button { Content = row, HorizontalContentAlignment = HorizontalAlignment.Stretch, Padding = new Thickness(10, 12, 8, 12), Margin = new Thickness(0, 0, 0, 3) };
-            button.Click += (_, _) => { if (Environment.TickCount64 < ignoreClickUntil) return; bool changed = ActionPicker.SelectedIndex != index; ActionPicker.SelectedIndex = index; if (changed && (ActionKind)index is ActionKind.Media or ActionKind.Spotify) { MediaPicker.SelectedIndex = 0; SpotifyPicker.SelectedIndex = 0; } SaveEditor(); };
+            button.Click += (_, _) => { if (Environment.TickCount64 < ignoreClickUntil) return; if (editingLong && index == 0) { ReportError("Choisissez une action configurée pour l’appui long."); return; } bool changed = ActionPicker.SelectedIndex != index; ActionPicker.SelectedIndex = index; if (changed && (ActionKind)index is ActionKind.Media or ActionKind.Spotify) { MediaPicker.SelectedIndex = 0; SpotifyPicker.SelectedIndex = 0; } SaveEditor(); };
             System.Windows.Automation.AutomationProperties.SetName(button, ActionNames[i]);
             ActionCatalog.Children.Add(button); actionButtons.Add(button);
         }
@@ -249,8 +251,15 @@ public partial class MainWindow : Window
     private void LoadEditor()
     {
         bool previous = loading; loading = true;
-        var action = settings.ActiveProfile.Buttons[selected];
-        SelectedTitle.Text = $"Bouton {selected + 1:00}";
+        var root = settings.ActiveProfile.Buttons[selected];
+        if (!root.LongPressEnabled) editingLong = false;
+        var action = EditedAction;
+        LongPressCheck.IsChecked = root.LongPressEnabled;
+        LongPressCheck.IsEnabled = root.Kind != ActionKind.Passthrough;
+        GesturePanel.Visibility = root.LongPressEnabled ? Visibility.Visible : Visibility.Collapsed;
+        GesturePicker.SelectedIndex = editingLong ? 1 : 0;
+        LongPressThreshold.Value = root.LongPressMilliseconds;
+        SelectedTitle.Text = $"Bouton {selected + 1:00}" + (editingLong ? " · Appui long" : "");
         SelectedKey.Text = $"Ligne {selected / 4 + 1}, colonne {selected % 4 + 1} · " + (settings.IsCalibrated ? Calibration.KeyName(settings.KeyMap[selected]) : "Calibrage nécessaire");
         LabelEditor.Text = action.Label;
         ActionPicker.SelectedIndex = (int)action.Kind;
@@ -261,28 +270,33 @@ public partial class MainWindow : Window
         ShortcutPicker.SelectedItem = ((IEnumerable<Choice>)ShortcutPicker.ItemsSource).FirstOrDefault(c => c.Key == action.Key) ?? ((IEnumerable<Choice>)ShortcutPicker.ItemsSource).First();
         MediaPicker.SelectedItem = ((IEnumerable<Choice>)MediaPicker.ItemsSource).FirstOrDefault(c => c.Key == action.Key) ?? ((IEnumerable<Choice>)MediaPicker.ItemsSource).First();
         SpotifyPicker.SelectedItem = ((IEnumerable<Choice>)SpotifyPicker.ItemsSource).FirstOrDefault(c => c.Key == action.Key) ?? ((IEnumerable<Choice>)SpotifyPicker.ItemsSource).First();
-        UpdateActionFields(); RenderGrid(); loading = previous; Motion.Reveal(EditorPanel);
+        UpdateActionFields(); PopulateAudioPickers(action); RenderGrid(); loading = previous; UpdateHistoryState(); Motion.Reveal(EditorPanel);
     }
     private bool SaveEditor()
     {
         if (loading || ActionPicker.SelectedIndex < 0) return true;
-        var action = settings.ActiveProfile.Buttons[selected];
-        action.Label = LabelEditor.Text.Trim(); action.Kind = (ActionKind)ActionPicker.SelectedIndex;
-        action.Target = TargetEditor.Text.Trim(); action.Arguments = ArgumentsEditor.Text; action.ApplicationName = pickedApplicationName;
-        action.Ctrl = CtrlCheck.IsChecked == true; action.Alt = AltCheck.IsChecked == true;
-        action.Shift = ShiftCheck.IsChecked == true; action.Win = WinCheck.IsChecked == true;
-        if (action.Kind == ActionKind.Shortcut && ShortcutPicker.SelectedItem is Choice shortcut) action.Key = shortcut.Key;
-        if (action.Kind == ActionKind.Media && MediaPicker.SelectedItem is Choice media) action.Key = media.Key;
-        if (action.Kind == ActionKind.Spotify && SpotifyPicker.SelectedItem is Choice spotify) action.Key = spotify.Key;
+        var action = ReadEditorConfiguration();
+        if (!action.IsValid()) { ReportError("Les appuis court et long nécessitent deux actions configurées, hors touche libre."); return false; }
+        if (EditorChanged()) gestures.CancelIndex(selected);
+        settings.ActiveProfile.Buttons[selected] = action;
+        LongPressCheck.IsEnabled = action.Kind != ActionKind.Passthrough;
+        GesturePanel.Visibility = action.LongPressEnabled ? Visibility.Visible : Visibility.Collapsed;
         bool saved = Persist(); RenderGrid(); return saved;
     }
     private bool Persist()
     {
-        try { settings.ActiveProfileId = settings.ActiveProfile.Id; store.Save(settings); StatusText.Text = "Configuration enregistrée sur ce PC."; return true; }
+        try { settings.ActiveProfileId = settings.ActiveProfile.Id; store.Save(settings); if (!restoringHistory) profileHistory?.Record(settings); UpdateHistoryState(); StatusText.Text = "Configuration enregistrée sur ce PC."; return true; }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException) { ReportError("Enregistrement impossible : " + ex.Message); return false; }
     }
     private void SaveClick(object sender, RoutedEventArgs e) => SaveEditor();
-    private void ActionChanged(object sender, SelectionChangedEventArgs e) { if (!loading) UpdateActionFields(); }
+    private void ActionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (loading) return;
+        if (!editingLong && ActionPicker.SelectedIndex == (int)ActionKind.Passthrough) { LongPressCheck.IsChecked = false; GesturePanel.Visibility = Visibility.Collapsed; }
+        if (ActionPicker.SelectedIndex == (int)ActionKind.AudioOutput && EditedAction.Kind != ActionKind.AudioOutput)
+        { TargetEditor.Text = ""; ArgumentsEditor.Text = ""; PopulateAudioPickers(new() { Kind = ActionKind.AudioOutput }); }
+        UpdateActionFields(); UpdateHistoryState();
+    }
     private void UpdateActionFields()
     {
         if (ActionPicker.SelectedIndex < 0) return;
@@ -302,6 +316,7 @@ public partial class MainWindow : Window
         ShortcutPanel.Visibility = kind == ActionKind.Shortcut ? Visibility.Visible : Visibility.Collapsed;
         MediaPanel.Visibility = kind == ActionKind.Media ? Visibility.Visible : Visibility.Collapsed;
         SpotifyPanel.Visibility = kind == ActionKind.Spotify ? Visibility.Visible : Visibility.Collapsed;
+        AudioOutputPanel.Visibility = kind == ActionKind.AudioOutput ? Visibility.Visible : Visibility.Collapsed;
         BrowseButton.Visibility = kind == ActionKind.Website ? Visibility.Collapsed : Visibility.Visible;
         TargetLabel.Text = kind == ActionKind.Website ? "Adresse du site" : kind == ActionKind.Folder ? "Chemin du dossier" : "Chemin du programme";
         ActionHelp.Text = kind switch
@@ -311,6 +326,8 @@ public partial class MainWindow : Window
             ActionKind.Folder => "Ouvre le dossier dans l’Explorateur Windows.",
             ActionKind.Website => "Ouvre une adresse http:// ou https:// dans votre navigateur par défaut.",
             ActionKind.Shortcut => "Envoie ce raccourci à la fenêtre active. Les touches F13–F24 simulées ne déclenchent pas d’autres actions DeckPilot.",
+            ActionKind.Microphone => "Coupe ou réactive tous les microphones Windows actifs. L’état est affiché dans la carte Audio Windows.",
+            ActionKind.AudioOutput => "Alterne entre deux sorties par défaut Windows. Les applications réglées sur une sortie fixe peuvent ne pas suivre ce changement.",
             ActionKind.Spotify => "Contrôle uniquement Spotify pour Windows, même si YouTube est actif. Ouvrez Spotify et lancez une lecture. Le lecteur Spotify dans un navigateur n’est pas pris en charge.",
             _ => "Contrôles multimédias généraux de Windows : peuvent agir sur YouTube ou un autre lecteur actif."
         };
@@ -332,7 +349,7 @@ public partial class MainWindow : Window
     private void ProfileChanged(object sender, SelectionChangedEventArgs e)
     {
         if (loading || ProfilePicker.SelectedItem is not Profile next) return;
-        SaveEditor(); settings.ActiveProfileId = next.Id; LoadEditor(); ProfileName.Text = next.Name; Persist();
+        SaveEditor(); CancelPendingGestures(); editingLong = false; settings.ActiveProfileId = next.Id; LoadEditor(); ProfileName.Text = next.Name; Persist();
         RefreshTrayProfiles();
         if (tray != null) tray.Text = "DeckPilot · " + next.Name[..Math.Min(next.Name.Length, 45)];
     }
@@ -341,7 +358,8 @@ public partial class MainWindow : Window
     private void DuplicateProfile(object sender, RoutedEventArgs e) => AddProfile(true);
     private void AddProfile(bool duplicate)
     {
-        SaveEditor();
+        if (settings.Profiles.Count >= 100) { ReportError("Limite de 100 profils atteinte."); return; }
+        SaveEditor(); CancelPendingGestures(); editingLong = false;
         var profile = new Profile { Name = NewProfileName() };
         if (duplicate) { profile.Name += " (copie)"; profile.Buttons = settings.ActiveProfile.Buttons.Select(b => b.Copy()).ToList(); }
         settings.Profiles.Add(profile); settings.ActiveProfileId = profile.Id; RefreshProfiles(); LoadEditor(); Persist();
@@ -354,6 +372,7 @@ public partial class MainWindow : Window
     {
         if (settings.Profiles.Count == 1) { StatusText.Text = "Conservez au moins un profil."; return; }
         if (MessageBox.Show(this, $"Supprimer le profil « {settings.ActiveProfile.Name} » ?", "DeckPilot", MessageBoxButton.YesNo) != MessageBoxResult.Yes) return;
+        CancelPendingGestures(); editingLong = false;
         settings.Profiles.Remove(settings.ActiveProfile); settings.ActiveProfileId = settings.Profiles[0].Id;
         RefreshProfiles(); LoadEditor(); Persist();
     }
@@ -372,16 +391,14 @@ public partial class MainWindow : Window
         if (index < 0) return;
         var action = settings.ActiveProfile.Buttons[index].Copy();
         e.Handled = action.Kind != ActionKind.Passthrough;
-        Dispatcher.BeginInvoke(async () =>
-        {
-            pressedUntil[index] = Environment.TickCount64 + 180; RefreshFeedback();
-            await ExecuteActionAsync(index, action);
-        });
+        pressedUntil[index] = Environment.TickCount64 + 180; RefreshFeedback();
+        if (gestures.Begin(e.Key, index, action, Environment.TickCount64) is { } invocation) RunGesture(invocation);
+        if (gestures.HasPending) gestureTimer.Start();
     }
     private async void TestActionClick(object sender, RoutedEventArgs e)
     {
         if (calibrating || firmwareOpen || !SaveEditor()) return;
-        await ExecuteActionAsync(selected, settings.ActiveProfile.Buttons[selected].Copy());
+        await ExecuteActionAsync(selected, EditedAction.CopyBasic());
     }
     private async Task ExecuteActionAsync(int index, ButtonAction action)
     {
@@ -393,7 +410,12 @@ public partial class MainWindow : Window
         {
             // Let WPF render feedback before dispatching; keyboard commands stay on the UI thread.
             await Dispatcher.Yield(DispatcherPriority.Render);
-            if (action.Kind == ActionKind.Spotify)
+            if (action.Kind is ActionKind.Microphone or ActionKind.AudioOutput)
+            {
+                await Task.Run(() => { if (action.Kind == ActionKind.Microphone) WindowsAudio.ToggleMicrophones(); else WindowsAudio.ToggleOutput(action.Target, action.Arguments); });
+                await RefreshAudioAsync();
+            }
+            else if (action.Kind == ActionKind.Spotify)
                 await SpotifyController.RunAsync(action.Key, lifetime.Token);
             else if (action.Kind is ActionKind.Application or ActionKind.Folder or ActionKind.Website)
                 await Task.Run(() => ActionRunner.Run(action));
@@ -419,7 +441,7 @@ public partial class MainWindow : Window
         if (!SaveEditor()) return;
         string preferredId = boardState?.Devices.Any(d => d.DeviceId == settings.PreferredBoardDeviceId) == true
             ? settings.PreferredBoardDeviceId : boardState?.Device?.DeviceId ?? settings.PreferredBoardDeviceId;
-        firmwareOpen = true;
+        CancelPendingGestures(); firmwareOpen = true;
         try
         {
             if (boardConnection != null) await boardConnection.PauseAsync();
@@ -437,7 +459,7 @@ public partial class MainWindow : Window
     private void CalibrateClick(object sender, RoutedEventArgs e) => BeginCalibration();
     private void BeginCalibration()
     {
-        SaveEditor(); captured.Clear(); calibrating = true;
+        SaveEditor(); CancelPendingGestures(); captured.Clear(); calibrating = true;
         CalibrationOverlay.Visibility = Visibility.Visible; CalibrationError.Text = layoutChanged ? "Disposition corrigée : 3 lignes de 4. Recalibrez les positions ; vos profils sont conservés." : "Les actions personnalisées sont suspendues pendant le calibrage.";
         UpdateCalibration();
     }
@@ -544,6 +566,7 @@ public partial class MainWindow : Window
     private void ApplyBoardState(BoardConnectionState state)
     {
         if (lifetime.IsCancellationRequested) return;
+        if (boardState?.Kind == BoardConnectionKind.Connected && state.Kind != BoardConnectionKind.Connected) CancelPendingGestures();
         boardState = state;
         bool connected = state.Kind == BoardConnectionKind.Connected;
         DeckAvailabilityStatus.Text = state.Kind switch

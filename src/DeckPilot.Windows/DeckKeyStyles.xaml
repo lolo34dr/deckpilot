@@ -5,16 +5,14 @@
   <Setter Property="Foreground" Value="#E8ECE9"/><Setter Property="FocusVisualStyle" Value="{DynamicResource KeyboardFocus}"/>
   <Setter Property="HorizontalContentAlignment" Value="Stretch"/><Setter Property="VerticalContentAlignment" Value="Stretch"/>
   <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="local:DeckKeyButton">
-   <Border x:Name="KeyBody" CornerRadius="9" BorderThickness="1" BorderBrush="#414742" Background="#101311" Padding="3,3,3,6" RenderTransformOrigin="0.5,0.5">
-    <Border.RenderTransform><ScaleTransform x:Name="KeyScale"/></Border.RenderTransform>
-    <Border.Effect><DropShadowEffect Color="#000000" BlurRadius="5" ShadowDepth="3" Opacity="0.35"/></Border.Effect>
+   <Border x:Name="KeyBody" CornerRadius="9" BorderThickness="1" BorderBrush="#414742" Background="#101311" Padding="3,3,3,6">
     <Border x:Name="KeyFace" CornerRadius="6" BorderBrush="#343A36" BorderThickness="1" Padding="8,5,8,6">
      <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="0,1"><GradientStop Color="#292E2A" Offset="0"/><GradientStop Color="#191D1A" Offset="1"/></LinearGradientBrush></Border.Background>
      <Grid>
       <Grid.RowDefinitions><RowDefinition Height="14"/><RowDefinition Height="*"/><RowDefinition Height="16"/></Grid.RowDefinitions>
       <Image Source="{TemplateBinding KindSource}" Width="12" Height="14" Opacity="0.9" HorizontalAlignment="Left"/>
       <TextBlock Text="{TemplateBinding KeyCaption}" FontSize="11" Foreground="#C1CDC4" HorizontalAlignment="Right"/>
-      <Image Grid.Row="1" Source="{TemplateBinding IconSource}" Width="36" Height="36" Margin="0,2,0,2"/>
+      <Image Grid.Row="1" Source="{TemplateBinding IconSource}" Width="36" Height="36" RenderOptions.BitmapScalingMode="HighQuality" Margin="0,2,0,2"/>
       <Border x:Name="StateBadge" Grid.Row="1" Width="18" Height="18" CornerRadius="9" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="#34473A" Visibility="Collapsed">
        <TextBlock x:Name="StateGlyph" Text="✓" FontSize="11" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#C5E3CE"/>
       </Border>

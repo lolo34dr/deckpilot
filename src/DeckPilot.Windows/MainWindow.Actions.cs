@@ -59,7 +59,7 @@ public partial class MainWindow
                             var buttons = settings.ActiveProfile.Buttons;
                             (buttons[index], buttons[payload.Source]) = (buttons[payload.Source], buttons[index]);
                             ResetActionFeedback(payload.Source); ResetActionFeedback(index);
-                            selected = index; LoadEditor(); Persist();
+                            editingLong = false; selected = index; LoadEditor(); Persist();
                             StatusText.Text = "Actions échangées · Le calibrage des touches ne change pas.";
                         }
                         else AssignAction(index, payload.Action);
@@ -73,13 +73,19 @@ public partial class MainWindow
     }
     private void ResetActionFeedback(int index)
     {
-        executionTickets[index]++; feedback[index] = DeckKeyFeedback.Ready;
+        gestures.CancelIndex(index); executionTickets[index]++; feedback[index] = DeckKeyFeedback.Ready;
         feedbackMessages[index] = ""; feedbackUntil[index] = pressedUntil[index] = 0;
     }
-    private void AssignAction(int index, ButtonAction action)
+    private void AssignAction(int index, ButtonAction action, bool currentGesture = false)
     {
         if (calibrating || firmwareOpen || !SaveEditor()) return;
-        settings.ActiveProfile.Buttons[index] = action.Copy(); ResetActionFeedback(index);
+        if (currentGesture && editingLong && index == selected)
+        {
+            if (action.Kind == ActionKind.Passthrough) { ReportError("Choisissez une action configurée pour l’appui long."); return; }
+            settings.ActiveProfile.Buttons[index].LongPressAction = action.CopyBasic();
+        }
+        else { settings.ActiveProfile.Buttons[index] = action.Copy(); editingLong = false; }
+        ResetActionFeedback(index);
         selected = index; LoadEditor(); Persist();
         StatusText.Text = "Action affectée · Complétez ses réglages si nécessaire. Rien n’a été exécuté.";
     }
@@ -164,7 +170,7 @@ public partial class MainWindow
             Grid.SetColumn(text, 1); content.Children.Add(text);
             var button = new Button { Content = content, Padding = new Thickness(8, 9, 8, 9), Margin = new Thickness(0, 0, 0, 4), HorizontalContentAlignment = HorizontalAlignment.Stretch, ToolTip = preset.Details };
             System.Windows.Automation.AutomationProperties.SetName(button, preset.Name);
-            button.Click += (_, _) => { if (Environment.TickCount64 >= ignoreClickUntil) AssignAction(selected, preset.Action); };
+            button.Click += (_, _) => { if (Environment.TickCount64 >= ignoreClickUntil) AssignAction(selected, preset.Action, true); };
             WireDragSource(button, () => new(preset.Action.Copy())); ActionSearchResults.Children.Add(button);
         }
         ActionSearchStatus.Text = $"{results.Count} résultat(s)" + (applicationsLoading ? " · Recherche des applications…" : applicationSearchWarning.Length > 0 ? " · " + applicationSearchWarning : " · Cliquez ou glissez sur une touche.");

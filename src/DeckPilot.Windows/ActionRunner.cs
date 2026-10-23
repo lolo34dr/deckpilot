@@ -14,6 +14,8 @@ public static class ActionRunner
     {
         switch (action.Kind)
         {
+            case ActionKind.Microphone:
+            case ActionKind.AudioOutput: throw new InvalidOperationException("Les commandes audio utilisent le service Windows Audio.");
             case ActionKind.Spotify: throw new InvalidOperationException("Les commandes Spotify utilisent la session dédiée.");
             case ActionKind.Passthrough: return;
             case ActionKind.Application:
