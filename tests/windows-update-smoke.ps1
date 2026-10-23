@@ -198,6 +198,25 @@ try {
     Invoke-Control (Find-Control $firmwareWindow 'CloseButton')
     Wait-Until { !(Test-Path $firmwareStage) }
     Write-Host 'PASS firmware dialog: embedded tools and image validated, flash disabled without a selected board, temporary files cleaned'
+    $script:phase = 'resize with all sidebar sections expanded'
+    foreach ($id in @('BoardDiagnosticExpander', 'ProfilesExpander', 'ApplicationPreferences')) {
+        (Find-Control $root $id).GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern).Expand()
+    }
+    $transform = $root.GetCurrentPattern([System.Windows.Automation.TransformPattern]::Pattern)
+    foreach ($size in @(@(960,720), @(1280,1000))) {
+        $transform.Resize($size[0], $size[1])
+        $sidebar = (Find-Control $root 'SidebarScroll').GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern)
+        Wait-Until { $sidebar.Current.VerticallyScrollable }
+        $sidebar.SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 100)
+        Wait-Until { !(Find-Control $root 'CalibrateButton').Current.IsOffscreen }
+        $bounds = (Find-Control $root 'CalibrateButton').Current.BoundingRectangle
+        if ($bounds.Bottom -gt $root.Current.BoundingRectangle.Bottom -or $bounds.Left -lt $root.Current.BoundingRectangle.Left) { throw 'Calibration button overflows after expanding sidebar sections' }
+        $profileBounds = (Find-Control $root 'ProfilePicker').Current.BoundingRectangle
+        $keyBounds = (Find-Control $root 'DeckKey01').Current.BoundingRectangle
+        if ($keyBounds.Top -lt $profileBounds.Bottom + 20) { throw 'Profile selector overlaps the keypad after resizing' }
+        $sidebar.SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 0)
+    }
+    Write-Host 'PASS responsive layout: expanded sections remain scrollable, calibration stays reachable, profile and keypad remain separated'
     $script:smokePassed = $true
     Write-Host 'PASS Windows UI and installed apps: twelve keys, vector templates, application catalog and persisted selection'
 }
