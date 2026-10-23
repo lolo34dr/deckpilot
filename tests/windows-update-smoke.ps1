@@ -41,27 +41,32 @@ using System;
 using System.Runtime.InteropServices;
 public static class DeckPilotDragMouse {
     [DllImport("user32.dll")] public static extern uint GetDpiForWindow(IntPtr window);
+    [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr window);
     [DllImport("user32.dll")] public static extern bool SetCursorPos(int x, int y);
     [DllImport("user32.dll")] public static extern void mouse_event(uint flags, uint dx, uint dy, uint data, UIntPtr extra);
 }
 '@
 function Drag-Control($Source, $Destination) {
     if (!$Source -or !$Destination) { throw 'Drag source or target is missing' }
+    [void][DeckPilotDragMouse]::SetForegroundWindow($replacement.MainWindowHandle)
     $left = (Find-Control $root 'DeckEditorScroll').GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern)
     if ($left.Current.VerticallyScrollable) { $left.SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 0) }
     $sidebar = Find-Control $root 'SidebarScroll'
     if ($Source.Current.BoundingRectangle.Left -ge $sidebar.Current.BoundingRectangle.Left -or $Source.Current.IsOffscreen) { Show-InScroll $root $Source 'SidebarScroll' }
+    Start-Sleep -Milliseconds 300
     $a = $Source.Current.BoundingRectangle; $b = $Destination.Current.BoundingRectangle
     $x = [int]($a.Left + $a.Width / 2); $y = [int]($a.Top + $a.Height / 2)
     $toX = [int]($b.Left + $b.Width / 2); $toY = [int]($b.Top + $b.Height / 2)
     [void][DeckPilotDragMouse]::SetCursorPos($x, $y)
     Start-Sleep -Milliseconds 100
     [DeckPilotDragMouse]::mouse_event(2,0,0,0,[UIntPtr]::Zero)
+    Start-Sleep -Milliseconds 200
     try {
         for ($step = 1; $step -le 16; $step++) {
             [void][DeckPilotDragMouse]::SetCursorPos([int]($x + ($toX - $x) * $step / 16), [int]($y + ($toY - $y) * $step / 16))
-            Start-Sleep -Milliseconds 35
+            Start-Sleep -Milliseconds 60
         }
+        Start-Sleep -Milliseconds 250
     }
     finally { [DeckPilotDragMouse]::mouse_event(4,0,0,0,[UIntPtr]::Zero) }
 }
@@ -271,11 +276,15 @@ try {
     Wait-Until { $null -ne (Find-ButtonLike $root 'Multim*Volume +') }
     $search.SetValue('spotify')
     Wait-Until { $null -ne (Find-ButtonLike $root 'Spotify*Piste suivante') }
-    Drag-Control (Find-ButtonLike $root 'Spotify*Piste suivante') (Find-Control $root 'DeckKey04')
-    Wait-Until {
+    $spotifyAssigned = {
         $data = Get-Content $settingsPath -Raw | ConvertFrom-Json
         $data.Profiles[0].Buttons[3].Kind -eq 'Spotify' -and $data.Profiles[0].Buttons[3].Key -eq 176
     }
+    for ($attempt = 0; $attempt -lt 3 -and !(& $spotifyAssigned); $attempt++) {
+        Drag-Control (Find-ButtonLike $root 'Spotify*Piste suivante') (Find-Control $root 'DeckKey04')
+        try { Wait-Until $spotifyAssigned 5 } catch { if ($attempt -eq 2) { throw } }
+    }
+    $script:phase = 'swap configured keys with a native mouse drag'
     Drag-Control (Find-Control $root 'DeckKey04') (Find-Control $root 'DeckKey05')
     Wait-Until {
         $data = Get-Content $settingsPath -Raw | ConvertFrom-Json

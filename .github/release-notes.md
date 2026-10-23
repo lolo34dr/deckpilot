@@ -1,4 +1,4 @@
-DeckPilot 1.6.0 fixes soft keypad rendering and adds profile recovery, Windows audio controls and short/long presses.
+DeckPilot 1.6.1 fixes soft keypad rendering and adds profile recovery, Windows audio controls and short/long presses.
 
 - Native-size keypad text: removed whole-deck scaling and content shadow effects, added per-monitor DPI awareness and larger desktop app icons. Small windows scroll instead of shrinking keys.
 - Undo/redo for profile edits, including drag-and-drop (50 changes per app session); text fields keep native Ctrl+Z/Ctrl+Y.
