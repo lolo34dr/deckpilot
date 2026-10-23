@@ -1,4 +1,5 @@
 $ErrorActionPreference = 'Stop'
+trap { Write-Host ("::error::" + ($_.Exception.Message + ' | ' + $_.ScriptStackTrace).Replace("`r", ' ').Replace("`n", ' ')); throw }
 if ($env:GITHUB_ACTIONS -ne 'true') { throw 'Use an isolated Windows runner.' }
 Add-Type -AssemblyName UIAutomationClient, UIAutomationTypes, System.Drawing
 Add-Type -TypeDefinition @'
