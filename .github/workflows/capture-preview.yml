@@ -2,7 +2,7 @@ name: Capture published DeckPilot interface
 on:
   push:
     branches: ['preview/screenshot-1.6.1']
-    paths: ['.github/workflows/capture-preview.yml', 'tests/capture-preview.ps1']
+    paths: ['.github/workflows/capture-preview.yml', 'tests/capture-preview.ps1', 'tools/DeckPilot.Preview/**']
 permissions:
   contents: write
 jobs:
@@ -11,6 +11,9 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
       - name: Capture the published Windows app
         shell: powershell
         run: ./tests/capture-preview.ps1
