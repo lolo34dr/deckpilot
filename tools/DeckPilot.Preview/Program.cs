@@ -15,8 +15,14 @@ internal static class Program
     [STAThread]
     private static int Main()
     {
+        try { return Capture(); }
+        catch (Exception error) { Console.WriteLine("::error::" + error.ToString().Replace("\r", " ").Replace("\n", " ")); return 1; }
+    }
+    private static int Capture()
+    {
         RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
         var app = new PreviewApplication();
+        app.DispatcherUnhandledException += (_, e) => { Console.WriteLine("::error::" + e.Exception.ToString().Replace("\r", " ").Replace("\n", " ")); e.Handled = true; app.Shutdown(1); };
         app.InitializeComponent();
         var window = new DeckPilot.Windows.MainWindow();
         window.MinWidth = 960; window.MinHeight = 720;
