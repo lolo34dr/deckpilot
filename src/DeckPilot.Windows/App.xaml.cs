@@ -11,6 +11,7 @@ public partial class App : Application
     private RegisteredWaitHandle? installerWait;
     protected override async void OnStartup(StartupEventArgs e)
     {
+        if (e.Args.Contains("--preview-capture")) return;
         base.OnStartup(e);
         if (e.Args.Length == 2 && e.Args[0] == "--apply-update")
         {

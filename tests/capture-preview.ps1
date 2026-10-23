@@ -14,5 +14,5 @@ $buttons[5] = @{ Kind = 'Website'; Label = 'GitHub'; Target = 'https://github.co
 $config = Join-Path $env:APPDATA 'DeckPilot\settings.json'
 New-Item -ItemType Directory -Force (Split-Path $config) | Out-Null
 @{ Version = 1; LayoutColumns = 4; AutoCheckUpdates = $false; AutoCheckFirmware = $false; KeyMap = @(124..135); ActiveProfileId = $id; Profiles = @(@{ Id = $id; Name = "Profil d'exemple"; Buttons = $buttons }) } | ConvertTo-Json -Depth 10 | Set-Content $config -Encoding UTF8
-dotnet run --project tools/DeckPilot.Preview -c Release
+dotnet run --project src/DeckPilot.Windows -c Release -p:PreviewCapture=true -- --preview-capture
 if ($LASTEXITCODE -ne 0) { throw "Native WPF capture failed: $LASTEXITCODE" }

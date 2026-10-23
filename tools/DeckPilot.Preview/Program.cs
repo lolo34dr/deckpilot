@@ -8,10 +8,6 @@ using System.Windows.Threading;
 
 internal static class Program
 {
-    private sealed class PreviewApplication : DeckPilot.Windows.App
-    {
-        protected override void OnStartup(StartupEventArgs e) { }
-    }
     [STAThread]
     private static int Main()
     {
@@ -21,8 +17,7 @@ internal static class Program
     private static int Capture()
     {
         RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
-        Application.ResourceAssembly = typeof(DeckPilot.Windows.App).Assembly;
-        var app = new PreviewApplication();
+        var app = new DeckPilot.Windows.App();
         app.DispatcherUnhandledException += (_, e) => { Console.WriteLine("::error::" + e.Exception.ToString().Replace("\r", " ").Replace("\n", " ")); e.Handled = true; app.Shutdown(1); };
         app.InitializeComponent();
         var window = new DeckPilot.Windows.MainWindow();

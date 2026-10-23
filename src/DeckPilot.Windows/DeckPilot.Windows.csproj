@@ -19,4 +19,8 @@
     <Error Text="Build the firmware bundle with firmware/tools/build.ps1 before publishing." />
   </Target>
   <ItemGroup><ProjectReference Include="../DeckPilot.Core/DeckPilot.Core.csproj" /></ItemGroup>
+  <PropertyGroup Condition="'$(PreviewCapture)' == 'true'">
+    <StartupObject>Program</StartupObject><OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(PreviewCapture)' == 'true'"><Compile Include="../../tools/DeckPilot.Preview/Program.cs" /></ItemGroup>
 </Project>
