@@ -277,7 +277,7 @@ Drag an action from the catalog or search results onto a key to assign it. Drag 
 
 Windows startup now keeps an explicit per-user preference, repairs a stale or missing Run entry, and reports known Windows startup disable flags. Normal launches respect Windows disabling; explicitly enabling **Lancer avec Windows** clears the known DeckPilot disable flag for the current user. Background launches remain hidden even before calibration, and duplicate background launches exit quietly. After updating, open **Préférences de l’application**, check the startup status and reactivate the option if Windows blocked it. A real sign-out/sign-in on the user's PC remains the final check for Windows policies or machine-specific restrictions.
 
-## Sharp keypad rendering, profile recovery and audio controls (1.6.0)
+## Sharp keypad rendering, profile recovery and audio controls (1.6.1)
 
 The keypad now renders at native WPF sizes instead of scaling text through a Viewbox. Parent/key shadow effects and text scale animations were removed; smaller windows scroll rather than shrinking the keypad. The app declares per-monitor DPI awareness and uses larger Windows shell icons for desktop applications.
 
