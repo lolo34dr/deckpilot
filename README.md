@@ -304,3 +304,5 @@ Windows smoke checks continue to perform native mouse drags and validate saved a
 Build and release workflows use Node.js 24 actions. The Arduino compiler remains at CLI 1.2.2; CI downloads its Windows archive with a pinned SHA-256 checksum. The firmware and its toolchain versions are unchanged.
 
 Settings reads in Windows tests explicitly allow read/write/delete sharing and parse UTF-8 after closing the reader. This prevents the test itself from denying the app’s atomic file replacement. The history test keeps an old snapshot open across three undo/redo cycles and verifies that it remains intact while the live settings change.
+
+On Windows, existing settings files are committed with `File.Replace` rather than overwrite-mode `File.Move`. This supports readers that allow deletion while retaining a complete old snapshot. The core suite tests three replacements with a reader held open; Windows core checks run before firmware compilation and publishing so persistence failures are detected early.

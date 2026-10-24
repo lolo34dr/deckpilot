@@ -17,17 +17,18 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.0.x'
+      - name: Verify core behavior on Windows
+        run: dotnet run --project tests/DeckPilot.Checks -c Release
       - name: Install verified Arduino CLI 1.2.2
         shell: pwsh
         run: ./firmware/tools/install-cli.ps1
       - name: Compile firmware and bundle verified AVRDUDE
         shell: pwsh
         run: ./firmware/tools/build.ps1
-      - uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '8.0.x'
       - run: dotnet build DeckPilot.sln -c Release -p:RequireFirmwareBundle=true
-      - run: dotnet run --project tests/DeckPilot.Checks -c Release --no-build
       - run: dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true -p:RequireFirmwareBundle=true -p:PublishSingleFile=false -o artifacts/win-x64
       - name: Publish standalone executable for Windows smoke checks
         run: dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true -p:RequireFirmwareBundle=true -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o artifacts/standalone
