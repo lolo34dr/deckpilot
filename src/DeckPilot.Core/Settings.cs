@@ -118,7 +118,10 @@ public sealed class SettingsStore(string path)
         try
         {
             File.WriteAllText(temporary, JsonSerializer.Serialize(settings, Options));
-            File.Move(temporary, path, overwrite: true);
+            // ReplaceFile on Windows keeps existing delete-sharing readers on
+            // their old snapshot; MoveFileEx cannot reliably overwrite it.
+            if (OperatingSystem.IsWindows() && File.Exists(path)) File.Replace(temporary, path, null);
+            else File.Move(temporary, path, overwrite: true);
         }
         finally { if (File.Exists(temporary)) File.Delete(temporary); }
     }
