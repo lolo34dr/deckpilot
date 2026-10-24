@@ -8,7 +8,17 @@ $script:phase = 'initialization'
 $script:smokePassed = $false
 $testStarted = Get-Date
 trap {
-    $message = ($script:phase + ': ' + $_.Exception.Message + ' | ' + $_.ScriptStackTrace + ' | Last drag: ' + $script:lastDrag + ' | Last scroll: ' + $script:lastScroll).Replace('%','%25').Replace("`r",'%0D').Replace("`n",'%0A')
+    $uiState = ''
+    try {
+        if ($root) {
+            $uiState = 'Status=' + (Find-Control $root 'StatusText').Current.Name + '; selection=' + (Find-Control $root 'SelectedTitle').Current.Name + '; redoEnabled=' + (Find-Control $root 'RedoProfileButton').Current.IsEnabled
+        }
+        if (Test-Path $settingsPath) {
+            $savedState = Get-Content $settingsPath -Raw -Encoding UTF8 | ConvertFrom-Json
+            $uiState += '; kinds=' + (($savedState.Profiles[0].Buttons | ForEach-Object { $_.Kind }) -join ',')
+        }
+    } catch { }
+    $message = ($script:phase + ': ' + $_.Exception.Message + ' | ' + $_.ScriptStackTrace + ' | ' + $uiState + ' | Last drag: ' + $script:lastDrag + ' | Last scroll: ' + $script:lastScroll).Replace('%','%25').Replace("`r",'%0D').Replace("`n",'%0A')
     Write-Host "::error title=Windows smoke::$message"
     throw
 }
@@ -328,9 +338,17 @@ try {
     if (($data.KeyMap -join ',') -ne ((124..135) -join ',')) { throw 'Dragging actions changed physical calibration' }
     $script:phase = 'undo and redo an actual key swap'
     Invoke-Control (Find-Control $root 'UndoProfileButton')
-    Wait-Until { (Get-Content $settingsPath -Raw | ConvertFrom-Json).Profiles[0].Buttons[3].Kind -eq 'Spotify' }
+    Wait-Until {
+        (Get-Content $settingsPath -Raw | ConvertFrom-Json).Profiles[0].Buttons[3].Kind -eq 'Spotify' -and
+        (Find-Control $root 'StatusText').Current.Name -like 'Modification annul*' -and
+        (Find-Control $root 'RedoProfileButton').Current.IsEnabled
+    }
+    $script:phase = 'redo the completed key-swap undo'
     Invoke-Control (Find-Control $root 'RedoProfileButton')
-    Wait-Until { (Get-Content $settingsPath -Raw | ConvertFrom-Json).Profiles[0].Buttons[4].Kind -eq 'Spotify' }
+    Wait-Until {
+        (Get-Content $settingsPath -Raw | ConvertFrom-Json).Profiles[0].Buttons[4].Kind -eq 'Spotify' -and
+        (Find-Control $root 'StatusText').Current.Name -like 'Modification r*'
+    }
     $script:phase = 'configure short and long actions with a custom threshold'
     $longCheck = Find-Control $root 'LongPressCheck'
     $longCheck.GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern).Toggle()
