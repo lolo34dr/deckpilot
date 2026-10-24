@@ -1,5 +1,6 @@
 param([Parameter(Mandatory=$true)][string]$Installer)
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'WindowsTestIO.ps1')
 function Read-RegistryValue([string]$Path, [string]$Name) {
     try { return (Get-ItemProperty -LiteralPath $Path -ErrorAction Stop).$Name }
     catch { return $null }
@@ -140,7 +141,7 @@ public static class DeckPilotIconResource {
     }
     if (!$updatedApp.WaitForInputIdle(30000)) { throw 'Updated app did not restart' }
     if ($null -ne (Read-RegistryValue $startupKey DeckPilot)) { throw 'Upgrade overwrote the disabled startup preference' }
-    $settings = Get-Content $settingsPath -Raw | ConvertFrom-Json
+    $settings = Read-SharedJson $settingsPath
     if ($settings.Profiles[0].Id -ne $profileId -or $settings.KeyMap.Count -ne 12) { throw 'Upgrade lost profiles or calibration' }
     Write-Host 'PASS installed upgrade: graceful app shutdown, successful replacement and restart, profiles preserved, disabled startup preference respected'
 

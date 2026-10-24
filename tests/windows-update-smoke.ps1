@@ -1,5 +1,6 @@
 param([Parameter(Mandatory = $true)][string]$Executable)
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'WindowsTestIO.ps1')
 function Read-RegistryValue([string]$Path, [string]$Name) {
     try { return (Get-ItemProperty -LiteralPath $Path -ErrorAction Stop).$Name }
     catch { return $null }
@@ -21,7 +22,7 @@ function Read-TestState {
             $uiState += '; label=' + (Find-Control $root 'LabelEditor').GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).Current.Value
         }
         if (Test-Path $settingsPath) {
-            $savedState = Get-Content $settingsPath -Raw -Encoding UTF8 | ConvertFrom-Json
+            $savedState = Read-SharedJson $settingsPath
             $uiState += '; kinds=' + (($savedState.Profiles[0].Buttons | ForEach-Object { $_.Kind }) -join ',')
         }
     } catch { }
@@ -200,7 +201,7 @@ try {
     if (Test-Path ($target + '.previous-' + (Split-Path $stage -Leaf))) { throw 'Sauvegarde non nettoyée après confirmation.' }
     if ((Get-FileHash $target -Algorithm SHA256).Hash.ToLowerInvariant() -ne $hash) { throw 'Le fichier installé ne correspond pas au téléchargement.' }
     if ($health.Version -ne $version) { throw 'Version redémarrée incorrecte.' }
-    $settings = Get-Content $settingsPath -Raw | ConvertFrom-Json
+    $settings = Read-SharedJson $settingsPath
     if ($settings.Profiles[0].Id -ne $profileId -or $settings.KeyMap.Count -ne 12) { throw 'Les réglages n’ont pas été conservés.' }
     Write-Host 'PASS real Windows updater: parent exit, atomic replacement, app startup, health confirmation and settings preservation'
 
@@ -246,7 +247,7 @@ try {
     if ((Find-Control $root 'ActionExecutionStatus').Current.Name -notlike '*introuvable*') { throw 'Failed action feedback should explain the problem' }
     Invoke-Control (Find-Control $root 'DeckKey03')
     if ((Find-Control $root 'DeckKey03').Current.ItemStatus -ne $readyStatus) { throw 'Action feedback leaked into another key' }
-    $savedSettings = Get-Content $settingsPath -Raw | ConvertFrom-Json
+    $savedSettings = Read-SharedJson $settingsPath
     if ($savedSettings.Profiles[0].Buttons[1].Arguments -ne '/c exit 0') { throw 'Collapsing advanced options lost existing arguments' }
     Invoke-Control (Find-Control $root 'DeckKey01')
     Write-Host 'PASS offline keypad: 3x4 large keys, editable configuration, collapsed advanced options, actual action success and failure feedback'
@@ -282,7 +283,7 @@ try {
     $items[0].GetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern).Select()
     Invoke-Control (Find-Control $picker 'ChooseInstalledApplication')
     Wait-Until {
-        try { $data = Get-Content $settingsPath -Raw | ConvertFrom-Json; return ![string]::IsNullOrWhiteSpace($data.Profiles[0].Buttons[0].Target) } catch { return $false }
+        try { $data = Read-SharedJson $settingsPath; return ![string]::IsNullOrWhiteSpace($data.Profiles[0].Buttons[0].Target) } catch { return $false }
     }
     $script:phase = 'open firmware dialog without hardware'
     Invoke-Control (Find-Control $root 'OpenFirmware')
@@ -328,7 +329,7 @@ try {
     if (((Find-ButtonLike $root 'Spotify*Piste suivante').GetRuntimeId() -join ',') -ne $presetRuntimeId) { throw 'Equivalent search results replaced the drag source control' }
     $script:phase = 'search and drag dedicated Spotify actions'
     $spotifyAssigned = {
-        $data = Get-Content $settingsPath -Raw | ConvertFrom-Json
+        $data = Read-SharedJson $settingsPath
         $data.Profiles[0].Buttons[3].Kind -eq 'Spotify' -and $data.Profiles[0].Buttons[3].Key -eq 176
     }
     Drag-Control (Find-ButtonLike $root 'Spotify*Piste suivante') (Find-Control $root 'DeckKey04')
@@ -336,24 +337,38 @@ try {
     $script:phase = 'swap configured keys with a native mouse drag'
     Drag-Control (Find-Control $root 'DeckKey04') (Find-Control $root 'DeckKey05')
     Wait-Until {
-        $data = Get-Content $settingsPath -Raw | ConvertFrom-Json
+        $data = Read-SharedJson $settingsPath
         $data.Profiles[0].Buttons[4].Kind -eq 'Spotify' -and $data.Profiles[0].Buttons[3].Kind -eq 'Passthrough'
     }
-    $data = Get-Content $settingsPath -Raw | ConvertFrom-Json
+    $data = Read-SharedJson $settingsPath
     if (($data.KeyMap -join ',') -ne ((124..135) -join ',')) { throw 'Dragging actions changed physical calibration' }
-    $script:phase = 'undo and redo an actual key swap'
-    Invoke-Control (Find-Control $root 'UndoProfileButton')
-    Wait-Until {
-        (Get-Content $settingsPath -Raw | ConvertFrom-Json).Profiles[0].Buttons[3].Kind -eq 'Spotify' -and
-        (Find-Control $root 'StatusText').Current.Name -like 'Modification annul*' -and
-        (Find-Control $root 'RedoProfileButton').Current.IsEnabled
-    }
-    $script:phase = 'redo the completed key-swap undo'
-    Invoke-Control (Find-Control $root 'RedoProfileButton')
-    Wait-Until {
-        (Get-Content $settingsPath -Raw | ConvertFrom-Json).Profiles[0].Buttons[4].Kind -eq 'Spotify' -and
-        (Find-Control $root 'StatusText').Current.Name -like 'Modification r*'
-    }
+    $settingsReadLease = Open-SharedSettings $settingsPath
+    try {
+        foreach ($cycle in 1..3) {
+            $script:phase = "undo an actual key swap (cycle $cycle)"
+            Invoke-Control (Find-Control $root 'UndoProfileButton')
+            Wait-Until {
+                (Read-SharedJson $settingsPath).Profiles[0].Buttons[3].Kind -eq 'Spotify' -and
+                (Find-Control $root 'StatusText').Current.Name -like 'Modification annul*' -and
+                (Find-Control $root 'RedoProfileButton').Current.IsEnabled
+            }
+            if ($cycle -eq 1) {
+                # The old handle remains a complete old snapshot even though the path
+                # now contains the undo result. No in-place/truncated writes are allowed.
+                $oldReader = [IO.StreamReader]::new($settingsReadLease, [Text.Encoding]::UTF8, $true, 1024, $true)
+                try { $oldSnapshot = $oldReader.ReadToEnd() | ConvertFrom-Json }
+                finally { $oldReader.Dispose() }
+                if ($oldSnapshot.Profiles[0].Buttons[4].Kind -ne 'Spotify' -or $oldSnapshot.Profiles[0].Buttons[3].Kind -ne 'Passthrough') { throw 'Atomic save modified the snapshot held by an existing reader' }
+            }
+            $script:phase = "redo the completed key-swap undo (cycle $cycle)"
+            Invoke-Control (Find-Control $root 'RedoProfileButton')
+            Wait-Until {
+                (Read-SharedJson $settingsPath).Profiles[0].Buttons[4].Kind -eq 'Spotify' -and
+                (Find-Control $root 'StatusText').Current.Name -like 'Modification r*'
+            }
+        }
+    } finally { $settingsReadLease.Dispose() }
+    Write-Host 'PASS history: three native undo/redo cycles with a settings reader held open; old snapshots remain complete'
     $script:phase = 'configure short and long actions with a custom threshold'
     $longCheck = Find-Control $root 'LongPressCheck'
     $longCheck.GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern).Toggle()
@@ -365,18 +380,18 @@ try {
     Wait-Until { $null -ne (Find-ButtonLike $root 'Microphone Windows') }
     Invoke-Control (Find-ButtonLike $root 'Microphone Windows')
     Wait-Until {
-        $configured = (Get-Content $settingsPath -Raw | ConvertFrom-Json).Profiles[0].Buttons[4]
+        $configured = (Read-SharedJson $settingsPath).Profiles[0].Buttons[4]
         $configured.Kind -eq 'Spotify' -and $configured.LongPressEnabled -and $configured.LongPressMilliseconds -eq 850 -and $configured.LongPressAction.Kind -eq 'Microphone'
     }
     Select-ComboItem $root 'GesturePicker' 'Appui court' $replacement.Id
-    $data = Get-Content $settingsPath -Raw | ConvertFrom-Json
+    $data = Read-SharedJson $settingsPath
     $script:phase = 'search for an installed application and assign it'
     $knownName = $data.Profiles[0].Buttons[0].ApplicationName
     if ([string]::IsNullOrWhiteSpace($knownName)) { throw 'The earlier application picker did not save its application name' }
     $search.SetValue($knownName)
     Wait-Until { $null -ne (Find-ButtonLike $root ([WildcardPattern]::Escape($knownName))) }
     Invoke-Control (Find-ButtonLike $root ([WildcardPattern]::Escape($knownName)))
-    Wait-Until { (Get-Content $settingsPath -Raw | ConvertFrom-Json).Profiles[0].Buttons[4].Kind -eq 'Application' }
+    Wait-Until { (Read-SharedJson $settingsPath).Profiles[0].Buttons[4].Kind -eq 'Application' }
     $search.SetValue('')
     if (!(Find-Control $root 'HeaderMicrophoneStatus')) { throw 'Global microphone status is missing from the header' }
     $backups = @(Get-ChildItem (Join-Path $env:APPDATA 'DeckPilot\Backups') -Filter '*.deckpilot.json')
