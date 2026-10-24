@@ -23,26 +23,26 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.0.x'
+      - name: Verify core behavior on Windows
+        run: dotnet run --project tests/DeckPilot.Checks -c Release
       - name: Install verified Arduino CLI 1.2.2
         shell: pwsh
         run: ./firmware/tools/install-cli.ps1
       - name: Compile firmware and bundle verified AVRDUDE
         shell: pwsh
         run: ./firmware/tools/build.ps1
-      - uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '8.0.x'
       - name: Verify release version
         shell: pwsh
         run: |
           [xml]$project = Get-Content src/DeckPilot.Windows/DeckPilot.Windows.csproj
           if ("v$($project.Project.PropertyGroup.Version)" -ne $env:GITHUB_REF_NAME) { throw "Le tag ne correspond pas à la version de l’application." }
-      - name: Build and verify
+      - name: Build application
         shell: pwsh
         run: |
           dotnet build DeckPilot.sln -c Release -p:RequireFirmwareBundle=true
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          dotnet run --project tests/DeckPilot.Checks -c Release --no-build
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Publish portable folder
         run: dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true -p:RequireFirmwareBundle=true -p:PublishSingleFile=false -o artifacts/win-x64

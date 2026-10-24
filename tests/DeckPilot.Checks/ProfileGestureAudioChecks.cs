@@ -94,6 +94,17 @@ public static class ProfileGestureAudioChecks
                 foreach (var file in files) Expect(ProfileExchange.Read(file).Profiles.Count == 1);
                 Expect(!Directory.GetFiles(temp, "*.tmp", SearchOption.AllDirectories).Any());
             });
+            Check("Atomic settings saves preserve an old snapshot held by a shared reader", () =>
+            {
+                string folder = Path.Combine(temp, "shared-reader"); Directory.CreateDirectory(folder);
+                string path = Path.Combine(folder, "settings.json");
+                var store = new SettingsStore(path); var settings = new Settings(); store.Save(settings);
+                string original = File.ReadAllText(path);
+                using var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+                for (int i = 0; i < 3; i++) { settings.ActiveProfile.Name = "Replacement " + i; store.Save(settings); Expect(store.Load().ActiveProfile.Name == settings.ActiveProfile.Name); }
+                using var reader = new StreamReader(stream);
+                Expect(reader.ReadToEnd() == original && !Directory.GetFiles(folder, "*.tmp").Any());
+            });
             Check("Backup failure cannot overwrite the current settings file", () =>
             {
                 string folder = Path.Combine(temp, "blocked"); Directory.CreateDirectory(folder);
