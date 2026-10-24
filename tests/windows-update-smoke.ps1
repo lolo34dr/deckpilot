@@ -8,7 +8,7 @@ $script:phase = 'initialization'
 $script:smokePassed = $false
 $testStarted = Get-Date
 trap {
-    $message = ($script:phase + ': ' + $_.Exception.Message + ' | ' + $_.ScriptStackTrace).Replace('%','%25').Replace("`r",'%0D').Replace("`n",'%0A')
+    $message = ($script:phase + ': ' + $_.Exception.Message + ' | ' + $_.ScriptStackTrace + ' | Last drag: ' + $script:lastDrag + ' | Last scroll: ' + $script:lastScroll).Replace('%','%25').Replace("`r",'%0D').Replace("`n",'%0A')
     Write-Host "::error title=Windows smoke::$message"
     throw
 }
@@ -42,7 +42,16 @@ using System.Runtime.InteropServices;
 public static class DeckPilotDragMouse {
     [DllImport("user32.dll")] public static extern uint GetDpiForWindow(IntPtr window);
     [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr window);
-    [DllImport("user32.dll")] public static extern bool SetCursorPos(int x, int y);
+    [DllImport("user32.dll", SetLastError=true)] static extern bool SetPhysicalCursorPos(int x, int y);
+    [DllImport("user32.dll", SetLastError=true)] static extern bool GetPhysicalCursorPos(out Point point);
+    [StructLayout(LayoutKind.Sequential)] public struct Point { public int X, Y; }
+    public static void Move(int x, int y) {
+        Point position;
+        if (!SetPhysicalCursorPos(x, y) || !GetPhysicalCursorPos(out position))
+            throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
+        if (position.X != x || position.Y != y)
+            throw new InvalidOperationException("Physical cursor did not reach " + x + "," + y + "; got " + position.X + "," + position.Y);
+    }
     [DllImport("user32.dll")] public static extern void mouse_event(uint flags, uint dx, uint dy, uint data, UIntPtr extra);
 }
 '@
@@ -51,42 +60,63 @@ function Drag-Control($Source, $Destination) {
     [void][DeckPilotDragMouse]::SetForegroundWindow($replacement.MainWindowHandle)
     $left = (Find-Control $root 'DeckEditorScroll').GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern)
     if ($left.Current.VerticallyScrollable) { $left.SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 0) }
-    $sidebar = Find-Control $root 'SidebarScroll'
-    if ($Source.Current.BoundingRectangle.Left -ge $sidebar.Current.BoundingRectangle.Left -or $Source.Current.IsOffscreen) { Show-InScroll $root $Source 'SidebarScroll' }
-    Start-Sleep -Milliseconds 300
+    $sourceScroll = if ($Source.Current.AutomationId -like 'DeckKey*') { 'DeckEditorScroll' } else { 'SidebarScroll' }
+    $Source = Show-InScroll $root $Source $sourceScroll
+    # Focus can ask WPF to bring a control into view. Do this before measuring
+    # either end of the drag, rather than allowing mouse-down to shift the page.
+    $Source.SetFocus()
+    Start-Sleep -Milliseconds 200
+    $Source = Show-InScroll $root $Source $sourceScroll
+    $Destination = Find-CurrentControl $root $Destination
     $a = $Source.Current.BoundingRectangle; $b = $Destination.Current.BoundingRectangle
     $x = [int]($a.Left + $a.Width / 2); $y = [int]($a.Top + $a.Height / 2)
     $toX = [int]($b.Left + $b.Width / 2); $toY = [int]($b.Top + $b.Height / 2)
-    [void][DeckPilotDragMouse]::SetCursorPos($x, $y)
+    $script:lastDrag = "source=$($Source.Current.Name) bounds=$a destination=$($Destination.Current.Name) bounds=$b DPI=$([DeckPilotDragMouse]::GetDpiForWindow($replacement.MainWindowHandle))"
+    [DeckPilotDragMouse]::Move($x, $y)
     Start-Sleep -Milliseconds 100
     [DeckPilotDragMouse]::mouse_event(2,0,0,0,[UIntPtr]::Zero)
     Start-Sleep -Milliseconds 200
     try {
+        # Cross the WPF drag threshold while still inside the source button.
+        [DeckPilotDragMouse]::Move(($x - 8), $y)
+        Start-Sleep -Milliseconds 150
         for ($step = 1; $step -le 16; $step++) {
-            [void][DeckPilotDragMouse]::SetCursorPos([int]($x + ($toX - $x) * $step / 16), [int]($y + ($toY - $y) * $step / 16))
+            [DeckPilotDragMouse]::Move([int]($x + ($toX - $x) * $step / 16), [int]($y + ($toY - $y) * $step / 16))
             Start-Sleep -Milliseconds 60
         }
         Start-Sleep -Milliseconds 250
     }
     finally { [DeckPilotDragMouse]::mouse_event(4,0,0,0,[UIntPtr]::Zero) }
 }
+function Find-CurrentControl($Root, $Reference) {
+    $automationId = $Reference.Current.AutomationId
+    if (![string]::IsNullOrEmpty($automationId)) { return Find-Control $Root $automationId }
+    $nameFilter = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::NameProperty, $Reference.Current.Name)
+    $typeFilter = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ControlTypeProperty, $Reference.Current.ControlType)
+    $identityFilter = [System.Windows.Automation.AndCondition]::new($nameFilter, $typeFilter)
+    return $Root.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $identityFilter)
+}
 function Show-InScroll($Root, $Control, [string]$Id) {
     $viewer = Find-Control $Root $Id
     $pattern = $viewer.GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern)
-    for ($i = 0; $i -lt 25; $i++) {
+    # Scan percentages, not a fixed number of tiny line increments. UIA can
+    # report empty/clipped rectangles for controls outside the viewport.
+    for ($percent = 0; $percent -le 105; $percent += 5) {
+        $Control = Find-CurrentControl $Root $Control
+        if (!$Control) { throw "Control disappeared while scrolling $Id" }
         $bounds = $Control.Current.BoundingRectangle; $viewport = $viewer.Current.BoundingRectangle
         $center = $bounds.Top + $bounds.Height / 2
-        if (!$Control.Current.IsOffscreen -and $center -gt $viewport.Top + 4 -and $center -lt $viewport.Bottom - 4) { return }
-        if (!$pattern.Current.VerticallyScrollable) { return }
-        $direction = if ($bounds.Height -gt 0 -and $center -lt $viewport.Top) { [System.Windows.Automation.ScrollAmount]::SmallDecrement } else { [System.Windows.Automation.ScrollAmount]::SmallIncrement }
-        $pattern.Scroll([System.Windows.Automation.ScrollAmount]::NoAmount, $direction)
-        Start-Sleep -Milliseconds 50
+        $script:lastScroll = "$Id percent=$percent control=$($Control.Current.Name) bounds=$bounds viewport=$viewport offscreen=$($Control.Current.IsOffscreen)"
+        if (!$bounds.IsEmpty -and !$Control.Current.IsOffscreen -and $center -gt $viewport.Top + 4 -and $center -lt $viewport.Bottom - 4) { return $Control }
+        if (!$pattern.Current.VerticallyScrollable -or $percent -gt 100) { break }
+        $pattern.SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, $percent)
+        Start-Sleep -Milliseconds 100
     }
-    throw 'Control did not become visible in its scroll viewer'
+    throw "Control did not become visible: $script:lastScroll"
 }
 function Select-ComboItem($Root, [string]$Id, [string]$Name, [int]$ProcessId) {
     $combo = Find-Control $Root $Id
-    Show-InScroll $Root $combo 'DeckEditorScroll'
+    $combo = Show-InScroll $Root $combo 'DeckEditorScroll'
     $expand = $combo.GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern)
     $expand.Expand()
     $nameCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::NameProperty, $Name)
@@ -96,7 +126,7 @@ function Select-ComboItem($Root, [string]$Id, [string]$Name, [int]$ProcessId) {
     Wait-Until { $script:gestureItem = [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $comboCondition); $null -ne $script:gestureItem }
     $itemBounds = $script:gestureItem.Current.BoundingRectangle
     if ($itemBounds.IsEmpty -or $script:gestureItem.Current.IsOffscreen) { throw 'Gesture option is not visible' }
-    [void][DeckPilotDragMouse]::SetCursorPos([int]($itemBounds.Left + $itemBounds.Width / 2), [int]($itemBounds.Top + $itemBounds.Height / 2))
+    [DeckPilotDragMouse]::Move([int]($itemBounds.Left + $itemBounds.Width / 2), [int]($itemBounds.Top + $itemBounds.Height / 2))
     [DeckPilotDragMouse]::mouse_event(2,0,0,0,[UIntPtr]::Zero)
     [DeckPilotDragMouse]::mouse_event(4,0,0,0,[UIntPtr]::Zero)
     Wait-Until { $expand.Current.ExpandCollapseState -eq [System.Windows.Automation.ExpandCollapseState]::Collapsed }
@@ -275,15 +305,19 @@ try {
     $search.SetValue('volume')
     Wait-Until { $null -ne (Find-ButtonLike $root 'Multim*Volume +') }
     $search.SetValue('spotify')
-    Wait-Until { $null -ne (Find-ButtonLike $root 'Spotify*Piste suivante') }
+    Wait-Until { $null -ne (Find-ButtonLike $root 'Spotify*Piste suivante') -and (Find-Control $root 'ActionSearchStatus').Current.Name -notlike '*Recherche des applications*' }
+    $script:phase = 'preserve search buttons across equivalent result refreshes'
+    $presetRuntimeId = (Find-ButtonLike $root 'Spotify*Piste suivante').GetRuntimeId() -join ','
+    $search.SetValue('SPOTIFY')
+    Start-Sleep -Milliseconds 500
+    if (((Find-ButtonLike $root 'Spotify*Piste suivante').GetRuntimeId() -join ',') -ne $presetRuntimeId) { throw 'Equivalent search results replaced the drag source control' }
+    $script:phase = 'search and drag dedicated Spotify actions'
     $spotifyAssigned = {
         $data = Get-Content $settingsPath -Raw | ConvertFrom-Json
         $data.Profiles[0].Buttons[3].Kind -eq 'Spotify' -and $data.Profiles[0].Buttons[3].Key -eq 176
     }
-    for ($attempt = 0; $attempt -lt 3 -and !(& $spotifyAssigned); $attempt++) {
-        Drag-Control (Find-ButtonLike $root 'Spotify*Piste suivante') (Find-Control $root 'DeckKey04')
-        try { Wait-Until $spotifyAssigned 5 } catch { if ($attempt -eq 2) { throw } }
-    }
+    Drag-Control (Find-ButtonLike $root 'Spotify*Piste suivante') (Find-Control $root 'DeckKey04')
+    Wait-Until $spotifyAssigned
     $script:phase = 'swap configured keys with a native mouse drag'
     Drag-Control (Find-Control $root 'DeckKey04') (Find-Control $root 'DeckKey05')
     Wait-Until {
