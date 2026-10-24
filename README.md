@@ -295,10 +295,12 @@ To configure **appui court / appui long**, first choose a configured action, ena
 
 Core checks cover repeat/release boundaries, simultaneous holds, cancellation, profile history/exchange/backups and audio rollback using fake endpoints. Windows UI checks exercise actual drag undo/redo, configuring a long action and threshold, native keypad dimensions after resizing and the microphone indicator. Actual microphone drivers, headset/speaker switching and physical holds still need validation on the owner's PC.
 
-## Search and CI reliability fixes (1.6.2)
+## Search and CI reliability fixes (1.6.3)
 
 Equivalent search results keep their existing WPF buttons. The installed-app catalog and debounce timer defer result replacement while a search button is captured or a drag is in progress. This prevents a source button from being removed during an interaction.
 
 Windows smoke checks continue to perform native mouse drags and validate saved assignments, swaps, undo/redo and both press gestures. The test client uses physical cursor coordinates to match UI Automation bounds regardless of DPI, focuses before measuring, and scans all scroll percentages. A regression check also verifies that equivalent searches preserve the same accessible button. Background-startup assertions wait for WPF's Loaded handler and require five consecutive hidden-window observations while the app remains alive. Failures report the phase, cursor targets, DPI and last scroll geometry.
 
 Build and release workflows use Node.js 24 actions. The Arduino compiler remains at CLI 1.2.2; CI downloads its Windows archive with a pinned SHA-256 checksum. The firmware and its toolchain versions are unchanged.
+
+Settings reads in Windows tests explicitly allow read/write/delete sharing and parse UTF-8 after closing the reader. This prevents the test itself from denying the app’s atomic file replacement. The history test keeps an old snapshot open across three undo/redo cycles and verifies that it remains intact while the live settings change.
