@@ -16,3 +16,6 @@ New-Item -ItemType Directory -Force (Split-Path $config) | Out-Null
 @{ Version = 1; LayoutColumns = 4; AutoCheckUpdates = $false; AutoCheckFirmware = $false; KeyMap = @(124..135); ActiveProfileId = $id; Profiles = @(@{ Id = $id; Name = "Profil d'exemple"; Buttons = $buttons }) } | ConvertTo-Json -Depth 10 | Set-Content $config -Encoding UTF8
 dotnet run --project src/DeckPilot.Windows -c Release -p:PreviewCapture=true -- --preview-capture
 if ($LASTEXITCODE -ne 0) { throw "Native WPF capture failed: $LASTEXITCODE" }
+$project = [xml](Get-Content src/DeckPilot.Windows/DeckPilot.Windows.csproj -Raw)
+$version = $project.SelectSingleNode('/Project/PropertyGroup/Version').InnerText
+Add-Content -Path $env:GITHUB_OUTPUT -Value "image=docs/previews/deckpilot-$version.png"

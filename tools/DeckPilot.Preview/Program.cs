@@ -45,7 +45,7 @@ internal static class Program
                 image.Render(content);
                 var png = new PngBitmapEncoder(); png.Frames.Add(BitmapFrame.Create(image));
                 Directory.CreateDirectory("docs/previews");
-                using var output = File.Create("docs/previews/deckpilot-1.6.1.png");
+                using var output = File.Create($"docs/previews/deckpilot-{typeof(DeckPilot.Windows.App).Assembly.GetName().Version!.ToString(3)}.png");
                 png.Save(output);
                 Console.WriteLine($"Captured actual WPF interface: {image.PixelWidth} x {image.PixelHeight}");
                 result = 0;
