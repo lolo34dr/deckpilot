@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,6 +18,8 @@ public partial class MainWindow
     private IReadOnlyList<InstalledApplication> actionApplications = [];
     private bool actionToolsReady, applicationsLoading, applicationsLoaded;
     private string applicationSearchWarning = "";
+    private string renderedSearchResults = "";
+    private bool draggingAction, refreshSearchAfterDrag;
     private long ignoreClickUntil;
     private const string ActionDragFormat = "DeckPilot.PrivateAction";
     private sealed record ActionDragPayload(ButtonAction Action, Guid? Profile = null, int Source = -1);
@@ -94,7 +97,11 @@ public partial class MainWindow
         Point origin = default;
         bool armed = false;
         element.PreviewMouseLeftButtonDown += (_, e) => { origin = e.GetPosition(element); armed = true; };
-        element.PreviewMouseLeftButtonUp += (_, _) => armed = false;
+        element.PreviewMouseLeftButtonUp += (_, _) =>
+        {
+            armed = false;
+            if (refreshSearchAfterDrag) Dispatcher.BeginInvoke(RefreshActionSearch);
+        };
         element.PreviewMouseMove += (_, e) =>
         {
             if (!armed || e.LeftButton != MouseButtonState.Pressed || calibrating || firmwareOpen) return;
@@ -103,11 +110,14 @@ public partial class MainWindow
             if (getAction() is not { } payload) return;
             armed = false;
             var data = new DataObject(); data.SetData(ActionDragFormat, payload);
+            draggingAction = true;
             try { DragDrop.DoDragDrop(element, data, payload.Source >= 0 ? DragDropEffects.Move : DragDropEffects.Copy); }
             finally
             {
+                draggingAction = false;
                 ignoreClickUntil = Environment.TickCount64 + 250;
                 foreach (var key in deckButtons) key.IsDropTarget = false;
+                if (refreshSearchAfterDrag) Dispatcher.BeginInvoke(RefreshActionSearch);
             }
         };
     }
@@ -155,23 +165,36 @@ public partial class MainWindow
     }
     private void RefreshActionSearch()
     {
+        // The catalog finishes asynchronously and the debounce timer may fire during
+        // OLE's drag loop. Keep its source control alive until the interaction ends.
+        if (draggingAction || ActionSearchResults.IsMouseCaptureWithin)
+        {
+            refreshSearchAfterDrag = true;
+            return;
+        }
+        refreshSearchAfterDrag = false;
         string query = ActionSearchBox.Text.Trim(); bool searching = query.Length > 0;
         ActionCatalog.Visibility = searching ? Visibility.Collapsed : Visibility.Visible;
         ActionSearchResults.Visibility = searching ? Visibility.Visible : Visibility.Collapsed;
-        ActionSearchResults.Children.Clear();
-        if (!searching) { ActionSearchStatus.Text = "Actions ou applications · Glissez-les sur une touche."; return; }
+        if (!searching) { ActionSearchResults.Children.Clear(); renderedSearchResults = ""; ActionSearchStatus.Text = "Actions ou applications · Glissez-les sur une touche."; return; }
         var results = ActionSearch.Find(query, actionApplications);
-        foreach (var preset in results)
+        string signature = JsonSerializer.Serialize(results);
+        if (signature != renderedSearchResults)
         {
-            var content = new Grid();
-            content.ColumnDefinitions.Add(new() { Width = new GridLength(26) }); content.ColumnDefinitions.Add(new());
-            content.Children.Add(new Image { Width = 18, Height = 18, VerticalAlignment = VerticalAlignment.Center, Source = preset.Action.Kind == ActionKind.Application ? ApplicationIcons.ForTarget(preset.Action.Target) : VectorIcons.ForKind(preset.Action.Kind) });
-            var text = new TextBlock { Text = preset.Name, TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
-            Grid.SetColumn(text, 1); content.Children.Add(text);
-            var button = new Button { Content = content, Padding = new Thickness(8, 9, 8, 9), Margin = new Thickness(0, 0, 0, 4), HorizontalContentAlignment = HorizontalAlignment.Stretch, ToolTip = preset.Details };
-            System.Windows.Automation.AutomationProperties.SetName(button, preset.Name);
-            button.Click += (_, _) => { if (Environment.TickCount64 >= ignoreClickUntil) AssignAction(selected, preset.Action, true); };
-            WireDragSource(button, () => new(preset.Action.Copy())); ActionSearchResults.Children.Add(button);
+            ActionSearchResults.Children.Clear();
+            foreach (var preset in results)
+            {
+                var content = new Grid();
+                content.ColumnDefinitions.Add(new() { Width = new GridLength(26) }); content.ColumnDefinitions.Add(new());
+                content.Children.Add(new Image { Width = 18, Height = 18, VerticalAlignment = VerticalAlignment.Center, Source = preset.Action.Kind == ActionKind.Application ? ApplicationIcons.ForTarget(preset.Action.Target) : VectorIcons.ForKind(preset.Action.Kind) });
+                var text = new TextBlock { Text = preset.Name, TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
+                Grid.SetColumn(text, 1); content.Children.Add(text);
+                var button = new Button { Content = content, Padding = new Thickness(8, 9, 8, 9), Margin = new Thickness(0, 0, 0, 4), HorizontalContentAlignment = HorizontalAlignment.Stretch, ToolTip = preset.Details };
+                System.Windows.Automation.AutomationProperties.SetName(button, preset.Name);
+                button.Click += (_, _) => { if (Environment.TickCount64 >= ignoreClickUntil) AssignAction(selected, preset.Action, true); };
+                WireDragSource(button, () => new(preset.Action.Copy())); ActionSearchResults.Children.Add(button);
+            }
+            renderedSearchResults = signature;
         }
         ActionSearchStatus.Text = $"{results.Count} résultat(s)" + (applicationsLoading ? " · Recherche des applications…" : applicationSearchWarning.Length > 0 ? " · " + applicationSearchWarning : " · Cliquez ou glissez sur une touche.");
     }

@@ -4,9 +4,9 @@ permissions:
   contents: read
 jobs:
   firmware-protocol:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Verify firmware protocol without hardware
         run: |
           g++ -std=c++11 -Wall -Wextra -Werror tests/firmware-protocol.cpp -o /tmp/deckpilot-firmware-check
@@ -16,14 +16,14 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
-      - uses: arduino/setup-arduino-cli@v2
-        with:
-          version: '1.2.2'
+      - uses: actions/checkout@v5
+      - name: Install verified Arduino CLI 1.2.2
+        shell: pwsh
+        run: ./firmware/tools/install-cli.ps1
       - name: Compile firmware and bundle verified AVRDUDE
         shell: pwsh
         run: ./firmware/tools/build.ps1
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '8.0.x'
       - run: dotnet build DeckPilot.sln -c Release -p:RequireFirmwareBundle=true
@@ -47,12 +47,12 @@ jobs:
         run: ./tests/windows-update-smoke.ps1 -Executable artifacts/standalone/DeckPilot.exe
       - shell: pwsh
         run: Compress-Archive -Path artifacts/win-x64/* -DestinationPath artifacts/DeckPilot-win-x64.zip
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: DeckPilot-win-x64
           path: artifacts/DeckPilot-win-x64.zip
           if-no-files-found: error
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: DeckPilot-Setup
           path: artifacts/installer/DeckPilot-Setup.exe
