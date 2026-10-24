@@ -295,7 +295,7 @@ To configure **appui court / appui long**, first choose a configured action, ena
 
 Core checks cover repeat/release boundaries, simultaneous holds, cancellation, profile history/exchange/backups and audio rollback using fake endpoints. Windows UI checks exercise actual drag undo/redo, configuring a long action and threshold, native keypad dimensions after resizing and the microphone indicator. Actual microphone drivers, headset/speaker switching and physical holds still need validation on the owner's PC.
 
-## Search and CI reliability fixes (1.6.3)
+## Search and CI reliability fixes (1.6.4)
 
 Equivalent search results keep their existing WPF buttons. The installed-app catalog and debounce timer defer result replacement while a search button is captured or a drag is in progress. This prevents a source button from being removed during an interaction.
 
@@ -306,3 +306,5 @@ Build and release workflows use Node.js 24 actions. The Arduino compiler remains
 Settings reads in Windows tests explicitly allow read/write/delete sharing and parse UTF-8 after closing the reader. This prevents the test itself from denying the app’s atomic file replacement. The history test keeps an old snapshot open across three undo/redo cycles and verifies that it remains intact while the live settings change.
 
 On Windows, existing settings files are committed with `File.Replace` rather than overwrite-mode `File.Move`. This supports readers that allow deletion while retaining a complete old snapshot. The core suite tests three replacements with a reader held open; Windows core checks run before firmware compilation and publishing so persistence failures are detected early.
+
+A test snapshot reader may wait up to 500 ms for Windows sharing/lock violations while `ReplaceFile` commits. The wait applies only to opening the snapshot, never to executing or re-executing an application action. Other errors, malformed JSON and persistent locks remain failures.
