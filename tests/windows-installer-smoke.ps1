@@ -115,8 +115,15 @@ public static class DeckPilotIconResource {
     $app = Start-Process $executable '--background' -PassThru
     if (!$app.WaitForInputIdle(30000)) { throw 'Background app did not restart' }
     Wait-Until { (Read-RegistryValue $startupKey DeckPilot) -eq ('"' + $executable + '" --background') }
-    $app.Refresh()
-    if ($app.MainWindowHandle -ne [IntPtr]::Zero) { throw 'Startup unexpectedly displayed a main window' }
+    # Registry repair runs in the constructor, before WPF's Loaded handler hides
+    # the background window. Input-idle is not a Loaded completion signal.
+    $script:hiddenSamples = 0
+    Wait-Until {
+        $app.Refresh()
+        if ($app.HasExited) { throw 'Background app exited instead of remaining in the tray' }
+        if ($app.MainWindowHandle -eq [IntPtr]::Zero) { $script:hiddenSamples++ } else { $script:hiddenSamples = 0 }
+        $script:hiddenSamples -ge 5
+    }
     $duplicate = Start-Process $executable '--background' -PassThru
     if (!$duplicate.WaitForExit(10000)) { Stop-Process $duplicate.Id; throw 'Duplicate startup showed a blocking prompt' }
     Write-Host 'PASS startup repair: Windows block respected, explicit activation repairs it, missing entry restored, background launch and duplicate startup are silent'

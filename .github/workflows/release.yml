@@ -10,9 +10,9 @@ permissions:
 
 jobs:
   firmware-protocol:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Verify firmware protocol without hardware
         run: |
           g++ -std=c++11 -Wall -Wextra -Werror tests/firmware-protocol.cpp -o /tmp/deckpilot-firmware-check
@@ -22,14 +22,14 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
-      - uses: arduino/setup-arduino-cli@v2
-        with:
-          version: '1.2.2'
+      - uses: actions/checkout@v5
+      - name: Install verified Arduino CLI 1.2.2
+        shell: pwsh
+        run: ./firmware/tools/install-cli.ps1
       - name: Compile firmware and bundle verified AVRDUDE
         shell: pwsh
         run: ./firmware/tools/build.ps1
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '8.0.x'
       - name: Verify release version
@@ -74,7 +74,7 @@ jobs:
             $hash = (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
             "$hash  $($_.Name)"
           } | Set-Content artifacts/release/SHA256SUMS.txt -Encoding ascii
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: DeckPilot-release-${{ github.ref_name }}
           path: artifacts/release/*

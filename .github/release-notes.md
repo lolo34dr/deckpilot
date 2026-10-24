@@ -1,12 +1,9 @@
-DeckPilot 1.6.1 fixes soft keypad rendering and adds profile recovery, Windows audio controls and short/long presses.
+DeckPilot 1.6.2 fixes search-result replacement during drag-and-drop and stabilizes Windows verification.
 
-- Native-size keypad text: removed whole-deck scaling and content shadow effects, added per-monitor DPI awareness and larger desktop app icons. Small windows scroll instead of shrinking keys.
-- Undo/redo for profile edits, including drag-and-drop (50 changes per app session); text fields keep native Ctrl+Z/Ctrl+Y.
-- Profile import/export and 20 automatic previous-version backups. Imports add new copies; restore and undo preserve calibration. Imported actions are never executed automatically.
-- Global Windows microphone toggle with a persistent status-bar indicator and live endpoint status. All active capture endpoints are muted/unmuted together.
-- Toggle between two chosen connected output devices, for all Windows default audio roles. Missing devices fail without silently choosing another output.
-- Two configured actions per key with a 200–3000 ms threshold. Short runs on release, long replaces short and runs once. Existing immediate actions and free F13–F24 keys keep their behavior. No firmware flash required.
+- Keep existing search buttons when the debounce timer or installed-app catalog produces the same results, so a drag source is not detached unexpectedly.
+- Defer search-result replacement while a mouse interaction or OLE drag is in progress.
+- Windows UI checks use physical cursor coordinates, focus controls before measuring them, and scan the full scroll range instead of assuming a fixed number of line increments. Native mouse drags remain required; failed assignments are not retried to obtain a pass.
+- Background-startup checks wait for WPF to finish hiding its window, then require the process to remain running with no visible main window.
+- Upgrade GitHub Actions to Node.js 24 versions and install the same Arduino CLI 1.2.2 from its checksum-verified upstream archive.
 
-Download **DeckPilot-Setup.exe** or update from the app. Profiles and calibration are preserved. Audio endpoint choices may need adjusting after importing profiles on another PC. Windows endpoint state differs from an application's own mute or a hardware mute switch; fixed-output applications may not follow default output changes.
-
-Validation: core profile/gesture/audio tests (audio endpoints simulated), Windows installer/update/UI tests, native mouse drag undo/redo and long-action editing. Physical key holds, actual microphone drivers and headset/speaker switching still need confirmation on the owner's hardware.
+Download **DeckPilot-Setup.exe** or update from the app. Profiles and calibration are preserved. No firmware flash is needed.
