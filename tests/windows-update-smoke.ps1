@@ -8,19 +8,24 @@ $script:phase = 'initialization'
 $script:smokePassed = $false
 $testStarted = Get-Date
 trap {
+    $failure = $_
+    $message = ($script:phase + ': ' + $failure.Exception.Message + ' | ' + $failure.ScriptStackTrace + ' | ' + $script:failureState + ' | Last drag: ' + $script:lastDrag + ' | Last scroll: ' + $script:lastScroll).Replace('%','%25').Replace("`r",'%0D').Replace("`n",'%0A')
+    Write-Host "::error title=Windows smoke::$message"
+    throw
+}
+function Read-TestState {
     $uiState = ''
     try {
         if ($root) {
-            $uiState = 'Status=' + (Find-Control $root 'StatusText').Current.Name + '; selection=' + (Find-Control $root 'SelectedTitle').Current.Name + '; redoEnabled=' + (Find-Control $root 'RedoProfileButton').Current.IsEnabled
+            $uiState = 'Status=' + (Find-Control $root 'StatusText').Current.Name + '; selection=' + (Find-Control $root 'SelectedTitle').Current.Name + '; editorKind=' + (Find-Control $root 'EditorActionTitle').Current.Name + '; redoEnabled=' + (Find-Control $root 'RedoProfileButton').Current.IsEnabled
+            $uiState += '; label=' + (Find-Control $root 'LabelEditor').GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).Current.Value
         }
         if (Test-Path $settingsPath) {
             $savedState = Get-Content $settingsPath -Raw -Encoding UTF8 | ConvertFrom-Json
             $uiState += '; kinds=' + (($savedState.Profiles[0].Buttons | ForEach-Object { $_.Kind }) -join ',')
         }
     } catch { }
-    $message = ($script:phase + ': ' + $_.Exception.Message + ' | ' + $_.ScriptStackTrace + ' | ' + $uiState + ' | Last drag: ' + $script:lastDrag + ' | Last scroll: ' + $script:lastScroll).Replace('%','%25').Replace("`r",'%0D').Replace("`n",'%0A')
-    Write-Host "::error title=Windows smoke::$message"
-    throw
+    return $uiState
 }
 if ($env:GITHUB_ACTIONS -ne 'true') { throw 'Ce test lance des processus et utilise la configuration du compte de test. Exécutez-le dans GitHub Actions.' }
 Add-Type -AssemblyName UIAutomationClient
@@ -402,6 +407,10 @@ try {
     Write-Host 'PASS responsive layout: expanded sections remain scrollable, calibration stays reachable, profile and keypad remain separated'
     $script:smokePassed = $true
     Write-Host 'PASS Windows UI and installed apps: twelve keys, vector templates, application catalog and persisted selection'
+}
+catch {
+    $script:failureState = Read-TestState
+    throw
 }
 finally {
     if (!$script:smokePassed) {
