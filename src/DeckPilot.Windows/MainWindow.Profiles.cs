@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -57,13 +56,14 @@ public partial class MainWindow
     private bool EditorChanged()
     {
         if (loading || ActionPicker.SelectedIndex < 0) return false;
-        return JsonSerializer.Serialize(ReadEditorConfiguration()) != JsonSerializer.Serialize(settings.ActiveProfile.Buttons[selected]);
+        return !ReadEditorConfiguration().Equals(settings.ActiveProfile.Buttons[selected]);
     }
     private void UpdateHistoryState()
     {
         if (profileHistory == null || loading) return;
-        UndoProfileButton.IsEnabled = profileHistory.CanUndo || EditorChanged();
-        RedoProfileButton.IsEnabled = profileHistory.CanRedo && !EditorChanged();
+        bool changed = EditorChanged();
+        UndoProfileButton.IsEnabled = profileHistory.CanUndo || changed;
+        RedoProfileButton.IsEnabled = profileHistory.CanRedo && !changed;
     }
     private void UndoProfileClick(object sender, RoutedEventArgs e) => RestoreHistory(false);
     private void RedoProfileClick(object sender, RoutedEventArgs e) => RestoreHistory(true);

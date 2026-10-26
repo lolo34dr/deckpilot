@@ -308,3 +308,13 @@ Settings reads in Windows tests explicitly allow read/write/delete sharing and p
 On Windows, existing settings files are committed with `File.Replace` rather than overwrite-mode `File.Move`. This supports readers that allow deletion while retaining a complete old snapshot. The core suite tests three replacements with a reader held open; Windows core checks run before firmware compilation and publishing so persistence failures are detected early.
 
 A test snapshot reader may wait up to 500 ms for Windows sharing/lock violations while `ReplaceFile` commits. The wait applies only to opening the snapshot, never to executing or re-executing an application action. Other errors, malformed JSON and persistent locks remain failures.
+
+## Runtime and editing optimizations (1.7.0)
+
+Saving identical settings checks the current file but skips replacement and backup work. External edits/deletion and failed writes are still detected. `ButtonAction` has value equality (including the long action); editor dirty checks avoid JSON serialization. History keeps detached model snapshots, validates new states, and avoids JSON parsing during undo/redo. The 50-edit limit and 20 profile backups remain.
+
+Search and picker share an immutable installed-app catalog for five minutes (15 seconds for a partial result). Concurrent consumers share one scan; closing one picker does not cancel another consumer. Refresh bypasses the cache, and each picker has its own filter/view. Scanning and catalog parsing run off the UI thread; picker filtering is debounced by 120 ms. Action search rechecks this cache after its debounce and when returning from the picker, so a refreshed catalog is available there too.
+
+Board UI updates now follow connection notifications instead of waking every 100 ms. Ordered disconnect notifications still cancel pending holds. Keyboard hooks queue visual work, while suppression and gesture timing remain synchronous. Hidden/minimized windows stop feedback animations and use a ten-second audio polling interval instead of two seconds; reopening or issuing an audio command requests fresh state immediately. Pending audio refreshes share a loop and include requests arriving during an existing read. Unchanged audio snapshots and frozen brushes avoid repeated UI allocations. Process wrappers returned by launching an app are disposed without closing the launched program.
+
+These changes reduce specified work; they do not establish a machine-independent CPU/RAM percentage. Native hardware audio switching and physical key behavior still require validation on a Windows PC with the macropad.

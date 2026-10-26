@@ -43,7 +43,6 @@ public partial class MainWindow : Window
     private FirmwareManifest? bundledFirmware;
     private string bundledFirmwareError = "";
     private readonly DispatcherTimer firmwareTimer = new() { Interval = TimeSpan.FromSeconds(5) };
-    private readonly DispatcherTimer boardUiTimer = new() { Interval = TimeSpan.FromMilliseconds(100) };
     private long firmwareQuietUntil;
     private readonly long startedAt = Environment.TickCount64;
     private readonly HashSet<string> firmwareOffered = [];
@@ -62,7 +61,7 @@ public partial class MainWindow : Window
     public MainWindow(bool startInBackground = false)
     {
         InitializeComponent();
-        // Fit the first window to the usable desktop; the keypad scales down on smaller screens.
+        // Fit the first window to the usable desktop; smaller windows scroll the native-size keypad.
         Width = Math.Min(Width, SystemParameters.WorkArea.Width);
         Height = Math.Min(Height, SystemParameters.WorkArea.Height);
         MinWidth = Math.Min(MinWidth, Width); MinHeight = Math.Min(MinHeight, Height);
@@ -116,23 +115,21 @@ public partial class MainWindow : Window
         CreateTray();
         feedbackTimer.Tick += (_, _) => RefreshFeedback();
         Closing += WindowClosing;
-        Closed += (_, _) => { boardUiTimer.Stop(); firmwareTimer.Stop(); boardConnection?.Dispose(); feedbackTimer.Stop(); updateTimer.Stop(); lifetime.Cancel(); updateService.Dispose(); hook?.Dispose(); tray?.Dispose(); trayIcon?.Dispose(); };
+        Closed += (_, _) => { firmwareTimer.Stop(); boardConnection?.Dispose(); feedbackTimer.Stop(); updateTimer.Stop(); lifetime.Cancel(); updateService.Dispose(); hook?.Dispose(); tray?.Dispose(); trayIcon?.Dispose(); };
         loading = false;
         StatusText.Text = "Prêt · Choisissez un bouton pour le personnaliser.";
         updateTimer.Tick += async (_, _) => await CheckForUpdatesAsync(false);
         updateTimer.Start();
         firmwareTimer.Tick += async (_, _) => await OfferFirmwareUpdateAsync();
         firmwareTimer.Start();
-        boardUiTimer.Tick += (_, _) => { if (boardConnection is { } connection) { var state = connection.State; if (!ReferenceEquals(state, boardState)) ApplyBoardState(state); } };
-        boardUiTimer.Start();
         CommandBindings.Add(new System.Windows.Input.CommandBinding(System.Windows.Input.ApplicationCommands.Save, (_, e) => { SaveEditor(); e.Handled = true; }));
         InputBindings.Add(new System.Windows.Input.KeyBinding(System.Windows.Input.ApplicationCommands.Save, System.Windows.Input.Key.S, System.Windows.Input.ModifierKeys.Control));
         Loaded += async (_, _) =>
         {
             if (startInBackground) Hide(); else if (!settings.IsCalibrated) BeginCalibration();
             Motion.Reveal(WindowContent);
-            boardConnection = new BoardConnectionService(settings.PreferredBoardDeviceId);
-            try { bundledFirmware = await Task.Run(FirmwareService.ReadBundledManifest); ApplyBoardState(boardConnection.State); }
+            boardConnection = new BoardConnectionService(settings.PreferredBoardDeviceId, new Progress<BoardConnectionState>(OnBoardStateChanged));
+            try { bundledFirmware = await Task.Run(FirmwareService.ReadBundledManifest); if (boardState != null) ApplyBoardState(boardState); }
             catch (Exception ex) { bundledFirmwareError = ex.Message; BoardFirmwareStatus.Text = ex.Message; }
             try { await Task.Delay(8000, lifetime.Token); await CheckForUpdatesAsync(false); }
             catch (OperationCanceledException) { }
@@ -173,7 +170,25 @@ public partial class MainWindow : Window
     }
     [DllImport("dwmapi.dll")]
     private static extern int DwmSetWindowAttribute(IntPtr window, int attribute, ref int value, int size);
-    private static SolidColorBrush Brush(string color) => new((Color)ColorConverter.ConvertFromString(color));
+    private static readonly Dictionary<string, SolidColorBrush> Palette = new(StringComparer.Ordinal);
+    private static SolidColorBrush Brush(string color)
+    {
+        if (Palette.TryGetValue(color, out var cached)) return cached;
+        var brush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+        brush.Freeze(); Palette.Add(color, brush); return brush;
+    }
+    private bool IsInterfaceActive => IsVisible && WindowState != WindowState.Minimized;
+    private bool feedbackQueued;
+    private void QueueFeedback()
+    {
+        if (feedbackQueued || lifetime.IsCancellationRequested) return;
+        feedbackQueued = true;
+        Dispatcher.BeginInvoke(() =>
+        {
+            feedbackQueued = false;
+            if (!lifetime.IsCancellationRequested) RefreshFeedback();
+        }, DispatcherPriority.Background);
+    }
     private void RenderGrid()
     {
         if (feedbackProfile != settings.ActiveProfile.Id)
@@ -201,6 +216,7 @@ public partial class MainWindow : Window
     }
     private void ApplyHardwareHighlights()
     {
+        if (!IsInterfaceActive) return;
         int mask = boardState?.Kind == BoardConnectionKind.Connected ? boardState.Telemetry?.Mask ?? 0 : 0;
         for (int i = 0; i < deckButtons.Count; i++)
         {
@@ -220,6 +236,10 @@ public partial class MainWindow : Window
                 feedback[i] = DeckKeyFeedback.Ready; feedbackMessages[i] = ""; feedbackUntil[i] = 0;
             }
             pending |= feedback[i] == DeckKeyFeedback.Running || feedbackUntil[i] > now || pressedUntil[i] > now;
+        }
+        if (!IsInterfaceActive) { feedbackTimer.Stop(); return; }
+        for (int i = 0; i < 12; i++)
+        {
             deckButtons[i].Feedback = feedback[i];
             string state = feedback[i] switch { DeckKeyFeedback.Running => "Action en cours", DeckKeyFeedback.Success => "Action envoyée", DeckKeyFeedback.Error => "Échec de l’action", _ => "Prêt" };
             System.Windows.Automation.AutomationProperties.SetItemStatus(deckButtons[i], state);
@@ -237,7 +257,7 @@ public partial class MainWindow : Window
         feedback[index] = state; feedbackMessages[index] = message;
         feedbackUntil[index] = state is DeckKeyFeedback.Success or DeckKeyFeedback.Error ? Environment.TickCount64 + (state == DeckKeyFeedback.Error ? 6000 : 3000) : 0;
         RefreshFeedback();
-        if (index == selected) Motion.Reveal(ActionExecutionStatus);
+        if (IsInterfaceActive && index == selected) Motion.Reveal(ActionExecutionStatus);
     }
     private void RefreshProfiles()
     {
@@ -270,7 +290,7 @@ public partial class MainWindow : Window
         ShortcutPicker.SelectedItem = ((IEnumerable<Choice>)ShortcutPicker.ItemsSource).FirstOrDefault(c => c.Key == action.Key) ?? ((IEnumerable<Choice>)ShortcutPicker.ItemsSource).First();
         MediaPicker.SelectedItem = ((IEnumerable<Choice>)MediaPicker.ItemsSource).FirstOrDefault(c => c.Key == action.Key) ?? ((IEnumerable<Choice>)MediaPicker.ItemsSource).First();
         SpotifyPicker.SelectedItem = ((IEnumerable<Choice>)SpotifyPicker.ItemsSource).FirstOrDefault(c => c.Key == action.Key) ?? ((IEnumerable<Choice>)SpotifyPicker.ItemsSource).First();
-        UpdateActionFields(); PopulateAudioPickers(action); RenderGrid(); loading = previous; UpdateHistoryState(); Motion.Reveal(EditorPanel);
+        UpdateActionFields(); PopulateAudioPickers(action); RenderGrid(); loading = previous; UpdateHistoryState(); if (IsInterfaceActive) Motion.Reveal(EditorPanel);
     }
     private bool SaveEditor()
     {
@@ -391,7 +411,7 @@ public partial class MainWindow : Window
         if (index < 0) return;
         var action = settings.ActiveProfile.Buttons[index].Copy();
         e.Handled = action.Kind != ActionKind.Passthrough;
-        pressedUntil[index] = Environment.TickCount64 + 180; RefreshFeedback();
+        pressedUntil[index] = Environment.TickCount64 + 180; QueueFeedback();
         if (gestures.Begin(e.Key, index, action, Environment.TickCount64) is { } invocation) RunGesture(invocation);
         if (gestures.HasPending) gestureTimer.Start();
     }
@@ -409,7 +429,7 @@ public partial class MainWindow : Window
         try
         {
             // Let WPF render feedback before dispatching; keyboard commands stay on the UI thread.
-            await Dispatcher.Yield(DispatcherPriority.Render);
+            if (IsInterfaceActive) await Dispatcher.Yield(DispatcherPriority.Render);
             if (action.Kind is ActionKind.Microphone or ActionKind.AudioOutput)
             {
                 await Task.Run(() => { if (action.Kind == ActionKind.Microphone) WindowsAudio.ToggleMicrophones(); else WindowsAudio.ToggleOutput(action.Target, action.Arguments); });
@@ -422,7 +442,7 @@ public partial class MainWindow : Window
             else ActionRunner.Run(action);
             // Keep short actions readable, without delaying their actual execution.
             int remaining = (int)Math.Max(0, 300 - (Environment.TickCount64 - dispatchedAt));
-            if (remaining > 0) await Task.Delay(remaining, lifetime.Token);
+            if (remaining > 0 && IsInterfaceActive) await Task.Delay(remaining, lifetime.Token);
             if (lifetime.IsCancellationRequested || executionTickets[index] != ticket) return;
             SetFeedback(index, DeckKeyFeedback.Success, "Action envoyée ✓");
             StatusText.Text = $"Action envoyée · {deckButtons[index].Label}";
@@ -527,7 +547,10 @@ public partial class MainWindow : Window
     private void ChooseApplicationClick(object sender, RoutedEventArgs e)
     {
         var picker = new ApplicationPicker { Owner = this };
-        if (picker.ShowDialog() != true || picker.SelectedApplication is not { } app) return;
+        bool chosen = picker.ShowDialog() == true;
+        // A manual refresh in the picker also updates an already-open action search.
+        if (applicationsLoaded && !applicationsLoading) _ = LoadActionApplicationsAsync();
+        if (!chosen || picker.SelectedApplication is not { } app) return;
         TargetEditor.Text = app.Target;
         pickedApplicationName = app.Name;
         if (string.IsNullOrWhiteSpace(LabelEditor.Text)) LabelEditor.Text = app.Name[..Math.Min(50, app.Name.Length)];
@@ -562,6 +585,15 @@ public partial class MainWindow : Window
             item.Click += (_, _) => Dispatcher.Invoke(() => { if (!firmwareOpen && !calibrating && OwnedWindows.Count == 0) ProfilePicker.SelectedItem = profile; });
             trayProfiles.DropDownItems.Add(item);
         }
+    }
+    private void OnBoardStateChanged(BoardConnectionState state)
+    {
+        if (lifetime.IsCancellationRequested) return;
+        var previous = boardState;
+        if (previous != null && previous.Kind == state.Kind && previous.Message == state.Message
+            && previous.Device == state.Device && previous.Info == state.Info && previous.Telemetry == state.Telemetry
+            && previous.Devices.SequenceEqual(state.Devices)) return;
+        ApplyBoardState(state);
     }
     private void ApplyBoardState(BoardConnectionState state)
     {
@@ -616,7 +648,6 @@ public partial class MainWindow : Window
     {
         if (loadingBoardPicker || BoardDevicePicker.SelectedItem is not FirmwareDevice device || firmwareOpen) return;
         settings.PreferredBoardDeviceId = device.DeviceId; Persist(); boardConnection?.Select(device.DeviceId);
-        if (boardConnection != null) ApplyBoardState(boardConnection.State);
     }
     private void AutoFirmwareClick(object sender, RoutedEventArgs e)
     {

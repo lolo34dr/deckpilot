@@ -122,5 +122,6 @@ passed += await AdditionalChecks.RunAsync();
 passed += FirmwareChecks.Run();
 passed += BoardProtocolChecks.Run();
 passed += await ActionToolsChecks.RunAsync();
+passed += await ApplicationCatalogChecks.RunAsync();
 passed += ProfileGestureAudioChecks.Run();
 Console.WriteLine($"{passed} checks passed.");

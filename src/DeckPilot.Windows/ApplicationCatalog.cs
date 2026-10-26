@@ -10,18 +10,27 @@ using System.Threading.Tasks;
 using DeckPilot.Core;
 
 namespace DeckPilot.Windows;
-public sealed record ApplicationCatalogResult(IReadOnlyList<InstalledApplication> Applications, string? Warning);
 public static class ApplicationCatalog
 {
-    public static async Task<ApplicationCatalogResult> FindAsync(CancellationToken cancellation)
+    private static readonly ApplicationCatalogCache Cache = new(DiscoverAsync);
+    public static async Task<ApplicationCatalogResult> FindAsync(CancellationToken cancellation, bool forceRefresh = false)
     {
-        var applications = await Task.Run(() =>
-        {
-            var result = new List<InstalledApplication>();
-            foreach (var location in new[] { Environment.SpecialFolder.StartMenu, Environment.SpecialFolder.CommonStartMenu })
-                Scan(Environment.GetFolderPath(location), result, cancellation);
-            return result;
-        }, cancellation);
+        using var wait = CancellationTokenSource.CreateLinkedTokenSource(cancellation);
+        wait.CancelAfter(TimeSpan.FromSeconds(30));
+        try { return await Cache.GetAsync(wait.Token, forceRefresh).ConfigureAwait(false); }
+        catch (OperationCanceledException) when (!cancellation.IsCancellationRequested)
+        { throw new TimeoutException("La recherche des applications a dépassé le délai prévu."); }
+    }
+    private static async Task<ApplicationCatalogResult> DiscoverAsync()
+    {
+        using var discovery = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        return await Task.Run(() => DiscoverAsync(discovery.Token), discovery.Token).ConfigureAwait(false);
+    }
+    private static async Task<ApplicationCatalogResult> DiscoverAsync(CancellationToken cancellation)
+    {
+        var applications = new List<InstalledApplication>();
+        foreach (var location in new[] { Environment.SpecialFolder.StartMenu, Environment.SpecialFolder.CommonStartMenu })
+            Scan(Environment.GetFolderPath(location), applications, cancellation);
         string? warning = null;
         try
         {
@@ -35,9 +44,9 @@ public static class ApplicationCatalog
             {
                 Task<string> output = process.StandardOutput.ReadToEndAsync(timeout.Token);
                 Task<string> errors = process.StandardError.ReadToEndAsync(timeout.Token);
-                await process.WaitForExitAsync(timeout.Token);
-                string json = await output;
-                await errors;
+                await process.WaitForExitAsync(timeout.Token).ConfigureAwait(false);
+                string json = await output.ConfigureAwait(false);
+                await errors.ConfigureAwait(false);
                 if (process.ExitCode != 0) throw new IOException("Le catalogue Windows n’est pas disponible.");
                 if (!string.IsNullOrWhiteSpace(json))
                 {
@@ -55,7 +64,12 @@ public static class ApplicationCatalog
                     }
                 }
             }
-            finally { if (!process.HasExited) process.Kill(entireProcessTree: true); }
+            finally
+            {
+                // The child can finish between HasExited and Kill.
+                try { if (!process.HasExited) process.Kill(entireProcessTree: true); }
+                catch (InvalidOperationException) { }
+            }
         }
         catch (OperationCanceledException) when (!cancellation.IsCancellationRequested) { warning = "Le catalogue Windows met trop de temps à répondre. Les raccourcis restent disponibles."; }
         catch (Exception ex) when (ex is IOException or System.ComponentModel.Win32Exception or JsonException)

@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 namespace DeckPilot.Core;
 
 public enum ActionKind { Passthrough, Application, Folder, Website, Shortcut, Media, Spotify, Microphone, AudioOutput }
-public sealed class ButtonAction
+public sealed record ButtonAction
 {
     public string Label { get; set; } = "";
     public ActionKind Kind { get; set; }
@@ -43,6 +43,12 @@ public sealed class Profile
     public string Name { get; set; } = "Profil par défaut";
     public List<ButtonAction> Buttons { get; set; } = Enumerable.Range(0, 12).Select(_ => new ButtonAction()).ToList();
     public override string ToString() => Name;
+    internal Profile Copy()
+    {
+        var copy = (Profile)MemberwiseClone();
+        copy.Buttons = Buttons.Select(button => button.Copy()).ToList();
+        return copy;
+    }
 }
 public sealed class Settings
 {
@@ -90,7 +96,10 @@ public sealed class SettingsStore(string path)
     public Settings Load()
     {
         if (!File.Exists(path)) return new();
-        string json = File.ReadAllText(path);
+        return Deserialize(File.ReadAllText(path));
+    }
+    private static Settings Deserialize(string json)
+    {
         var settings = JsonSerializer.Deserialize<Settings>(json, Options)
             ?? throw new InvalidDataException("Configuration vide.");
         using var document = JsonDocument.Parse(json);
@@ -101,23 +110,36 @@ public sealed class SettingsStore(string path)
     public void Save(Settings settings)
     {
         settings.Validate();
-        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+        string json = JsonSerializer.Serialize(settings, Options);
         if (File.Exists(path))
         {
+            // Compare the actual file, not a cached timestamp: another program
+            // may have changed or removed it since this instance last saved.
+            string previousJson = File.ReadAllText(path);
+            if (previousJson == json)
+            {
+                _ = ProfileExchange.Export(settings.Profiles);
+                return;
+            }
             Settings? previous = null;
-            try { previous = Load(); }
+            try { previous = Deserialize(previousJson); }
             catch (Exception ex) when (ex is JsonException or InvalidDataException)
             {
                 Directory.CreateDirectory(BackupsPath);
                 File.Copy(path, Path.Combine(BackupsPath, "recovered-settings-" + Guid.NewGuid().ToString("N") + ".json"));
             }
-            if (previous != null && ProfileExchange.Export(previous.Profiles) != ProfileExchange.Export(settings.Profiles))
-                ProfileBackups.Save(BackupsPath, previous.Profiles);
+            if (previous != null)
+            {
+                _ = ProfileExchange.Export(settings.Profiles);
+                if (!ProfileExchange.HaveSameContent(previous.Profiles, settings.Profiles))
+                    ProfileBackups.Save(BackupsPath, previous.Profiles);
+            }
         }
+        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
         var temporary = path + "." + Guid.NewGuid().ToString("N") + ".tmp";
         try
         {
-            File.WriteAllText(temporary, JsonSerializer.Serialize(settings, Options));
+            File.WriteAllText(temporary, json);
             // ReplaceFile on Windows keeps existing delete-sharing readers on
             // their old snapshot; MoveFileEx cannot reliably overwrite it.
             if (OperatingSystem.IsWindows() && File.Exists(path)) File.Replace(temporary, path, null);
