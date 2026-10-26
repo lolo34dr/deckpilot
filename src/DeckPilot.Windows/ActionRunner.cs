@@ -23,20 +23,20 @@ public static class ActionRunner
                 {
                     var launcher = new ProcessStartInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe")) { UseShellExecute = false };
                     launcher.ArgumentList.Add("shell:AppsFolder\\" + ApplicationTarget.GetAppId(action.Target));
-                    Process.Start(launcher);
+                    Process.Start(launcher)?.Dispose();
                     break;
                 }
                 if (!File.Exists(action.Target)) throw new IOException("Le programme sélectionné est introuvable.");
-                Process.Start(new ProcessStartInfo(action.Target) { UseShellExecute = true, Arguments = action.Arguments, WorkingDirectory = Path.GetDirectoryName(action.Target)! });
+                Process.Start(new ProcessStartInfo(action.Target) { UseShellExecute = true, Arguments = action.Arguments, WorkingDirectory = Path.GetDirectoryName(action.Target)! })?.Dispose();
                 break;
             case ActionKind.Folder:
                 if (!Directory.Exists(action.Target)) throw new IOException("Le dossier sélectionné est introuvable.");
-                Process.Start(new ProcessStartInfo(action.Target) { UseShellExecute = true });
+                Process.Start(new ProcessStartInfo(action.Target) { UseShellExecute = true })?.Dispose();
                 break;
             case ActionKind.Website:
                 if (!Uri.TryCreate(action.Target, UriKind.Absolute, out var uri) || (uri.Scheme != "https" && uri.Scheme != "http"))
                     throw new ArgumentException("Saisissez une adresse commençant par https:// ou http://.");
-                Process.Start(new ProcessStartInfo(uri.AbsoluteUri) { UseShellExecute = true });
+                Process.Start(new ProcessStartInfo(uri.AbsoluteUri) { UseShellExecute = true })?.Dispose();
                 break;
             case ActionKind.Shortcut:
                 if (!IsShortcutKey(action.Key)) throw new ArgumentException("Choisissez une touche pour le raccourci.");

@@ -420,6 +420,16 @@ try {
         $sidebar.SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 0)
     }
     Write-Host 'PASS responsive layout: expanded sections remain scrollable, calibration stays reachable, profile and keypad remain separated'
+    $script:phase = 'minimize and restore without modifying profiles'
+    $settingsBeforeMinimize = (Read-SharedJson $settingsPath | ConvertTo-Json -Depth 15 -Compress)
+    $windowPattern = $root.GetCurrentPattern([System.Windows.Automation.WindowPattern]::Pattern)
+    $windowPattern.SetWindowVisualState([System.Windows.Automation.WindowVisualState]::Minimized)
+    Wait-Until { $windowPattern.Current.WindowVisualState -eq [System.Windows.Automation.WindowVisualState]::Minimized }
+    $windowPattern.SetWindowVisualState([System.Windows.Automation.WindowVisualState]::Normal)
+    Wait-Until { $windowPattern.Current.WindowVisualState -eq [System.Windows.Automation.WindowVisualState]::Normal }
+    Wait-Until { (Find-Control $root 'HeaderMicrophoneStatus').Current.Name -notlike '*lecture*' }
+    if ((Read-SharedJson $settingsPath | ConvertTo-Json -Depth 15 -Compress) -cne $settingsBeforeMinimize) { throw 'Window activity modified the saved configuration' }
+    Write-Host 'PASS window activity: minimize/restore preserves settings and keeps the audio indicator available'
     $script:smokePassed = $true
     Write-Host 'PASS Windows UI and installed apps: twelve keys, vector templates, application catalog and persisted selection'
 }
