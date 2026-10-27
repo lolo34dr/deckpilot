@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 trap { Write-Host ("::error::" + ($_.Exception.Message + ' | ' + $_.ScriptStackTrace).Replace("`r", ' ').Replace("`n", ' ')); throw }
 if ($env:GITHUB_ACTIONS -ne 'true') { throw 'Use an isolated Windows runner.' }
 New-Item -ItemType Directory -Force artifacts/firmware | Out-Null
