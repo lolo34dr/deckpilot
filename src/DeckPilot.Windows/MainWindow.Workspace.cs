@@ -8,7 +8,14 @@ namespace DeckPilot.Windows;
 
 public partial class MainWindow
 {
-    private sealed record ProfileDestination(string Name, string Id);
+    private sealed record ProfileDestination(string Name, string Id) { public override string ToString() => Name; }
+    private int profileSelectionLocks;
+    private T WithProfileSelectionLocked<T>(Func<T> showDialog)
+    {
+        profileSelectionLocks++;
+        try { return showDialog(); }
+        finally { profileSelectionLocks--; }
+    }
 
     private void InitializeWorkspaceFeatures()
     {
@@ -85,6 +92,7 @@ public partial class MainWindow
 
     private bool SwitchProfile(Profile destination)
     {
+        if (profileSelectionLocks > 0 || OwnedWindows.Count > 0) { ReportError("Fermez la fenêtre de configuration avant de changer de profil."); return false; }
         if (calibrating || firmwareOpen || !SaveEditor()) return false;
         Guid previous = settings.ActiveProfile.Id;
         settings.ActiveProfileId = destination.Id;

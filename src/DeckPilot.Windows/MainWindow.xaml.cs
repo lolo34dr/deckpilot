@@ -55,7 +55,7 @@ public partial class MainWindow : Window
     private readonly List<Border> calibrationCells = [];
     private readonly List<TextBlock> calibrationLabels = [];
     private readonly DispatcherTimer feedbackTimer = new() { Interval = TimeSpan.FromMilliseconds(60) };
-    private record Choice(string Name, int Key);
+    private record Choice(string Name, int Key) { public override string ToString() => Name; }
     private static readonly string[] ActionNames = ActionSearch.KindNames;
 
     public MainWindow(bool startInBackground = false)
@@ -327,8 +327,10 @@ public partial class MainWindow : Window
         { TargetEditor.Text = ""; ArgumentsEditor.Text = ""; PopulateAudioPickers(new() { Kind = ActionKind.AudioOutput }); }
         if ((ActionPicker.SelectedIndex == (int)ActionKind.Profile || ActionPicker.SelectedIndex == (int)ActionKind.System) && EditedAction.Kind != (ActionKind)ActionPicker.SelectedIndex)
         {
+            var accent = AccentPicker.SelectedItem;
             bool previous = loading; loading = true;
             PopulateWorkspaceEditor(new() { Kind = (ActionKind)ActionPicker.SelectedIndex });
+            AccentPicker.SelectedItem = accent;
             loading = previous;
         }
         UpdateActionFields(); UpdateHistoryState();
@@ -378,12 +380,12 @@ public partial class MainWindow : Window
         if ((ActionKind)ActionPicker.SelectedIndex == ActionKind.Folder)
         {
             using var dialog = new Forms.FolderBrowserDialog();
-            if (dialog.ShowDialog() == Forms.DialogResult.OK) TargetEditor.Text = dialog.SelectedPath;
+            if (WithProfileSelectionLocked(() => dialog.ShowDialog()) == Forms.DialogResult.OK) TargetEditor.Text = dialog.SelectedPath;
         }
         else
         {
             var dialog = new OpenFileDialog { Filter = "Applications et raccourcis|*.exe;*.lnk|Tous les fichiers|*.*", CheckFileExists = true };
-            if (dialog.ShowDialog(this) == true) TargetEditor.Text = dialog.FileName;
+            if (WithProfileSelectionLocked(() => dialog.ShowDialog(this)) == true) TargetEditor.Text = dialog.FileName;
         }
     }
     private void ProfileChanged(object sender, SelectionChangedEventArgs e)
@@ -399,22 +401,38 @@ public partial class MainWindow : Window
         if (settings.Profiles.Count >= 100) { ReportError("Limite de 100 profils atteinte."); return; }
         if (!SaveEditor()) return;
         CancelPendingGestures(); editingLong = false;
+        Guid previous = settings.ActiveProfile.Id;
         var profile = new Profile { Name = NewProfileName() };
-        if (duplicate) { profile = ProfileExchange.CopyAsNew(new[] { settings.ActiveProfile })[0]; profile.Name = NewProfileName() + " (copie)"; }
-        settings.Profiles.Add(profile); settings.ActiveProfileId = profile.Id; RefreshProfiles(); LoadEditor(); Persist();
+        if (duplicate)
+        {
+            const string suffix = " (copie)";
+            string name = NewProfileName();
+            profile = ProfileExchange.CopyAsNew(new[] { settings.ActiveProfile })[0];
+            profile.Name = name[..Math.Min(name.Length, 60 - suffix.Length)] + suffix;
+        }
+        settings.Profiles.Add(profile); settings.ActiveProfileId = profile.Id;
+        if (!Persist()) { settings.Profiles.Remove(profile); settings.ActiveProfileId = previous; }
+        RefreshProfiles(); LoadEditor();
     }
     private void RenameProfile(object sender, RoutedEventArgs e)
     {
         if (!SaveEditor()) return;
-        settings.ActiveProfile.Name = NewProfileName(); RefreshProfiles(); LoadEditor(); Persist();
+        string previous = settings.ActiveProfile.Name;
+        settings.ActiveProfile.Name = NewProfileName();
+        if (!Persist()) settings.ActiveProfile.Name = previous;
+        RefreshProfiles(); LoadEditor();
     }
     private void DeleteProfile(object sender, RoutedEventArgs e)
     {
         if (settings.Profiles.Count == 1) { StatusText.Text = "Conservez au moins un profil."; return; }
-        if (MessageBox.Show(this, $"Supprimer le profil « {settings.ActiveProfile.Name} » ?", "DeckPilot", MessageBoxButton.YesNo) != MessageBoxResult.Yes) return;
+        if (!SaveEditor()) return;
+        if (WithProfileSelectionLocked(() => MessageBox.Show(this, $"Supprimer le profil « {settings.ActiveProfile.Name} » ?", "DeckPilot", MessageBoxButton.YesNo)) != MessageBoxResult.Yes) return;
         CancelPendingGestures(); editingLong = false;
-        settings.Profiles.Remove(settings.ActiveProfile); settings.ActiveProfileId = settings.Profiles[0].Id;
-        RefreshProfiles(); LoadEditor(); Persist();
+        var previous = settings.ActiveProfile;
+        int index = settings.Profiles.IndexOf(previous);
+        settings.Profiles.RemoveAt(index); settings.ActiveProfileId = settings.Profiles[0].Id;
+        if (!Persist()) { settings.Profiles.Insert(index, previous); settings.ActiveProfileId = previous.Id; }
+        RefreshProfiles(); LoadEditor();
     }
     private void OnDeckKey(object? sender, DeckKeyEventArgs e)
     {
@@ -474,7 +492,7 @@ public partial class MainWindow : Window
                     if (sourceProfile == destination.Id && executionTickets[index] == ticket)
                         SetFeedback(index, DeckKeyFeedback.Success, "Ce profil est déjà actif ✓");
                 }
-                else { AddActivity(title, false, "Changement de profil impossible"); SetFeedback(index, DeckKeyFeedback.Error, "Changement de profil impossible · Vérifiez l’enregistrement."); }
+                else { AddActivity(title, false, "Changement de profil impossible"); SetFeedback(index, DeckKeyFeedback.Error, "Changement de profil impossible · " + StatusText.Text); }
                 return;
             }
             if (action.Kind is ActionKind.Microphone or ActionKind.AudioOutput)
@@ -599,7 +617,7 @@ public partial class MainWindow : Window
     private void ChooseApplicationClick(object sender, RoutedEventArgs e)
     {
         var picker = new ApplicationPicker { Owner = this };
-        bool chosen = picker.ShowDialog() == true;
+        bool chosen = WithProfileSelectionLocked(() => picker.ShowDialog()) == true;
         // A manual refresh in the picker also updates an already-open action search.
         if (applicationsLoaded && !applicationsLoading) _ = LoadActionApplicationsAsync();
         if (!chosen || picker.SelectedApplication is not { } app) return;
