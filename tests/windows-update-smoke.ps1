@@ -479,7 +479,7 @@ try {
     }
     Invoke-Control (Find-Control $root 'DeckKey02')
     Invoke-Control (Find-Control $root 'DeckKey01')
-    $accentSelection = (Find-Control $root 'AccentPicker').GetCurrentPattern([System.Windows.Automation.SelectionPattern]::Pattern).GetCurrentSelection()
+    $accentSelection = (Find-Control $root 'AccentPicker').GetCurrentPattern([System.Windows.Automation.SelectionPattern]::Pattern).Current.GetSelection()
     if ($accentSelection.Count -ne 1 -or $accentSelection[0].Current.Name -ne 'Bleu') { throw 'The accent picker lost its saved selection' }
     Write-Host 'PASS key appearance: accent persists and reloads when returning to the key'
 
@@ -578,8 +578,8 @@ try {
     $profilesSection.Collapse()
     Invoke-Control (Find-Control $root 'DeckKey02')
     $screen = [System.Windows.Forms.Screen]::PrimaryScreen.WorkingArea
-    $transform.Resize([Math]::Min(1180, $screen.Width - 40), [Math]::Min(900, $screen.Height - 40))
-    $transform.Move($screen.Left + 20, $screen.Top + 20)
+    $transform.Resize([Math]::Max(960, [Math]::Min(1180, $screen.Width)), [Math]::Max(720, [Math]::Min(900, $screen.Height)))
+    $transform.Move($screen.Left, $screen.Top)
     foreach ($id in @('DeckEditorScroll', 'SidebarScroll')) {
         $scroll = (Find-Control $root $id).GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern)
         if ($scroll.Current.VerticallyScrollable) { $scroll.SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 0) }

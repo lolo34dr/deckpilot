@@ -370,7 +370,7 @@ public partial class MainWindow : Window
             ActionKind.AudioOutput => "Alterne entre deux sorties par défaut Windows. Les applications réglées sur une sortie fixe peuvent ne pas suivre ce changement.",
             ActionKind.Spotify => "Contrôle uniquement Spotify pour Windows, même si YouTube est actif. Ouvrez Spotify et lancez une lecture. Le lecteur Spotify dans un navigateur n’est pas pris en charge.",
             ActionKind.Profile => "Change de profil avec cette touche. Choisissez un profil précis, le suivant ou le précédent. Le calibrage reste commun.",
-            ActionKind.System => "Ouvre un réglage ou un outil Windows. Le verrouillage ferme votre session à l’écran sans arrêter vos applications.",
+            ActionKind.System => "Ouvre un réglage ou un outil Windows. Le verrouillage protège l’accès à votre session sans arrêter vos applications.",
             _ => "Contrôles multimédias généraux de Windows : peuvent agir sur YouTube ou un autre lecteur actif."
         };
         UpdateApplicationSummary();
