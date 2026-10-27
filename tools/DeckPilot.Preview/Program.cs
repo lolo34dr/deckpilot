@@ -22,7 +22,7 @@ internal static class Program
         app.InitializeComponent();
         var window = new DeckPilot.Windows.MainWindow();
         window.MinWidth = 960; window.MinHeight = 720;
-        window.Width = 1080; window.Height = 980;
+        window.Width = 1180; window.Height = 900;
         window.WindowStartupLocation = WindowStartupLocation.Manual;
         window.Left = 0; window.Top = 0;
         window.Show();
@@ -35,12 +35,13 @@ internal static class Program
             {
                 window.UpdateLayout();
                 var content = (FrameworkElement)window.Content;
-                content.Measure(new Size(1080, 952));
-                content.Arrange(new Rect(0, 0, 1080, 952));
-                content.UpdateLayout();
-                var image = new RenderTargetBitmap((int)Math.Ceiling(content.ActualWidth), (int)Math.Ceiling(content.ActualHeight), 96, 96, PixelFormats.Pbgra32);
+                // Capture the actual arranged client area at the runner's native
+                // DPI. Do not force an alternate layout or rescale key text.
+                var dpi = VisualTreeHelper.GetDpi(content);
+                var image = new RenderTargetBitmap((int)Math.Ceiling(content.ActualWidth * dpi.DpiScaleX),
+                    (int)Math.Ceiling(content.ActualHeight * dpi.DpiScaleY), dpi.PixelsPerInchX, dpi.PixelsPerInchY, PixelFormats.Pbgra32);
                 var background = new DrawingVisual();
-                using (var drawing = background.RenderOpen()) drawing.DrawRectangle(window.Background, null, new Rect(0, 0, image.PixelWidth, image.PixelHeight));
+                using (var drawing = background.RenderOpen()) drawing.DrawRectangle(window.Background, null, new Rect(0, 0, content.ActualWidth, content.ActualHeight));
                 image.Render(background);
                 image.Render(content);
                 var png = new PngBitmapEncoder(); png.Frames.Add(BitmapFrame.Create(image));
