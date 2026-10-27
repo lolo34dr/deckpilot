@@ -1,12 +1,14 @@
-DeckPilot 1.7.0 reduces repeated work while editing profiles, finding applications and running in the background.
+DeckPilot 1.8.0 adds a refreshed workspace and faster ways to build and use your profiles.
 
-- Saving unchanged settings no longer replaces the file or creates backups. Actual disk contents are still checked, so external edits, deletions and failed saves are not hidden.
-- Profile history keeps detached model snapshots. Unchanged edits and undo/redo avoid JSON round-trips; action editing uses value comparisons instead of repeated serialization.
-- Application search and picker share a five-minute catalog cache and one discovery task. Discovery runs outside WPF; Refresh still forces a new scan. Each picker owns its filter and keeps current results usable during refresh.
-- Replace the permanent 100 ms board UI poll with ordered connection notifications. Keyboard-hook callbacks queue visual work instead of rendering twelve keys synchronously.
-- Audio status polls every two seconds while visible and every ten seconds when hidden/minimized, refreshing immediately on reopen and after audio commands. Overlapping refresh requests are coalesced without dropping the post-command update.
-- Hidden windows stop visual feedback timers and skip cosmetic rendering waits. Frozen UI brushes are reused and launched application process wrappers are disposed.
+- Clearer charcoal/teal interface, action library first, crisp 3 × 4 keys, key accent colors and reduced-motion preference.
+- Three editable profile templates: Music and audio, Desktop and productivity, and Creation.
+- Profile actions: switch to a named profile, the next or the previous profile from a key. Imported profile sets keep their internal links.
+- Windows actions: open common settings or Task Manager, or explicitly lock the PC.
+- Copy/cut/paste/reset entire keys, including long presses and colors, with undo/redo and an app-local clipboard.
+- Capture a keyboard shortcut directly; Escape cancels and macropad keys remain reserved during capture.
+- Ctrl+K action search and a clearable, session-only history of the last 30 actions.
+- Fix the automatic firmware prompt so accepting it opens the firmware manager. Pending gestures are cancelled across profile changes.
 
-Download **DeckPilot-Setup.exe** or update from the app. Profiles, calibration and startup preferences are preserved. No firmware flash is required.
+Download **DeckPilot-Setup.exe** or update from the app. Existing profiles, calibration and startup preferences are preserved. Firmware remains **1.1.1**; no flash is required for these features.
 
-Validation includes settings/history/cache regressions and Windows installation, update, picker, drag-and-drop, short/long action editing and minimize/restore checks. These are structural optimizations, not a measured claim of a particular CPU or RAM saving on every PC.
+Validation includes core compatibility/navigation/import/template checks and native Windows installation, update, picker, drag-and-drop, undo/redo, template creation, profile actions, shortcut capture, clipboard editing, layout and minimize/restore checks. Physical macropad and audio-device behavior still depends on the owner’s Windows hardware.

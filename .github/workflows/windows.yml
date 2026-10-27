@@ -46,6 +46,12 @@ jobs:
       - name: Verify native update and application picker
         shell: powershell
         run: ./tests/windows-update-smoke.ps1 -Executable artifacts/standalone/DeckPilot.exe
+      - name: Save the native interface capture
+        uses: actions/upload-artifact@v6
+        with:
+          name: DeckPilot-interface
+          path: artifacts/ui/DeckPilot.png
+          if-no-files-found: error
       - shell: pwsh
         run: Compress-Archive -Path artifacts/win-x64/* -DestinationPath artifacts/DeckPilot-win-x64.zip
       - uses: actions/upload-artifact@v6

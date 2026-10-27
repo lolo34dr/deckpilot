@@ -44,12 +44,22 @@ public partial class MainWindow
     }
     private void SessionChanged(object sender, SessionSwitchEventArgs e) => Dispatcher.BeginInvoke(CancelPendingGestures);
     private void PowerChanged(object sender, PowerModeChangedEventArgs e) { if (e.Mode == PowerModes.Suspend) Dispatcher.BeginInvoke(CancelPendingGestures); }
-    private void CancelPendingGestures() { gestures.CancelAll(); gestureTimer.Stop(); }
+    private int gestureGeneration;
+    private void CancelPendingGestures() { gestureGeneration++; gestures.CancelAll(); gestureTimer.Stop(); }
     private void OnDeckRelease(object? sender, DeckKeyEventArgs e)
     {
         if (gestures.Release(e.Key, Environment.TickCount64) is { } invocation) RunGesture(invocation);
     }
-    private void RunGesture(GestureInvocation invocation) => Dispatcher.BeginInvoke(async () => await ExecuteActionAsync(invocation.Index, invocation.Action));
+    private void RunGesture(GestureInvocation invocation)
+    {
+        int generation = gestureGeneration;
+        Guid profile = settings.ActiveProfile.Id;
+        Dispatcher.BeginInvoke(async () =>
+        {
+            if (generation != gestureGeneration || profile != settings.ActiveProfile.Id || calibrating || firmwareOpen || lifetime.IsCancellationRequested) return;
+            await ExecuteActionAsync(invocation.Index, invocation.Action);
+        });
+    }
     private async Task InterfaceActivityChangedAsync()
     {
         if (!IsOperational || lifetime.IsCancellationRequested) return;

@@ -59,6 +59,19 @@ public static class ProfileExchange
         }
     }
     public static List<Profile> Copy(IEnumerable<Profile> profiles) => Import(Export(profiles)).Profiles;
+    public static List<Profile> CopyAsNew(IEnumerable<Profile> profiles)
+    {
+        var copies = Copy(profiles);
+        var ids = copies.ToDictionary(profile => profile.Id, _ => Guid.NewGuid());
+        foreach (var profile in copies)
+        {
+            profile.Id = ids[profile.Id];
+            foreach (var action in profile.Buttons.SelectMany(a => a.LongPressAction == null ? new[] { a } : new[] { a, a.LongPressAction }))
+                if (action.Kind == ActionKind.Profile && Guid.TryParse(action.Target, out var destination) && ids.TryGetValue(destination, out var newId))
+                    action.Target = newId.ToString();
+        }
+        return copies;
+    }
     internal static bool HaveSameContent(IReadOnlyList<Profile> left, IReadOnlyList<Profile> right)
     {
         if (left.Count != right.Count) return false;
@@ -71,11 +84,13 @@ public static class ProfileExchange
     }
     public static List<Profile> AddAsNew(Settings settings, ProfilePackage package)
     {
-        var imported = Copy(package.Profiles);
+        Validate(package);
+        if (settings.Profiles.Count + package.Profiles.Count > 100) throw new InvalidDataException("Limite de 100 profils atteinte.");
+        var imported = CopyAsNew(package.Profiles);
         var names = settings.Profiles.Select(p => p.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
         foreach (var p in imported)
         {
-            p.Id = Guid.NewGuid(); string original = p.Name;
+            string original = p.Name;
             for (int i = 1; !names.Add(p.Name); i++)
             {
                 string suffix = $" (import {i})";

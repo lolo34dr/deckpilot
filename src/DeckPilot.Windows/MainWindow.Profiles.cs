@@ -21,7 +21,7 @@ public partial class MainWindow
         GesturePicker.SelectedIndex = 0;
         PreviewKeyDown += (_, e) =>
         {
-            if (OwnedWindows.Count > 0 || Keyboard.FocusedElement is TextBoxBase || Keyboard.Modifiers != ModifierKeys.Control) return;
+            if (shortcutRecording || OwnedWindows.Count > 0 || Keyboard.FocusedElement is TextBoxBase || Keyboard.Modifiers != ModifierKeys.Control) return;
             if (e.Key is Key.Z or Key.Y) { RestoreHistory(e.Key == Key.Y); e.Handled = true; }
         };
         AddHandler(TextBoxBase.TextChangedEvent, new TextChangedEventHandler((_, _) => UpdateHistoryState()), true);
@@ -35,6 +35,7 @@ public partial class MainWindow
     {
         var root = settings.ActiveProfile.Buttons[selected].Copy();
         var action = editingLong ? root.LongPressAction ?? root.CopyBasic() : root;
+        root.Accent = (AccentPicker.SelectedItem as ActionAccent)?.Value ?? root.Accent;
         action.Label = LabelEditor.Text.Trim(); action.Kind = (ActionKind)ActionPicker.SelectedIndex;
         action.Target = TargetEditor.Text.Trim(); action.Arguments = ArgumentsEditor.Text; action.ApplicationName = pickedApplicationName;
         action.Ctrl = CtrlCheck.IsChecked == true; action.Alt = AltCheck.IsChecked == true;
@@ -47,6 +48,8 @@ public partial class MainWindow
             action.Target = (PrimaryOutputPicker.SelectedItem as AudioDevice)?.Id ?? action.Target;
             action.Arguments = (SecondaryOutputPicker.SelectedItem as AudioDevice)?.Id ?? action.Arguments;
         }
+        if (action.Kind == ActionKind.Profile) action.Target = (ProfileTargetPicker.SelectedItem as ProfileDestination)?.Id ?? action.Target;
+        if (action.Kind == ActionKind.System) action.Target = (SystemCommandPicker.SelectedItem as SystemActionPreset)?.Id ?? action.Target;
         if (editingLong) root.LongPressAction = action.CopyBasic();
         root.LongPressEnabled = LongPressCheck.IsChecked == true;
         root.LongPressMilliseconds = (int)Math.Round(LongPressThreshold.Value);

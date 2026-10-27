@@ -31,7 +31,8 @@ public static class ActionToolsChecks
         var volume = ActionSearch.Find("volume", []);
         var apps = new[] { new InstalledApplication("Discord", @"C:\Apps\Discord.lnk", "Menu"), new InstalledApplication("Éditeur", @"C:\Apps\edit.exe", "Menu") };
         var discord = ActionSearch.Find("DISCORD", apps);
-        Check(volume.Count == 3 && volume.All(p => p.Action.Kind == ActionKind.Media) && discord.Single().Action.Target == apps[0].Target
+        Check(volume.Where(p => p.Action.Kind == ActionKind.Media).Select(p => p.Action.Key).Order().SequenceEqual(new[] { 0xAD, 0xAE, 0xAF })
+            && volume.Any(p => p.Action.Kind == ActionKind.System && p.Action.Target == "sound-settings") && discord.Single().Action.Target == apps[0].Target
             && ActionSearch.Find("editeur", apps).Single().Action.ApplicationName == "Éditeur", "Action search finds volume presets and installed applications regardless of case or accents");
         var next = ActionSearch.Find("skip", []).Where(p => p.Action.Kind == ActionKind.Spotify).Single();
         var copy = next.Action.Copy(); copy.Label = "Changed";
