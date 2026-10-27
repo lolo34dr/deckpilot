@@ -1,4 +1,4 @@
-param([Parameter(Mandatory = $true)][string]$Executable)
+﻿param([Parameter(Mandatory = $true)][string]$Executable)
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'WindowsTestIO.ps1')
 function Read-RegistryValue([string]$Path, [string]$Name) {
@@ -460,6 +460,14 @@ try {
     Select-ComboItem $root 'ProfilePicker' 'Musique et audio' $replacement.Id
     Wait-Until { (Read-SharedJson $settingsPath).ActiveProfileId -eq $templateId }
     Write-Host 'PASS profile action: a deck key changes the active profile and the selector remains synchronized'
+    Select-ComboItem $root 'ProfileTargetPicker' 'Musique et audio' $replacement.Id
+    Invoke-Control (Find-Control $root 'SaveActionButton')
+    Invoke-Control (Find-Control $root 'TestActionButton')
+    Wait-Until { (Find-Control $root 'DeckKey12').Current.ItemStatus -eq 'Action envoyée' -and (Find-Control $root 'TestActionButton').Current.IsEnabled }
+    if ((Read-SharedJson $settingsPath).ActiveProfileId -ne $templateId) { throw 'A self-profile action changed the active profile' }
+    Select-ComboItem $root 'ProfileTargetPicker' 'Profil suivant' $replacement.Id
+    Invoke-Control (Find-Control $root 'SaveActionButton')
+    Write-Host 'PASS profile self-reference: selecting the current profile finishes feedback and permits another action'
 
     $script:phase = 'save a custom key accent and retain it after changing selection'
     Invoke-Control (Find-Control $root 'DeckKey01')
@@ -543,6 +551,18 @@ try {
     $motionCheck.GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern).Toggle()
     Wait-Until { (Read-SharedJson $settingsPath).ReduceMotion -eq $true }
     Write-Host 'PASS preferences: reduced motion setting is persisted'
+
+    $script:phase = 'duplicate a profile with the maximum name length'
+    $profileNameEditor = Show-InScroll $root (Find-Control $root 'ProfileName') 'SidebarScroll'
+    $profileNameEditor.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue(('P' * 60))
+    Invoke-Control (Find-ButtonLike $root 'Dupliquer')
+    Wait-Until { (Read-SharedJson $settingsPath).Profiles.Count -eq 3 }
+    $duplicateState = Read-SharedJson $settingsPath
+    $duplicate = @($duplicateState.Profiles | Where-Object { $_.Id -eq $duplicateState.ActiveProfileId })[0]
+    if ($duplicate.Name.Length -gt 60 -or !$duplicate.Name.EndsWith(' (copie)')) { throw 'Duplicating the maximum name produced an invalid profile' }
+    Invoke-Control (Find-Control $root 'UndoProfileButton')
+    Wait-Until { (Read-SharedJson $settingsPath).Profiles.Count -eq 2 }
+    Write-Host 'PASS profile duplication: the maximum-length name remains valid and can be undone'
 
     $script:phase = 'capture the actual Windows interface'
     foreach ($id in @('BoardDiagnosticExpander', 'ProfilesExpander', 'ApplicationPreferences', 'ActivityExpander')) {
