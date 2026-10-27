@@ -1,6 +1,6 @@
 namespace DeckPilot.Core;
 
-public sealed record ActionAccent(string Value, string Name);
+public sealed record ActionAccent(string Value, string Name) { public override string ToString() => Name; }
 
 public static class ActionAppearance
 {
@@ -37,7 +37,7 @@ public static class ProfileNavigation
     }
 }
 
-public sealed record SystemActionPreset(string Id, string Name, string Description);
+public sealed record SystemActionPreset(string Id, string Name, string Description) { public override string ToString() => Name; }
 
 public static class SystemActions
 {
@@ -56,7 +56,7 @@ public static class SystemActions
         ?? throw new InvalidOperationException("Choisissez une commande Windows dans les réglages de cette action.");
 }
 
-public sealed record ProfileTemplate(string Id, string Name, string Description);
+public sealed record ProfileTemplate(string Id, string Name, string Description) { public override string ToString() => Name; }
 
 public static class ProfileTemplates
 {

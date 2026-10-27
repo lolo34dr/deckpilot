@@ -1,6 +1,6 @@
 namespace DeckPilot.Core;
 
-public sealed record AudioDevice(string Id, string Name);
+public sealed record AudioDevice(string Id, string Name) { public override string ToString() => Name; }
 public interface IAudioBackend
 {
     IReadOnlyList<AudioDevice> Outputs();

@@ -104,7 +104,7 @@ public partial class MainWindow
     {
         if (!SaveEditor()) return;
         var dialog = new SaveFileDialog { Title = all ? "Exporter tous les profils" : "Exporter le profil", Filter = "Profils DeckPilot|*.deckpilot.json", FileName = "DeckPilot-profil.deckpilot.json", AddExtension = true, DefaultExt = ".deckpilot.json" };
-        if (dialog.ShowDialog(this) != true) return;
+        if (WithProfileSelectionLocked(() => dialog.ShowDialog(this)) != true) return;
         try
         {
             string json = ProfileExchange.Export(all ? settings.Profiles : new[] { settings.ActiveProfile });
@@ -126,14 +126,14 @@ public partial class MainWindow
             catch (Exception ex) { ReportError("Accès aux sauvegardes impossible : " + ex.Message); return; }
         }
         var dialog = new OpenFileDialog { Title = restore ? "Restaurer les profils depuis une sauvegarde" : "Importer des profils", Filter = "Profils DeckPilot|*.deckpilot.json|JSON|*.json", InitialDirectory = restore ? store.BackupsPath : Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) };
-        if (dialog.ShowDialog(this) != true) return;
+        if (WithProfileSelectionLocked(() => dialog.ShowDialog(this)) != true) return;
         try
         {
             var package = ProfileExchange.Read(dialog.FileName);
             string names = string.Join("\n", package.Profiles.Take(8).Select(p => "• " + p.Name));
             string message = restore ? $"Remplacer les profils actuels par ces {package.Profiles.Count} profil(s) ?\n\n{names}\n\nLe calibrage est conservé. Les profils actuels seront sauvegardés."
                 : $"Ajouter ces {package.Profiles.Count} profil(s) sans remplacer les vôtres ?\n\n{names}\n\nLes programmes et périphériques audio peuvent nécessiter une adaptation sur ce PC. Aucune action ne sera exécutée.";
-            if (MessageBox.Show(this, message, "DeckPilot", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) != MessageBoxResult.Yes) return;
+            if (WithProfileSelectionLocked(() => MessageBox.Show(this, message, "DeckPilot", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No)) != MessageBoxResult.Yes) return;
             if (restore) { settings.Profiles = ProfileExchange.Copy(package.Profiles); settings.ActiveProfileId = settings.Profiles[0].Id; }
             else
             {
