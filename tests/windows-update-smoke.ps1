@@ -199,12 +199,12 @@ try {
     Wait-Until { $worker.HasExited }
     $worker.WaitForExit()
     if ($worker.ExitCode -ne 0) { throw (Get-Content (Join-Path $stage 'error.txt') -Raw) }
-    if (!(Test-Path (Join-Path $stage 'complete'))) { throw 'Le remplacement n’a pas été confirmé.' }
+    if (!(Test-Path (Join-Path $stage 'complete'))) { throw "Le remplacement n’a pas été confirmé." }
     if (Test-Path ($target + '.previous-' + (Split-Path $stage -Leaf))) { throw 'Sauvegarde non nettoyée après confirmation.' }
     if ((Get-FileHash $target -Algorithm SHA256).Hash.ToLowerInvariant() -ne $hash) { throw 'Le fichier installé ne correspond pas au téléchargement.' }
     if ($health.Version -ne $version) { throw 'Version redémarrée incorrecte.' }
     $settings = Read-SharedJson $settingsPath
-    if ($settings.Profiles[0].Id -ne $profileId -or $settings.KeyMap.Count -ne 12) { throw 'Les réglages n’ont pas été conservés.' }
+    if ($settings.Profiles[0].Id -ne $profileId -or $settings.KeyMap.Count -ne 12) { throw "Les réglages n’ont pas été conservés." }
     Write-Host 'PASS real Windows updater: parent exit, atomic replacement, app startup, health confirmation and settings preservation'
 
     $script:phase = 'find main window'
