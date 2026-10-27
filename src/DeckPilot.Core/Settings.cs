@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace DeckPilot.Core;
 
-public enum ActionKind { Passthrough, Application, Folder, Website, Shortcut, Media, Spotify, Microphone, AudioOutput }
+public enum ActionKind { Passthrough, Application, Folder, Website, Shortcut, Media, Spotify, Microphone, AudioOutput, Profile, System }
 public sealed record ButtonAction
 {
     public string Label { get; set; } = "";
@@ -11,6 +11,7 @@ public sealed record ButtonAction
     public string Target { get; set; } = "";
     public string Arguments { get; set; } = "";
     public string ApplicationName { get; set; } = "";
+    public string Accent { get; set; } = "";
     public int Key { get; set; } = 0x41;
     public bool Ctrl { get; set; }
     public bool Alt { get; set; }
@@ -32,6 +33,7 @@ public sealed record ButtonAction
         return copy;
     }
     public bool IsValid(bool nested = false) => Enum.IsDefined(Kind) && Label != null && Target != null && Arguments != null && ApplicationName != null
+        && ActionAppearance.IsValidAccent(Accent)
         && LongPressMilliseconds is >= 200 and <= 3000
         && (!nested || (!LongPressEnabled && LongPressAction == null))
         && (LongPressAction == null || LongPressAction.IsValid(true))
@@ -58,6 +60,7 @@ public sealed class Settings
     public DateTimeOffset FirmwareSnoozedUntil { get; set; }
     public string PreferredBoardDeviceId { get; set; } = "";
     public bool AutoCheckUpdates { get; set; } = true;
+    public bool ReduceMotion { get; set; }
     public DateTimeOffset UpdateSnoozedUntil { get; set; }
     public List<int> KeyMap { get; set; } = [];
     public List<Profile> Profiles { get; set; } = [new()];

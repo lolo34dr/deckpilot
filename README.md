@@ -37,6 +37,9 @@ DeckPilot configures Arduino Leonardo-compatible macropads that already send **F
 - **Custom actions:** launch applications, open folders or websites, send shortcuts, and control media.
 - **Free keys:** keep F13–F24 available for shortcuts configured directly in a game or another application.
 - **Local profiles:** create, duplicate, rename, delete, and select profiles. Calibration is shared across profiles.
+- **Ready-made profiles:** start with Music, Productivity or Creation templates, then customize them. Switch to a specific, next or previous profile from a physical key.
+- **Faster editing:** copy/cut/paste/reset complete keys, record keyboard shortcuts, choose key accent colors, and undo changes.
+- **Windows tools:** open sound, display, Bluetooth and network settings, Task Manager, or lock the session.
 - **Compact dark interface:** vector icons, application icons where available, and subtle animations that respect Windows animation preferences.
 - **Background operation:** keep DeckPilot in the notification area, with startup at Windows sign-in enabled by default (can be disabled).
 - **Automatic updates:** approve a new release, then let DeckPilot download, verify, replace, and restart itself.
@@ -271,7 +274,7 @@ For manual Arduino IDE uploads, **quit DeckPilot from its tray menu** to free th
 
 **Spotify** is separate from **Multimédia**. Its play/pause, next and previous commands address the Spotify desktop app's Windows media session, even while a browser is playing YouTube. Spotify must be open and have an available playback session; start a track once if necessary. Spotify in a browser is not supported. Missing or refusing Spotify sessions produce an error, with no fallback to global media keys or another player. No Spotify account authorization, Premium subscription or stored token is needed by DeckPilot. Windows 10 version 2004 or later, or Windows 11, is required by this build.
 
-Use **Rechercher une action ou une application** for queries such as `volume`, `skip`, `Spotify` or an installed app's name. The installed-app index loads on the first search and is cached for the current app session; manual file selection remains available. Click a result to configure the selected key or drag it onto another key.
+Use **Rechercher une action ou une application** for queries such as `volume`, `skip`, `Spotify` or an installed app's name. The installed-app index loads on the first search and is cached for five minutes; manual file selection remains available. Click a result to configure the selected key or drag it onto another key.
 
 Drag an action from the catalog or search results onto a key to assign it. Drag one configured key onto another to **swap their actions**; the physical calibration stays unchanged. You can also drop one `.exe`, `.lnk`, `.appref-ms`, folder or HTTP(S) URL onto a key. Dropping only configures the key and never executes the action. Complete any missing settings in the editor.
 
@@ -318,3 +321,18 @@ Search and picker share an immutable installed-app catalog for five minutes (15 
 Board UI updates now follow connection notifications instead of waking every 100 ms. Ordered disconnect notifications still cancel pending holds. Keyboard hooks queue visual work, while suppression and gesture timing remain synchronous. Hidden/minimized windows stop feedback animations and use a ten-second audio polling interval instead of two seconds; reopening or issuing an audio command requests fresh state immediately. Pending audio refreshes share a loop and include requests arriving during an existing read. Unchanged audio snapshots and frozen brushes avoid repeated UI allocations. Process wrappers returned by launching an app are disposed without closing the launched program.
 
 These changes reduce specified work; they do not establish a machine-independent CPU/RAM percentage. Native hardware audio switching and physical key behavior still require validation on a Windows PC with the macropad.
+
+## Workspace tools and refreshed interface (1.8.0)
+
+The charcoal interface puts the action library first, separates profile controls from the crisp native-size 3 × 4 keypad, and groups action settings in a card. Key accents distinguish your own categories; selection, keyboard focus and action feedback remain separate. **Réduire les animations** in preferences supplements the Windows animation setting. Smaller windows retain scroll access instead of shrinking key text.
+
+- **Profile templates:** under **Gérer les profils**, add Music and audio, Desktop and productivity, or Creation. Each template creates a separate editable profile and never executes its actions. Existing profiles and physical calibration are retained. Keyboard shortcuts use the active application, whose bindings may differ.
+- **Profile keys:** assign **Changer de profil**, then select a named profile or cycle forward/backward. References between profiles are remapped when importing a set or duplicating a self-referencing profile. A missing destination reports an error and can be replaced in the editor.
+- **Windows commands:** use **Windows** to open common settings or Task Manager, or explicitly lock the PC. Commands come from a fixed list, with no script to enter. The lock action requires signing back into Windows.
+- **Complete-key clipboard:** right-click a key to copy, cut, paste or reset it, including the long action and accent. Ctrl+C/X/V and Delete work while a deck key has keyboard focus; ordinary text fields keep their editing shortcuts. The key clipboard stays inside DeckPilot and is cleared on exit. These edits support undo/redo.
+- **Shortcut recorder:** select a keyboard action and click **Enregistrer un raccourci**. Press a supported combination, then save it. Escape cancels; F13–F24 is reserved for the macropad while recording. Windows-reserved combinations can still require the manual controls.
+- **Quick access:** Ctrl+K or the Library button focuses action search. **Activité récente** keeps the last 30 dispatched/failed actions in memory for this session, without storing program arguments or target paths. It can be cleared at any time. A successful dispatch does not guarantee completion in the target app.
+
+The firmware remains **1.1.1**. Accepting an automatic firmware offer now correctly opens the firmware manager; the previous modal guard prevented that handoff. Existing firmware identity, heartbeat, reconnect and flash checks remain in place. New workspace features do not need a firmware flash.
+
+Validation covers legacy settings, accent validation, profile navigation and reference remapping, portable templates, native Windows template/undo/redo and profile switching, shortcut recording, copy/paste/reset, settings persistence, installation/update, layout resizing and an actual UI capture. Hardware-specific behavior still requires the macropad and audio devices on a Windows PC.

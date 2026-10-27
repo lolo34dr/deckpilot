@@ -12,6 +12,8 @@ public enum DeckKeyFeedback { Ready, Running, Success, Error }
 // Each key keeps its feedback independently: refreshing the editor must not erase it.
 public sealed class DeckKeyButton : Button
 {
+    public static readonly DependencyProperty AccentBrushProperty = DependencyProperty.Register(nameof(AccentBrush), typeof(Brush), typeof(DeckKeyButton), new PropertyMetadata(Brushes.Transparent));
+    public Brush AccentBrush { get => (Brush)GetValue(AccentBrushProperty); set => SetValue(AccentBrushProperty, value); }
     public static readonly DependencyProperty LabelProperty = DependencyProperty.Register(nameof(Label), typeof(string), typeof(DeckKeyButton), new PropertyMetadata(""));
     public static readonly DependencyProperty KeyCaptionProperty = DependencyProperty.Register(nameof(KeyCaption), typeof(string), typeof(DeckKeyButton), new PropertyMetadata(""));
     public static readonly DependencyProperty IconSourceProperty = DependencyProperty.Register(nameof(IconSource), typeof(ImageSource), typeof(DeckKeyButton));

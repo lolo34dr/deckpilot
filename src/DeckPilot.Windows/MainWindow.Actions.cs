@@ -81,7 +81,7 @@ public partial class MainWindow
     }
     private void ResetActionFeedback(int index)
     {
-        gestures.CancelIndex(index); executionTickets[index]++; feedback[index] = DeckKeyFeedback.Ready;
+        CancelPendingGestures(); executionTickets[index]++; feedback[index] = DeckKeyFeedback.Ready;
         feedbackMessages[index] = ""; feedbackUntil[index] = pressedUntil[index] = 0;
     }
     private void AssignAction(int index, ButtonAction action, bool currentGesture = false)
