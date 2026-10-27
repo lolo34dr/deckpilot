@@ -43,7 +43,6 @@ public partial class MainWindow : Window
     private FirmwareManifest? bundledFirmware;
     private string bundledFirmwareError = "";
     private readonly DispatcherTimer firmwareTimer = new() { Interval = TimeSpan.FromSeconds(5) };
-    private readonly DispatcherTimer boardUiTimer = new() { Interval = TimeSpan.FromMilliseconds(100) };
     private long firmwareQuietUntil;
     private readonly long startedAt = Environment.TickCount64;
     private readonly HashSet<string> firmwareOffered = [];
@@ -62,7 +61,7 @@ public partial class MainWindow : Window
     public MainWindow(bool startInBackground = false)
     {
         InitializeComponent();
-        // Fit the first window to the usable desktop; the keypad scales down on smaller screens.
+        // Fit the first window to the usable desktop; smaller windows scroll the native-size keypad.
         Width = Math.Min(Width, SystemParameters.WorkArea.Width);
         Height = Math.Min(Height, SystemParameters.WorkArea.Height);
         MinWidth = Math.Min(MinWidth, Width); MinHeight = Math.Min(MinHeight, Height);
@@ -94,7 +93,9 @@ public partial class MainWindow : Window
         MediaPicker.ItemsSource = new Choice[] { new("Lecture / pause", 0xB3), new("Piste suivante", 0xB0), new("Piste précédente", 0xB1), new("Volume +", 0xAF), new("Volume −", 0xAE), new("Muet", 0xAD) };
         SpotifyPicker.ItemsSource = new Choice[] { new("Lecture / pause", 0xB3), new("Piste suivante", 0xB0), new("Piste précédente", 0xB1) };
         BuildGrid();
+        InitializeWorkspaceFeatures();
         InitializeActionTools();
+        InitializeProductivityTools();
         RefreshProfiles();
         LoadEditor();
         try { StartupService.Initialize(); }
@@ -116,23 +117,22 @@ public partial class MainWindow : Window
         CreateTray();
         feedbackTimer.Tick += (_, _) => RefreshFeedback();
         Closing += WindowClosing;
-        Closed += (_, _) => { boardUiTimer.Stop(); firmwareTimer.Stop(); boardConnection?.Dispose(); feedbackTimer.Stop(); updateTimer.Stop(); lifetime.Cancel(); updateService.Dispose(); hook?.Dispose(); tray?.Dispose(); trayIcon?.Dispose(); };
+        Closed += (_, _) => { firmwareTimer.Stop(); boardConnection?.Dispose(); feedbackTimer.Stop(); updateTimer.Stop(); lifetime.Cancel(); updateService.Dispose(); hook?.Dispose(); tray?.Dispose(); trayIcon?.Dispose(); };
         loading = false;
+        UpdateHistoryState();
         StatusText.Text = "Prêt · Choisissez un bouton pour le personnaliser.";
         updateTimer.Tick += async (_, _) => await CheckForUpdatesAsync(false);
         updateTimer.Start();
         firmwareTimer.Tick += async (_, _) => await OfferFirmwareUpdateAsync();
         firmwareTimer.Start();
-        boardUiTimer.Tick += (_, _) => { if (boardConnection is { } connection) { var state = connection.State; if (!ReferenceEquals(state, boardState)) ApplyBoardState(state); } };
-        boardUiTimer.Start();
         CommandBindings.Add(new System.Windows.Input.CommandBinding(System.Windows.Input.ApplicationCommands.Save, (_, e) => { SaveEditor(); e.Handled = true; }));
         InputBindings.Add(new System.Windows.Input.KeyBinding(System.Windows.Input.ApplicationCommands.Save, System.Windows.Input.Key.S, System.Windows.Input.ModifierKeys.Control));
         Loaded += async (_, _) =>
         {
             if (startInBackground) Hide(); else if (!settings.IsCalibrated) BeginCalibration();
             Motion.Reveal(WindowContent);
-            boardConnection = new BoardConnectionService(settings.PreferredBoardDeviceId);
-            try { bundledFirmware = await Task.Run(FirmwareService.ReadBundledManifest); ApplyBoardState(boardConnection.State); }
+            boardConnection = new BoardConnectionService(settings.PreferredBoardDeviceId, new Progress<BoardConnectionState>(OnBoardStateChanged));
+            try { bundledFirmware = await Task.Run(FirmwareService.ReadBundledManifest); if (boardState != null) ApplyBoardState(boardState); }
             catch (Exception ex) { bundledFirmwareError = ex.Message; BoardFirmwareStatus.Text = ex.Message; }
             try { await Task.Delay(8000, lifetime.Token); await CheckForUpdatesAsync(false); }
             catch (OperationCanceledException) { }
@@ -146,7 +146,7 @@ public partial class MainWindow : Window
             int index = i;
             var button = new DeckKeyButton();
             System.Windows.Automation.AutomationProperties.SetAutomationId(button, $"DeckKey{i + 1:00}");
-            button.Click += (_, _) => { if (Environment.TickCount64 < ignoreClickUntil) return; SaveEditor(); editingLong = false; selected = index; LoadEditor(); };
+            button.Click += (_, _) => { if (Environment.TickCount64 < ignoreClickUntil || !SaveEditor()) return; editingLong = false; selected = index; LoadEditor(); };
             DeckGrid.Children.Add(button); deckButtons.Add(button);
             var calibrationLabel = new TextBlock { Text = $"{i + 1:00}", FontSize = 18, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
             var cell = new Border { CornerRadius = new CornerRadius(6), BorderThickness = new Thickness(1), Margin = new Thickness(6), Child = calibrationLabel };
@@ -173,7 +173,25 @@ public partial class MainWindow : Window
     }
     [DllImport("dwmapi.dll")]
     private static extern int DwmSetWindowAttribute(IntPtr window, int attribute, ref int value, int size);
-    private static SolidColorBrush Brush(string color) => new((Color)ColorConverter.ConvertFromString(color));
+    private static readonly Dictionary<string, SolidColorBrush> Palette = new(StringComparer.Ordinal);
+    private static SolidColorBrush Brush(string color)
+    {
+        if (Palette.TryGetValue(color, out var cached)) return cached;
+        var brush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+        brush.Freeze(); Palette.Add(color, brush); return brush;
+    }
+    private bool IsInterfaceActive => IsVisible && WindowState != WindowState.Minimized;
+    private bool feedbackQueued;
+    private void QueueFeedback()
+    {
+        if (feedbackQueued || lifetime.IsCancellationRequested) return;
+        feedbackQueued = true;
+        Dispatcher.BeginInvoke(() =>
+        {
+            feedbackQueued = false;
+            if (!lifetime.IsCancellationRequested) RefreshFeedback();
+        }, DispatcherPriority.Background);
+    }
     private void RenderGrid()
     {
         if (feedbackProfile != settings.ActiveProfile.Id)
@@ -193,14 +211,16 @@ public partial class MainWindow : Window
             deckButtons[i].KeyCaption = keyName;
             deckButtons[i].IconSource = action.Kind == ActionKind.Application ? ApplicationIcons.ForTarget(action.Target) : VectorIcons.ForKind(action.Kind);
             deckButtons[i].KindSource = VectorIcons.ForKind(action.Kind);
+            deckButtons[i].AccentBrush = AccentBrushFor(action.Accent);
             deckButtons[i].IsSelected = i == selected;
             deckButtons[i].ToolTip = $"Ligne {i / 4 + 1}, colonne {i % 4 + 1} · {deckButtons[i].Label} · {keyName} · {ActionNames[(int)action.Kind]}";
             System.Windows.Automation.AutomationProperties.SetName(deckButtons[i], (string)deckButtons[i].ToolTip);
         }
-        RefreshFeedback();
+        RefreshProfileSummary(); RefreshFeedback();
     }
     private void ApplyHardwareHighlights()
     {
+        if (!IsInterfaceActive) return;
         int mask = boardState?.Kind == BoardConnectionKind.Connected ? boardState.Telemetry?.Mask ?? 0 : 0;
         for (int i = 0; i < deckButtons.Count; i++)
         {
@@ -220,6 +240,10 @@ public partial class MainWindow : Window
                 feedback[i] = DeckKeyFeedback.Ready; feedbackMessages[i] = ""; feedbackUntil[i] = 0;
             }
             pending |= feedback[i] == DeckKeyFeedback.Running || feedbackUntil[i] > now || pressedUntil[i] > now;
+        }
+        if (!IsInterfaceActive) { feedbackTimer.Stop(); return; }
+        for (int i = 0; i < 12; i++)
+        {
             deckButtons[i].Feedback = feedback[i];
             string state = feedback[i] switch { DeckKeyFeedback.Running => "Action en cours", DeckKeyFeedback.Success => "Action envoyée", DeckKeyFeedback.Error => "Échec de l’action", _ => "Prêt" };
             System.Windows.Automation.AutomationProperties.SetItemStatus(deckButtons[i], state);
@@ -237,7 +261,7 @@ public partial class MainWindow : Window
         feedback[index] = state; feedbackMessages[index] = message;
         feedbackUntil[index] = state is DeckKeyFeedback.Success or DeckKeyFeedback.Error ? Environment.TickCount64 + (state == DeckKeyFeedback.Error ? 6000 : 3000) : 0;
         RefreshFeedback();
-        if (index == selected) Motion.Reveal(ActionExecutionStatus);
+        if (IsInterfaceActive && index == selected) Motion.Reveal(ActionExecutionStatus);
     }
     private void RefreshProfiles()
     {
@@ -250,6 +274,7 @@ public partial class MainWindow : Window
     }
     private void LoadEditor()
     {
+        CancelShortcutRecording();
         bool previous = loading; loading = true;
         var root = settings.ActiveProfile.Buttons[selected];
         if (!root.LongPressEnabled) editingLong = false;
@@ -270,31 +295,42 @@ public partial class MainWindow : Window
         ShortcutPicker.SelectedItem = ((IEnumerable<Choice>)ShortcutPicker.ItemsSource).FirstOrDefault(c => c.Key == action.Key) ?? ((IEnumerable<Choice>)ShortcutPicker.ItemsSource).First();
         MediaPicker.SelectedItem = ((IEnumerable<Choice>)MediaPicker.ItemsSource).FirstOrDefault(c => c.Key == action.Key) ?? ((IEnumerable<Choice>)MediaPicker.ItemsSource).First();
         SpotifyPicker.SelectedItem = ((IEnumerable<Choice>)SpotifyPicker.ItemsSource).FirstOrDefault(c => c.Key == action.Key) ?? ((IEnumerable<Choice>)SpotifyPicker.ItemsSource).First();
-        UpdateActionFields(); PopulateAudioPickers(action); RenderGrid(); loading = previous; UpdateHistoryState(); Motion.Reveal(EditorPanel);
+        PopulateWorkspaceEditor(action);
+        UpdateActionFields(); PopulateAudioPickers(action); RenderGrid(); loading = previous; UpdateHistoryState(); if (IsInterfaceActive) Motion.Reveal(EditorPanel);
     }
     private bool SaveEditor()
     {
         if (loading || ActionPicker.SelectedIndex < 0) return true;
         var action = ReadEditorConfiguration();
         if (!action.IsValid()) { ReportError("Les appuis court et long nécessitent deux actions configurées, hors touche libre."); return false; }
-        if (EditorChanged()) gestures.CancelIndex(selected);
+        if (EditorChanged()) ResetActionFeedback(selected);
+        var previous = settings.ActiveProfile.Buttons[selected];
         settings.ActiveProfile.Buttons[selected] = action;
         LongPressCheck.IsEnabled = action.Kind != ActionKind.Passthrough;
         GesturePanel.Visibility = action.LongPressEnabled ? Visibility.Visible : Visibility.Collapsed;
-        bool saved = Persist(); RenderGrid(); return saved;
+        bool saved = Persist();
+        if (!saved) settings.ActiveProfile.Buttons[selected] = previous;
+        RenderGrid(); return saved;
     }
     private bool Persist()
     {
         try { settings.ActiveProfileId = settings.ActiveProfile.Id; store.Save(settings); if (!restoringHistory) profileHistory?.Record(settings); UpdateHistoryState(); StatusText.Text = "Configuration enregistrée sur ce PC."; return true; }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException) { ReportError("Enregistrement impossible : " + ex.Message); return false; }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException) { ReportError("Enregistrement impossible : " + ex.Message); return false; }
     }
     private void SaveClick(object sender, RoutedEventArgs e) => SaveEditor();
     private void ActionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (loading) return;
+        CancelShortcutRecording();
         if (!editingLong && ActionPicker.SelectedIndex == (int)ActionKind.Passthrough) { LongPressCheck.IsChecked = false; GesturePanel.Visibility = Visibility.Collapsed; }
         if (ActionPicker.SelectedIndex == (int)ActionKind.AudioOutput && EditedAction.Kind != ActionKind.AudioOutput)
         { TargetEditor.Text = ""; ArgumentsEditor.Text = ""; PopulateAudioPickers(new() { Kind = ActionKind.AudioOutput }); }
+        if ((ActionPicker.SelectedIndex == (int)ActionKind.Profile || ActionPicker.SelectedIndex == (int)ActionKind.System) && EditedAction.Kind != (ActionKind)ActionPicker.SelectedIndex)
+        {
+            bool previous = loading; loading = true;
+            PopulateWorkspaceEditor(new() { Kind = (ActionKind)ActionPicker.SelectedIndex });
+            loading = previous;
+        }
         UpdateActionFields(); UpdateHistoryState();
     }
     private void UpdateActionFields()
@@ -304,8 +340,8 @@ public partial class MainWindow : Window
         EditorActionTitle.Text = ActionNames[(int)kind];
         for (int i = 0; i < actionButtons.Count; i++)
         {
-            actionButtons[i].Background = Brush(i == (int)kind ? "#344B3B" : "#222622");
-            actionButtons[i].BorderBrush = Brush(i == (int)kind ? "#90B89B" : "#222622");
+            actionButtons[i].Background = Brush(i == (int)kind ? "#203B39" : "#1B2025");
+            actionButtons[i].BorderBrush = Brush(i == (int)kind ? "#71B8AB" : "#1B2025");
         }
         ApplicationPanel.Visibility = kind == ActionKind.Application ? Visibility.Visible : Visibility.Collapsed;
         AdvancedOptionsExpander.Visibility = kind is ActionKind.Application or ActionKind.Folder or ActionKind.Website ? Visibility.Visible : Visibility.Collapsed;
@@ -317,6 +353,8 @@ public partial class MainWindow : Window
         MediaPanel.Visibility = kind == ActionKind.Media ? Visibility.Visible : Visibility.Collapsed;
         SpotifyPanel.Visibility = kind == ActionKind.Spotify ? Visibility.Visible : Visibility.Collapsed;
         AudioOutputPanel.Visibility = kind == ActionKind.AudioOutput ? Visibility.Visible : Visibility.Collapsed;
+        ProfileActionPanel.Visibility = kind == ActionKind.Profile ? Visibility.Visible : Visibility.Collapsed;
+        SystemActionPanel.Visibility = kind == ActionKind.System ? Visibility.Visible : Visibility.Collapsed;
         BrowseButton.Visibility = kind == ActionKind.Website ? Visibility.Collapsed : Visibility.Visible;
         TargetLabel.Text = kind == ActionKind.Website ? "Adresse du site" : kind == ActionKind.Folder ? "Chemin du dossier" : "Chemin du programme";
         ActionHelp.Text = kind switch
@@ -329,6 +367,8 @@ public partial class MainWindow : Window
             ActionKind.Microphone => "Coupe ou réactive tous les microphones Windows actifs. L’état est affiché dans la carte Audio Windows.",
             ActionKind.AudioOutput => "Alterne entre deux sorties par défaut Windows. Les applications réglées sur une sortie fixe peuvent ne pas suivre ce changement.",
             ActionKind.Spotify => "Contrôle uniquement Spotify pour Windows, même si YouTube est actif. Ouvrez Spotify et lancez une lecture. Le lecteur Spotify dans un navigateur n’est pas pris en charge.",
+            ActionKind.Profile => "Change de profil avec cette touche. Choisissez un profil précis, le suivant ou le précédent. Le calibrage reste commun.",
+            ActionKind.System => "Ouvre un réglage ou un outil Windows. Le verrouillage ferme votre session à l’écran sans arrêter vos applications.",
             _ => "Contrôles multimédias généraux de Windows : peuvent agir sur YouTube ou un autre lecteur actif."
         };
         UpdateApplicationSummary();
@@ -349,9 +389,7 @@ public partial class MainWindow : Window
     private void ProfileChanged(object sender, SelectionChangedEventArgs e)
     {
         if (loading || ProfilePicker.SelectedItem is not Profile next) return;
-        SaveEditor(); CancelPendingGestures(); editingLong = false; settings.ActiveProfileId = next.Id; LoadEditor(); ProfileName.Text = next.Name; Persist();
-        RefreshTrayProfiles();
-        if (tray != null) tray.Text = "DeckPilot · " + next.Name[..Math.Min(next.Name.Length, 45)];
+        if (!SwitchProfile(next)) RefreshProfiles();
     }
     private string NewProfileName() => string.IsNullOrWhiteSpace(ProfileName.Text) ? "Nouveau profil" : ProfileName.Text.Trim();
     private void CreateProfile(object sender, RoutedEventArgs e) => AddProfile(false);
@@ -359,14 +397,16 @@ public partial class MainWindow : Window
     private void AddProfile(bool duplicate)
     {
         if (settings.Profiles.Count >= 100) { ReportError("Limite de 100 profils atteinte."); return; }
-        SaveEditor(); CancelPendingGestures(); editingLong = false;
+        if (!SaveEditor()) return;
+        CancelPendingGestures(); editingLong = false;
         var profile = new Profile { Name = NewProfileName() };
-        if (duplicate) { profile.Name += " (copie)"; profile.Buttons = settings.ActiveProfile.Buttons.Select(b => b.Copy()).ToList(); }
+        if (duplicate) { profile = ProfileExchange.CopyAsNew(new[] { settings.ActiveProfile })[0]; profile.Name = NewProfileName() + " (copie)"; }
         settings.Profiles.Add(profile); settings.ActiveProfileId = profile.Id; RefreshProfiles(); LoadEditor(); Persist();
     }
     private void RenameProfile(object sender, RoutedEventArgs e)
     {
-        SaveEditor(); settings.ActiveProfile.Name = NewProfileName(); RefreshProfiles(); Persist();
+        if (!SaveEditor()) return;
+        settings.ActiveProfile.Name = NewProfileName(); RefreshProfiles(); LoadEditor(); Persist();
     }
     private void DeleteProfile(object sender, RoutedEventArgs e)
     {
@@ -379,6 +419,12 @@ public partial class MainWindow : Window
     private void OnDeckKey(object? sender, DeckKeyEventArgs e)
     {
         if (firmwareOpen) return;
+        if (shortcutRecording)
+        {
+            e.Handled = true;
+            ShortcutRecordingHint.Text = "F13–F24 est réservé au macropad. Choisissez une autre combinaison, ou Échap pour annuler.";
+            return;
+        }
         if (calibrating)
         {
             e.Handled = true;
@@ -391,7 +437,7 @@ public partial class MainWindow : Window
         if (index < 0) return;
         var action = settings.ActiveProfile.Buttons[index].Copy();
         e.Handled = action.Kind != ActionKind.Passthrough;
-        pressedUntil[index] = Environment.TickCount64 + 180; RefreshFeedback();
+        pressedUntil[index] = Environment.TickCount64 + 180; QueueFeedback();
         if (gestures.Begin(e.Key, index, action, Environment.TickCount64) is { } invocation) RunGesture(invocation);
         if (gestures.HasPending) gestureTimer.Start();
     }
@@ -403,13 +449,34 @@ public partial class MainWindow : Window
     private async Task ExecuteActionAsync(int index, ButtonAction action)
     {
         if (action.Kind == ActionKind.Passthrough || lifetime.IsCancellationRequested) return;
+        Guid sourceProfile = settings.ActiveProfile.Id;
+        int generation = gestureGeneration;
+        string title = string.IsNullOrWhiteSpace(action.Label) ? ActionNames[(int)action.Kind] : action.Label;
         int ticket = ++executionTickets[index];
         long dispatchedAt = Environment.TickCount64;
         SetFeedback(index, DeckKeyFeedback.Running, "Action en cours…");
         try
         {
             // Let WPF render feedback before dispatching; keyboard commands stay on the UI thread.
-            await Dispatcher.Yield(DispatcherPriority.Render);
+            if (IsInterfaceActive) await Dispatcher.Yield(DispatcherPriority.Render);
+            if (lifetime.IsCancellationRequested || sourceProfile != settings.ActiveProfile.Id || generation != gestureGeneration || calibrating || firmwareOpen)
+            {
+                if (!lifetime.IsCancellationRequested && sourceProfile == settings.ActiveProfile.Id && executionTickets[index] == ticket)
+                    SetFeedback(index, DeckKeyFeedback.Ready, "Action annulée · Le contexte a changé.");
+                return;
+            }
+            if (action.Kind == ActionKind.Profile)
+            {
+                var destination = ProfileNavigation.Resolve(settings, action.Target);
+                if (SwitchProfile(destination))
+                {
+                    AddActivity(title, true, "Profil actif · " + destination.Name);
+                    if (sourceProfile == destination.Id && executionTickets[index] == ticket)
+                        SetFeedback(index, DeckKeyFeedback.Success, "Ce profil est déjà actif ✓");
+                }
+                else { AddActivity(title, false, "Changement de profil impossible"); SetFeedback(index, DeckKeyFeedback.Error, "Changement de profil impossible · Vérifiez l’enregistrement."); }
+                return;
+            }
             if (action.Kind is ActionKind.Microphone or ActionKind.AudioOutput)
             {
                 await Task.Run(() => { if (action.Kind == ActionKind.Microphone) WindowsAudio.ToggleMicrophones(); else WindowsAudio.ToggleOutput(action.Target, action.Arguments); });
@@ -417,19 +484,22 @@ public partial class MainWindow : Window
             }
             else if (action.Kind == ActionKind.Spotify)
                 await SpotifyController.RunAsync(action.Key, lifetime.Token);
-            else if (action.Kind is ActionKind.Application or ActionKind.Folder or ActionKind.Website)
+            else if (action.Kind is ActionKind.Application or ActionKind.Folder or ActionKind.Website or ActionKind.System)
                 await Task.Run(() => ActionRunner.Run(action));
             else ActionRunner.Run(action);
+            AddActivity(title, true, $"Bouton {index + 1:00} · Action envoyée");
             // Keep short actions readable, without delaying their actual execution.
             int remaining = (int)Math.Max(0, 300 - (Environment.TickCount64 - dispatchedAt));
-            if (remaining > 0) await Task.Delay(remaining, lifetime.Token);
+            if (remaining > 0 && IsInterfaceActive) await Task.Delay(remaining, lifetime.Token);
             if (lifetime.IsCancellationRequested || executionTickets[index] != ticket) return;
             SetFeedback(index, DeckKeyFeedback.Success, "Action envoyée ✓");
             StatusText.Text = $"Action envoyée · {deckButtons[index].Label}";
         }
         catch (Exception ex)
         {
-            if (lifetime.IsCancellationRequested || executionTickets[index] != ticket) return;
+            if (lifetime.IsCancellationRequested) return;
+            AddActivity(title, false, $"Bouton {index + 1:00} · Échec de l’action");
+            if (executionTickets[index] != ticket) return;
             SetFeedback(index, DeckKeyFeedback.Error, "Échec · " + ex.Message);
             ReportError("Action impossible : " + ex.Message);
         }
@@ -439,6 +509,7 @@ public partial class MainWindow : Window
     {
         if (updateBusy || firmwareOpen || firmwarePromptActive || OwnedWindows.Count > 0 || calibrating || lifetime.IsCancellationRequested) return;
         if (!SaveEditor()) return;
+        CancelShortcutRecording();
         string preferredId = boardState?.Devices.Any(d => d.DeviceId == settings.PreferredBoardDeviceId) == true
             ? settings.PreferredBoardDeviceId : boardState?.Device?.DeviceId ?? settings.PreferredBoardDeviceId;
         CancelPendingGestures(); firmwareOpen = true;
@@ -459,7 +530,8 @@ public partial class MainWindow : Window
     private void CalibrateClick(object sender, RoutedEventArgs e) => BeginCalibration();
     private void BeginCalibration()
     {
-        SaveEditor(); CancelPendingGestures(); captured.Clear(); calibrating = true;
+        if (!SaveEditor()) return;
+        CancelShortcutRecording(); CancelPendingGestures(); captured.Clear(); calibrating = true;
         CalibrationOverlay.Visibility = Visibility.Visible; CalibrationError.Text = layoutChanged ? "Disposition corrigée : 3 lignes de 4. Recalibrez les positions ; vos profils sont conservés." : "Les actions personnalisées sont suspendues pendant le calibrage.";
         UpdateCalibration();
     }
@@ -527,7 +599,10 @@ public partial class MainWindow : Window
     private void ChooseApplicationClick(object sender, RoutedEventArgs e)
     {
         var picker = new ApplicationPicker { Owner = this };
-        if (picker.ShowDialog() != true || picker.SelectedApplication is not { } app) return;
+        bool chosen = picker.ShowDialog() == true;
+        // A manual refresh in the picker also updates an already-open action search.
+        if (applicationsLoaded && !applicationsLoading) _ = LoadActionApplicationsAsync();
+        if (!chosen || picker.SelectedApplication is not { } app) return;
         TargetEditor.Text = app.Target;
         pickedApplicationName = app.Name;
         if (string.IsNullOrWhiteSpace(LabelEditor.Text)) LabelEditor.Text = app.Name[..Math.Min(50, app.Name.Length)];
@@ -562,6 +637,15 @@ public partial class MainWindow : Window
             item.Click += (_, _) => Dispatcher.Invoke(() => { if (!firmwareOpen && !calibrating && OwnedWindows.Count == 0) ProfilePicker.SelectedItem = profile; });
             trayProfiles.DropDownItems.Add(item);
         }
+    }
+    private void OnBoardStateChanged(BoardConnectionState state)
+    {
+        if (lifetime.IsCancellationRequested) return;
+        var previous = boardState;
+        if (previous != null && previous.Kind == state.Kind && previous.Message == state.Message
+            && previous.Device == state.Device && previous.Info == state.Info && previous.Telemetry == state.Telemetry
+            && previous.Devices.SequenceEqual(state.Devices)) return;
+        ApplyBoardState(state);
     }
     private void ApplyBoardState(BoardConnectionState state)
     {
@@ -616,7 +700,6 @@ public partial class MainWindow : Window
     {
         if (loadingBoardPicker || BoardDevicePicker.SelectedItem is not FirmwareDevice device || firmwareOpen) return;
         settings.PreferredBoardDeviceId = device.DeviceId; Persist(); boardConnection?.Select(device.DeviceId);
-        if (boardConnection != null) ApplyBoardState(boardConnection.State);
     }
     private void AutoFirmwareClick(object sender, RoutedEventArgs e)
     {
@@ -630,15 +713,19 @@ public partial class MainWindow : Window
         string offer = boardState.Device!.DeviceId + "|" + bundledFirmware.Version;
         if (!firmwareOffered.Add(offer)) return;
         firmwarePromptActive = true;
+        bool accepted = false;
         try
         {
             string message = $"Le firmware {bundledFirmware.Version} est disponible pour votre DeckPilot (version actuelle : {current.Version}).\n\nOuvrir l’installation ? Le flash nécessitera votre confirmation.";
             var answer = IsVisible ? MessageBox.Show(this, message, "Mise à jour du firmware", MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No)
                 : MessageBox.Show(message, "Mise à jour du firmware", MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No);
             settings.FirmwareSnoozedUntil = DateTimeOffset.UtcNow.AddHours(24); Persist();
-            if (answer == MessageBoxResult.Yes) await OpenFirmwareAsync();
+            accepted = answer == MessageBoxResult.Yes;
         }
         finally { firmwarePromptActive = false; }
+        // The manager rejects concurrent prompts; release this prompt before
+        // handing over to it so accepting the notification actually opens it.
+        if (accepted) await OpenFirmwareAsync();
     }
     private void CopyDiagnosticClick(object sender, RoutedEventArgs e)
     {

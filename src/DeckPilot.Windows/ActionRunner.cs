@@ -14,6 +14,10 @@ public static class ActionRunner
     {
         switch (action.Kind)
         {
+            case ActionKind.Profile: throw new InvalidOperationException("Les profils utilisent la navigation DeckPilot.");
+            case ActionKind.System:
+                RunSystemCommand(action.Target);
+                break;
             case ActionKind.Microphone:
             case ActionKind.AudioOutput: throw new InvalidOperationException("Les commandes audio utilisent le service Windows Audio.");
             case ActionKind.Spotify: throw new InvalidOperationException("Les commandes Spotify utilisent la session dédiée.");
@@ -23,20 +27,20 @@ public static class ActionRunner
                 {
                     var launcher = new ProcessStartInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe")) { UseShellExecute = false };
                     launcher.ArgumentList.Add("shell:AppsFolder\\" + ApplicationTarget.GetAppId(action.Target));
-                    Process.Start(launcher);
+                    Process.Start(launcher)?.Dispose();
                     break;
                 }
                 if (!File.Exists(action.Target)) throw new IOException("Le programme sélectionné est introuvable.");
-                Process.Start(new ProcessStartInfo(action.Target) { UseShellExecute = true, Arguments = action.Arguments, WorkingDirectory = Path.GetDirectoryName(action.Target)! });
+                Process.Start(new ProcessStartInfo(action.Target) { UseShellExecute = true, Arguments = action.Arguments, WorkingDirectory = Path.GetDirectoryName(action.Target)! })?.Dispose();
                 break;
             case ActionKind.Folder:
                 if (!Directory.Exists(action.Target)) throw new IOException("Le dossier sélectionné est introuvable.");
-                Process.Start(new ProcessStartInfo(action.Target) { UseShellExecute = true });
+                Process.Start(new ProcessStartInfo(action.Target) { UseShellExecute = true })?.Dispose();
                 break;
             case ActionKind.Website:
                 if (!Uri.TryCreate(action.Target, UriKind.Absolute, out var uri) || (uri.Scheme != "https" && uri.Scheme != "http"))
                     throw new ArgumentException("Saisissez une adresse commençant par https:// ou http://.");
-                Process.Start(new ProcessStartInfo(uri.AbsoluteUri) { UseShellExecute = true });
+                Process.Start(new ProcessStartInfo(uri.AbsoluteUri) { UseShellExecute = true })?.Dispose();
                 break;
             case ActionKind.Shortcut:
                 if (!IsShortcutKey(action.Key)) throw new ArgumentException("Choisissez une touche pour le raccourci.");
@@ -46,7 +50,28 @@ public static class ActionRunner
                 if (action.Key is not (0xAD or 0xAE or 0xAF or 0xB0 or 0xB1 or 0xB3)) throw new ArgumentException("Choisissez une commande multimédia.");
                 SendKeys([action.Key]);
                 break;
+            default: throw new InvalidOperationException("Ce type d’action n’est pas pris en charge.");
         }
+    }
+    private static void RunSystemCommand(string id)
+    {
+        _ = SystemActions.Get(id);
+        if (id == "lock")
+        {
+            if (!LockWorkStation()) throw new Win32Exception(Marshal.GetLastWin32Error());
+            return;
+        }
+        string target = id switch
+        {
+            "settings" => "ms-settings:",
+            "sound-settings" => "ms-settings:sound",
+            "display-settings" => "ms-settings:display",
+            "bluetooth-settings" => "ms-settings:bluetooth",
+            "network-settings" => "ms-settings:network-status",
+            "task-manager" => Path.Combine(Environment.SystemDirectory, "Taskmgr.exe"),
+            _ => throw new InvalidOperationException("Choisissez une commande Windows.")
+        };
+        Process.Start(new ProcessStartInfo(target) { UseShellExecute = true })?.Dispose();
     }
     public static bool IsShortcutKey(int key) => key is >= 0x30 and <= 0x39 or >= 0x41 and <= 0x5A or >= 0x70 and <= 0x87 or 0x0D or 0x1B or 0x20 or 0x09 or 0x08 or >= 0x21 and <= 0x28 or 0x2D or 0x2E;
     private static void SendChord(ButtonAction action)
@@ -85,4 +110,5 @@ public static class ActionRunner
     [StructLayout(LayoutKind.Sequential)] private struct MouseInput { public int X, Y; public uint MouseData, Flags, Time; public UIntPtr Extra; }
     [DllImport("user32.dll", SetLastError = true)] private static extern uint SendInput(uint count, Input[] inputs, int size);
     [DllImport("user32.dll")] private static extern short GetAsyncKeyState(int key);
+    [DllImport("user32.dll", SetLastError = true)] [return: MarshalAs(UnmanagedType.Bool)] private static extern bool LockWorkStation();
 }

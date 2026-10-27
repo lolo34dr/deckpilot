@@ -31,6 +31,8 @@ function Read-TestState {
 if ($env:GITHUB_ACTIONS -ne 'true') { throw 'Ce test lance des processus et utilise la configuration du compte de test. Exécutez-le dans GitHub Actions.' }
 Add-Type -AssemblyName UIAutomationClient
 Add-Type -AssemblyName UIAutomationTypes
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
 
 function Wait-Until([scriptblock]$Condition, [int]$Seconds = 45) {
     $deadline = [DateTime]::UtcNow.AddSeconds($Seconds)
@@ -130,9 +132,9 @@ function Show-InScroll($Root, $Control, [string]$Id) {
     }
     throw "Control did not become visible: $script:lastScroll"
 }
-function Select-ComboItem($Root, [string]$Id, [string]$Name, [int]$ProcessId) {
+function Select-ComboItem($Root, [string]$Id, [string]$Name, [int]$ProcessId, [string]$ScrollId = 'DeckEditorScroll') {
     $combo = Find-Control $Root $Id
-    $combo = Show-InScroll $Root $combo 'DeckEditorScroll'
+    $combo = Show-InScroll $Root $combo $ScrollId
     $expand = $combo.GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern)
     $expand.Expand()
     $nameCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::NameProperty, $Name)
@@ -141,7 +143,7 @@ function Select-ComboItem($Root, [string]$Id, [string]$Name, [int]$ProcessId) {
     $comboCondition = [System.Windows.Automation.AndCondition]::new([System.Windows.Automation.Condition[]]@($nameCondition, $processCondition, $typeCondition))
     Wait-Until { $script:gestureItem = [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $comboCondition); $null -ne $script:gestureItem }
     $itemBounds = $script:gestureItem.Current.BoundingRectangle
-    if ($itemBounds.IsEmpty -or $script:gestureItem.Current.IsOffscreen) { throw 'Gesture option is not visible' }
+    if ($itemBounds.IsEmpty -or $script:gestureItem.Current.IsOffscreen) { throw "Combo option is not visible: $Id / $Name" }
     [DeckPilotDragMouse]::Move([int]($itemBounds.Left + $itemBounds.Width / 2), [int]($itemBounds.Top + $itemBounds.Height / 2))
     [DeckPilotDragMouse]::mouse_event(2,0,0,0,[UIntPtr]::Zero)
     [DeckPilotDragMouse]::mouse_event(4,0,0,0,[UIntPtr]::Zero)
@@ -420,6 +422,161 @@ try {
         $sidebar.SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 0)
     }
     Write-Host 'PASS responsive layout: expanded sections remain scrollable, calibration stays reachable, profile and keypad remain separated'
+    $script:phase = 'minimize and restore without modifying profiles'
+    $settingsBeforeMinimize = (Read-SharedJson $settingsPath | ConvertTo-Json -Depth 15 -Compress)
+    $windowPattern = $root.GetCurrentPattern([System.Windows.Automation.WindowPattern]::Pattern)
+    $windowPattern.SetWindowVisualState([System.Windows.Automation.WindowVisualState]::Minimized)
+    Wait-Until { $windowPattern.Current.WindowVisualState -eq [System.Windows.Automation.WindowVisualState]::Minimized }
+    $windowPattern.SetWindowVisualState([System.Windows.Automation.WindowVisualState]::Normal)
+    Wait-Until { $windowPattern.Current.WindowVisualState -eq [System.Windows.Automation.WindowVisualState]::Normal }
+    Wait-Until { (Find-Control $root 'HeaderMicrophoneStatus').Current.Name -notlike '*lecture*' }
+    if ((Read-SharedJson $settingsPath | ConvertTo-Json -Depth 15 -Compress) -cne $settingsBeforeMinimize) { throw 'Window activity modified the saved configuration' }
+    Write-Host 'PASS window activity: minimize/restore preserves settings and keeps the audio indicator available'
+    $script:phase = 'add a complete profile template and preserve calibration'
+    $originalCalibration = (Read-SharedJson $settingsPath).KeyMap -join ','
+    Select-ComboItem $root 'ProfileTemplatePicker' 'Musique et audio' $replacement.Id 'SidebarScroll'
+    Invoke-Control (Find-Control $root 'AddTemplateButton')
+    Wait-Until { (Read-SharedJson $settingsPath).Profiles.Count -eq 2 }
+    $templateState = Read-SharedJson $settingsPath
+    $templateId = $templateState.ActiveProfileId
+    $templateProfile = @($templateState.Profiles | Where-Object { $_.Id -eq $templateId })[0]
+    if ($templateId -eq $profileId -or $templateProfile.Buttons.Count -ne 12 -or $templateProfile.Name -ne 'Musique et audio') { throw 'The profile template was not created as an independent twelve-key profile' }
+    if (($templateState.KeyMap -join ',') -ne $originalCalibration) { throw 'Creating a profile template changed calibration' }
+    if ($templateProfile.Buttons[0].Kind -ne 'Spotify' -or $templateProfile.Buttons[11].Kind -ne 'Profile' -or $templateProfile.Buttons[11].Target -ne 'next') { throw 'The template lost its dedicated playback or profile-navigation actions' }
+    Invoke-Control (Find-Control $root 'UndoProfileButton')
+    Wait-Until { (Read-SharedJson $settingsPath).Profiles.Count -eq 1 -and (Find-Control $root 'RedoProfileButton').Current.IsEnabled }
+    Invoke-Control (Find-Control $root 'RedoProfileButton')
+    Wait-Until { (Read-SharedJson $settingsPath).Profiles.Count -eq 2 -and (Read-SharedJson $settingsPath).ActiveProfileId -eq $templateId }
+    Write-Host 'PASS templates: independent twelve-key profile, undo/redo and physical calibration preservation'
+
+    $script:phase = 'execute profile navigation without launching another program'
+    Invoke-Control (Find-Control $root 'DeckKey12')
+    if (!(Find-Control $root 'ProfileTargetPicker')) { throw 'Profile-navigation settings are missing' }
+    Select-ComboItem $root 'ProfileTargetPicker' 'Profil suivant' $replacement.Id
+    Invoke-Control (Find-Control $root 'SaveActionButton')
+    Invoke-Control (Find-Control $root 'TestActionButton')
+    Wait-Until { (Read-SharedJson $settingsPath).ActiveProfileId -eq $profileId }
+    if (((Read-SharedJson $settingsPath).KeyMap -join ',') -ne $originalCalibration) { throw 'Profile navigation changed calibration' }
+    Select-ComboItem $root 'ProfilePicker' 'Musique et audio' $replacement.Id
+    Wait-Until { (Read-SharedJson $settingsPath).ActiveProfileId -eq $templateId }
+    Write-Host 'PASS profile action: a deck key changes the active profile and the selector remains synchronized'
+
+    $script:phase = 'save a custom key accent and retain it after changing selection'
+    Invoke-Control (Find-Control $root 'DeckKey01')
+    Select-ComboItem $root 'AccentPicker' 'Bleu' $replacement.Id
+    Invoke-Control (Find-Control $root 'SaveActionButton')
+    Wait-Until {
+        $state = Read-SharedJson $settingsPath
+        (@($state.Profiles | Where-Object { $_.Id -eq $templateId })[0]).Buttons[0].Accent -eq '#70A7E8'
+    }
+    Invoke-Control (Find-Control $root 'DeckKey02')
+    Invoke-Control (Find-Control $root 'DeckKey01')
+    $accentSelection = (Find-Control $root 'AccentPicker').GetCurrentPattern([System.Windows.Automation.SelectionPattern]::Pattern).GetCurrentSelection()
+    if ($accentSelection.Count -ne 1 -or $accentSelection[0].Current.Name -ne 'Bleu') { throw 'The accent picker lost its saved selection' }
+    Write-Host 'PASS key appearance: accent persists and reloads when returning to the key'
+
+    $script:phase = 'record a shortcut without running it'
+    Invoke-Control (Find-Control $root 'DeckKey04')
+    Invoke-Control (Find-ButtonLike $root 'Raccourci clavier')
+    $record = Show-InScroll $root (Find-Control $root 'RecordShortcutButton') 'DeckEditorScroll'
+    [void][DeckPilotDragMouse]::SetForegroundWindow($replacement.MainWindowHandle)
+    $record.SetFocus()
+    Invoke-Control $record
+    Wait-Until { (Find-Control $root 'RecordShortcutButton').Current.ItemStatus -eq 'Enregistrement du raccourci en cours' }
+    [System.Windows.Forms.SendKeys]::SendWait('^z')
+    Wait-Until { (Find-Control $root 'RecordShortcutButton').Current.ItemStatus -eq '' }
+    Invoke-Control (Find-Control $root 'SaveActionButton')
+    Wait-Until {
+        $state = Read-SharedJson $settingsPath
+        $action = (@($state.Profiles | Where-Object { $_.Id -eq $templateId })[0]).Buttons[3]
+        $action.Kind -eq 'Shortcut' -and $action.Key -eq 90 -and $action.Ctrl
+    }
+    if ((Read-SharedJson $settingsPath).Profiles.Count -ne 2) { throw 'Shortcut recording invoked profile undo' }
+    Invoke-Control $record
+    Wait-Until { (Find-Control $root 'RecordShortcutButton').Current.ItemStatus -eq 'Enregistrement du raccourci en cours' }
+    [System.Windows.Forms.SendKeys]::SendWait('^+k')
+    Wait-Until { (Find-Control $root 'RecordShortcutButton').Current.ItemStatus -eq '' }
+    Invoke-Control (Find-Control $root 'SaveActionButton')
+    Wait-Until {
+        $state = Read-SharedJson $settingsPath
+        $action = (@($state.Profiles | Where-Object { $_.Id -eq $templateId })[0]).Buttons[3]
+        $action.Kind -eq 'Shortcut' -and $action.Key -eq 75 -and $action.Ctrl -and $action.Shift -and !$action.Alt -and !$action.Win
+    }
+    if ((Read-SharedJson $settingsPath).ActiveProfileId -ne $templateId) { throw 'Recording a shortcut unexpectedly changed the profile' }
+    Write-Host 'PASS shortcut recorder: Ctrl+Z bypasses history, Ctrl+Shift+K captured without executing the configured action'
+
+    $script:phase = 'copy, paste and clear a key using the keyboard'
+    $sourceKey = Show-InScroll $root (Find-Control $root 'DeckKey04') 'DeckEditorScroll'
+    [void][DeckPilotDragMouse]::SetForegroundWindow($replacement.MainWindowHandle)
+    $sourceKey.SetFocus()
+    [System.Windows.Forms.SendKeys]::SendWait('^c')
+    Wait-Until { (Find-Control $root 'StatusText').Current.Name -like 'Touche copi*' }
+    # Ordinary text editing must not replace DeckPilot's internal key clipboard.
+    $label = Show-InScroll $root (Find-Control $root 'LabelEditor') 'DeckEditorScroll'
+    $label.SetFocus()
+    [System.Windows.Forms.SendKeys]::SendWait('^a^c')
+    $destinationKey = Show-InScroll $root (Find-Control $root 'DeckKey05') 'DeckEditorScroll'
+    Invoke-Control $destinationKey
+    $destinationKey.SetFocus()
+    [System.Windows.Forms.SendKeys]::SendWait('^v')
+    Wait-Until {
+        $state = Read-SharedJson $settingsPath
+        $editedProfile = @($state.Profiles | Where-Object { $_.Id -eq $templateId })[0]
+        ($editedProfile.Buttons[3] | ConvertTo-Json -Depth 10 -Compress) -ceq ($editedProfile.Buttons[4] | ConvertTo-Json -Depth 10 -Compress)
+    }
+    $destinationKey.SetFocus()
+    [System.Windows.Forms.SendKeys]::SendWait('{DELETE}')
+    Wait-Until {
+        $state = Read-SharedJson $settingsPath
+        (@($state.Profiles | Where-Object { $_.Id -eq $templateId })[0]).Buttons[4].Kind -eq 'Passthrough'
+    }
+    Invoke-Control (Find-Control $root 'UndoProfileButton')
+    Wait-Until {
+        $state = Read-SharedJson $settingsPath
+        (@($state.Profiles | Where-Object { $_.Id -eq $templateId })[0]).Buttons[4].Kind -eq 'Shortcut'
+    }
+    if (((Read-SharedJson $settingsPath).KeyMap -join ',') -ne $originalCalibration) { throw 'Editing key actions changed calibration' }
+    Write-Host 'PASS key clipboard: keyboard copy/paste, reset and undo preserve the source and calibration'
+
+    $script:phase = 'persist reduced motion preference'
+    $motionCheck = Show-InScroll $root (Find-Control $root 'ReduceMotionCheck') 'SidebarScroll'
+    $motionCheck.GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern).Toggle()
+    Wait-Until { (Read-SharedJson $settingsPath).ReduceMotion -eq $true }
+    Write-Host 'PASS preferences: reduced motion setting is persisted'
+
+    $script:phase = 'capture the actual Windows interface'
+    foreach ($id in @('BoardDiagnosticExpander', 'ProfilesExpander', 'ApplicationPreferences', 'ActivityExpander')) {
+        $section = Find-Control $root $id
+        if ($section) { $section.GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern).Collapse() }
+    }
+    # Leave a clean, populated profile visible instead of the test configuration.
+    $profilesSection = (Find-Control $root 'ProfilesExpander').GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern)
+    $profilesSection.Expand()
+    Select-ComboItem $root 'ProfileTemplatePicker' 'Musique et audio' $replacement.Id 'SidebarScroll'
+    Invoke-Control (Find-Control $root 'AddTemplateButton')
+    Wait-Until { (Read-SharedJson $settingsPath).Profiles.Count -eq 3 }
+    $profilesSection.Collapse()
+    Invoke-Control (Find-Control $root 'DeckKey02')
+    $screen = [System.Windows.Forms.Screen]::PrimaryScreen.WorkingArea
+    $transform.Resize([Math]::Min(1180, $screen.Width - 40), [Math]::Min(900, $screen.Height - 40))
+    $transform.Move($screen.Left + 20, $screen.Top + 20)
+    foreach ($id in @('DeckEditorScroll', 'SidebarScroll')) {
+        $scroll = (Find-Control $root $id).GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern)
+        if ($scroll.Current.VerticallyScrollable) { $scroll.SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 0) }
+    }
+    [void][DeckPilotDragMouse]::SetForegroundWindow($replacement.MainWindowHandle)
+    Start-Sleep -Milliseconds 700
+    $bounds = $root.Current.BoundingRectangle
+    $captureFolder = Join-Path (Get-Location) 'artifacts/ui'
+    New-Item -ItemType Directory -Force $captureFolder | Out-Null
+    $bitmap = [System.Drawing.Bitmap]::new([int]$bounds.Width, [int]$bounds.Height)
+    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+    try {
+        $graphics.CopyFromScreen([int]$bounds.Left, [int]$bounds.Top, 0, 0, $bitmap.Size)
+        $bitmap.Save((Join-Path $captureFolder 'DeckPilot.png'), [System.Drawing.Imaging.ImageFormat]::Png)
+    }
+    finally { $graphics.Dispose(); $bitmap.Dispose() }
+    Write-Host 'PASS screenshot: actual running application captured to artifacts/ui/DeckPilot.png'
     $script:smokePassed = $true
     Write-Host 'PASS Windows UI and installed apps: twelve keys, vector templates, application catalog and persisted selection'
 }

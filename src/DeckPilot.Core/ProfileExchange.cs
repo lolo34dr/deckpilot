@@ -59,13 +59,38 @@ public static class ProfileExchange
         }
     }
     public static List<Profile> Copy(IEnumerable<Profile> profiles) => Import(Export(profiles)).Profiles;
+    public static List<Profile> CopyAsNew(IEnumerable<Profile> profiles)
+    {
+        var copies = Copy(profiles);
+        var ids = copies.ToDictionary(profile => profile.Id, _ => Guid.NewGuid());
+        foreach (var profile in copies)
+        {
+            profile.Id = ids[profile.Id];
+            foreach (var action in profile.Buttons.SelectMany(a => a.LongPressAction == null ? new[] { a } : new[] { a, a.LongPressAction }))
+                if (action.Kind == ActionKind.Profile && Guid.TryParse(action.Target, out var destination) && ids.TryGetValue(destination, out var newId))
+                    action.Target = newId.ToString();
+        }
+        return copies;
+    }
+    internal static bool HaveSameContent(IReadOnlyList<Profile> left, IReadOnlyList<Profile> right)
+    {
+        if (left.Count != right.Count) return false;
+        for (int i = 0; i < left.Count; i++)
+        {
+            var a = left[i]; var b = right[i];
+            if (a == null || b == null || a.Id != b.Id || a.Name != b.Name || a.Buttons == null || b.Buttons == null || !a.Buttons.SequenceEqual(b.Buttons)) return false;
+        }
+        return true;
+    }
     public static List<Profile> AddAsNew(Settings settings, ProfilePackage package)
     {
-        var imported = Copy(package.Profiles);
+        Validate(package);
+        if (settings.Profiles.Count + package.Profiles.Count > 100) throw new InvalidDataException("Limite de 100 profils atteinte.");
+        var imported = CopyAsNew(package.Profiles);
         var names = settings.Profiles.Select(p => p.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
         foreach (var p in imported)
         {
-            p.Id = Guid.NewGuid(); string original = p.Name;
+            string original = p.Name;
             for (int i = 1; !names.Add(p.Name); i++)
             {
                 string suffix = $" (import {i})";
@@ -95,21 +120,31 @@ public static class ProfileBackups
 }
 public sealed class ProfileHistory
 {
-    private sealed record Snapshot(string Profiles, Guid Active);
+    private sealed record Snapshot(List<Profile> Profiles, Guid Active);
     private Snapshot current;
     private readonly List<Snapshot> undo = [], redo = [];
     public ProfileHistory(Settings settings) => current = Capture(settings);
     public bool CanUndo => undo.Count > 0;
     public bool CanRedo => redo.Count > 0;
-    private static Snapshot Capture(Settings settings) => new(ProfileExchange.Export(settings.Profiles), settings.ActiveProfile.Id);
+    private static List<Profile> CopyProfiles(List<Profile> profiles) => profiles.Select(profile => profile.Copy()).ToList();
+    private static Snapshot Capture(Settings settings)
+    {
+        // Keep export validation and its size limit for every new state, but
+        // retain detached model copies so unchanged edits and restores need no JSON.
+        _ = ProfileExchange.Export(settings.Profiles);
+        return new(CopyProfiles(settings.Profiles), settings.ActiveProfile.Id);
+    }
     public void Record(Settings settings)
     {
-        var next = Capture(settings);
-        if (next.Profiles != current.Profiles)
+        if (ProfileExchange.HaveSameContent(settings.Profiles, current.Profiles))
         {
-            undo.Add(current); if (undo.Count > 50) undo.RemoveAt(0);
-            redo.Clear();
+            Guid active = settings.ActiveProfile.Id;
+            if (active != current.Active) current = current with { Active = active };
+            return;
         }
+        var next = Capture(settings);
+        undo.Add(current); if (undo.Count > 50) undo.RemoveAt(0);
+        redo.Clear();
         current = next;
     }
     public bool Undo(Settings settings) => Restore(settings, undo, redo);
@@ -118,7 +153,7 @@ public sealed class ProfileHistory
     {
         if (source.Count == 0) return false;
         destination.Add(current); current = source[^1]; source.RemoveAt(source.Count - 1);
-        settings.Profiles = ProfileExchange.Import(current.Profiles).Profiles;
+        settings.Profiles = CopyProfiles(current.Profiles);
         settings.ActiveProfileId = current.Active;
         return true;
     }

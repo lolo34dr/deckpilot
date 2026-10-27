@@ -27,7 +27,12 @@ public partial class MainWindow
     private void InitializeActionTools()
     {
         actionToolsReady = true;
-        searchTimer.Tick += (_, _) => { searchTimer.Stop(); RefreshActionSearch(); };
+        searchTimer.Tick += (_, _) =>
+        {
+            searchTimer.Stop();
+            if (!string.IsNullOrWhiteSpace(ActionSearchBox.Text) && !applicationsLoading) _ = LoadActionApplicationsAsync();
+            else RefreshActionSearch();
+        };
         Closed += (_, _) => searchTimer.Stop();
         for (int i = 0; i < actionButtons.Count; i++)
         {
@@ -76,7 +81,7 @@ public partial class MainWindow
     }
     private void ResetActionFeedback(int index)
     {
-        gestures.CancelIndex(index); executionTickets[index]++; feedback[index] = DeckKeyFeedback.Ready;
+        CancelPendingGestures(); executionTickets[index]++; feedback[index] = DeckKeyFeedback.Ready;
         feedbackMessages[index] = ""; feedbackUntil[index] = pressedUntil[index] = 0;
     }
     private void AssignAction(int index, ButtonAction action, bool currentGesture = false)
@@ -145,14 +150,16 @@ public partial class MainWindow
     {
         if (!actionToolsReady) return;
         searchTimer.Stop(); searchTimer.Start();
-        if (!string.IsNullOrWhiteSpace(ActionSearchBox.Text) && !applicationsLoading && !applicationsLoaded) _ = LoadActionApplicationsAsync();
     }
     private async Task LoadActionApplicationsAsync()
     {
-        applicationsLoading = true; RefreshActionSearch();
+        if (applicationsLoading || lifetime.IsCancellationRequested) return;
+        applicationsLoading = true;
         try
         {
-            var result = await ApplicationCatalog.FindAsync(lifetime.Token);
+            var pending = ApplicationCatalog.FindAsync(lifetime.Token);
+            if (!pending.IsCompletedSuccessfully) RefreshActionSearch();
+            var result = await pending;
             actionApplications = result.Applications; applicationSearchWarning = result.Warning ?? "";
         }
         catch (OperationCanceledException) { }
