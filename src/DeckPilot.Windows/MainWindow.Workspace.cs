@@ -76,8 +76,9 @@ public partial class MainWindow
         StatusText.Text = $"Modèle « {profile.Name} » ajouté · Vos autres profils sont conservés.";
     }
 
-    private void ReduceMotionClick(object sender, RoutedEventArgs e)
+    private void ReduceMotionChanged(object sender, RoutedEventArgs e)
     {
+        if (loading || (ReduceMotionCheck.IsChecked == true) == settings.ReduceMotion) return;
         bool previous = settings.ReduceMotion;
         settings.ReduceMotion = ReduceMotionCheck.IsChecked == true;
         if (!Persist()) { settings.ReduceMotion = previous; ReduceMotionCheck.IsChecked = previous; }
