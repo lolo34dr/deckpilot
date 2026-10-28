@@ -188,7 +188,7 @@
       <Expander x:Name="PreferencesExpander" Header="Préférences de l’application" Foreground="#C1CDC4" IsExpanded="False" AutomationProperties.AutomationId="ApplicationPreferences">
        <StackPanel Margin="0,10,0,0">
       <TextBlock Text="Apparence" FontWeight="SemiBold" Margin="0,0,0,4"/>
-      <CheckBox x:Name="ReduceMotionCheck" Content="Réduire les animations" Click="ReduceMotionClick"/>
+      <CheckBox x:Name="ReduceMotionCheck" Content="Réduire les animations" Checked="ReduceMotionChanged" Unchecked="ReduceMotionChanged"/>
       <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,8,0,12"/>
       <TextBlock Text="Mises à jour" FontWeight="SemiBold" Margin="0,0,0,6"/>
       <CheckBox x:Name="AutoUpdateCheck" Content="Rechercher automatiquement" Click="AutoUpdateClick"/>
