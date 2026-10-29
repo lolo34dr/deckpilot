@@ -56,7 +56,7 @@ DeckPilot configure les macropads compatibles Arduino Leonardo qui envoient déj
 - **Étalonnage guidé:**  tout identifier 12 des boutons physiques sans recâbler votre macropad.
 - **Sélecteur d’applications installées :**  Rechercher Démarrer les raccourcis de menu et le catalogue d'applications Windows, y compris les entrées Microsoft Store. La sélection manuelle des fichiers reste disponible.
 - **Actions personnalisées  :**  lancer des applications, ouvrir des dossiers ou des sites Web, envoyer des raccourcis et contrôler les médias.
-- **touches libres :**  Gardez F13–F24 disponible pour les raccourcis configurés directement dans un jeu ou une autre application.
+- **Touches libres:**  Gardez F13–F24 disponible pour les raccourcis configurés directement dans un jeu ou une autre application.
 - **Profils locaux:**  créer, dupliquer, renommer, supprimer et sélectionner les profils. L'étalonnage est partagé entre les profils.
 - **Profils prêts à l'emploi:**  Commencez par les modèles Musique, Productivité ou Création, puis personnalisez-les. Passez à un profil spécifique, suivant ou précédent à partir d'une touche physique.
 - **Édition plus rapide :**  copier/découper/coller/réinitialiser les touches complètes, enregistrer les raccourcis clavier, choisir les couleurs de l'accent touche et annuler les modifications.
@@ -102,7 +102,7 @@ L'exécutable à un seul fichier extrait ses dépendances groupées dans le cach
 
 |  Décision | Comportement |
 | --- | --- |
-|  touche libre |  Passez F13–F24 à travers normalement. Assignez-le directement dans votre jeu ou application. |
+| Touche libre |  Passez F13–F24 à travers normalement. Assignez-le directement dans votre jeu ou application. |
 |  Demande |  Lance une application installée ou un programme ou un raccourci sélectionné manuellement. |
 |  Dossier |  Ouvre un dossier dans l'Explorateur Windows. |
 | Site Web |  Ouvre une adresse HTTP ou HTTPS dans votre navigateur par défaut. |

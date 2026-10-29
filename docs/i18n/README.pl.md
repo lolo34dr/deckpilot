@@ -56,7 +56,7 @@ DeckPilot konfiguruje Arduino Leonardo- kompatybilne makropadki, które już wys
 - **Kalibracja z przewodnikiem:** identyfikacja wszystkich 12 Przyciski fizyczne bez przełączania makro-pad.
 - **Instalowany wybielacz aplikacji:** wyszukaj skróty w menu Start i katalog aplikacji Windows, w tym wpisy Microsoft Store. Ręczny wybór plików pozostaje dostępny.
 - **Niestandardowe działania:** uruchamia aplikacje, otwarte foldery lub strony internetowe, wysyła skróty i media sterujące.
-- **Bezpłatne klucze:** zachować F13- F24 dostępne dla skrótów skonfigurowanych bezpośrednio w grze lub innej aplikacji.
+- **Wolne klawisze:** zachować F13- F24 dostępne dla skrótów skonfigurowanych bezpośrednio w grze lub innej aplikacji.
 - **Profile lokalne:** tworzyć, duplikować, zmieniać nazwę, usunąć i wybrać profile. Kalibracja jest dzielona między profile.
 - **Profile wykonane z papieru:** zacząć od szablonów Music, Productivity lub Creation, a następnie dostosować je. Przełącz na konkretny, następny lub poprzedni profil z klucza fizycznego.
 - **Szybsza edycja:** kopiowanie / wycinanie / wklejanie / resetowanie pełnych kluczy, nagrywanie skrótów klawiszowych, wybieranie kolorów akcentów klawiszy i cofanie zmian.
@@ -102,7 +102,7 @@ Pojedynczy plik wykonywalny pobiera swoje powiązane zależności do pamięci po
 
 | Działanie | Zachowanie |
 | --- | --- |
-| Darmowy klucz | Przesyłki F13- F24 przez normalnie. Przypisz go bezpośrednio w grze lub aplikacji. |
+| Wolny klawisz | Przesyłki F13- F24 przez normalnie. Przypisz go bezpośrednio w grze lub aplikacji. |
 | Stosowanie | Otwiera zainstalowaną aplikację lub ręcznie wybrany program lub skrót. |
 | Katalog | Otwiera folder w systemie Windows Explorer. |
 | Strona internetowa | Otwiera adres HTTP lub HTTPS w domyślnej przeglądarce. |

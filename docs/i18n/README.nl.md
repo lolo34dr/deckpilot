@@ -56,7 +56,7 @@ DeckPilot configureert Arduino Leonardo-compatibele macropads die al verzenden *
 - **Begeleide kalibratie:**  alles identificeren 12  fysieke knoppen zonder uw macropad opnieuw te bedrading.
 - **Geïnstalleerde applicatiepicker:**  zoeken Start menu snelkoppelingen en de Windows-applicatiecatalogus, inclusief Microsoft Store-items. Handmatige bestandsselectie blijft beschikbaar.
 - **Aangepaste acties:** start toepassingen, open mappen of websites, stuur snelkoppelingen en controlemedia.
-- **Gratis sleutels:**  Houd F13_F24 beschikbaar voor snelkoppelingen die direct in een spel of een andere toepassing zijn geconfigureerd.
+- **Vrije toetsen:**  Houd F13_F24 beschikbaar voor snelkoppelingen die direct in een spel of een andere toepassing zijn geconfigureerd.
 - **Lokale profielen:**  Maak, dupliceer, hernoem, verwijder en selecteer profielen. Kalibratie wordt gedeeld over profielen.
 - **Gereedgemaakte profielen:**  Begin met sjablonen voor muziek, productiviteit of creatie, en pas ze aan. Schakel vanuit een fysieke sleutel over naar een specifiek, volgend of vorig profiel.
 - **Sneller bewerken:** Kopieer/snijd/plakken/reset complete toetsen, neem sneltoetsen op, kies accentkleuren, en maak wijzigingen ongedaan.
@@ -102,7 +102,7 @@ De single-file uitvoerbaar haalt zijn gebundelde afhankelijkheden in de gebruike
 
 |  Actie | Gedrag |
 | --- | --- |
-|  Vrije sleutel | Passeert F13/F24 door normaal. Geef het direct in uw spel of toepassing. |
+| Vrije toets | Passeert F13/F24 door normaal. Geef het direct in uw spel of toepassing. |
 |  Toepassing | Start een geïnstalleerde toepassing of een handmatig geselecteerd programma of snelkoppeling. |
 | Map | Opent een map in Windows Explorer. |
 | Site | Opent een HTTP- of HTTPS-adres in uw standaard browser. |

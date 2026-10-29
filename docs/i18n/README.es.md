@@ -102,7 +102,7 @@ El ejecutable de un solo fichero extrae sus dependencias agrupadas en la caché 
 
 | Medida | Comportamiento |
 | --- | --- |
-| Llave libre | Pasa F13–F24 a través de normalmente. Asignarlo directamente en su juego o aplicación. |
+| Tecla libre | Pasa F13–F24 a través de normalmente. Asignarlo directamente en su juego o aplicación. |
 | Aplicación | Lanza una aplicación instalada o un programa seleccionado manualmente o atajo. |
 | Folder | Abre una carpeta en Windows Explorer. |
 | Sitio web | Abre una dirección HTTP o HTTPS en su navegador predeterminado. |

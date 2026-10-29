@@ -102,7 +102,7 @@ L'eseguibile single-file estrae le sue dipendenze in bundle nella cache .NET del
 
 | Azione | Comportamento |
 | --- | --- |
-| Chiave libera | Passa F13-F24 attraverso normalmente. Assegnalo direttamente nel tuo gioco o applicazione. |
+| Tasto libero | Passa F13-F24 attraverso normalmente. Assegnalo direttamente nel tuo gioco o applicazione. |
 | Applicazione | Avvia un'applicazione installata o un programma selezionato manualmente o una scorciatoia. |
 | Cartella | Apre una cartella in Windows Explorer. |
 | Sito web | Apre un indirizzo HTTP o HTTPS nel browser predefinito. |
