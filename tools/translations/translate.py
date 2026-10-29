@@ -45,7 +45,7 @@ def prepare(out):
     (out/'manifest.json').write_text(json.dumps({'readme_sha256':hashlib.sha256(source).hexdigest(),'firmware_sha256':hashlib.sha256(firmware).hexdigest()}))
 
 # Markdown controls, exact code, URLs, link destinations and existing French UI labels.
-PROTECTED=re.compile(r'(`+[^`\n]*`+|!?\[[^\]\n]*\]\([^\)\n]*\)|<[^>]+>|https?://[^\s<>]+|\*\*|\*|\||&[a-zA-Z#0-9]+;)')
+PROTECTED=re.compile(r'(`+[^`\n]*`+|!?\[[^\]\n]*\]\([^\)\n]*\)|<[^>]+>|https?://[^\s<>]+|DeckPilot|\b\d+(?:[.,]\d+)*\b|\*\*|\*|\||&[a-zA-Z#0-9]+;)')
 UI=['Lancer avec Windows','Firmware du macropad…','Votre macropad','Connexion et diagnostic','Options avancées · fichier et arguments','Tester l’action','Hors ligne','Multimédia','Rechercher une action ou une application','Préférences de l’application','Annuler / Rétablir','Gérer les profils','Microphone Windows','Changer de sortie audio','appui court / appui long','Réduire les animations','Changer de profil','Commandes Windows','Enregistrer un raccourci','Activité récente']
 
 class Engine:
@@ -86,6 +86,7 @@ class Engine:
         else:
             result=self.translator.translate_batch([tokens],beam_size=4,max_decoding_length=768)[0]
             translated=self.processor.decode(result.hypotheses[0])
+        if not translated.strip():raise RuntimeError('Translation model returned empty prose')
         answer=left+translated+right
         self.cache[text]=answer
         return answer
@@ -118,7 +119,11 @@ class Engine:
             if readme and prefix.startswith('#'):output.append(f'<a id="{slug(body)}"></a>')
             output.append(prefix+self.inline(body))
         if fence:raise ValueError('Unclosed Markdown fence')
-        return '\n'.join(output)+'\n'
+        result='\n'.join(output)+'\n'
+        if re.findall(r'```[\s\S]*?```',source)!=re.findall(r'```[\s\S]*?```',result):raise RuntimeError('Code block changed during translation')
+        if re.findall(r'`[^`\n]+`',source)!=re.findall(r'`[^`\n]+`',result):raise RuntimeError('Inline code changed during translation')
+        if len(re.findall(r'^#{1,6} ',source,re.M))!=len(re.findall(r'^#{1,6} ',result,re.M)):raise RuntimeError('Section omitted during translation')
+        return result
 
 def translate(language,source,out,cache):
     engine=Engine(language,cache)
