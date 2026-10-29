@@ -14,18 +14,18 @@
 
 <p align="center">
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest">最新のリリースをダウンロード</a>
-  &nbsp;·&nbsp;
+   · 
   <a href="#getting-started">はじめに</a>
-  &nbsp;·&nbsp;
+   · 
   <a href="#development">開発実績</a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&amp;color=78b7a0" alt="最新リリース"></a>
-  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&amp;logo=windows" alt="Windowsのx64のためのダウンロード"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&color=78b7a0" alt="最新リリース"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&logo=windows" alt="Windowsのx64のためのダウンロード"></a>
   <a href="https://github.com/lolo34dr/deckpilot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/lolo34dr/deckpilot?style=flat-square" alt="MITライセンス"></a>
   <a href="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml"><img src="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml/badge.svg?branch=main" alt="Windowsビルドステータス"></a>
-  <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&amp;color=70a7e8" alt="GitHubリリースのダウンロード"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&color=70a7e8" alt="GitHubリリースのダウンロード"></a>
 </p>
 
 <p align="center">
@@ -80,7 +80,7 @@ DeckPilot 既に送信するArduino Leonardo互換のマクロパッドを構成
 <a id="install-and-launch"></a>
 ### インストールと起動
 
-1. ダウンロード **[デッキPilot-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** インストーラーを実行します。 Windows は、インストールする管理者権限を要求します **プログラムファイル\DeckPilot**.
+1. ダウンロード **[デッキPilot-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** インストーラーを実行します。 Windows は、インストールする管理者権限を要求します **Program Files\DeckPilot**.
 2. インストーラーは追加します DeckPilot Windows に **インストールされたアプリ**, スタートメニューショートカットを作成します。, デフォルトでデスクトップのショートカットとWindowsの起動オプションを選択します。. これらのオプションのタスクを選択解除することができます。.
 3. マクロパッドを接続し、開きます DeckPilot ショートカットから。
 4. 左から右にキャリブレーションを続けてください **4つの列**, 次の行, のために **3列**. 各ボタンは別のF13–F24のキーを送って下さい。

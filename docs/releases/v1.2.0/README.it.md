@@ -2,7 +2,7 @@
 
 DeckPilot ora installa come un'applicazione regolare di Windows, con il corretto **3 righe × 4 colonne** layout macropad.
 
-- Scarica **DeckPilot-Setup.exe** per installare **File di programma\DeckPilot**, con menu Start e scorciatoie desktop e una voce di disinstallazione di Windows.
+- Scarica **DeckPilot-Setup.exe** per installare **Program Files\DeckPilot**, con menu Start e scorciatoie desktop e una voce di disinstallazione di Windows.
 - L'avvio di Windows è abilitato per impostazione predefinita e può essere disabilitato durante l'installazione o dall'app.
 - Gli aggiornamenti dell'app installati scaricano e verificano il pacchetto di configurazione, richiedono il normale permesso dell'amministratore di Windows, quindi installano e riavviano l'app.
 - La griglia principale, le etichette di posizione e la calibrazione guidata ora utilizzano tre righe di quattro chiavi. Vengono mantenuti profili/azioni esistenti; il layout precedente richiede una nuova calibrazione.

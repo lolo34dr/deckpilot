@@ -14,18 +14,18 @@
 
 <p align="center">
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest">Pobierz najnowszą wersję</a>
-  &nbsp;·&nbsp;
+   · 
   <a href="#getting-started">Rozpoczynanie</a>
-  &nbsp;·&nbsp;
+   · 
   <a href="#development">Rozwój</a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&amp;color=78b7a0" alt="Najnowsze wydanie"></a>
-  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&amp;logo=windows" alt="Pobierz dla Windows x64"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&color=78b7a0" alt="Najnowsze wydanie"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&logo=windows" alt="Pobierz dla Windows x64"></a>
   <a href="https://github.com/lolo34dr/deckpilot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/lolo34dr/deckpilot?style=flat-square" alt="Licencja MIT"></a>
   <a href="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml"><img src="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml/badge.svg?branch=main" alt="Stan budowy systemu Windows"></a>
-  <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&amp;color=70a7e8" alt="GitHub umożliwia pobieranie plików"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&color=70a7e8" alt="GitHub umożliwia pobieranie plików"></a>
 </p>
 
 <p align="center">
@@ -80,7 +80,7 @@ Opublikowane pliki do pobrania zawierają runtime .NET. **Nie trzeba instalować
 <a id="install-and-launch"></a>
 ### Zainstaluj i uruchom
 
-1. Pobieranie **[DeckPilot- Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** i uruchom instalatora. Windows prosi o zgodę administratora na instalację do **Pliki programu\DeckPilot**.
+1. Pobieranie **[DeckPilot- Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** i uruchom instalatora. Windows prosi o zgodę administratora na instalację do **Program Files\DeckPilot**.
 2. Instalator dodaje DeckPilot do Windows **Instalowane aplikacje**, tworzy skrót Menu Start i domyślnie wybiera skrót pulpitu i opcje uruchamiania systemu Windows. Możesz wybrać te opcjonalne zadania.
 3. Połącz makro-pad i otwórz DeckPilot ze skrótu.
 4. Postępuj zgodnie z kalibracją od lewej do prawej strony **4 kolumny**, następnie w następnym wierszu, dla **trzy wiersze**. Każdy przycisk musi wysłać inny klawisz F13- F24.
@@ -305,7 +305,7 @@ Oprogramowanie firmowe **1.1.1** dodaje identyfikację sesji, skorelowane odpowi
 
 Im większy 3 × 4 klawiatura śledzi fizyczną obudowę i czarne nasadki klawiszy. Każdy klucz pokazuje swoją główną ikonę, etykietę, mapowanie F13- F24 i małą ikonę typu action- type; wskazówki o narzędziach zachowują pełną etykietę i pozycję. Naciśnij informacje zwrotne, działania, skuteczne wysyłanie i błędy mają odmienny wygląd, w tym symbole, a nie tylko kolor. Animacje podążają za preferencjami animacji systemu Windows.
 
-Wybierz klucz do edycji. **Options avancées · fichier et arguments** utrzymuje ręczne ścieżki aplikacji i argumenty startowe zawalone domyślnie, podczas gdy podstawowe foldery i cele strony internetowej pozostają rozszerzone. **Tester l’action** zapisuje i wysyła wybrane działanie na bieżącym komputerze PC; wskaźnik sukcesu potwierdza wysyłkę, a nie ukończenie wewnątrz innej aplikacji. Skróty klawiszowe mają na celu aktywne okno. Darmowe klawisze F13- F24 nie mają działania testowego.
+Wybierz klucz do edycji. **Options avancées · fichier et arguments** utrzymuje ręczne ścieżki aplikacji i argumenty startowe zawalone domyślnie, podczas gdy podstawowe foldery i cele strony internetowej pozostają rozszerzone. **Tester l’action** zapisuje i wysyła wybrane działanie na bieżącym komputerze PC; wskaźnik sukcesu potwierdza wysyłkę, a nie ukończenie wewnątrz innej aplikacji. Skróty klawiszowe mają na celu aktywne okno. Wolne klawisze F13- F24 nie mają działania testowego.
 
 Kiedy makropad jest odłączony, **Hors ligne** i towarzysząca podpowiedź wyjaśnia, że profile mogą być wciąż edytowane i testowane. Konfiguracja jest przechowywana na komputerze PC i pozostaje dostępna przez cały czas rozłączania i ponownego łączenia. Te usprawnienia interfejsu działają z istniejącym oprogramowaniem firmowym i nie wymagają dodatkowego błysku.
 
