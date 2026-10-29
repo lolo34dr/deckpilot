@@ -149,8 +149,16 @@ def publish(source):
         req=urllib.request.Request(f"https://api.github.com/repos/lolo34dr/deckpilot/releases/{release['id']}",data=payload,headers=headers,method='PATCH')
         with urllib.request.urlopen(req,timeout=60) as response:response.read()
 
-if __name__=='__main__':
+def main():
     p=argparse.ArgumentParser();p.add_argument('command',choices=['prepare','translate','publish']);p.add_argument('--language',choices=LANGUAGES);p.add_argument('--source',type=Path,default=Path('/tmp/deckpilot-source'));p.add_argument('--out',type=Path,default=Path('/tmp/deckpilot-translated'));p.add_argument('--cache',type=Path,default=Path('/tmp/deckpilot-models'));a=p.parse_args()
     if a.command=='prepare':prepare(a.source)
     elif a.command=='translate':translate(a.language,a.source,a.out,a.cache)
     else:publish(a.source)
+
+if __name__ == '__main__':
+    try:
+        main()
+    except Exception as error:
+        message=(type(error).__name__+': '+str(error)).replace('%','%25').replace('\r','%0D').replace('\n','%0A')
+        print('::error title=Documentation translation::'+message,flush=True)
+        raise
