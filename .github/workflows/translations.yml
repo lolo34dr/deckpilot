@@ -2,7 +2,7 @@ name: Complete documentation translations
 on:
   push:
     branches: [main]
-    paths: [README.md, tools/translations/**, .github/workflows/translations.yml]
+    paths: [README.md, firmware/README.md, .github/release-notes.md, tools/translations/**, .github/workflows/translations.yml]
   workflow_dispatch:
   release:
     types: [published, edited]
