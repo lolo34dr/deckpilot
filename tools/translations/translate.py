@@ -1,5 +1,5 @@
 """Translate complete Markdown documents with Argos models; retain executable syntax."""
-import argparse, hashlib, json, os, re, shutil, tempfile, urllib.request, zipfile
+import argparse, hashlib, json, os, re, shutil, tempfile, time, urllib.error, urllib.request, zipfile
 from pathlib import Path
 
 LANGUAGES = {'fr':'fr','de':'de','es':'es','it':'it','pt-BR':'pt','nl':'nl','pl':'pl','ru':'ru','ja':'ja','ko':'ko','zh-CN':'zh','ar':'ar'}
@@ -9,8 +9,14 @@ def request(url):
     headers={'User-Agent':'DeckPilot-documentation'}
     if url.startswith('https://api.github.com/'):
         headers['Authorization']='Bearer '+os.environ['GH_TOKEN']
-    with urllib.request.urlopen(urllib.request.Request(url,headers=headers),timeout=120) as response:
-        return response.read()
+    for attempt in range(5):
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url,headers=headers),timeout=120) as response:
+                return response.read()
+        except (urllib.error.URLError, TimeoutError, ConnectionError) as error:
+            if isinstance(error,urllib.error.HTTPError) and error.code not in (408,429,500,502,503,504):raise
+            if attempt==4:raise
+            time.sleep(min(20,2**attempt))
 
 def releases():
     result=[]
