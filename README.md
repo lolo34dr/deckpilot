@@ -19,16 +19,34 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml">
-    <img src="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml/badge.svg" alt="Windows build status">
-  </a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&amp;color=78b7a0" alt="Latest release"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&amp;logo=windows" alt="Download for Windows x64"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/lolo34dr/deckpilot?style=flat-square" alt="MIT license"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml"><img src="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml/badge.svg?branch=main" alt="Windows build status"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&amp;color=70a7e8" alt="GitHub release downloads"></a>
+</p>
+
+<p align="center">
+  <a href="README.md">🇬🇧 English</a> ·
+  <a href="docs/i18n/README.fr.md">🇫🇷 Français</a> ·
+  <a href="docs/i18n/README.de.md">🇩🇪 Deutsch</a> ·
+  <a href="docs/i18n/README.es.md">🇪🇸 Español</a> ·
+  <a href="docs/i18n/README.it.md">🇮🇹 Italiano</a> ·
+  <a href="docs/i18n/README.pt-BR.md">🇧🇷 Português brasileiro</a> ·
+  <a href="docs/i18n/README.nl.md">🇳🇱 Nederlands</a> ·
+  <a href="docs/i18n/README.pl.md">🇵🇱 Polski</a> ·
+  <a href="docs/i18n/README.ru.md">🇷🇺 Русский</a> ·
+  <a href="docs/i18n/README.ja.md">🇯🇵 日本語</a> ·
+  <a href="docs/i18n/README.ko.md">🇰🇷 한국어</a> ·
+  <a href="docs/i18n/README.zh-CN.md">🇨🇳 简体中文</a> ·
+  <a href="docs/i18n/README.ar.md">🇸🇦 العربية</a>
 </p>
 
 ---
 
 DeckPilot configures Arduino Leonardo-compatible macropads that already send **F13–F24** as USB keyboard inputs, arranged in **3 rows of 4 keys**. The physical key order can be arbitrary: a guided calibration maps each button to its position.
 
-**No additional driver or firmware changes are required.** The current application interface is in French; this documentation is in English.
+**No additional driver or firmware changes are required.** The application interface is currently in French. Choose a language above for a translated user guide; the detailed technical reference and version history below remain in English.
 
 ## Features
 
