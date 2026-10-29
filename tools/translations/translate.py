@@ -89,10 +89,15 @@ class Engine:
         else:raise RuntimeError('No supported tokenizer found in '+str(directory))
         self.translator=ctranslate2.Translator(str(model.parent),device='cpu',compute_type='int8',inter_threads=1,intra_threads=4)
         self.cache={}
+        self.collecting=False
+        self.pending=set()
 
     def text(self,text):
         if not text.strip() or not re.search('[A-Za-z]',text):return text
         if text in self.cache:return self.cache[text]
+        if self.collecting:
+            self.pending.add(text)
+            return text
         left=text[:len(text)-len(text.lstrip())];right=text[len(text.rstrip()):]
         value=text.strip()
         tokens=self.processor.encode(value,out_type=str)
@@ -109,6 +114,25 @@ class Engine:
         answer=left+translated+right
         self.cache[text]=answer
         return answer
+
+    def prefill(self,documents):
+        # Batch independent prose fragments; preserve their Markdown outside the model.
+        self.collecting=True
+        for document in documents:self.markdown(document)
+        self.collecting=False
+        rows=[]
+        for text in self.pending:
+            tokens=self.processor.encode(text.strip(),out_type=str)
+            if len(tokens)<=350:rows.append((text,tokens))
+        rows.sort(key=lambda row:len(row[1]))
+        for offset in range(0,len(rows),16):
+            batch=rows[offset:offset+16]
+            results=self.translator.translate_batch([row[1] for row in batch],beam_size=4,max_batch_size=768,batch_type='tokens',max_decoding_length=768)
+            for (text,_),result in zip(batch,results):
+                value=self.processor.decode(result.hypotheses[0])
+                if not value.strip():raise RuntimeError('Translation model returned empty prose')
+                self.cache[text]=text[:len(text)-len(text.lstrip())]+value+text[len(text.rstrip()):]
+        self.pending.clear()
 
     def inline(self,line):
         # Translate link labels independently; never change their destination.
@@ -152,6 +176,9 @@ def translate(language,source,out,cache):
     original=original.replace('href="README.md"','href="../../README.md"')
     original=re.sub(r'href="docs/i18n/(README\.[^"]+)"',r'href="\1"',original)
     original=original.replace('](LICENSE)','](../../LICENSE)').replace('](firmware/README.md)',f'](FIRMWARE.{language}.md)')
+    documents=[original]+[r['body'] for r in json.loads((source/'releases.json').read_text())]
+    if (source/'firmware.md').exists():documents.append((source/'firmware.md').read_text())
+    engine.prefill(documents)
     notice=engine.text('This is an automatic translation of the complete README. The English original is the reference. Application interface labels and commands are preserved exactly.')
     translated=engine.markdown(original,True)
     (dest/f'README.{language}.md').write_text('> '+notice+'\n\n'+translated,encoding='utf-8')
