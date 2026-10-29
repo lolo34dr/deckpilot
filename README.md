@@ -46,7 +46,7 @@
 
 DeckPilot configures Arduino Leonardo-compatible macropads that already send **F13–F24** as USB keyboard inputs, arranged in **3 rows of 4 keys**. The physical key order can be arbitrary: a guided calibration maps each button to its position.
 
-**No additional driver or firmware changes are required.** The application interface is currently in French. Choose a language above for a translated user guide; the detailed technical reference and version history below remain in English.
+**No additional driver or firmware changes are required.** The application interface is currently in French. Choose a language above for a complete translated README, including the technical reference and version history. Translations are generated automatically; this English original is the reference.
 
 ## Features
 
