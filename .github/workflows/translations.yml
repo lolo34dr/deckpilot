@@ -56,7 +56,7 @@ jobs:
           path: /tmp/deckpilot-models
           key: deckpilot-argos-${{ matrix.language }}-v1
       - name: Install local neural translation runtime
-        run: python -m pip install ctranslate2==4.6.0 sentencepiece==0.2.0
+        run: python -m pip install ctranslate2==4.6.0 sentencepiece==0.2.0 sacremoses==0.1.1 subword-nmt==0.3.8
       - name: Translate every README section and every published changelog
         run: python tools/translations/translate.py translate --language '${{ matrix.language }}'
       - uses: actions/upload-artifact@v6

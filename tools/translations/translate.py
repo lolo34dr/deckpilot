@@ -48,6 +48,21 @@ def prepare(out):
 PROTECTED=re.compile(r'(`+[^`\n]*`+|!?\[[^\]\n]*\]\([^\)\n]*\)|<[^>]+>|https?://[^\s<>]+|DeckPilot|\b\d+(?:[.,]\d+)*\b|\*\*|\*|\||&[a-zA-Z#0-9]+;)')
 UI=['Lancer avec Windows','Firmware du macropad…','Votre macropad','Connexion et diagnostic','Options avancées · fichier et arguments','Tester l’action','Hors ligne','Multimédia','Rechercher une action ou une application','Préférences de l’application','Annuler / Rétablir','Gérer les profils','Microphone Windows','Changer de sortie audio','appui court / appui long','Réduire les animations','Changer de profil','Commandes Windows','Enregistrer un raccourci','Activité récente']
 
+
+class BPEProcessor:
+    """Argos also supplies BPE packages (including Polish), not just SentencePiece."""
+    def __init__(self,path,code):
+        from sacremoses import MosesTokenizer, MosesDetokenizer, MosesPunctNormalizer
+        from subword_nmt.apply_bpe import BPE
+        self.tokenizer=MosesTokenizer(lang='en')
+        self.detokenizer=MosesDetokenizer(lang=code)
+        self.normalizer=MosesPunctNormalizer(lang='en')
+        with path.open(encoding='utf-8') as stream:self.bpe=BPE(stream)
+    def encode(self,text,out_type=str):
+        return self.bpe.segment_tokens(self.tokenizer.tokenize(self.normalizer.normalize(text)))
+    def decode(self,tokens):
+        return self.detokenizer.detokenize(' '.join(tokens).replace('@@ ','').split())
+
 class Engine:
     def __init__(self,language,cache):
         import ctranslate2, sentencepiece
@@ -67,7 +82,11 @@ class Engine:
                         if not dest.is_relative_to(directory.resolve()) or item.file_size>2_000_000_000:raise ValueError('Unsafe model archive')
                     z.extractall(directory)
             model=next(directory.rglob('model.bin'))
-        self.processor=sentencepiece.SentencePieceProcessor(model_file=str(next(directory.rglob('sentencepiece.model'))))
+        sp_model=next(directory.rglob('sentencepiece.model'),None)
+        bpe_model=next(directory.rglob('bpe.model'),None)
+        if sp_model:self.processor=sentencepiece.SentencePieceProcessor(model_file=str(sp_model))
+        elif bpe_model:self.processor=BPEProcessor(bpe_model,code)
+        else:raise RuntimeError('No supported tokenizer found in '+str(directory))
         self.translator=ctranslate2.Translator(str(model.parent),device='cpu',compute_type='int8',inter_threads=1,intra_threads=4)
         self.cache={}
 
