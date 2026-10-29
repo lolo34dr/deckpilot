@@ -56,7 +56,7 @@ DeckPilot  configura macropads compatíveis com o Arduino Leonardo que já envia
 - **Calibração guiada:**  identificar todos 12  botões físicos sem religar o seu macropad.
 - **Recolhedor de aplicativos instalado:**  procurar Iniciar atalhos de menu e o catálogo de aplicativos do Windows, incluindo entradas da Microsoft Store. A seleção manual de arquivos permanece disponível.
 - **Acções personalizadas:**  lançar aplicativos, abrir pastas ou sites, enviar atalhos e controlar mídia.
-- **Chaves livres:**  Mantenha F13–F24 disponível para atalhos configurados diretamente em um jogo ou outra aplicação.
+- **Teclas livres:**  Mantenha F13–F24 disponível para atalhos configurados diretamente em um jogo ou outra aplicação.
 - **Perfis locais:**  criar, duplicar, renomear, excluir e selecionar perfis. Calibração é compartilhada entre perfis.
 - **Perfis prontos:**  comece com modelos de Música, Produtividade ou Criação, depois personalize-os. Mude para um perfil específico, próximo ou anterior a partir de uma chave física.
 - **Edição mais rápida:**  copiar/cortar/colar/repor teclas completas, gravar atalhos de teclado, escolher cores de acento de teclas e desfazer alterações.
@@ -102,7 +102,7 @@ O executável de arquivo único extrai suas dependências empacotadas no cache .
 
 |  Acção |  Comportamento |
 | --- | --- |
-|  Chave livre |  Passa por F13–F24 normalmente. Atribua-o diretamente em seu jogo ou aplicação. |
+| Tecla livre |  Passa por F13–F24 normalmente. Atribua-o diretamente em seu jogo ou aplicação. |
 |  Aplicação |  Lança uma aplicação instalada ou um programa ou atalho manualmente seleccionado. |
 |  Pasta |  Abre uma pasta no Windows Explorer. |
 |  Sítio Web |  Abre um endereço HTTP ou HTTPS em seu navegador padrão. |

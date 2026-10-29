@@ -56,7 +56,7 @@ DeckPilot konfiguriert Arduino Leonardo-kompatible Makropads, die bereits senden
 - **Geführte Kalibrierung:** Kennzeichnen Sie alle 12 physische Tasten, ohne Ihr Makropad neu zu verkabeln.
 - **Installierter Application Picker:** Suchen Sie nach Startmenükürzeln und dem Windows-Anwendungskatalog, einschließlich Microsoft Store-Einträgen. Die manuelle Dateiauswahl bleibt verfügbar.
 - **Zollverfahren:** Anwendungen starten, Ordner oder Websites öffnen, Verknüpfungen senden und Medien steuern.
-- **Freie Schlüssel:** Halten Sie F13-F24 für Verknüpfungen verfügbar, die direkt in einem Spiel oder einer anderen Anwendung konfiguriert sind.
+- **Freie Tasten:** Halten Sie F13-F24 für Verknüpfungen verfügbar, die direkt in einem Spiel oder einer anderen Anwendung konfiguriert sind.
 - **Lokale Profile:** Profile erstellen, duplizieren, umbenennen, löschen und auswählen.
 - **Fertige Profile:** Beginnen Sie mit Musik-, Produktivitäts- oder Erstellungsvorlagen und passen Sie sie dann an. Wechseln Sie von einem physischen Schlüssel zu einem bestimmten, nächsten oder vorherigen Profil.
 - **Schnellere Bearbeitung:** Kopieren / Schneiden / Einfügen / Zurücksetzen vollständiger Tasten, Tastenkombinationen aufzeichnen, Akzentfarben auswählen und Änderungen rückgängig machen.
@@ -102,7 +102,7 @@ Die ausführbare Einzeldatei extrahiert ihre gebündelten Abhängigkeiten beim e
 
 | Aktion | Verhalten |
 | --- | --- |
-| Freier Schlüssel | Führt F13-F24 normal durch und weist es direkt in Ihrem Spiel oder Ihrer Anwendung zu. |
+| Freie Taste | Führt F13-F24 normal durch und weist es direkt in Ihrem Spiel oder Ihrer Anwendung zu. |
 | Antragstellung | Startet eine installierte Anwendung oder ein manuell ausgewähltes Programm oder eine Verknüpfung. |
 | Ordner | Öffnet einen Ordner im Windows Explorer. |
 | Website | Öffnet eine HTTP- oder HTTPS-Adresse in Ihrem Standardbrowser. |

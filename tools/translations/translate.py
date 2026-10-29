@@ -69,7 +69,7 @@ def clean_prose(text,language):
         text=re.sub(r'touches? gratuites?',lambda m:'touches libres' if m[0].lower().startswith('touches') else 'touche libre',text,flags=re.I)
         text=text.replace('redynamiser','recâbler').replace("Récupérateur d'application installé",'Sélecteur d’applications installées').replace('Fonctionnement de fond','Fonctionnement en arrière-plan')
     replacements={
-      'de': [('Kostenlose Tasten','Freie Tasten'),('Kostenlose Taste','Freie Taste')],
+      'de': [('Freie Schlüssel','Freie Tasten'),('Freier Schlüssel','Freie Taste'),('Kostenlose Tasten','Freie Tasten'),('Kostenlose Taste','Freie Taste')],
       'es': [('Teclas gratuitas','Teclas libres'),('Tecla gratuita','Tecla libre')],
       'it': [('Tasti gratuiti','Tasti liberi'),('Tasto gratuito','Tasto libero')],
       'pt-BR': [('Teclas gratuitas','Teclas livres'),('Tecla gratuita','Tecla livre')],
@@ -97,6 +97,20 @@ def repair_markdown(source,language):
         line=''.join(pieces)
         line=re.sub(r'^(#{1,6})[ \t]+',r'\1 ',line)
         lines.append(line)
+    if '<a id="features"></a>' in source and '<a id="configure-a-key"></a>' in source:
+        in_features=False;features=0;first_table=False
+        for index,line in enumerate(lines):
+            if line=='<a id="features"></a>':in_features=True
+            if line=='<a id="getting-started"></a>':in_features=False
+            if in_features and line.startswith('- **'):
+                features+=1
+                if features==4:lines[index]=re.sub(r'^- \*\*.*?\*\*','- **'+FREE_KEYS[language][1]+':**',line,count=1)
+            if not first_table and re.fullmatch(r'\|[ |:\-]+\|',line):
+                cells=lines[index+1].split('|')
+                if len(cells)>=4:
+                    cells[1]=' '+FREE_KEYS[language][0]+' '
+                    lines[index+1]='|'.join(cells)
+                first_table=True
     result='\n'.join(lines)+'\n'
     if re.findall(r'```[\s\S]*?```',source)!=re.findall(r'```[\s\S]*?```',result):raise RuntimeError('Repair changed code')
     if re.findall(r'`[^`\n]+`',source)!=re.findall(r'`[^`\n]+`',result):raise RuntimeError('Repair changed inline code')
