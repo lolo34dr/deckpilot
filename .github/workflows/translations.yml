@@ -39,13 +39,17 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: python tools/translations/translate.py prepare
       - name: Translate full README, firmware and all changelogs in 12 languages
+        if: ${{ !contains(github.event.head_commit.message, '[translation-format]') }}
         run: python tools/translations/translate.py all
+      - name: Normalize translated typography
+        run: python tools/translations/translate.py repair
       - name: Publish validated documentation and translated release bodies
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           git pull --ff-only origin main
-          python -c "import shutil; shutil.copytree('/tmp/deckpilot-translated/docs', 'docs', dirs_exist_ok=True)"
+          python -c "import pathlib, shutil; p=pathlib.Path('/tmp/deckpilot-translated/docs'); shutil.copytree(p, 'docs', dirs_exist_ok=True) if p.exists() else None"
+          python tools/translations/translate.py repair
           python tools/translations/translate.py publish
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
@@ -54,6 +58,7 @@ jobs:
           git commit -m 'Update full README and release translations [skip ci]'
           git push origin HEAD:main
       - name: Save translated documents
+        if: ${{ !contains(github.event.head_commit.message, '[translation-format]') }}
         uses: actions/upload-artifact@v6
         with:
           name: full-documentation-translations

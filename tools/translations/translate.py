@@ -1,5 +1,5 @@
 """Translate complete Markdown documents with Argos models; retain executable syntax."""
-import argparse, hashlib, json, os, re, shutil, tempfile, time, urllib.error, urllib.request, zipfile
+import argparse, hashlib, html, json, os, re, shutil, tempfile, time, urllib.error, urllib.request, zipfile
 from pathlib import Path
 
 LANGUAGES = {'fr':'fr','de':'de','es':'es','it':'it','pt-BR':'pt','nl':'nl','pl':'pl','ru':'ru','ja':'ja','ko':'ko','zh-CN':'zh','ar':'ar'}
@@ -49,6 +49,59 @@ PROTECTED=re.compile(r'(`+[^`\n]*`+|!?\[[^\]\n]*\]\([^\)\n]*\)|<[^>]+>|https?://
 UI=['Lancer avec Windows','Firmware du macropad…','Votre macropad','Connexion et diagnostic','Options avancées · fichier et arguments','Tester l’action','Hors ligne','Multimédia','Rechercher une action ou une application','Préférences de l’application','Annuler / Rétablir','Gérer les profils','Microphone Windows','Changer de sortie audio','appui court / appui long','Réduire les animations','Changer de profil','Commandes Windows','Enregistrer un raccourci','Activité récente']
 
 
+
+FREE_KEYS = {
+ 'fr': ('Touche libre','Touches libres'), 'de': ('Freie Taste','Freie Tasten'),
+ 'es': ('Tecla libre','Teclas libres'), 'it': ('Tasto libero','Tasti liberi'),
+ 'pt-BR': ('Tecla livre','Teclas livres'), 'nl': ('Vrije toets','Vrije toetsen'),
+ 'pl': ('Wolny klawisz','Wolne klawisze'), 'ru': ('Свободная клавиша','Свободные клавиши'),
+ 'ja': ('未割り当てキー','未割り当てキー'), 'ko': ('미지정 키','미지정 키'),
+ 'zh-CN': ('未分配按键','未分配按键'), 'ar': ('مفتاح حر','مفاتيح حرة')
+}
+
+def clean_prose(text,language):
+    text=text.replace('▁',' ')
+    text=re.sub(r'&\s+#(\d+)\s*;',r'&#\1;',text)
+    text=html.unescape(text)
+    if language=='fr':
+        text=re.sub(r'\bclés\b','touches',text,flags=re.I)
+        text=re.sub(r'\bclé\b','touche',text,flags=re.I)
+        text=re.sub(r'touches? gratuites?',lambda m:'touches libres' if m[0].lower().startswith('touches') else 'touche libre',text,flags=re.I)
+        text=text.replace('redynamiser','recâbler').replace("Récupérateur d'application installé",'Sélecteur d’applications installées').replace('Fonctionnement de fond','Fonctionnement en arrière-plan')
+    replacements={
+      'de': [('Kostenlose Tasten','Freie Tasten'),('Kostenlose Taste','Freie Taste')],
+      'es': [('Teclas gratuitas','Teclas libres'),('Tecla gratuita','Tecla libre')],
+      'it': [('Tasti gratuiti','Tasti liberi'),('Tasto gratuito','Tasto libero')],
+      'pt-BR': [('Teclas gratuitas','Teclas livres'),('Tecla gratuita','Tecla livre')],
+      'nl': [('Gratis toetsen','Vrije toetsen'),('Gratis toets','Vrije toets')],
+      'pl': [('Darmowe klawisze','Wolne klawisze'),('Darmowy klawisz','Wolny klawisz')],
+      'ru': [('Бесплатные ключи','Свободные клавиши'),('Бесплатная клавиша','Свободная клавиша')],
+      'ja': [('無料キー','未割り当てキー')], 'ko': [('무료 키','미지정 키')],
+      'zh-CN': [('免费按键','未分配按键'),('免费密钥','未分配按键')],
+      'ar': [('مفاتيح مجانية','مفاتيح حرة'),('مفتاح مجاني','مفتاح حر')]
+    }
+    for old,new in replacements.get(language,[]):text=text.replace(old,new)
+    return text
+
+def repair_markdown(source,language):
+    lines=[];fence=False
+    for line in source.splitlines():
+        if line.startswith('```'):fence=not fence;lines.append(line);continue
+        if fence:lines.append(line);continue
+        pieces=re.split(r'(`+[^`\n]*`+)',line)
+        for index in range(0,len(pieces),2):
+            text=clean_prose(pieces[index],language)
+            text=re.sub(r'\*\*(.*?)\*\*',lambda m:'**'+m[1].strip()+'**',text)
+            text=re.sub(r'(?<=\*\*)[^*\n\\]+\\DeckPilot(?=\*\*)',lambda m:'Program Files\\DeckPilot',text)
+            pieces[index]=text
+        line=''.join(pieces)
+        line=re.sub(r'^(#{1,6})[ \t]+',r'\1 ',line)
+        lines.append(line)
+    result='\n'.join(lines)+'\n'
+    if re.findall(r'```[\s\S]*?```',source)!=re.findall(r'```[\s\S]*?```',result):raise RuntimeError('Repair changed code')
+    if re.findall(r'`[^`\n]+`',source)!=re.findall(r'`[^`\n]+`',result):raise RuntimeError('Repair changed inline code')
+    return result
+
 class BPEProcessor:
     """Argos also supplies BPE packages (including Polish), not just SentencePiece."""
     def __init__(self,path,code):
@@ -66,6 +119,7 @@ class BPEProcessor:
 class Engine:
     def __init__(self,language,cache):
         import ctranslate2, sentencepiece
+        self.language=language
         code=LANGUAGES[language]
         index=json.loads(request('https://raw.githubusercontent.com/argosopentech/argospm-index/main/index.json'))
         package=next(p for p in index if p['from_code']=='en' and p['to_code']==code)
@@ -94,6 +148,11 @@ class Engine:
 
     def text(self,text):
         if not text.strip() or not re.search('[A-Za-z]',text):return text
+        value=text.strip()
+        term=value.rstrip(':').lower()
+        if term in ('free key','free keys'):
+            translated=FREE_KEYS[self.language][term=='free keys']+(':' if value.endswith(':') else '')
+            return text[:len(text)-len(text.lstrip())]+translated+text[len(text.rstrip()):]
         if text in self.cache:return self.cache[text]
         if self.collecting:
             self.pending.add(text)
@@ -109,7 +168,7 @@ class Engine:
             translated=' '.join(self.text(c) for c in chunks)
         else:
             result=self.translator.translate_batch([tokens],beam_size=4,max_decoding_length=768)[0]
-            translated=self.processor.decode(result.hypotheses[0])
+            translated=clean_prose(self.processor.decode(result.hypotheses[0]),self.language).strip()
         if not translated.strip():raise RuntimeError('Translation model returned empty prose')
         answer=left+translated+right
         self.cache[text]=answer
@@ -129,7 +188,7 @@ class Engine:
             batch=rows[offset:offset+16]
             results=self.translator.translate_batch([row[1] for row in batch],beam_size=4,max_batch_size=768,batch_type='tokens',max_decoding_length=768)
             for (text,_),result in zip(batch,results):
-                value=self.processor.decode(result.hypotheses[0])
+                value=clean_prose(self.processor.decode(result.hypotheses[0]),self.language).strip()
                 if not value.strip():raise RuntimeError('Translation model returned empty prose')
                 self.cache[text]=text[:len(text)-len(text.lstrip())]+value+text[len(text.rstrip()):]
         self.pending.clear()
@@ -217,9 +276,13 @@ def publish(source):
         with urllib.request.urlopen(req,timeout=60) as response:response.read()
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('command',choices=['prepare','translate','all','publish']);p.add_argument('--language',choices=LANGUAGES);p.add_argument('--source',type=Path,default=Path('/tmp/deckpilot-source'));p.add_argument('--out',type=Path,default=Path('/tmp/deckpilot-translated'));p.add_argument('--cache',type=Path,default=Path('/tmp/deckpilot-models'));a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('command',choices=['prepare','translate','all','repair','publish']);p.add_argument('--language',choices=LANGUAGES);p.add_argument('--source',type=Path,default=Path('/tmp/deckpilot-source'));p.add_argument('--out',type=Path,default=Path('/tmp/deckpilot-translated'));p.add_argument('--cache',type=Path,default=Path('/tmp/deckpilot-models'));a=p.parse_args()
     if a.command=='prepare':prepare(a.source)
     elif a.command=='translate':translate(a.language,a.source,a.out,a.cache)
+    elif a.command=='repair':
+        for lang in LANGUAGES:
+            for file in list(Path('docs/i18n').glob('*.'+lang+'.md'))+list(Path('docs/releases').glob('*/README.'+lang+'.md')):
+                file.write_text(repair_markdown(file.read_text(),lang),encoding='utf-8')
     elif a.command=='all':
         from concurrent.futures import ThreadPoolExecutor
         with ThreadPoolExecutor(max_workers=2) as pool:

@@ -14,18 +14,18 @@
 
 <p align="center">
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest">Скачать последний релиз</a>
-  &nbsp;·&nbsp;
+   · 
   <a href="#getting-started">Начало работы</a>
-  &nbsp;·&nbsp;
+   · 
   <a href="#development">Развитие</a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&amp;color=78b7a0" alt="Последний релиз"></a>
-  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&amp;logo=windows" alt="Скачать для Windows x64"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&color=78b7a0" alt="Последний релиз"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&logo=windows" alt="Скачать для Windows x64"></a>
   <a href="https://github.com/lolo34dr/deckpilot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/lolo34dr/deckpilot?style=flat-square" alt="Лицензия MIT"></a>
   <a href="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml"><img src="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml/badge.svg?branch=main" alt="Статус сборки Windows"></a>
-  <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&amp;color=70a7e8" alt="GitHub скачать"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&color=70a7e8" alt="GitHub скачать"></a>
 </p>
 
 <p align="center">
@@ -56,7 +56,7 @@ DeckPilot Настройка совместимых с Arduino Leonardo макр
 - **Руководящая калибровка:** Определить все 12 Физические кнопки без перезагрузки макропада.
 - **Установочный сборщик приложений:** Поиск меню «Пуск» и каталог приложений Windows, включая записи в Microsoft Store. ручной выбор файлов остается доступным.
 - **Пользовательские действия:** запускать приложения, открывать папки или веб-сайты, отправлять ярлыки и контролировать носители.
-- **Бесплатные ключи:** Сохраняйте F13-F24 доступным для ярлыков, настроенных непосредственно в игре или другом приложении.
+- **Свободные клавиши:** Сохраняйте F13-F24 доступным для ярлыков, настроенных непосредственно в игре или другом приложении.
 - **Местные профили:** создавать, дублировать, переименовывать, удалять и выбирать профили. Калибровка распределяется между профилями.
 - **Готовые профили:** Начните с шаблонов «Музыка», «Производительность» или «Создание», затем настройте их. Переключитесь на конкретный, следующий или предыдущий профиль из физического ключа.
 - **Более быстрое редактирование:** Копировать/вырезать/вставить/перезагрузить полные клавиши, записать ярлыки клавиатуры, выбрать ключевые цвета акцента и отменить изменения.
@@ -80,7 +80,7 @@ DeckPilot Настройка совместимых с Arduino Leonardo макр
 <a id="install-and-launch"></a>
 ### Установка и запуск
 
-1. скачать **[DeckPilot-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** Windows запрашивает разрешение администратора для установки в **Файлы программы\DeckPilot**.
+1. скачать **[DeckPilot-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** Windows запрашивает разрешение администратора для установки в **Program Files\DeckPilot**.
 2. Инсталлятор добавляет DeckPilot В Windows **Установка приложений**, создает ярлык меню «Пуск» и по умолчанию выбирает ярлык рабочего стола и параметры запуска Windows. Вы можете отключить эти дополнительные задачи.
 3. Подключите макропаду и откройте DeckPilot от его короткого пути.
 4. Следуйте калибровке слева направо поперек **Четыре колонны**Затем следующий ряд, для **три ряда**Каждая кнопка должна посылать другой ключ F13-F24.

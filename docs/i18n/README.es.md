@@ -14,18 +14,18 @@
 
 <p align="center">
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest">Descargar la última versión</a>
-  &nbsp;·&nbsp;
+   · 
   <a href="#getting-started">Comienzo</a>
-  &nbsp;·&nbsp;
+   · 
   <a href="#development">Desarrollo</a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&amp;color=78b7a0" alt="Última publicación"></a>
-  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&amp;logo=windows" alt="Descargar para Windows x64"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&color=78b7a0" alt="Última publicación"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&logo=windows" alt="Descargar para Windows x64"></a>
   <a href="https://github.com/lolo34dr/deckpilot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/lolo34dr/deckpilot?style=flat-square" alt="Licencia MIT"></a>
   <a href="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml"><img src="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml/badge.svg?branch=main" alt="estado de construcción de Windows"></a>
-  <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&amp;color=70a7e8" alt="Descarga de descargas de GitHub"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&color=70a7e8" alt="Descarga de descargas de GitHub"></a>
 </p>
 
 <p align="center">
@@ -56,7 +56,7 @@ DeckPilot configura Arduino Leonardo-compatible macropads que ya envía **F13-F2
 - **Calibración guiada:** Identificar todos 12 botones físicos sin cambiar el macropado.
 - **Picker de aplicación instalado:** búsqueda Iniciar atajos de menú y el catálogo de aplicaciones de Windows, incluyendo entradas de Microsoft Store. La selección manual de archivos sigue disponible.
 - **Acciones personalizadas:** aplicaciones de lanzamiento, carpetas abiertas o sitios web, enviar atajos y medios de control.
-- **Teclas gratuitas:** Mantenga F13–F24 disponible para atajos configurados directamente en un juego u otra aplicación.
+- **Teclas libres:** Mantenga F13–F24 disponible para atajos configurados directamente en un juego u otra aplicación.
 - **Perfiles locales:** crear, duplicar, renombrar, eliminar y seleccionar perfiles. La calibración se comparte a través de perfiles.
 - **Perfiles listos:** empezar con plantillas de música, productividad o creación, a continuación, personalizarlas. Cambiar a un perfil específico, próximo o anterior de una clave física.
 - **Edición más rápida:** copy/cut/paste/reset teclas completas, atajos de teclado para grabar, elegir colores de acento clave, y deshacer cambios.
@@ -80,7 +80,7 @@ Las descargas publicadas incluyen el tiempo de ejecución .NET. **Usted no neces
 <a id="install-and-launch"></a>
 ### Instalación y lanzamiento
 
-1. Descargar **[DeckPilot-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** y ejecutar el instalador. Windows pide permiso de administrador para instalar **Archivos del programa\DeckPilot**.
+1. Descargar **[DeckPilot-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** y ejecutar el instalador. Windows pide permiso de administrador para instalar **Program Files\DeckPilot**.
 2. El instalador añade DeckPilot a Windows **Aplicaciones instaladas**, crea un atajo de menú Inicio, y selecciona las opciones de inicio de escritorio y Windows por defecto. Puede deseleccionar estas tareas opcionales.
 3. Conecta tu macropado y abre DeckPilot de su atajo.
 4. Siga la calibración de izquierda a derecha a través **cuatro columnas**, entonces la siguiente fila, para **tres filas**. Cada botón debe enviar una tecla F13-F24 diferente.

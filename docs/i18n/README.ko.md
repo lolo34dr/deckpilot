@@ -14,18 +14,18 @@
 
 <p align="center">
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest">최신 버전 다운로드</a>
-  &nbsp;·&nbsp;
+   · 
   <a href="#getting-started">시작하기</a>
-  &nbsp;·&nbsp;
+   · 
   <a href="#development">(주)디지</a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&amp;color=78b7a0" alt="최근 출시"></a>
-  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&amp;logo=windows" alt="다운로드 Windows x64"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&color=78b7a0" alt="최근 출시"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&logo=windows" alt="다운로드 Windows x64"></a>
   <a href="https://github.com/lolo34dr/deckpilot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/lolo34dr/deckpilot?style=flat-square" alt="MIT 라이센스"></a>
   <a href="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml"><img src="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml/badge.svg?branch=main" alt="Windows 빌드 상태"></a>
-  <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&amp;color=70a7e8" alt="GitHub 릴리스 다운로드"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&color=70a7e8" alt="GitHub 릴리스 다운로드"></a>
 </p>
 
 <p align="center">
@@ -56,7 +56,7 @@ DeckPilot 이미 보낼 Arduino Leonardo-compatible macropads 구성 **F13–F24
 - **Guided 구경측정:** 모두 보기 12 당신의 macropad를 rewiring 없이 육체적인 단추.
 - **설치된 신청 피커:** Microsoft Store 항목을 포함한 시작 메뉴 단축키 및 Windows 응용 카탈로그를 검색하십시오. 수동 파일 선택은 사용할 수 있습니다.
 - **공급 능력:** 응용 프로그램, 열린 폴더 또는 웹 사이트, 단축키를 보내고, 미디어를 제어합니다.
-- **무료 키:** F13–F24는 게임이나 다른 응용 프로그램에 직접 구성된 단축키에 사용할 수 있습니다.
+- **미지정 키:** F13–F24는 게임이나 다른 응용 프로그램에 직접 구성된 단축키에 사용할 수 있습니다.
 - **현지 프로필:** create, duplicate, rename, delete, and select profiles. 교정은 프로파일을 통해 공유됩니다.
 - **준비된 단면도:** Music, Productivity 또는 Creation Templates로 시작하면 사용자 정의 할 수 있습니다. 물리적 키에서 특정, 다음 또는 이전 프로파일로 전환하십시오.
 - **빠른 편집:** 복사/cut/paste/reset 완전한 열쇠, 기록적인 키보드 단축키는, 열쇠 악센트 색깔을 선택하고, undo 변화합니다.
@@ -80,7 +80,7 @@ DeckPilot 이미 보낼 Arduino Leonardo-compatible macropads 구성 **F13–F24
 <a id="install-and-launch"></a>
 ### 설치 및 실행
 
-1. 지원하다 **[갑판Pilot-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** 설치 프로그램을 실행합니다. Windows는 관리자 권한이 설치되도록 요청합니다. **프로그램 Files\DeckPilot**.
+1. 지원하다 **[갑판Pilot-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** 설치 프로그램을 실행합니다. Windows는 관리자 권한이 설치되도록 요청합니다. **Program Files\DeckPilot**.
 2. installer 추가 DeckPilot Windows로 **앱 설치**, 시작 메뉴 단축키를 생성하고 기본으로 데스크탑 단축키 및 Windows 시작 옵션을 선택합니다. 이 옵션 작업을 선택 할 수 있습니다.
 3. 매크로패드를 연결하고 엽니다. DeckPilot 그것의 단축키에서.
 4. 왼쪽에서 오른쪽으로 캘리브레이션 **4개의 란**, 다음 행을 위해 **3개의 줄**. 각 단추는 다른 F13–F24 열쇠를 보내야 합니다.
@@ -102,7 +102,7 @@ Single-file executable은 사용자의 .NET 캐시에 묶인 의존성을 추출
 
 | ᄋᄋᄋᄋ | 뚱 베어 |
 | --- | --- |
-| 무료 키 | 일반적으로 F13–F24를 통과합니다. 게임이나 응용 프로그램에 직접 할당하십시오. |
+| 미지정 키 | 일반적으로 F13–F24를 통과합니다. 게임이나 응용 프로그램에 직접 할당하십시오. |
 | 제품 설명 | 설치된 응용 프로그램 또는 수동 선택된 프로그램 또는 단축키를 시작합니다. |
 | 뚱 베어 | Windows Explorer의 폴더를 엽니다. |
 | 웹 사이트 | 기본 브라우저에서 HTTP 또는 HTTPS 주소를 엽니다. |
@@ -111,7 +111,7 @@ Single-file executable은 사용자의 .NET 캐시에 묶인 의존성을 추출
 
 애플리케이션 동작을 위해, 애플리케이션 선택기를 열고 이름을 검색합니다. 수동 파일 선택기는 고급 옵션에서 옵션 프로그램 인수와 함께 사용할 수 있습니다. 대상 애플리케이션의 구문에 따라 인수를 입력하십시오.
 
-버튼 트리거를 해제 할 때까지 한 번만 구성 된 동작을 유지. 무료 키 모드에서, 일반 키보드 반복 이벤트는 사용할 수 있습니다.
+버튼 트리거를 해제 할 때까지 한 번만 구성 된 동작을 유지. 미지정 키 모드에서, 일반 키보드 반복 이벤트는 사용할 수 있습니다.
 
 <a id="manage-profiles"></a>
 ### 자주 묻는 질문
@@ -239,7 +239,7 @@ Windows ARM64의 경우, 별도로 게시 `-r win-arm64` 대상 기계에 대한
 레오나르도 연결:
 
 - 모든 것 12 중재 F13–F24 주문의 위치. 중복 키가 거부되고 취소 이전 매핑을 보존합니다.
-- 게임에서 무료 키를 할당하고 게임이 정상적으로받을 수 있는지 확인하십시오.
+- 게임에서 미지정 키를 할당하고 게임이 정상적으로받을 수 있는지 확인하십시오.
 - 설정된 프로그램을 실행한 다음 버튼을 누른다: 한 번 릴리스 될 때까지 실행해야 한다. 공백과 옵션 인수를 포함하는 경로 포함.
 - 폴더를 테스트, 웹 사이트, 정규 응용 프로그램에서 단축키, 및 미디어 컨트롤.
 - F13–F24를 단축키 작업을 통해 보내고 반복이 없다는 것을 확인합니다. DeckPilot 작업.
