@@ -13,85 +13,49 @@ concurrency:
   group: documentation-translations
   cancel-in-progress: true
 permissions:
-  contents: read
+  contents: write
 jobs:
-  source:
+  documentation:
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          ref: main
-      - name: Snapshot full README and all published release notes
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: python3 tools/translations/translate.py prepare --source /tmp/deckpilot-source
-      - uses: actions/upload-artifact@v6
-        with:
-          name: translation-source
-          path: /tmp/deckpilot-source
-          if-no-files-found: error
-  translate:
-    needs: source
-    runs-on: ubuntu-24.04
-    timeout-minutes: 60
-    strategy:
-      fail-fast: false
-      max-parallel: 4
-      matrix:
-        language: [fr, de, es, it, pt-BR, nl, pl, ru, ja, ko, zh-CN, ar]
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          ref: main
-      - uses: actions/setup-python@v6
-        with:
-          python-version: '3.11'
-      - uses: actions/download-artifact@v7
-        with:
-          name: translation-source
-          path: /tmp/deckpilot-source
-      - uses: actions/cache@v5
-        with:
-          path: /tmp/deckpilot-models
-          key: deckpilot-argos-${{ matrix.language }}-v1
-      - name: Install local neural translation runtime
-        run: python -m pip install ctranslate2==4.6.0 sentencepiece==0.2.0 sacremoses==0.1.1 subword-nmt==0.3.8
-      - name: Translate every README section and every published changelog
-        run: python tools/translations/translate.py translate --language '${{ matrix.language }}'
-      - uses: actions/upload-artifact@v6
-        with:
-          name: translated-${{ matrix.language }}
-          path: /tmp/deckpilot-translated
-          if-no-files-found: error
-  publish:
-    needs: translate
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: write
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v5
         with:
           ref: main
           fetch-depth: 0
-      - uses: actions/download-artifact@v7
+      - uses: actions/setup-python@v6
         with:
-          name: translation-source
-          path: /tmp/deckpilot-source
-      - uses: actions/download-artifact@v7
+          python-version: '3.11'
+      - uses: actions/cache@v5
         with:
-          pattern: translated-*
-          merge-multiple: true
-          path: .
-      - name: Publish translated notes for existing releases
+          path: /tmp/deckpilot-models
+          key: deckpilot-argos-all-v1
+          restore-keys: deckpilot-argos-
+      - name: Install neural translation runtime
+        run: python -m pip install ctranslate2==4.6.0 sentencepiece==0.2.0 sacremoses==0.1.1 subword-nmt==0.3.8
+      - name: Snapshot complete documentation and every published release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python3 tools/translations/translate.py publish --source /tmp/deckpilot-source
-      - name: Save complete translated documentation
+        run: python tools/translations/translate.py prepare
+      - name: Translate full README, firmware and all changelogs in 12 languages
+        run: python tools/translations/translate.py all
+      - name: Publish validated documentation and translated release bodies
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
+          git pull --ff-only origin main
+          python -c "import shutil; shutil.copytree('/tmp/deckpilot-translated/docs', 'docs', dirs_exist_ok=True)"
+          python tools/translations/translate.py publish
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add docs/i18n docs/releases
           if git diff --cached --quiet; then exit 0; fi
           git commit -m 'Update full README and release translations [skip ci]'
           git push origin HEAD:main
+      - name: Save translated documents
+        uses: actions/upload-artifact@v6
+        with:
+          name: full-documentation-translations
+          path: /tmp/deckpilot-translated
+          if-no-files-found: error
