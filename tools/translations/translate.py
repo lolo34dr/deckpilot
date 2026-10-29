@@ -33,6 +33,8 @@ def prepare(out):
     out.mkdir(parents=True,exist_ok=True)
     source=Path('README.md').read_bytes()
     (out/'README.md').write_bytes(source)
+    firmware=Path('firmware/README.md').read_bytes()
+    (out/'firmware.md').write_bytes(firmware)
     notes=[]
     for r in releases():
         tag=r['tag_name']
@@ -40,7 +42,7 @@ def prepare(out):
         body=(r['body'] or '').partition(MARKER)[0].rstrip()
         notes.append({'tag':tag,'body':body,'id':r['id']})
     (out/'releases.json').write_text(json.dumps(notes,ensure_ascii=False),encoding='utf-8')
-    (out/'manifest.json').write_text(json.dumps({'readme_sha256':hashlib.sha256(source).hexdigest()}))
+    (out/'manifest.json').write_text(json.dumps({'readme_sha256':hashlib.sha256(source).hexdigest(),'firmware_sha256':hashlib.sha256(firmware).hexdigest()}))
 
 # Markdown controls, exact code, URLs, link destinations and existing French UI labels.
 PROTECTED=re.compile(r'(`+[^`\n]*`+|!?\[[^\]\n]*\]\([^\)\n]*\)|<[^>]+>|https?://[^\s<>]+|\*\*|\*|\||&[a-zA-Z#0-9]+;)')
@@ -125,19 +127,27 @@ def translate(language,source,out,cache):
     original=original.replace('src="deckpilot','src="../../deckpilot')
     original=original.replace('href="README.md"','href="../../README.md"')
     original=re.sub(r'href="docs/i18n/(README\.[^"]+)"',r'href="\1"',original)
-    original=original.replace('](LICENSE)','](../../LICENSE)').replace('](firmware/README.md)','](../../firmware/README.md)')
+    original=original.replace('](LICENSE)','](../../LICENSE)').replace('](firmware/README.md)',f'](FIRMWARE.{language}.md)')
     notice=engine.text('This is an automatic translation of the complete README. The English original is the reference. Application interface labels and commands are preserved exactly.')
     translated=engine.markdown(original,True)
     (dest/f'README.{language}.md').write_text('> '+notice+'\n\n'+translated,encoding='utf-8')
+    if (source/'firmware.md').exists():
+        firmware=(source/'firmware.md').read_text()
+        firmware=re.sub(r'(\]\()([^):#]+)(\))',lambda m:m[1]+'../../firmware/'+m[2]+m[3],firmware)
+        note=engine.text('This is an automatic translation of the complete firmware documentation. The English original is the reference. Commands and identifiers are preserved exactly.')
+        (dest/f'FIRMWARE.{language}.md').write_text('> '+note+'\n\n'+engine.markdown(firmware,True),encoding='utf-8')
+    release_notice=engine.text('This is an automatic translation of the complete release notes. The English original is the reference.')
     for release in json.loads((source/'releases.json').read_text()):
         directory=out/'docs/releases'/release['tag'];directory.mkdir(parents=True,exist_ok=True)
         body=release['body']
-        (directory/f'README.{language}.md').write_text('> '+notice+'\n\n'+engine.markdown(body) if body else engine.text('No release notes were provided.')+'\n',encoding='utf-8')
+        (directory/f'README.{language}.md').write_text('> '+release_notice+'\n\n'+engine.markdown(body) if body else engine.text('No release notes were provided.')+'\n',encoding='utf-8')
     print(f'Completed {language}: full README and all published release notes',flush=True)
 
 def publish(source):
     expected=json.loads((source/'manifest.json').read_text())['readme_sha256']
     if hashlib.sha256(Path('README.md').read_bytes()).hexdigest()!=expected:raise RuntimeError('README changed during translation; rerun against current source')
+    manifest=json.loads((source/'manifest.json').read_text())
+    if 'firmware_sha256' in manifest and hashlib.sha256(Path('firmware/README.md').read_bytes()).hexdigest()!=manifest['firmware_sha256']:raise RuntimeError('Firmware documentation changed during translation')
     for release in json.loads((source/'releases.json').read_text()):
         directory=Path('docs/releases')/release['tag'];directory.mkdir(parents=True,exist_ok=True)
         (directory/'README.en.md').write_text(release['body']+'\n',encoding='utf-8')
