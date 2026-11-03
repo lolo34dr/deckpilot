@@ -66,6 +66,19 @@ jobs:
       - name: Verify Atelier installation, launch, upgrade and uninstall
         shell: powershell
         run: ./tests/windows-factory-installer-smoke.ps1 -Installer artifacts/installer/DeckPilot-Atelier-Setup.exe
+      - name: Save Atelier startup diagnostics
+        if: always()
+        shell: pwsh
+        run: |
+          $source = Join-Path $env:LOCALAPPDATA 'DeckPilotFactory/startup-errors.log'
+          if (Test-Path $source) { New-Item -ItemType Directory -Force artifacts/factory-smoke | Out-Null; Copy-Item $source artifacts/factory-smoke/startup-errors.log -Force }
+      - name: Upload Atelier startup diagnostics
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: Atelier-startup-diagnostics-${{ github.run_id }}
+          path: artifacts/factory-smoke/startup-errors.log
+          if-no-files-found: ignore
       - name: Verify native update and application picker
         shell: powershell
         run: ./tests/windows-update-smoke.ps1 -Executable artifacts/standalone/DeckPilot.exe

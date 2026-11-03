@@ -1,3 +1,5 @@
+DeckPilot 1.9.5 includes detailed Atelier startup diagnostics in the Windows release check.
+
 DeckPilot 1.9.4 improves the Atelier Windows startup smoke test to report application crash details.
 
 DeckPilot 1.9.3 fixes the Atelier build metadata to read the firmware manifest from the bundled firmware archive.

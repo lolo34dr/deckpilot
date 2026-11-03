@@ -4,6 +4,13 @@ if ($env:GITHUB_ACTIONS -ne 'true') { throw 'This installation test runs only on
 $phase = 'initialize'
 trap {
     $detail = ($phase + ': ' + $_.Exception.Message + ' | ' + $_.ScriptStackTrace).Replace('%','%25').Replace("`r",'%0D').Replace("`n",'%0A')
+    $startupLog = Join-Path $env:LOCALAPPDATA 'DeckPilotFactory/startup-errors.log'
+    if (Test-Path $startupLog) { $detail += ' | Atelier startup log: ' + (Get-Content $startupLog -Raw) }
+    if ($env:GITHUB_STEP_SUMMARY) {
+        $summaryDetail = $phase + ': ' + $_.Exception.Message + ' | ' + $_.ScriptStackTrace
+        if (Test-Path $startupLog) { $summaryDetail += "`n`nAtelier startup log:`n" + (Get-Content $startupLog -Raw) }
+        Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value ("`n## Atelier installer smoke failure`n`n$summaryDetail") -Encoding UTF8
+    }
     Write-Host "::error title=Atelier installer smoke::$detail"
     throw
 }
@@ -75,5 +82,7 @@ try {
 }
 finally {
     foreach ($process in @($app,$updated)) { if ($process -and !$process.HasExited) { Stop-Process -Id $process.Id -Force; $process.WaitForExit() } }
+    $startupLog = Join-Path $env:LOCALAPPDATA 'DeckPilotFactory/startup-errors.log'
+    if (Test-Path $startupLog) { New-Item -ItemType Directory -Force 'artifacts/factory-smoke' | Out-Null; Copy-Item $startupLog 'artifacts/factory-smoke/startup-errors.log' -Force }
     if (Test-Path $uninstaller) { Start-Process $uninstaller -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART' -Wait }
 }
