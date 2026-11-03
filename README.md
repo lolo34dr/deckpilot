@@ -372,4 +372,6 @@ The Atelier release check now reports startup diagnostics if Windows fails to op
 
 DeckPilot 1.9.6 fixes Atelier's Windows DPI manifest so the installed application launches correctly on Windows 10 and 11.
 
+DeckPilot 1.9.7 fixes uninstalling Atelier while it is running. The Windows release test also verifies launch, in-place update and uninstall.
+
 Validation covers legacy settings, accent validation, profile navigation and reference remapping, portable templates, native Windows template/undo/redo and profile switching, shortcut recording, copy/paste/reset, settings persistence, installation/update, layout resizing and an actual UI capture. Hardware-specific behavior still requires the macropad and audio devices on a Windows PC.
