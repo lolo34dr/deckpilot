@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>../DeckPilot.Windows/Assets/DeckPilot.ico</ApplicationIcon>
-    <AssemblyName>DeckPilot.Factory</AssemblyName><Version>1.0.2</Version>
+    <AssemblyName>DeckPilot.Factory</AssemblyName><Version>1.0.3</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.IO.Ports" Version="8.0.0" />

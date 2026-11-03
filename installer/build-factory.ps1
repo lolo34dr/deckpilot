@@ -5,10 +5,17 @@ $resolvedProject = (Resolve-Path $project).Path
 [xml]$factoryProject = Get-Content $resolvedProject -Raw
 $factoryVersion = $factoryProject.Project.PropertyGroup.Version
 if (!$factoryVersion) { throw "Factory application version is missing from $resolvedProject." }
-$firmwareManifestPath = Join-Path (Get-Location) 'artifacts/firmware/manifest.json'
-if (!(Test-Path $firmwareManifestPath)) { throw "Firmware manifest is missing: $firmwareManifestPath" }
-$firmwareManifest = Get-Content $firmwareManifestPath -Raw | ConvertFrom-Json
-if (!$firmwareManifest.Version) { throw "Firmware version is missing from $firmwareManifestPath." }
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+$firmwareArchivePath = (Resolve-Path 'artifacts/firmware/DeckPilot-firmware.zip').Path
+$firmwareArchive = [IO.Compression.ZipFile]::OpenRead($firmwareArchivePath)
+try {
+    $manifestEntry = $firmwareArchive.GetEntry('manifest.json')
+    if (!$manifestEntry -or $manifestEntry.Length -gt 4096) { throw "Firmware manifest is missing or invalid in $firmwareArchivePath." }
+    $manifestReader = [IO.StreamReader]::new($manifestEntry.Open())
+    try { $firmwareManifest = $manifestReader.ReadToEnd() | ConvertFrom-Json }
+    finally { $manifestReader.Dispose() }
+} finally { $firmwareArchive.Dispose() }
+if (!$firmwareManifest.Version) { throw "Firmware version is missing from $firmwareArchivePath." }
 Write-Host "Publishing DeckPilot Atelier $factoryVersion with firmware $($firmwareManifest.Version)..."
 if (Test-Path $output) { Remove-Item -Recurse -Force $output }
 dotnet publish $resolvedProject -c Release -r win-x64 --self-contained true -p:RequireFirmwareBundle=true -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o $output
