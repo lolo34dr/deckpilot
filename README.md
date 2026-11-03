@@ -370,4 +370,6 @@ Version 1.9.3 corrects how the Windows package reads the included firmware versi
 
 The Atelier release check now reports startup diagnostics if Windows fails to open its installed window.
 
+DeckPilot 1.9.6 fixes Atelier's Windows DPI manifest so the installed application launches correctly on Windows 10 and 11.
+
 Validation covers legacy settings, accent validation, profile navigation and reference remapping, portable templates, native Windows template/undo/redo and profile switching, shortcut recording, copy/paste/reset, settings persistence, installation/update, layout resizing and an actual UI capture. Hardware-specific behavior still requires the macropad and audio devices on a Windows PC.
