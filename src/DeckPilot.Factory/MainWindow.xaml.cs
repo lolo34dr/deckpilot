@@ -19,7 +19,9 @@ public partial class MainWindow : Window
     private readonly int[] pinForPhysical = Enumerable.Repeat(-1, 12).ToArray();
     private readonly List<string> events = [];
     private readonly DispatcherTimer scanTimer = new() { Interval = TimeSpan.FromSeconds(2) };
-    private bool scanning, flashBusy, testBusy, held, fail, firmwareAvailable;
+    private readonly FactoryUpdateService updateService = new();
+    private readonly CancellationTokenSource lifetime = new();
+    private bool scanning, flashBusy, testBusy, held, fail, firmwareAvailable, updateChecking;
     private int physicalIndex, stage, heldPin = -1, previousMask;
     private long pressedAt;
     private CancellationTokenSource? testCancellation;
@@ -28,6 +30,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        AppVersionLabel.Text = "Atelier " + FactoryUpdateService.CurrentVersion.ToString(3);
         DeviceCombo.ItemsSource = devices;
         BuildKeyGrid();
         FirmwareManifest? manifest = null;
@@ -36,7 +39,8 @@ public partial class MainWindow : Window
         if (manifest == null) { FlashStatus.Text = "Firmware non inclus. Réinstalle cette application depuis un installeur officiel."; FlashButton.IsEnabled = false; }
         scanTimer.Tick += async (_, _) => await RefreshDevicesAsync(); scanTimer.Start();
         Loaded += async (_, _) => await RefreshDevicesAsync();
-        Closing += (_, _) => { scanTimer.Stop(); testCancellation?.Cancel(); };
+        Loaded += async (_, _) => await CheckUpdatesAsync(manual: false);
+        Closing += (_, _) => { IsClosing = true; lifetime.Cancel(); scanTimer.Stop(); testCancellation?.Cancel(); updateService.Dispose(); lifetime.Dispose(); };
     }
 
     private void BuildKeyGrid()
@@ -77,6 +81,39 @@ public partial class MainWindow : Window
         var device = DeviceCombo.SelectedItem as FactoryDevice;
         FlashButton.IsEnabled = device != null && firmwareAvailable && !flashBusy;
         if (device != null) FlashStatus.Text = device.Bootloader ? "Bootloader Caterina prêt. Le firmware peut être installé." : "Carte Leonardo détectée. L’application redémarrera la carte en mode bootloader avant le flash.";
+    }
+
+    private async void CheckUpdates_Click(object sender, RoutedEventArgs e) => await CheckUpdatesAsync(manual: true);
+
+    private async Task CheckUpdatesAsync(bool manual)
+    {
+        if (updateChecking || IsClosing) return;
+        if (flashBusy || testBusy)
+        {
+            if (manual) MessageBox.Show(this, "Termine le flash ou le test en cours avant de mettre à jour Atelier.", "Opération USB en cours", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+        updateChecking = true; UpdateButton.IsEnabled = false; UpdateButton.Content = "Recherche…";
+        try
+        {
+            var manifest = FactoryHardware.BundleInfo() ?? throw new IOException("Firmware inclus absent.");
+            var release = await updateService.CheckAsync(Version.Parse(manifest.Version), lifetime.Token);
+            if (IsClosing) return;
+            if (release == null)
+            {
+                UpdateButton.ToolTip = "DeckPilot Atelier et le firmware inclus sont à jour.";
+                if (manual) MessageBox.Show(this, "DeckPilot Atelier et son firmware inclus sont à jour.", "Mise à jour", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            var prompt = new UpdatePromptWindow(updateService, release, FactoryUpdateService.CurrentVersion, Version.Parse(manifest.Version)) { Owner = this };
+            prompt.ShowDialog();
+        }
+        catch (Exception ex)
+        {
+            UpdateButton.ToolTip = "Impossible de vérifier les mises à jour. Vérifie ta connexion puis réessaie.";
+            if (manual) MessageBox.Show(this, "La vérification des mises à jour a échoué.\n\n" + ex.Message, "Mise à jour indisponible", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+        finally { updateChecking = false; if (!IsClosing) { UpdateButton.IsEnabled = true; UpdateButton.Content = "Vérifier les mises à jour"; } }
     }
 
     private async void FlashButton_Click(object sender, RoutedEventArgs e)
@@ -138,6 +175,12 @@ public partial class MainWindow : Window
                 catch (IOException) when (attempt < 7) { await Task.Delay(400, token); }
             }
             if (info == null) throw new IOException("Le macropad ne répond pas. Vérifie qu’il n’est pas ouvert dans DeckPilot ou un autre outil série.");
+            var bundledFirmware = Version.Parse(FactoryHardware.BundleInfo()!.Version);
+            if (Version.Parse(info.Firmware.Version) < bundledFirmware)
+            {
+                FlashStatus.Text = $"Le firmware de la carte ({info.Firmware.Version}) est ancien. La version {bundledFirmware} est incluse dans Atelier et prête à flasher.";
+                ShowFlashPage(); return;
+            }
             if (info.Protocol != 2 || (info.Capabilities & 2) == 0) throw new IOException("Cette version du firmware ne transmet pas les événements des touches. Installe le firmware inclus dans l’outil Atelier.");
             TestStatus.Text = $"Firmware {info.Firmware.Version} connecté. Appuie brièvement sur la touche physique 01.";
             TestInstructions.Text = "Suis l’ordre des touches sur la grille. Pour chaque touche : appui court, puis maintien long.";
@@ -153,6 +196,18 @@ public partial class MainWindow : Window
     {
         testCancellation?.Cancel(); testCancellation?.Dispose(); testCancellation = null;
         foreach (var key in keys) key.IsEnabled = false;
+    }
+
+    private bool IsClosing { get; set; }
+    public void RequestInstallerExit()
+    {
+        if (flashBusy || testBusy)
+        {
+            FlashStatus.Text = "Une opération USB est en cours. Termine le flash ou le test avant la mise à jour.";
+            TestStatus.Text = "Une mise à jour attend la fin du test en cours.";
+            return;
+        }
+        IsClosing = true; StopTest(); Close();
     }
 
     private void OnTelemetry(BoardTelemetry telemetry) => Dispatcher.BeginInvoke(() => ProcessMask(telemetry.Mask));
