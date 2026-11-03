@@ -1,9 +1,9 @@
->  Esta é uma tradução automática das notas de lançamento completas. O original em inglês é a referência.
+> Esta é uma tradução automática das notas de lançamento completas. O original em inglês é a referência.
 
 Interface mais sobre despejo DeckPilot, Inspirée de la Disposition Stream Deck.
 
 - Palette antracite et gris, tipografia mais compacta e supressão du grand texte d’accueil.
--  Grille de 4 × 3  toca avec pictogrames et bordure de sélection discrète.
+- Grille de 4 × 3 toca avec pictogrames et bordure de sélection discrète.
 - Choix des actions à droite et réglages de la touche sous la grille.
 - Gestion des profils dans un panneau repliable ; calibrage et barre de titure assortis au thème sombre.
 

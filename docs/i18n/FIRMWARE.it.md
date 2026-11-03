@@ -8,7 +8,7 @@ Per la configurazione hardware testata: **Pro Micro ATmega32U4, 5 V / 16 MHz**, 
 <a id="wiring-and-behavior"></a>
 ## Cablaggio e comportamento
 
-Ogni interruttore collega un perno a GND. Le pull-up interne sono abilitate. Perni **2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15, 16** invio **F13 fino a F24** in quell'ordine. 30 Il comportamento della tastiera, i profili di Windows e la calibrazione rimangono compatibili; il rollover della tastiera USB rimane limitato dalla libreria di tastiera di Arduino. Il firmware non introduce le modalità USB per pulsante o i controlli dei media nativi.
+Ogni interruttore collega un perno a GND. Sono abilitate le pull-up interne. **2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15, 16** invio **F13 fino a F24** in quell'ordine. 30 Il comportamento della tastiera, i profili di Windows e la calibrazione rimangono compatibili; il rollover della tastiera USB rimane limitato dalla libreria di tastiera di Arduino. Il firmware non introduce le modalità USB per pulsante o i controlli dei media nativi.
 
 Pinocchina **1** tenuto a GND all'avvio disabilita il funzionamento della tastiera, mantenendo il failsafe originale. Il nucleo USB può ancora supportare l'ingresso del bootloader.
 

@@ -1,8 +1,8 @@
->  Dit is een automatische vertaling van de volledige release notes. Het Engelse origineel is de referentie.
+> Dit is een automatische vertaling van de volledige release notes. Het Engelse origineel is de referentie.
 
-Première version de DeckPilot  vensters inschenken 10/11 x64.
+Première version de DeckPilot vensters inschenken 10/11 x64.
 
-- Interface sombre avec grille de 4  lignes et 3 Colonnes.
+- Interface sombre avec grille de 4 lignes et 3 Colonnes.
 - Kalibreringsguidé des 12 Boutons F13 à F24.
 - Profils manuels et actions: touche libre, application, dossier, site, racourci et multimédia.
 - Zone de notification et démarrage Windows faculteit.

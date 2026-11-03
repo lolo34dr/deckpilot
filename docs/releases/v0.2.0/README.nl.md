@@ -1,6 +1,6 @@
->  Dit is een automatische vertaling van de volledige release notes. Het Engelse origineel is de referentie.
+> Dit is een automatische vertaling van de volledige release notes. Het Engelse origineel is de referentie.
 
- Applications installées, interface affonée et mises à jour automatiques.
+Applications installées, interface affonée et mises à jour automatiques.
 
 - Sélecteur d andere applicaties avec recherche par nom : menu Démarrer et catalogue Windows/Microsoft Store. Le choix manuel d `.exe` Rustbaar.
 - Icônes des applications lorsquêelles sont disponibles, pictogrammen vectoriels et animations discrètes respectant les préférences Windows.

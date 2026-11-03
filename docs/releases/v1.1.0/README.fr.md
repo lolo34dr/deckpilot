@@ -1,9 +1,9 @@
 > Il s'agit d'une traduction automatique des notes de sortie complètes. L'original anglais est la référence.
 
-DeckPilot  peut maintenant installer le micrologiciel sur le macropad Bricolage Pro Micro directement depuis l'application.
+DeckPilot peut maintenant installer le micrologiciel sur le macropad Bricolage Pro Micro directement depuis l'application.
 
 - Nouveau **Firmware du macropad…** dialogue avec la sélection et la confirmation du périphérique avant de clignoter.
--  Logiciels firmware groupés **1.0.0** conserve F13–F24 et ajoute une DeckPilot  réponse d'identité/version sur la série USB.
+- Logiciels firmware groupés **1.0.0** conserve F13–F24 et ajoute une DeckPilot réponse d'identité/version sur la série USB.
 - AVRDUDE groupé: pas d'installation Arduino IDE nécessaire pour les mises à jour normales.
 - Validé firmware checksum et les limites de la mémoire, connexion USB physique correspondant, vérification d'écriture et la vérification de version après flash.
 - Les profils PC existants et le calibrage sont préservés. La mise à jour de l'application ne clignote jamais automatiquement le matériel.

@@ -23,16 +23,16 @@ DECKPILOT|1|promicro-32u4-16mhz|1.1.1
 <a id="install-from-deckpilot"></a>
 ## 설치하기 DeckPilot
 
-1. 공급된 회복 sketch 유지 (`firmware/Original/Original.ino`) 및 복구 옵션으로 작업 Arduino 업로드 설정. RST 및 GND 물리적으로 액세스 유지.
+1. 공급된 회복 sketch 유지 (`firmware/Original/Original.ino`) 및 작업 Arduino 업로드 설정 복구 옵션으로. RST 및 GND 물리적으로 액세스 유지.
 2. Arduino IDE, 시리얼 모니터 및 기타 직렬 도구. 다른 레오나르도 보드를 분리합니다.
-3. ᄋᄋᄋ **Firmware du macropad…**, 정확한 장치를 선택하고 널과 배선을 확인합니다. unidentified 본래 sketch는 급행 확인 후에 단지에 설치될 수 있습니다.
+3. ᄋᄋᄋ **Firmware du macropad…**, 정확한 장치를 선택하고 널과 배선을 확인합니다. unidentified 본래 sketch는 명시한 확인 후에만 설치될 수 있습니다.
 4. 설치를 확인하고 완료 될 때까지 연결된 USB 케이블을 남깁니다. 키보드 작업이 중단됩니다. DeckPilot 펌웨어 대화상자가 열리면서 일반 F13–F24 이벤트는 여전히 Windows에 도달합니다.
 
 펌웨어 및 Windows AVRDUDE 8.0 게시된 앱 내에서 번들됩니다. Arduino IDE 또는 별도의 드라이버 설치가 수행되지 않습니다. DeckPilot. Windows는 이미 소유자의 성공적인 업로드를 위해 한대로 이사회의 USB 직렬 포트를 노출해야합니다. 새로운 펌웨어 버전은 GitHub의 앱 업데이트로 전달됩니다. 앱 업데이트 **아니다.** 자동적으로 플래시 하드웨어. 각 플래시는 확인을 요구합니다.
 
 DeckPilot 체크 SHA-256, 인텔 HEX 기록 체크섬, 재시동력 존재, 오버랩 및 **28672-바이트** 응용 프로그램을 재설정하기 전에 경계. 그것은 런타임과 bootloader 포트에 걸쳐 물리적 USB 위치를 일치, 사용 AVR109 에 57600 baud는, AVRDUDE의 쓰기 검증을 요구하고, 그 후에 실행 펌웨어의 정체성과 버전을 검사합니다. 그것은 신관, EEPROM 또는 부트 로더를 쓰지 않습니다. 레오나르도 IDs만 `2341:8036` / `2A03:8036` 그리고 Caterina `2341:0036` / `2A03:0036` 허용됩니다. Windows가 일치하는 물리적 연결을 제공 할 수 없다면, 깜박임은 포트를 추측하는 것보다 오히려 차단됩니다.
 
-번쩍이는 것은 원자가 아닙니다: 케이블 단선 또는 힘 손실은 신청 굳힌모를 남겨둘 수 있습니다. 자동적인 굳힌모 백업 또는 rollback가 없습니다. 필요한 경우에, Arduino IDE 세트를 가진 본래 sketch를 다시 로드하십시오 **Arduino, 이탈리아**. 널의 bootloader에 따라서, 간접적으로 연결 RST에 GND 두번 임시 bootloader 항구를 노출할지도 모릅니다; 그 항구가 유효하다 동안 올려주기하십시오. 손상된 bootloader는 ISP 기계설비를 요구하고 이 USB updater에 의해 고쳐질 수 없습니다. 다른 널 또는 시계 변종을 쓰지 마십시오.
+번쩍이는 것은 원자가 아닙니다: 케이블 단선 또는 힘 손실은 신청 굳힌모를 남겨둘 수 있습니다. 자동적인 굳힌모 백업 또는 rollback가 없습니다. 필요한 경우에, Arduino IDE 세트를 가진 본래 sketch를 다시 로드하십시오 **Arduino, 이탈리아**. 널의 bootloader에 따라서, 간접적으로 연결 RST에 GND 두번 임시 bootloader 항구를 드러낼지도 모릅니다; 그 항구가 유효하다 동안 올려주기하십시오. 손상된 bootloader는 ISP 기계설비를 요구하고 이 USB updater에 의해 고쳐질 수 없습니다. 다른 널 또는 시계 변종을 쓰지 마십시오.
 
 마지막 완료된 AVRDUDE 프로세스 로그에 저장됩니다 `%LOCALAPPDATA%\DeckPilot\Firmware\last-flash.log`.
 
@@ -49,7 +49,7 @@ dotnet run --project tests/DeckPilot.Checks -c Release --no-build
 
 스크립트 핀 Arduino AVR 코어 **1.8.6**, 키보드 **1.0.6**, 및 상류 AVRDUDE **8.0**. CLI 관리 패키지 사용 Arduino의 패키지 체크섬 검증; AVRDUDE 바이너리 / 소스 아카이브는 SHA-를 명시256 스크립트에 핀. `artifacts/firmware/DeckPilot-firmware.zip` HEX, 표, Windows 도구, 라이센스 및 대응 업스트림 AVRDUDE 소스 아카이브가 포함되어 있습니다. 출판 CI는 번들을 요구합니다. 앱을 실행할 수 없는 일반 개발자 빌드는 플래시할 수 없습니다.
 
-이름 * 12- 버튼 스케치는 데이비드 매디슨 (David Madison)의 적응되었습니다. **Stream 저렴한** 프로젝트, 저작권 2018, MIT. 그것의 통보는 안으로 남아 있습니다 `DeckPilot.ino`. DeckPilot 저장소 MIT 라이선스를 사용할 수 있습니다. **AVRDUDE는 GPL-의 밑에 분리되는 소프트웨어입니다2.0-또는-later**, 그것의 공지/라이센스 및 소스 번들; 저장소 MIT 라이센스는 그 라이센스를 대체하지 않습니다. 참조 https://github.com/avrdudes/avrdude/tree/v8.0 업스트림 빌드 지침 및 의존성 통지.
+이름 * 12-button 스케치는 David Madison 's에서 적용되었습니다. **Stream 저렴한** 프로젝트, 저작권 2018, MIT. 그것의 통보는 안으로 남아 있습니다 `DeckPilot.ino`. DeckPilot 저장소 MIT 라이선스를 사용할 수 있습니다. **AVRDUDE는 GPL-의 밑에 분리되는 소프트웨어입니다2.0-또는-later**, 그것의 공지/라이센스 및 소스 번들; 저장소 MIT 라이센스는 그 라이센스를 대체하지 않습니다. 참조 https://github.com/avrdudes/avrdude/tree/v8.0 업스트림 빌드 지침 및 의존성 통지.
 
 <a id="firmware-111-and-usb-protocol-2"></a>
 ## 회사 소개 1.1.1 및 USB 프로토콜 2
@@ -62,7 +62,7 @@ dotnet run --project tests/DeckPilot.Checks -c Release --no-build
 
 **Arduino IDE의 매뉴얼 업로드를 위해, 종료 DeckPilot 첫 번째 트레이 아이콘에서.** 메인 창을 닫는 것은 숨기므로 연속 연결이 계속됩니다. DeckPilot 또 다른 시리얼 모니터는 동시에 동일한 포트를 사용할 수 없습니다. 또 다른 도구가 이미 포트를 소유하면, 응용 프로그램은 일반 키보드 키에 영향을 미치지 않고 문제와 retries를보고합니다.
 
-새 소식 `DeckPilotProtocol.h` 동일한 구현은 다음과 같습니다. `tests/firmware-protocol.cpp`. 그것은 고정 크기 버퍼를 사용, 경계 입력 처리 및 사용 가능한 USB 전송 공간; 버튼 스캐닝은 호스트를 기다리는 동안 절대 지연되지 않습니다. 최신 종료 버튼 마스크는 역압 아래 석탄입니다. 매크로를 실행하는 명령이 없습니다, EEPROM을 작성, 키보드를 비활성화, 이 진단 프로토콜을 통해 프로파일 또는 플래시 펌웨어를 수정.
+새 소식 `DeckPilotProtocol.h` 동일한 구현은 다음과 같습니다. `tests/firmware-protocol.cpp`. 그것은 고정 크기 버퍼, 경계 입력 처리 및 사용 가능한 USB 전송 공간을 사용; 버튼 스캐닝은 호스트를 기다리는 동안 절대 지연되지 않습니다. 최신 종료 버튼 마스크는 역압 아래 석탄입니다. 매크로를 실행하는 명령이 없습니다, EEPROM을 작성, 키보드를 비활성화, 이 진단 프로토콜을 통해 프로파일 또는 플래시 펌웨어를 수정.
 
 (주) 115200 LF (CRLF는 허용됩니다)를 가진 배드, 선 끝. 세션 토큰은 정확하게 8개의 위문자 hexadecimal 특성을 포함합니다. 모든 수는 불행한 소수입니다. 예:
 

@@ -1,4 +1,4 @@
->  Esta é uma tradução automática das notas de lançamento completas. O original em inglês é a referência.
+> Esta é uma tradução automática das notas de lançamento completas. O original em inglês é a referência.
 
 Première versão de DeckPilot descartar janelas 10/11 x64.
 

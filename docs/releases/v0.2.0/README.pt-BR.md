@@ -1,8 +1,8 @@
->  Esta é uma tradução automática das notas de lançamento completas. O original em inglês é a referência.
+> Esta é uma tradução automática das notas de lançamento completas. O original em inglês é a referência.
 
- Aplicações instalées, interface affinée et mises à jour automatices.
+Aplicações instalées, interface affinée et mises à jour automatices.
 
-- Selecteur d’aplications avec recherche par nom : menu Démarrer et catalog Windows/Microsoft Store. Le choix manuel d’un `.exe`  descansar disponível.
+- Selecteur d’aplications avec recherche par nom : menu Démarrer et catalog Windows/Microsoft Store. Le choix manuel d’un `.exe` descansar disponível.
 - Icônes des applications lorsqu’elles sont disponibles, pictogrames vectoriels et animations discrètes respeitant les préférences Windows.
 - Recherche automatique des versions stables sur GitHub. Une confirmation suffit pour télécharger, vérifier, installer et redémarrer.
 - Verificação SHA-256 e conservation de l’ancien exécutable jusqu’à confirmation du démarrage, avec restauration en cas d’échec.

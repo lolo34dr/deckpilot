@@ -1,9 +1,9 @@
->  Dit is een automatische vertaling van de volledige release notes. Het Engelse origineel is de referentie.
+> Dit is een automatische vertaling van de volledige release notes. Het Engelse origineel is de referentie.
 
 Interface plus sobre pour DeckPilot, inspirée de la disposition Stream Deck.
 
 - Palette antracite et gris, typographie plus compacte et onderdrukking du grand texte d
-- Grille de 4 × 3  raakt avec pictogrammen et bordure de sélection discrète aan.
+- Grille de 4 × 3 raakt avec pictogrammen et bordure de sélection discrète aan.
 - Choix des actions à droite et réglages de la touche sous la grille.
 - Gestion des profils dans un panneau replibel ; calibrage et barre de titre assortis au théme sombre.
 

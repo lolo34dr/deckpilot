@@ -8,7 +8,7 @@
 - ヴェリファイ SHA-256 et 保存 de l'ancien exécutable jusqu'à 確認 du démarrage, avec restauration en cas d'échec.
 - Profils et のキャリブレーション 存在者 conservés。
 
-**デプイス 0.1.x : quittez l’ancienne version près de l’horloge et remplacez l’exécutable une dernière fois manuellement.** ジュア・スイバンテス・セロント・プロポセス・オートマティックメントの誤差。ウチイゼス・ウン・ドシエの人員は、パーメット・ル・リムースを注いでいます。
+**デプイス 0.1.x : quittez l’ancienne version près de l’horloge et remplacez l’exécutable une dernière fois manuellement.** ジュア・スイバンテス・セロント・プロポセス・オートマティックメントの誤差。ウチイゼス・ウン・ドシエの人員は、パーメット・ル・リモプレースメントを注ぐ。
 
 Téléchargez(テレチャージ) **DeckPilot.exeについて** la version autonome, ou を注ぐ **DeckPilot-win-x64.zip は、** le の dossier のコンレットを注いで下さい。 Windows 10/11 x64 ; aucun のランタイム .NET のインストーラ。
 

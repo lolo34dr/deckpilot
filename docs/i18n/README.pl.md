@@ -23,6 +23,7 @@
 <p align="center">
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&color=78b7a0" alt="Najnowsze wydanie"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&logo=windows" alt="Pobierz dla Windows x64"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe"><img src="https://img.shields.io/badge/Download-DeckPilot_Atelier-16856A?style=flat-square&logo=windows" alt="Pobierz Atelier DeckPilot"></a>
   <a href="https://github.com/lolo34dr/deckpilot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/lolo34dr/deckpilot?style=flat-square" alt="Licencja MIT"></a>
   <a href="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml"><img src="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml/badge.svg?branch=main" alt="Stan budowy systemu Windows"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&color=70a7e8" alt="GitHub umożliwia pobieranie plików"></a>
@@ -104,7 +105,7 @@ Pojedynczy plik wykonywalny pobiera swoje powiązane zależności do pamięci po
 | --- | --- |
 | Wolny klawisz | Przesyłki F13- F24 przez normalnie. Przypisz go bezpośrednio w grze lub aplikacji. |
 | Stosowanie | Otwiera zainstalowaną aplikację lub ręcznie wybrany program lub skrót. |
-| Katalog | Otwiera folder w systemie Windows Explorer. |
+| Folder | Otwiera folder w systemie Windows Explorer. |
 | Strona internetowa | Otwiera adres HTTP lub HTTPS w domyślnej przeglądarce. |
 | Skrót klawiszowy | Wysyła kombinację kluczy do aktywnego okna. |
 | Media | Kontroluje odtwarzanie, utwory, głośność lub wyciszenie. |
@@ -132,7 +133,7 @@ Uruchomienie systemu Windows jest domyślnie włączone dla bieżącego użytkow
 
 Picker odczytuje skróty z menu bieżącego użytkownika i systemowego, a następnie uzupełnia je o `Get-StartApps` wyniki z katalogu aplikacji Windows.
 
-Szukaj ignoruje przypadek i akcent. Duplikaty nazwy są zgrupowane, przy czym wpisy w menu Start mają pierwszeństwo. Przenośne aplikacje i programy bez zarejestrowanych skrótów mogą być nadal wybierane ręcznie. Jeśli katalog Windows jest niedostępny, dostępne są czytelne skróty w menu Start.
+Wyszukiwanie ignoruje przypadek i akcent. Duplikaty nazwy są zgrupowane, przy czym pozycje w menu Start mają pierwszeństwo. Przenośne aplikacje i programy bez zarejestrowanych skrótów mogą być nadal wybierane ręcznie. Jeśli katalog Windows jest niedostępny, dostępne są czytelne skróty w menu Start.
 
 Windows uruchamia wybrane skróty. `shell:AppsFolder`. Opcjonalne argumenty odnoszą się do programów opartych na plikach i skrótów; są one ukryte dla wpisów AppsFolder.
 
@@ -282,9 +283,11 @@ Proponowany kredyt:
 <a id="macropad-firmware-updates"></a>
 ## Aktualizacje oprogramowania Macropad
 
-DeckPilot 1.1.0 zawiera **Firmware du macropad…** okno dialogowe i oprogramowanie firmowe 1.0.0 dla Pro Micro ATmega32U4 **5 V / 16 MHz**, przy użyciu konfiguracji Leonardo / Caterina potwierdzonej przez właściciela dziennika wysyłania. Narzędzie do migania w pakiecie Windows nie wymaga Arduino IDE. Wybór urządzenia i potwierdzenie są obowiązkowe; aktualizacje aplikacji nigdy po cichu nie świecą planszą. Istniejące mappingi, profile i kalibracja F13- F24 pozostają kompatybilne.
+Dla przygotowania urządzenia i kontroli jakości warsztatu, zainstalować oddzielny [Atelier DeckPilot](docs/FACTORY.md) narzędzie. Jego instalator jest publikowany jako **[DeckPilot- Atelier- Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** obok aplikacji głównej. Może wyświetlić dołączone oprogramowanie firmowe na desce Leonardo / Caterina, a następnie sprawdzić krótkie i długie prasy na wszystkich 12 klucze fizyczne i eksportować raport.
 
-**Właściciel potwierdził udaną migawkę w aplikacji, oprogramowanie firmowe 1.0.0 identyfikacja i wszystkie 12 przyciski na tablicy odniesienia.** Zachowaj oryginalny szkic i dostęp do RST / GND do odzysku. Nie można automatycznie obracać migawki firmware. Zobacz [dokumentacja firmware](FIRMWARE.pl.md) dla kompatybilności, walidacji, odzyskiwania, budowania kroków i licencji trzeciej strony. Przyciski Per- tryby USB i natywnych kontroli mediów nie są częścią tej wersji oprogramowania firmowego.
+DeckPilot 1.1.0 zawiera **Firmware du macropad…** okno dialogowe i oprogramowanie firmowe 1.0.0 dla Pro Micro ATmega32U4 **5 V / 16 MHz**, przy użyciu konfiguracji Leonardo / Caterina potwierdzonej przez właściciela dziennika wysyłania. Złączone narzędzie do migania Windows nie wymaga Arduino IDE. Wybór urządzenia i potwierdzenie są obowiązkowe; aktualizacje aplikacji nigdy po cichu nie świecą planszą. Istniejące mappingi F13- F24, profile i kalibracja pozostają kompatybilne.
+
+**Właściciel potwierdził udaną migawkę w aplikacji, firmware 1.0.0 identyfikacja i wszystkie 12 przyciski na tablicy odniesienia.** Zachowaj oryginalny szkic i dostęp do RST / GND do odzysku. Nie można automatycznie obracać migawki firmware. Zobacz [dokumentacja firmware](FIRMWARE.pl.md) dla kompatybilności, walidacji, odzyskiwania, budowania kroków i licencji trzeciej strony. Przyciski Per- tryby USB i natywnych kontroli mediów nie są częścią tej wersji oprogramowania firmowego.
 
 <a id="building-the-windows-installer"></a>
 ### Budowa instalatora systemu Windows
@@ -307,7 +310,7 @@ Im większy 3 × 4 klawiatura śledzi fizyczną obudowę i czarne nasadki klawis
 
 Wybierz klucz do edycji. **Options avancées · fichier et arguments** utrzymuje ręczne ścieżki aplikacji i argumenty startowe zawalone domyślnie, podczas gdy podstawowe foldery i cele strony internetowej pozostają rozszerzone. **Tester l’action** zapisuje i wysyła wybrane działanie na bieżącym komputerze PC; wskaźnik sukcesu potwierdza wysyłkę, a nie ukończenie wewnątrz innej aplikacji. Skróty klawiszowe mają na celu aktywne okno. Wolne klawisze F13- F24 nie mają działania testowego.
 
-Kiedy makropad jest odłączony, **Hors ligne** i towarzysząca podpowiedź wyjaśnia, że profile mogą być wciąż edytowane i testowane. Konfiguracja jest przechowywana na komputerze PC i pozostaje dostępna przez cały czas rozłączania i ponownego łączenia. Te usprawnienia interfejsu działają z istniejącym oprogramowaniem firmowym i nie wymagają dodatkowego błysku.
+Kiedy makropad jest odłączony, **Hors ligne** i towarzysząca podpowiedź wyjaśnia, że profile mogą być nadal edytowane i testowane. Konfiguracja jest przechowywana na komputerze PC i pozostaje dostępna przez cały czas rozłączania i ponownego łączenia. Te usprawnienia interfejsu działają z istniejącym oprogramowaniem firmowym i nie wymagają dodatkowego błysku.
 
 Menu obszaru zgłoszeniowego włącza teraz bezpośrednio profile. **Ctrl + S** Zapisuje bieżącą konfigurację przycisku. Nieprawidłowe pliki konfiguracyjne są kopiowane zanim zostanie użyta świeża konfiguracja. Instalacja aplikacji, ikony menu desktop / Start, preferencje startowe i istniejący automatyczny updater są zatrzymywane.
 
@@ -346,7 +349,7 @@ Kontrole podstawowe obejmują granice powtarzania / zwalniania, jednoczesne przy
 <a id="search-and-ci-reliability-fixes-164"></a>
 ## Wyszukiwarka i niezawodność CI (1.6.4)
 
-Równoważne wyniki wyszukiwania zachowują swoje istniejące przyciski WPF. Katalog instalalled- app i debuunce timer defer result result result while a search short is capture or a drag is in progress. To zapobiega usuwaniu przycisku źródłowego podczas interakcji.
+Równoważne wyniki wyszukiwania zachowują swoje istniejące przyciski WPF. Katalog instalalled- app i debuunce timer defer result result result while a search short is catching or a drag is in progress. To zapobiega usuwaniu przycisku źródłowego podczas interakcji.
 
 Kontrola dymu w systemie Windows nadal wykonuje natywne przeciągnięcia myszy i sprawdza zapisane zadania, swapy, cofnięcie / redo i oba gesty prasowe. Klient testowy używa fizycznych współrzędnych kursora, aby dopasować się do granic Automatyzacji UI niezależnie od DPI, skupia się przed pomiarem i skanuje wszystkie wartości procentowe przewijania. Sprawdzenie regresji sprawdza również, czy równoważne przeszukiwania zachowują ten sam dostępny przycisk. Podręczne poświadczenia startowe czekają na załadowany uchwyt WPF i wymagają pięciu kolejnych obserwacji hidden- okiennych, podczas gdy aplikacja pozostaje przy życiu.
 
@@ -356,7 +359,7 @@ Ustawienia odczytywane w testach Windows wyraźnie pozwalają odczytywać / pisa
 
 W systemie Windows istniejące pliki konfiguracyjne są oddane `File.Replace` a nie tryb nadpisarski `File.Move`Wspiera to czytniki, które pozwalają na usuwanie przy zachowaniu kompletnego starego migawki. Podstawowy apartament testuje trzy zastępstwa z czytnikiem utrzymywanym w otwartym; Kontrola rdzenia systemu Windows działa przed kompilacją oprogramowania firmowego i publikacją, tak więc błędy trwałości są wykrywane wcześnie.
 
-Czytnik migawek testowych może czekać aż 500 ms dla Windows udostępniania / naruszenia blokady podczas `ReplaceFile` commits. Poczekanie dotyczy tylko otwarcia migawki, nigdy nie wykonywania lub ponownego wykonania działania aplikacji. Inne błędy, źle ukształtowany JSON i trwałe zamki pozostają niepowodzeniem.
+Czytnik migawek testowych może czekać aż 500 ms dla Windows udostępniania / naruszenia blokady podczas `ReplaceFile` commits. Czekanie dotyczy tylko otwarcia migawki, nigdy nie wykonywania lub ponownego wykonania działania aplikacji. Inne błędy, źle ukształtowany JSON i trwałe zamki pozostają niepowodzeniem.
 
 <a id="runtime-and-editing-optimizations-170"></a>
 ## Optymalizacja czasu pracy i edycji (1.7.0)
@@ -382,5 +385,10 @@ Interfejs węglowy stawia bibliotekę działania na pierwszym miejscu, oddziela 
 - **Szybki dostęp:** Ctrl + K lub przycisk Biblioteka skupia wyszukiwanie akcji. **Activité récente** utrzymuje ostatni 30 wysłanie / nieudana akcja w pamięci dla tej sesji, bez zapisywania argumentów programu lub ścieżek docelowych. Można ją w każdej chwili wyczyścić. Udane wysłanie nie gwarantuje zakończenia w aplikacji docelowej.
 
 Oprogramowanie firmowe pozostaje **1.1.1**. Akceptowanie automatycznej oferty oprogramowania firmowego teraz poprawnie otwiera menedżera oprogramowania firmowego; poprzednia ochrona modalna uniemożliwiła przekazanie go. Istniejąca tożsamość oprogramowania firmowego, bicie serca, ponowne podłączenie i kontrola flash pozostają na miejscu. Nowe funkcje przestrzeni roboczej nie potrzebują błysku firmware.
+
+<a id="deckpilot-atelier-190"></a>
+## DeckPilot Atelier (1.9.0)
+
+Oddzielny **DeckPilot Atelier** Instalator systemu Windows przygotowuje nowe makropadki DIY. Wykrywa deski Leonardo / Caterina, waliduje i błyskuje sprzętem firmowym w pakiecie bez nadpisywania bootloadera, a następnie prowadzi fizyczny 3×4 kontrola wszystkich 12 przyciski. Każdy przycisk musi przejść krótką prasę i uchwyt co najmniej 700 MS. Narzędzie rejestruje, który sygnał F13- F24 należy do każdej pozycji fizycznej, flagi wiele lub niespójne sygnały, i eksportuje raport oznaczony czasem. Pobierz `DeckPilot-Atelier-Setup.exe` ze strony wydania. Bootloader Caterina musi być już obecny; narzędzie nie instaluje brakującego bootloadera.
 
 Walidacja obejmuje istniejące ustawienia, walidację akcentu, nawigację profilu i remapowanie odniesienia, przenośne szablony, natywny szablon systemu Windows / cofnij / redo i przełączanie profilu, nagrywanie skrótów, kopiowanie / wklej / reset, utrzymywanie ustawień, instalację / aktualizację, zmianę układu graficznego oraz faktyczne wychwytywanie UI. Zachowanie specyficzne dla użytkownika nadal wymaga makro-pad i urządzeń audio na komputerze z systemem Windows.

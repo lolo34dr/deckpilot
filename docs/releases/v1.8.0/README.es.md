@@ -7,7 +7,7 @@ DeckPilot 1.8.0 añade un espacio de trabajo refrescado y formas más rápidas d
 - Acciones de perfil: cambiar a un perfil nombrado, el siguiente o el perfil anterior de una clave. Los conjuntos de perfil importado mantienen sus enlaces internos.
 - Acciones de Windows: abrir ajustes comunes o Administrador de tareas, o bloquear explícitamente el PC.
 - Copiar/cortar/paste/reestablecer teclas completas, incluyendo largas prensas y colores, con deshacer/redo y un portapapeles plano.
-- Capturar un atajo de teclado directamente; Escapar cancela y las teclas macropadas permanecen reservadas durante la captura.
+- Capturar un acceso directo al teclado; Escapar cancela y las teclas macropadas permanecen reservadas durante la captura.
 - Ctrl+K búsqueda de acción y una historia clara y sencilla de la última sesión 30 acciones.
 - Arregla el impulso automático de firmware para aceptarlo abre el gestor de firmware. Los gestos pendientes se cancelan a través de los cambios de perfil.
 

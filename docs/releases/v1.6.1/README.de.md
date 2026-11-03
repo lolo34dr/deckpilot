@@ -2,7 +2,7 @@
 
 DeckPilot 1.6.1 Behebt das weiche Keypad-Rendering und fügt Profilwiederherstellung, Windows-Audiosteuerungen und kurze / lange Drücke hinzu.
 
-- Native-Size-Tastatur-Text: Ganzdeck-Skalierung und Content-Shadow-Effekte entfernt, DPI-Awareness pro Monitor und größere Desktop-App-Symbole hinzugefügt. Kleine Fenster scrollen anstatt Tasten zu verkleinern.
+- Native-Size-Tastatur-Text: Ganzdeck-Skalierung und Content-Shadow-Effekte entfernt, zusätzliche DPI-Awareness pro Monitor und größere Desktop-App-Symbole. Kleine Fenster scrollen statt schrumpfender Tasten.
 - Undo / Redo für Profilbearbeitungen, einschließlich Drag-and-Drop ()50 Änderungen pro App-Sitzung); Textfelder behalten native Ctrl+Z/Ctrl+Y.
 - Profil Import/Export und 20 automatische Backups der vorherigen Version; Importe fügen neue Kopien hinzu; Wiederherstellung und Rückgängigmachung der Kalibrierung; Importierte Aktionen werden niemals automatisch ausgeführt.
 - Globales Windows-Mikrofon schaltet mit einer permanenten Statusleistenanzeige und einem Live-Endpunktstatus um.
