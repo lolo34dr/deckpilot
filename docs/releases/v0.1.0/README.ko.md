@@ -5,7 +5,7 @@
 - 공용영역 sombre avec 석쇠 de 4 lignes 외 3 콜론스.
 - 캘거리 guidé des 12 boutons F13 à F24. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 - Profils manuels et action : 터치 라이브러리, 응용 프로그램, 도스피어, 사이트, raccourci et multimédia.
-- Zone de notification et démarrage 윈도우 facultatif.
+- Zone de notification et démarrage Windows facultatif에 대한 의견
 - Aucun Pilote ni changement du program du 레오나르도.
 
 Téléchargez의 특징 **DeckPilot.exe 파일** 붓다 버전 autonome, ou **DeckPilot-윈-x64.zip** 부 르 dossier 완료 à extraire. Aucun runtime .NET à installer.

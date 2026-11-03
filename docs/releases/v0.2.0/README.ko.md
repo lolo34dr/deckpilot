@@ -4,7 +4,7 @@
 
 - Sélecteur d’applications avec recherche par nom : 메뉴 Démarrer et 카탈로그 Windows / Microsoft Store. Le choix manuel d’un `.exe` 중단할 수 있습니다.
 - Icônes des application lorsqu’elles sont disponibles, pictogrammes vectoriels et Animations discrètes 존경하는 les préférences Windows.
-- Recherche automatique des version Stables sur GitHub. Une 확인 suffit pour télécharger, vérifier, 설치자 등 redémarrer.
+- Recherche automatique des version stable sur GitHub. Une 확인 suffit pour télécharger, vérifier, installer et redémarrer.
 - 평가 SHA-256 기타 보존 de l'ancien exécutable jusqu'à 확인 du démarrage, avec restauration en cas d'échec.
 - Profils et Calibrage가 있습니다.
 

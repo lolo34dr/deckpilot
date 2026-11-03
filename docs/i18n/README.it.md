@@ -23,6 +23,7 @@
 <p align="center">
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&color=78b7a0" alt="Ultimo rilascio"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&logo=windows" alt="Scarica per Windows x64"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe"><img src="https://img.shields.io/badge/Download-DeckPilot_Atelier-16856A?style=flat-square&logo=windows" alt="Scarica DeckPilot Atelier"></a>
   <a href="https://github.com/lolo34dr/deckpilot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/lolo34dr/deckpilot?style=flat-square" alt="Licenza MIT"></a>
   <a href="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml"><img src="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml/badge.svg?branch=main" alt="Stato di costruzione di Windows"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&color=70a7e8" alt="GitHub scarica il rilascio"></a>
@@ -125,7 +126,7 @@ La calibrazione si applica a tutti i profili e può essere ripetuta dalla barra 
 
 Chiudere la finestra nasconde DeckPilot Fare doppio clic sull'icona dell'area di notifica vicino all'orologio per riaprirlo, oppure fare clic con il pulsante destro del mouse sull'icona e scegliere il comando quit per fermarlo completamente.
 
-L'avvio di Windows è abilitato per impostazione predefinita per l'utente corrente. **Lancer avec Windows**; aggiornamenti app successivi conservano tale scelta. L'installazione e i successivi lanci rinfrescano un ingresso abilitato al percorso eseguibile corrente.
+L'avvio di Windows è abilitato per impostazione predefinita per l'utente corrente. **Lancer avec Windows**; aggiornamenti app successivi conservano tale scelta. L'installazione e i successivi lanci rinfrescano un'entrata abilitata al percorso eseguibile corrente.
 
 <a id="installed-applications"></a>
 ## Applicazioni installate
@@ -208,7 +209,7 @@ La console controlla l'uscita con uno stato non zero sulla prima affermazione fa
 
 Il controllo file-lock viene eseguito solo su Windows.
 
-GitHub Azioni funziona anche `tests/windows-update-smoke.ps1` Avvia l'helper dell'aggiornamento, esce dal processo originale, verifica la conferma della sostituzione e dell'avvio, verifica la conservazione delle impostazioni, quindi apre il picker dell'applicazione installato tramite UI Automation e salva una selezione. Esercita anche gli eseguibili rinomati e i percorsi che contengono gli spazi. Questo script è riservato all'account di test GitHub Actions usa e getta. `tests/windows-installer-smoke.ps1`: Real Program File installazione, desktop/Start menu scorciatoie, avvio predefinito, aggiornamento con l'applicazione aperta, la conservazione di avvio disabili, e la disinstallazione senza cancellare i profili.
+GitHub Azioni funziona anche `tests/windows-update-smoke.ps1` Avvia l'helper dell'aggiornamento, esce dal processo originale, verifica la conferma della sostituzione e dell'avvio, verifica la conservazione delle impostazioni, quindi apre il picker dell'applicazione installato tramite UI Automation e salva una selezione. Esercita anche eseguibili rinomati e percorsi contenenti spazi. Questo script è riservato all'account di test GitHub Actions usa e getta. `tests/windows-installer-smoke.ps1`: Real Program File installazione, desktop/Start menu scorciatoie, avvio predefinito, aggiornamento con l'applicazione aperta, la conservazione di avvio disabili, e la disinstallazione senza cancellare i profili.
 
 <a id="publish-a-standalone-windows-folder"></a>
 ### Pubblica una cartella di Windows standalone
@@ -223,7 +224,7 @@ Distribuire l'archivio completo. Il flusso di lavoro di Windows build produce an
 <a id="publish-a-github-release"></a>
 ### Pubblica un rilascio di GitHub
 
-Aggiornare la versione dell'applicazione e `.github/release-notes.md`, quindi spingere una corrispondenza `v*` tag, come ad esempio `v1.0.0`. Il flusso di lavoro di rilascio verifica che il tag corrisponde alla versione del progetto ed esegue la validazione prima di pubblicare:
+Aggiornare la versione dell'applicazione e `.github/release-notes.md`, quindi spingere una corrispondenza `v*` tag, come ad esempio `v1.0.0`. Il flusso di lavoro di rilascio controlla che il tag corrisponde alla versione del progetto ed esegue la validazione prima di pubblicare:
 
 | Scarica | Contenuto |
 | --- | --- |
@@ -261,7 +262,7 @@ Con Leonardo collegato:
 
 | Sentiero | Oggetto |
 | --- | --- |
-| `src/DeckPilot.Core` | Impostazioni, stato chiave, ricerca, convalida di rilascio di GitHub, download verificati e operazioni di sostituzione. |
+| `src/DeckPilot.Core` | Impostazioni, stato chiave, ricerca, convalida di rilascio GitHub, download verificati e operazioni di sostituzione. |
 | `src/DeckPilot.Windows` | Interfaccia WPF, catalogo delle applicazioni, icone, azioni di Windows, integrazione di area di notifica e helper di aggiornamento. |
 | `tests/DeckPilot.Checks` | Controlli eseguibili senza un quadro di prova esterno. |
 | `tests/windows-update-smoke.ps1` | Aggiornamento nativo di Windows e test di fumo di applicazione-picker utilizzato da CI. |
@@ -281,6 +282,8 @@ Credito consigliato:
 
 <a id="macropad-firmware-updates"></a>
 ## Aggiornamenti firmware Macropad
+
+Per la preparazione del dispositivo e i controlli di qualità dell'officina, installare il separato [DeckPilot Atelier](docs/FACTORY.md) strumento. Il suo installatore è pubblicato come **[DeckPilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** accanto all'applicazione principale. Può lampeggiare il firmware incluso su una tavola Leonardo/Caterina, quindi controllare brevi e lunghe presse su tutti 12 chiavi fisiche ed esportare un rapporto.
 
 DeckPilot 1.1.0 include un **Firmware du macropad…** dialogo e firmware 1.0.0 per il Pro Micro ATmega32U4 **5 V / 16 MHz**, utilizzando la configurazione Leonardo/Caterina confermata dal registro di caricamento del proprietario. Lo strumento di flashing in bundle di Windows non richiede Arduino IDE. La selezione e la conferma dei dispositivi sono obbligatori; gli aggiornamenti delle app non lampeggiano mai silenziosamente la scheda.
 
@@ -309,7 +312,7 @@ Scegli una chiave per modificarla. **Options avancées · fichier et arguments**
 
 Quando il macropad è scollegato, **Hors ligne** e l'accenno di accompagnamento spiegano che i profili possono ancora essere modificati e le azioni testate. La configurazione viene memorizzata sul PC e rimane disponibile durante le disconnessioni e le riconnessioni.
 
-Il menu delle aree di notifica ora passa direttamente i profili. **Ctrl+S** I file di configurazione non validi vengono ripristinati prima che venga utilizzata una nuova configurazione. L'installazione dell'app, le icone del menu desktop/Start, le preferenze di avvio e l'aggiornamento automatico esistente vengono mantenuti.
+Il menu delle aree di notifica ora passa direttamente i profili. **Ctrl+S** I file di configurazione non validi vengono supportati prima che venga utilizzata una nuova configurazione. L'installazione dell'app, le icone del menu desktop/Start, le preferenze di avvio e l'aggiornamento automatico esistente vengono mantenuti.
 
 Per gli upload manuali di Arduino IDE, **Qui. DeckPilot dal suo menu di vassoio** per liberare la porta seriale. Chiusura della finestra principale lo mantiene in esecuzione in background.
 
@@ -329,7 +332,7 @@ L'avvio di Windows ora mantiene una preferenza esplicita per l'utente, ripara un
 
 Il tastierino ora rende a dimensioni native WPF invece di scalare il testo attraverso una Viewbox. Effetti di ombra principale / chiave e animazioni di scala di testo sono stati rimossi; scorrere di finestre più piccole piuttosto che ridurre la tastiera. L'applicazione dichiara per-monitor DPI consapevolezza e utilizza le icone di shell di Windows più grandi per applicazioni desktop.
 
-**Annuler / Rétablir** ripristina le modifiche del profilo, compresi gli swap drag-and-drop, le impostazioni di azione, le importazioni e la creazione/delezione del profilo. 50 Ctrl+Z / Ctrl+Y operare su profili al di fuori dei campi di testo; i campi di testo mantengono il proprio undo/redo. La calibrazione, le preferenze di avvio e le azioni eseguite non vengono annullate.
+**Annuler / Rétablir** ripristina le modifiche del profilo, compresi gli swap drag-and-drop, le impostazioni di azione, le importazioni e la creazione/delezione del profilo. 50 Ctrl+Z / Ctrl+Y operare su profili al di fuori dei campi di testo; i campi di testo mantengono il proprio annullare/redo. La calibrazione, le preferenze di avvio e le azioni eseguite non vengono annullate.
 
 Sottotitolo **Gérer les profils**, esportare il profilo corrente o tutti i profili come `.deckpilot.json`, importare profili come nuove copie, o ripristinare un backup di tutti i profili. Importa non esegue mai azioni e non sostituisce mai la calibrazione del PC. I profili contengono percorsi di azione, argomenti e ID endpoint audio, che possono essere necessari per la regolazione su un altro PC.
 
@@ -352,7 +355,7 @@ I controlli di fumo di Windows continuano a eseguire trascinamenti nativo del mo
 
 Costruire e rilasciare i flussi di lavoro utilizzare Node.js 24 azioni. Il compilatore Arduino rimane a CLI 1.2.2; CI scarica il suo archivio di Windows con un pinned SHA-256 checksum. Le versioni firmware e toolchain sono invariate.
 
-Le impostazioni lette nei test di Windows permettono esplicitamente di leggere / scrivere / cancellare la condivisione e la parse UTF-8 Questo impedisce al test stesso di negare la sostituzione del file atomico dell'app. Il test di storia mantiene una vecchia snapshot aperta su tre cicli di undo/redo e verifica che rimanga intatta mentre le impostazioni live cambiano.
+Le impostazioni lette nei test di Windows permettono esplicitamente di leggere/scrivere/cancellare la condivisione e la parsa UTF-8 Questo impedisce al test stesso di negare la sostituzione del file atomico dell'app. Il test di storia mantiene una vecchia snapshot aperta su tre cicli di undo/redo e verifica che rimanga intatta mentre le impostazioni live cambiano.
 
 Su Windows, i file di impostazioni esistenti sono impegnati con `File.Replace` piuttosto che overwrite-mode `File.Move`. Questo supporta i lettori che permettono la cancellazione mantenendo una vecchia snapshot completa. Il core suite testa tre sostituzioni con un lettore tenuto aperto; i controlli di core di Windows vengono eseguiti prima della compilazione del firmware e la pubblicazione di tali guasti di persistenza vengono rilevati presto.
 
@@ -363,7 +366,7 @@ Un lettore di istantanee di prova può aspettare fino a 500 ms per la condivisio
 
 Risparmio di impostazioni identiche controlla il file corrente, ma salta la sostituzione e il lavoro di backup. Le modifiche esterne / cancellazione e le scritture fallite sono ancora rilevate. `ButtonAction` ha l'uguaglianza di valore (compresa la lunga azione); i controlli sporchi dell'editor evitano la serializzazione di JSON. La storia mantiene le istantanee del modello staccate, convalida nuovi stati ed evita la parsing di JSON durante l'undo/redo. 50-edit limit e 20 i backup dei profili rimangono.
 
-Ricerca e picker condividono un catalogo immutabile installato-app per cinque minuti (15 secondi per un risultato parziale). I consumatori concorrenti condividono una scansione; la chiusura di un raccoglitore non cancella un altro consumatore. Refresh bypassa la cache, e ogni raccoglitore ha un proprio filtro / vista. Scansione e catalogo parsing eseguire il thread UI; il filtro del picker è debounced da 120 ms. La ricerca di azione ricontrolla questa cache dopo il suo debounce e quando ritorna dal raccoglitore, quindi è disponibile anche un catalogo aggiornato.
+Ricerca e picker condividono un catalogo immutabile installato-app per cinque minuti (15 secondi per un risultato parziale). I consumatori concorrenti condividono una scansione; la chiusura di un raccoglitore non cancella un altro consumatore. Refresh bypassa la cache, e ogni raccoglitore ha un proprio filtro / vista. Scansione e catalogo parsing eseguire il thread UI; il filtro del picker è debounced da 120 ms. La ricerca d'azione ricontrolla questa cache dopo il suo debounce e quando ritorna dal raccoglitore, quindi è disponibile anche un catalogo aggiornato.
 
 Gli aggiornamenti di bordo UI ora seguono le notifiche di connessione invece di svegliare ogni 100 ms. Le notifiche di disconnessione ordinate annullano ancora le detenzioni in sospeso. I ganci di tastiera agganciano il lavoro visivo della coda, mentre la soppressione e il temporizzazione del gesto rimangono sincroni. Le animazioni di feedback nascoste/minimizzate arrestano e utilizzano un intervallo di polling audio di dieci secondi invece di due secondi; la riapertura o l'emissione di un comando audio richiede lo stato fresco immediatamente.
 
@@ -374,7 +377,7 @@ Queste modifiche riducono il lavoro specificato; non stabiliscono una percentual
 
 L'interfaccia carbone mette in primo luogo la libreria di azione, separa i controlli del profilo dalla dimensione nativa croccante 3 × 4 Gli accenti chiave distinguono le proprie categorie; la selezione, la messa a fuoco della tastiera e il feedback d'azione rimangono separati. **Réduire les animations** nelle preferenze integra l'impostazione di animazione di Windows. Le finestre più piccole mantengono l'accesso alla pergamena invece di restringere il testo chiave.
 
-- **Modelli di profilo:** sotto: **Gérer les profils**, aggiungere musica e audio, desktop e produttività, o Creazione. Ogni modello crea un profilo modificabile separato e non esegue mai le sue azioni. I profili esistenti e la calibrazione fisica vengono mantenuti. Le scorciatoie della tastiera utilizzano l'applicazione attiva, i cui binding possono differire.
+- **Modelli di profilo:** sotto: **Gérer les profils**, aggiungere musica e audio, desktop e produttività, o Creazione. Ogni modello crea un profilo modificabile separato e non esegue mai le sue azioni. I profili esistenti e la calibrazione fisica vengono mantenuti. Tastiere utilizzare l'applicazione attiva, i cui binding possono differire.
 - **Tasti del profilo:** assegnare assegna assegna assegna assegna assegna as assegna as assegna as as assegna as as assegna as as assegna as assegna as as assegna as as assegna as as assegna as as as as assegna as as as as as as assegna as as as as assegna as as as as as as as as as as as as assegna as as as as as as as assegna as as as as as as as as assegna as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as as **Changer de profil**, quindi selezionare un profilo di nome o un ciclo in avanti/indietro. I riferimenti tra i profili vengono ristampati quando si importa un set o si duplica un profilo di auto-riferencing. Una destinazione mancante segnala un errore e può essere sostituita nell'editor.
 - **Comandi di Windows:** uso **Commandes Windows** per aprire impostazioni comuni o Task Manager, o bloccare esplicitamente il PC. I comandi provengono da un elenco fisso, senza script da inserire. L'azione di blocco richiede la firma di nuovo in Windows.
 - **Tastiera completa:** Fare clic con il pulsante destro del mouse su una chiave per copiare, tagliare, incollare o resettarlo, tra cui l'azione lunga e l'accento. Ctrl+C/X/V e cancellare il lavoro mentre una chiave del mazzo ha messa a fuoco della tastiera; i campi di testo ordinari mantengono le scorciatoie di editing. DeckPilot e viene eliminato all'uscita. Queste modifiche supportano undo/redo.
@@ -382,5 +385,10 @@ L'interfaccia carbone mette in primo luogo la libreria di azione, separa i contr
 - **Accesso rapido:** Ctrl+K o il pulsante Libreria concentra la ricerca di azione. **Activité récente** mantiene l'ultimo 30 azioni in memoria per questa sessione, senza memorizzare argomenti di programma o percorsi di destinazione. Può essere chiarito in qualsiasi momento. Una spedizione di successo non garantisce il completamento nell'app di destinazione.
 
 Il firmware rimane **1.1.1**. L'accettazione di un'offerta firmware automatico ora apre correttamente il firmware manager; la precedente guardia modale ha impedito che il handoff. L'identità del firmware esistente, battito cardiaco, ricollegamento e controlli flash rimangono in vigore.
+
+<a id="deckpilot-atelier-190"></a>
+## DeckPilot Atelier (in inglese)1.9.0)
+
+Il separato **DeckPilot Atelier** L'installatore di Windows prepara nuovi macropad DIY, rileva le schede Leonardo/Caterina, convalida e lampeggia il firmware in bundle senza sovrascrivere il bootloader, quindi guida un fisico 3×4 controllo di tutti 12 pulsanti. Ogni pulsante deve passare una breve pressione e una presa di almeno 700 ms. Le registrazioni degli strumenti che il segnale F13-F24 appartiene ad ogni posizione fisica, bandiere segnali multipli o inconsistenti, e esporta un rapporto timestamped. `DeckPilot-Atelier-Setup.exe` Un bootloader Caterina deve essere già presente; lo strumento non installa un bootloader mancante.
 
 La validazione copre le impostazioni legacy, la convalida dell'accento, la navigazione del profilo e la remapping di riferimento, i modelli portatili, il modello di Windows nativo/undo/redo e il commutatore del profilo, la registrazione di scorciatoia, copia/paste/reset, le impostazioni persistenza, l'installazione/aggiornamento, il ridimensionamento del layout e un'effettiva acquisizione dell'interfaccia utente.

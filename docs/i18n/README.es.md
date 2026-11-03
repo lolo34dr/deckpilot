@@ -23,6 +23,7 @@
 <p align="center">
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&color=78b7a0" alt="Última publicación"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&logo=windows" alt="Descargar para Windows x64"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe"><img src="https://img.shields.io/badge/Download-DeckPilot_Atelier-16856A?style=flat-square&logo=windows" alt="Descargar DeckPilot Atelier"></a>
   <a href="https://github.com/lolo34dr/deckpilot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/lolo34dr/deckpilot?style=flat-square" alt="Licencia MIT"></a>
   <a href="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml"><img src="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml/badge.svg?branch=main" alt="estado de construcción de Windows"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&color=70a7e8" alt="Descarga de descargas de GitHub"></a>
@@ -61,8 +62,8 @@ DeckPilot configura Arduino Leonardo-compatible macropads que ya envía **F13-F2
 - **Perfiles listos:** empezar con plantillas de música, productividad o creación, a continuación, personalizarlas. Cambiar a un perfil específico, próximo o anterior de una clave física.
 - **Edición más rápida:** copy/cut/paste/reset teclas completas, atajos de teclado para grabar, elegir colores de acento clave, y deshacer cambios.
 - **Herramientas de Windows:** abrir sonido, visualización, Bluetooth y configuración de red, Administrador de tareas, o bloquear la sesión.
-- **Interfaz oscura compacta:** iconos vectoriales, iconos de aplicación donde esté disponible, y animaciones sutiles que respetan las preferencias de animación de Windows.
-- **Operación de antecedentes:** Manténganse. DeckPilot en el área de notificación, con inicio en el registro de Windows habilitado por defecto (puede ser deshabilitado).
+- **Interfaz oscura compacta:** iconos vectoriales, iconos de aplicación donde está disponible, y animaciones sutiles que respetan las preferencias de animación de Windows.
+- **Operación de antecedentes:** Manténganse. DeckPilot en el área de notificación, con el inicio de sesión de Windows habilitado por defecto (puede ser deshabilitado).
 - **Actualizaciones automáticas:** aprobar una nueva versión, entonces dejar DeckPilot descargar, verificar, reemplazar y reiniciar en sí mismo.
 
 <a id="getting-started"></a>
@@ -282,7 +283,9 @@ Crédito sugerido:
 <a id="macropad-firmware-updates"></a>
 ## Actualizaciones de firmware de Macropad
 
-DeckPilot 1.1.0 incluye un **Firmware du macropad…** diálogo y firmware 1.0.0 Pro Micro ATmega32U4 **5 V / 16 MHz**, utilizando la configuración Leonardo/Caterina confirmada por el registro de carga del propietario. La herramienta de parpadeo de Windows agrupada no requiere Arduino IDE. La selección y confirmación de dispositivos son obligatorios; actualizaciones de aplicaciones nunca flashear silenciosamente el tablero.
+Para la preparación del dispositivo y los controles de calidad del taller, instalar el separado [DeckPilot Atelier](docs/FACTORY.md) herramienta. Su instalador se publica como **[DeckPilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** junto a la aplicación principal. Puede destellar el firmware incluido a un tablero Leonardo/Caterina, a continuación, comprobar prensas cortas y largas en todos 12 claves físicas y exportar un informe.
+
+DeckPilot 1.1.0 incluye un **Firmware du macropad…** diálogo y firmware 1.0.0 Pro Micro ATmega32U4 **5 V / 16 MHz**, utilizando la configuración Leonardo/Caterina confirmada por el registro de carga del propietario. La herramienta de parpadeo de Windows agrupada no requiere Arduino IDE. La selección y confirmación de dispositivos son obligatorios; actualizaciones de aplicaciones nunca flashear silenciosamente el tablero. Existing F13–F24 cartografías, perfiles y calibración siguen siendo compatibles.
 
 **El propietario ha confirmado éxito en la aplicación flashing, firmware 1.0.0 identificación y todo 12 botones en la tabla de referencia.** Mantenga el boceto original y el acceso a RST/GND para la recuperación. [documentación de firmware](FIRMWARE.es.md) para compatibilidad, validación, recuperación, pasos de construcción y licencias de terceros. Los modos USB per-button y los controles de medios nativos no son parte de esta versión de firmware.
 
@@ -296,7 +299,7 @@ Después de producir `artifacts/standalone/DeckPilot.exe` con el paquete de firm
 
 El **Votre macropad** tarjeta muestra estado de conexión, el firmware detectado y cualquier actualización de paquetes disponibles. **Connexion et diagnostic** expone la selección de tableros cuando varios Leonardos están conectados, el estado de enlace USB en vivo, cuenta de botones físicos, preferencias de notificación de firmware y un resumen de diagnóstico copiable. Los diagnósticos no copian las acciones de perfil o identificadores de serie USB. El monitor vuelve a conectarse después de desconectar y deja su puerto serie automáticamente mientras el administrador de firmware está abierto. 1.0.0 y sin el vínculo de diagnóstico.
 
-Las comprobaciones de firmware de inicio están activadas por defecto. Después de la actualización de la aplicación, el cheque y la calibración están fuera del camino, un firmware identificado más antiguo puede impulsar la instalación; enviar recordatorios de demoras para 24 horas. Los tableros desconocidos y múltiples candidatos no seleccionados no se destellan automáticamente. Los lanzamientos de firmware se agrupan con actualizaciones de aplicaciones de GitHub, en lugar de obtener de una alimentación independiente de firmware.
+Los cheques de firmware de inicio están habilitados por defecto. Después de la actualización de la aplicación, el cheque y la calibración están fuera del camino, un firmware identificado más antiguo puede impulsar la instalación; enviar recordatorios de demoras para 24 horas. Los tableros desconocidos y múltiples candidatos no seleccionados no se destellan automáticamente. Los lanzamientos de firmware se agrupan con actualizaciones de aplicaciones de GitHub, en lugar de obtener de una alimentación independiente de firmware.
 
 Firmware **1.1.1** añade identificación de sesión, respuestas de latidos cardíacos correlativos, mensajes encuadernados y eventos físicos de estado clave. Estos eventos animan los botones mapeados y actualizan el diagnóstico; nunca invocan acciones por segunda vez. Su primera validación de tablero físico todavía es necesaria, aunque el firmware anterior 1.0.0 y el procedimiento flash han sido confirmados por el propietario. [protocolo y documentación de compatibilidad](FIRMWARE.es.md).
 
@@ -346,7 +349,7 @@ Controles básicos cubren los límites de repetición / liberación, las bodegas
 <a id="search-and-ci-reliability-fixes-164"></a>
 ## Fiabilidad de búsqueda y CI fija (1.6.4)
 
-Los resultados de búsqueda Equivalente mantienen sus botones WPF existentes. El catálogo de la aplicación instalada y el reemplazo de los resultados de aplazamiento del temporizador de debounce mientras se captura un botón de búsqueda o se está progresando un arrastre.
+Los resultados de búsqueda Equivalente mantienen sus botones WPF existentes. El catálogo de aplicación instalado y el reemplazo de los resultados de aplazamiento del temporizador de debounce mientras se captura un botón de búsqueda o se encuentra en progreso una arrastre.
 
 Controles de humo de Windows continúan realizando arrastres de ratón nativos y validando asignaciones guardadas, swaps, undo/redo y ambos gestos de prensa. El cliente de prueba utiliza coordenadas del cursor físico para coincidir con los límites UI Automation independientemente de DPI, se centra antes de medir, y escanea todos los porcentajes de desplazamiento consecutivos.
 
@@ -354,7 +357,7 @@ Construir y soltar flujos de trabajo utilizan Node.js 24 acciones. El compilador
 
 Ajustes leídos en las pruebas de Windows permiten explícitamente compartir lectura/escritura y parse UTF-8 Después de cerrar el lector. Esto evita que la prueba en sí misma niegue la sustitución de archivos atómicos de la aplicación. La prueba de historia mantiene una vieja instantánea abierta a través de tres ciclos de deshacer/redo y verifica que permanece intacta mientras los ajustes en vivo cambian.
 
-En Windows, los archivos de configuración existentes se comprometen con `File.Replace` en lugar de sobreescribir-mode `File.Move`. Esto es compatible con los lectores que permiten la eliminación al tiempo que conservan una instantánea vieja completa. La suite central prueba tres reemplazos con un lector mantenido abierto; los controles de núcleo de Windows funcionan antes de la compilación de firmware y la publicación de manera que los fallos de persistencia se detectan temprano.
+En Windows, los archivos de configuración existentes se comprometen con `File.Replace` en lugar de sobreescribir-mode `File.Move`. Esto es compatible con los lectores que permiten la eliminación al tiempo que conservan una instantánea vieja completa. La suite central prueba tres reemplazos con un lector mantenido abierto; las comprobaciones de núcleo de Windows funcionan antes de la compilación de firmware y la publicación de manera que los fallos de persistencia se detectan temprano.
 
 Un lector de instantáneas de prueba puede esperar hasta 500 ms para Windows compartir / bloquear las violaciones mientras `ReplaceFile` commits. La espera se aplica sólo para abrir la instantánea, nunca para ejecutar o volver a ejecutar una acción de aplicación. Otros errores, malformado JSON y bloqueos persistentes siguen siendo fallos.
 
@@ -382,5 +385,10 @@ La interfaz de carbón pone la biblioteca de acción primero, separa los control
 - **Acceso rápido:** Ctrl+K o el botón Biblioteca centra la búsqueda de acción. **Activité récente** mantiene el último 30 Acciones enviadas/failed en memoria para esta sesión, sin guardar los argumentos del programa o las rutas de destino. Se puede limpiar en cualquier momento. Un envío exitoso no garantiza la terminación en la aplicación de destino.
 
 El firmware sigue **1.1.1**. Aceptar una oferta automática de firmware ahora abre correctamente el gestor de firmware; el anterior guardia modal impidió que el handoff. La identidad de firmware existente, latido del corazón, la reconexión y los cheques flash permanecen en su lugar.
+
+<a id="deckpilot-atelier-190"></a>
+## DeckPilot Atelier (Atelier)1.9.0)
+
+El separado **DeckPilot Atelier** El instalador de Windows prepara nuevos macropados DIY. Detecta tableros Leonardo/Caterina, valida y destella el firmware agrupado sin sobrescribir el cargador de arranque, luego guía un físico 3×4 chequeo de todos 12 botones. Cada botón debe pasar una pulsación corta y una sujeción de al menos 700 ms. Los registros de herramientas que la señal F13-F24 pertenece a cada posición física, banderas múltiples o inconsistentes señales, y exporta un reporte atemporal. Descargar `DeckPilot-Atelier-Setup.exe` desde la página de lanzamientos. Un descargador de arranque Caterina ya debe estar presente; la herramienta no instala un cargador de arranque perdido.
 
 La validación cubre los ajustes heredados, validación de acento, navegación de perfiles y remapping de referencia, plantillas portátiles, configuración nativa de Windows plantilla/deshacer/redo/redo y conmutación de perfiles, grabación atajo, copia/paste/reset, persistencia de configuraciones, instalación/actualización, redimensionamiento de diseño y una captura de interfaz de usuario real.

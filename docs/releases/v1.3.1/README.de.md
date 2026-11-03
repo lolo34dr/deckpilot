@@ -1,6 +1,6 @@
 > Dies ist eine automatische Übersetzung der vollständigen Release Notes. Das englische Original ist die Referenz.
 
-DeckPilot 1.3.1 verbessert die USB-Verbindung und prüft die Macropad-Firmware beim Start.
+DeckPilot 1.3.1 verbessert die USB-Verbindung und überprüft die Macropad-Firmware beim Start.
 
 - Verbindungs-Dashboard mit automatischer Wiederverbindung, erkannter Firmware, Live-Button-Zustand/USB-Diagnose und expliziter Board-Auswahl bei Vorhandensein mehrerer Geräte.
 - Startup-Firmware prüft und aktualisiert Vorschläge, mit einem 24-hüftige Erinnerungsverzögerung und eine Option zum Deaktivieren von Firmwarebenachrichtigungen.

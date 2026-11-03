@@ -8,7 +8,7 @@ Applications installées, interface affinée et mises à jour automatiques.
 - Vérification SHA-256 " )٢( " )٢( " Avec restauration en cas d 'échec " .
 - Profils et calibrage existants conservés.
 
-**Depuis 0.1' ١٠ ' الاستقالة من النسخة " 2 " " " " من النص الإنكليزي " " " " ؛** Les mises à jour suivantes seront proposées automatiquement. Utilisez un dossier personnel modifiable pour permettre le remplacement.
+**Depuis 0.1' ١٠ ' الاستقالة من النسخة " 2 " " " " من النص الإنكليزي " " " ؛** Les mises à jour suivantes seront proposées automatiquement. Utilisez un dossier personnel modifiable pour permettre le remplacement.
 
 Téléchargez **DeckPilot.....** pour la version autonome, ou **DeckPilot-W-X64.zip** (ويندوز) 10/11 X64 ; aucun runtime.NET à installer.
 

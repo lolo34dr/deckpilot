@@ -10,7 +10,7 @@ Nur für die getestete Hardware-Konfiguration: **Pro Micro ATmega32U4 5 V / 16 M
 
 Jeder Schalter verbindet einen Pin mit GND. Interne Klimmzüge sind aktiviert. Pins **2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15, 16** Senden **F13 bis F24** in dieser Reihenfolge. Eine stabile 30 ms debounce behandelt das Drücken und Loslassen unabhängig. Tastaturverhalten, Windows-seitige Profile und Kalibrierung bleiben kompatibel; USB-Tastaturrollover bleibt durch Arduinos Tastaturbibliothek eingeschränkt. Die Firmware führt noch keine USB-Modi per Taste oder native Mediensteuerung ein.
 
-Stift **1** Der USB-Kern kann weiterhin den Bootloader-Eintrag unterstützen. Schließen Sie VCC nicht an GND an.
+Stift **1** Der USB-Kern kann weiterhin den Bootloader-Eintrag unterstützen, VCC nicht mit GND verbinden.
 
 Die aktuelle USB CDC Serial Interface Antworten `DECKPILOT?\n` bei 115200 Baud mit:
 
@@ -28,11 +28,11 @@ Für den normalen Tastaturbetrieb ist keine serielle Verbindung erforderlich. Di
 3. Offen **Firmware du macropad…**, wählen Sie das richtige Gerät und bestätigen Sie die Platine und die Verdrahtung. eine nicht identifizierte Originalskizze kann nur nach ausdrücklicher Bestätigung installiert werden.
 4. Bestätigen Sie die Installation und lassen Sie das USB-Kabel bis zum Abschluss angeschlossen. DeckPilot während der Firmware-Dialog geöffnet ist; gewöhnliche F13-F24-Ereignisse erreichen immer noch Windows.
 
-Die Firmware und Windows AVRDUDE 8.0 werden in der veröffentlichten App gebündelt. Keine Arduino IDE oder separate Treiberinstallation wird durchgeführt von DeckPilot. Windows muss bereits den seriellen USB-Anschluss des Boards freilegen, wie es beim erfolgreichen Upload des Besitzers der Fall war. Neue Firmware-Versionen werden mit App-Updates von GitHub geliefert; die Aktualisierung der App funktioniert **nicht** automatisches Flashen von Hardware. Jeder Blitz muss bestätigt werden.
+Die Firmware und Windows AVRDUDE 8.0 werden in der veröffentlichten App gebündelt. Keine Arduino IDE oder separate Treiberinstallation wird durchgeführt von DeckPilot. Windows muss bereits den seriellen USB-Anschluss des Boards freigeben, wie es beim erfolgreichen Upload des Besitzers der Fall war. Neue Firmware-Versionen werden mit App-Updates von GitHub geliefert; die Aktualisierung der App erfolgt **nicht** automatisches Flashen von Hardware. Jeder Blitz muss bestätigt werden.
 
 DeckPilot prüft SHA-256Intel HEX zeichnet Prüfsummen, Reset-Vektor-Präsenz, Überlappungen und die **28672-byte** Anwendungsgrenze vor dem Reset. Es entspricht dem physischen USB-Standort über Laufzeit- und Bootloader-Ports, verwendet AVR109 bei 57600 baud, erfordert die Schreibverifizierung von AVRDUDE, überprüft dann die Identität und Version der laufenden Firmware. Es werden keine Sicherungen, EEPROM oder der Bootloader geschrieben. `2341:8036` / `2A03:8036` und Caterina `2341:0036` / `2A03:0036` Wenn Windows keine passende physische Verbindung bereitstellen kann, wird das Blinken blockiert, anstatt einen Port zu erraten.
 
-Blinken ist nicht atomar: Eine Kabeltrennung oder ein Stromausfall kann die Firmware der Anwendung unvollständig machen. Es gibt keine automatische Firmware-Backup oder Rollback. **Arduino Leonardo**. Je nach Bootloader des Boards kann ein kurzzeitiges zweimaliges Anschließen von RST an GND einen temporären Bootloader-Port freilegen; Uploaden während dieser Port verfügbar ist. Ein beschädigter Bootloader benötigt ISP-Hardware und kann nicht mit diesem USB-Updater repariert werden. Schreiben Sie kein anderes Board oder eine andere Clock-Variante.
+Blinken ist nicht atomar: Eine Kabeltrennung oder Stromausfall kann die Firmware der Anwendung unvollständig machen. Es gibt keine automatische Firmware-Backup oder Rollback. **Arduino Leonardo**. Je nach Bootloader des Boards kann ein kurzzeitiges zweimaliges Anschließen von RST an GND einen temporären Bootloader-Port freilegen; Upload während dieser Port verfügbar ist. Ein beschädigter Bootloader benötigt ISP-Hardware und kann nicht mit diesem USB-Updater repariert werden. Schreiben Sie keine andere Board- oder Clock-Variante.
 
 Das letzte abgeschlossene AVRDUDE-Prozessprotokoll wird gespeichert unter `%LOCALAPPDATA%\DeckPilot\Firmware\last-flash.log`.
 
@@ -54,7 +54,7 @@ Das Original 12-Button Skizze wurde von David Madison angepasst **Stream Billig*
 <a id="firmware-111-and-usb-protocol-2"></a>
 ## Firmware 1.1.1 und USB-Protokoll 2
 
-Firmware 1.1.1 fügt einen schreibgeschützten Diagnoselink hinzu, während das gleiche F13-F24-Tastatur-Mapping und -Pin beibehalten wird1 Startup Failsafe. **Der physische Test des Besitzers deckte die Firmware ab 1.0.0Firmware 1.1.1 hat automatisierte Protokolltests und einen AVR-Build, benötigt aber immer noch seinen ersten Test auf der eigentlichen Platine.** Profile und Kalibrierung bleiben auf dem PC und müssen für dieses Firmware-Update nicht neu erstellt werden.
+Firmware 1.1.1 fügt einen schreibgeschützten Diagnoselink hinzu, während das gleiche F13-F24-Tastatur-Mapping und PIN-1 Startup Failsafe. **Der physische Test des Besitzers deckte die Firmware ab 1.0.0Firmware 1.1.1 hat automatisierte Protokolltests und einen AVR-Build, benötigt aber immer noch seinen ersten Test auf der eigentlichen Platine.** Profile und Kalibrierung bleiben auf dem PC und müssen für dieses Firmware-Update nicht neu erstellt werden.
 
 Die neue App identifiziert die angeschlossene Karte, hält ihren seriellen Port offen, verbindet sich nach dem Ausstecken wieder und überprüft ihre Firmware-Version beim Start und nach der Wiederverbindung. Firmware-Updates werden mit App-Releases geliefert: Start-Checks vergleichen die angeschlossene Firmware mit dem validierten Bundle in der installierten App. App-Update-Checks erhalten immer noch neuere Releases von GitHub. Es gibt keinen separaten Firmware-Download-Kanal.
 
@@ -80,6 +80,6 @@ Board: DP2|KEYS|1234ABCD|10|1
 
 Heartbeat-Anfragen werden normalerweise alle zwei Sekunden gesendet. Die App verbindet sich wieder, wenn eine passende Antwort fehlt. 1.5 Sekunden; die Firmware stoppt die unerwünschte Diagnose nach sechs Sekunden ohne Herzschlag oder wenn die serielle Verbindung geschlossen wird. Firmware 1.0.0 bleibt durch die Legacy-Identitätsabfrage unterstützt, ohne Live-Key-Diagnose. DeckPilot Apps können immer noch die Legacy-Identität der Firmware lesen 1.1.1.
 
-Die Quellversion in `DeckPilotProtocol.h` liefert die Release-Manifest-Version. Veröffentlichte Firmware-Bundles enthalten nun auch die aktuelle Skizze/Header unter `source/DeckPilot`, die Recovery Skizze und die DeckPilot MIT-Lizenz.
+Die Quellversion in `DeckPilotProtocol.h` liefert die Release-Manifest-Version. Veröffentlichte Firmware-Bundles enthalten nun auch die aktuelle Skizze/Header unter `source/DeckPilot`Die Recovery Skizze und die DeckPilot MIT-Lizenz.
 
 Der Diagnoselink nutzt bewusst `Serial.dtr()` eher als `bool(Serial)`: Arduino AVR Kern 1.8.6 Einsätze a 10 ms Verzögerung in `Serial_::operator bool()`Das Lesen von DTR verhindert direkt, dass der Diagnosepfad diese Pause zu jedem Key-Scan-Zyklus hinzufügt. Der Host-Protokolltest löscht die implizite Bool-Konvertierung, so dass dieses Blockierungsmuster nicht unbemerkt in die Implementierung des gemeinsamen Protokolls eingeführt werden kann.
