@@ -51,13 +51,16 @@ begin
   Result := ExpandConstant('{param:UPDATE|0}') <> '0';
 end;
 
-function StopFactory(Exe: String): Boolean;
+function StopFactory(Exe: String; OriginalUser: Boolean): Boolean;
 var Code, Attempt: Integer;
 begin
   Result := True;
   if not CheckForMutexes('Local\DeckPilot.Factory') then exit;
   for Attempt := 1 to 20 do begin
-    ExecAsOriginalUser(Exe, '--exit-for-install', '', SW_HIDE, ewWaitUntilTerminated, Code);
+    if OriginalUser then
+      ExecAsOriginalUser(Exe, '--exit-for-install', '', SW_HIDE, ewWaitUntilTerminated, Code)
+    else
+      Exec(Exe, '--exit-for-install', '', SW_HIDE, ewWaitUntilTerminated, Code);
     Sleep(250);
     if not CheckForMutexes('Local\DeckPilot.Factory') then exit;
   end;
@@ -67,13 +70,13 @@ end;
 function PrepareToInstall(var NeedsRestart: Boolean): String;
 begin
   ExtractTemporaryFile('DeckPilot.Factory.exe');
-  if not StopFactory(ExpandConstant('{tmp}\DeckPilot.Factory.exe')) then
+  if not StopFactory(ExpandConstant('{tmp}\DeckPilot.Factory.exe'), True) then
     Result := 'Fermez DeckPilot Atelier et attendez la fin du flash avant de réessayer.'
   else Result := '';
 end;
 
 function InitializeUninstall: Boolean;
 begin
-  Result := StopFactory(ExpandConstant('{app}\DeckPilot.Factory.exe'));
+  Result := StopFactory(ExpandConstant('{app}\DeckPilot.Factory.exe'), False);
   if not Result then MsgBox('Fermez DeckPilot Atelier et attendez la fin du flash avant de désinstaller.', mbError, MB_OK);
 end;

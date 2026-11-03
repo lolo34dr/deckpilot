@@ -1,3 +1,5 @@
+DeckPilot 1.9.7 fixes Atelier uninstalling while the app is open. Atelier 1.0.6 also corrects its Windows DPI manifest, which prevented the installed app from launching.
+
 DeckPilot 1.9.6 fixes the Windows DPI manifest that prevented DeckPilot Atelier from opening after installation.
 
 DeckPilot 1.9.5 includes detailed Atelier startup diagnostics in the Windows release check.
