@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType><TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <UseWPF>true</UseWPF><EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>../DeckPilot.Windows/Assets/DeckPilot.ico</ApplicationIcon>
+    <AssemblyName>DeckPilot.Factory</AssemblyName><Version>1.0.0</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.IO.Ports" Version="8.0.0" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
+    <EmbeddedResource Include="../../artifacts/firmware/DeckPilot-firmware.zip" LogicalName="DeckPilot.Factory.FirmwareBundle.zip" Condition="Exists('../../artifacts/firmware/DeckPilot-firmware.zip')" />
+    <ProjectReference Include="../DeckPilot.Core/DeckPilot.Core.csproj" />
+  </ItemGroup>
+  <Target Name="RequireFirmwareBundle" BeforeTargets="PrepareForBuild" Condition="'$(RequireFirmwareBundle)' == 'true' And !Exists('../../artifacts/firmware/DeckPilot-firmware.zip')">
+    <Error Text="Build the firmware bundle with firmware/tools/build.ps1 before publishing the factory installer." />
+  </Target>
+</Project>

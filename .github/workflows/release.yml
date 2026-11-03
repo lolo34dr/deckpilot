@@ -56,6 +56,10 @@ jobs:
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           }
           ./installer/build.ps1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Build DeckPilot Atelier installer
+        shell: pwsh
+        run: ./installer/build-factory.ps1
       - name: Verify Windows installation, upgrade and uninstall
         shell: powershell
         run: ./tests/windows-installer-smoke.ps1 -Installer artifacts/installer/DeckPilot-Setup.exe
@@ -75,8 +79,10 @@ jobs:
           Compress-Archive -Path artifacts/win-x64/* -DestinationPath artifacts/release/DeckPilot-win-x64.zip
           Copy-Item artifacts/installer/DeckPilot-Setup.exe artifacts/release/DeckPilot-Setup.exe
           Copy-Item artifacts/standalone/DeckPilot.exe artifacts/release/DeckPilot.exe
+          Copy-Item artifacts/installer/DeckPilot-Atelier-Setup.exe artifacts/release/DeckPilot-Atelier-Setup.exe
+          Copy-Item artifacts/factory-standalone/DeckPilot.Factory.exe artifacts/release/DeckPilot-Atelier.exe
           Copy-Item artifacts/firmware/DeckPilot-firmware.zip artifacts/release/DeckPilot-firmware.zip
-          Get-ChildItem artifacts/release -File | Where-Object { $_.Name -in @("DeckPilot-Setup.exe", "DeckPilot.exe", "DeckPilot-win-x64.zip", "DeckPilot-firmware.zip") } | ForEach-Object {
+          Get-ChildItem artifacts/release -File | Where-Object { $_.Name -in @("DeckPilot-Setup.exe", "DeckPilot.exe", "DeckPilot-Atelier-Setup.exe", "DeckPilot-Atelier.exe", "DeckPilot-win-x64.zip", "DeckPilot-firmware.zip") } | ForEach-Object {
             $hash = (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
             "$hash  $($_.Name)"
           } | Set-Content artifacts/release/SHA256SUMS.txt -Encoding ascii
@@ -90,5 +96,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         shell: pwsh
         run: |
-          gh release create "$env:GITHUB_REF_NAME" artifacts/release/DeckPilot-Setup.exe artifacts/release/DeckPilot.exe artifacts/release/DeckPilot-win-x64.zip artifacts/release/DeckPilot-firmware.zip artifacts/release/SHA256SUMS.txt --verify-tag --title "DeckPilot $env:GITHUB_REF_NAME" --notes-file .github/release-notes.md
+          gh release create "$env:GITHUB_REF_NAME" artifacts/release/DeckPilot-Setup.exe artifacts/release/DeckPilot.exe artifacts/release/DeckPilot-Atelier-Setup.exe artifacts/release/DeckPilot-Atelier.exe artifacts/release/DeckPilot-win-x64.zip artifacts/release/DeckPilot-firmware.zip artifacts/release/SHA256SUMS.txt --verify-tag --title "DeckPilot $env:GITHUB_REF_NAME" --notes-file .github/release-notes.md
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
