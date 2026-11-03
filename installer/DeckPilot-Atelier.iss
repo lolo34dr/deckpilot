@@ -42,4 +42,38 @@ Name: "{autoprograms}\DeckPilot Atelier"; Filename: "{app}\DeckPilot.Factory.exe
 Name: "{autodesktop}\DeckPilot Atelier"; Filename: "{app}\DeckPilot.Factory.exe"; WorkingDir: "{app}"; IconFilename: "{app}\DeckPilot.Factory.ico"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\DeckPilot.Factory.exe"; Description: "Ouvrir DeckPilot Atelier"; Flags: postinstall nowait skipifsilent
+Filename: "{app}\DeckPilot.Factory.exe"; Description: "Ouvrir DeckPilot Atelier"; Flags: postinstall nowait skipifsilent runasoriginaluser
+Filename: "{app}\DeckPilot.Factory.exe"; Flags: nowait runasoriginaluser; Check: IsUpdate
+
+[Code]
+function IsUpdate: Boolean;
+begin
+  Result := ExpandConstant('{param:UPDATE|0}') <> '0';
+end;
+
+function StopFactory(Exe: String): Boolean;
+var Code, Attempt: Integer;
+begin
+  Result := True;
+  if not CheckForMutexes('Local\DeckPilot.Factory') then exit;
+  for Attempt := 1 to 20 do begin
+    ExecAsOriginalUser(Exe, '--exit-for-install', '', SW_HIDE, ewWaitUntilTerminated, Code);
+    Sleep(250);
+    if not CheckForMutexes('Local\DeckPilot.Factory') then exit;
+  end;
+  Result := False;
+end;
+
+function PrepareToInstall(var NeedsRestart: Boolean): String;
+begin
+  ExtractTemporaryFile('DeckPilot.Factory.exe');
+  if not StopFactory(ExpandConstant('{tmp}\DeckPilot.Factory.exe')) then
+    Result := 'Fermez DeckPilot Atelier et attendez la fin du flash avant de réessayer.'
+  else Result := '';
+end;
+
+function InitializeUninstall: Boolean;
+begin
+  Result := StopFactory(ExpandConstant('{app}\DeckPilot.Factory.exe'));
+  if not Result then MsgBox('Fermez DeckPilot Atelier et attendez la fin du flash avant de désinstaller.', mbError, MB_OK);
+end;

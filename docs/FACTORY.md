@@ -16,3 +16,7 @@ Le test lit le masque des touches via le protocole série du firmware. Il ne dé
 Si l’écriture a été interrompue, rebranche la carte. Caterina reste intact et permet de relancer le flash depuis le bootloader. L’application enregistre le journal AVRDUDE dans `%LOCALAPPDATA%\DeckPilotFactory\last-flash.log`.
 
 Le programme nécessite Windows 10 ou 11 64 bits, un câble USB de données et une carte équipée du bootloader Caterina. Il ne peut pas installer un bootloader absent ou endommagé.
+
+## Mises à jour
+
+Atelier vérifie les nouvelles versions de l’application et du firmware inclus au démarrage, et le bouton **Vérifier les mises à jour** lance une recherche manuelle. Après confirmation, l’installeur est téléchargé puis validé avec le SHA-256 publié. Le programme se ferme proprement, s’installe dans son dossier existant et redémarre. Si une nouvelle version du firmware est incluse, elle peut ensuite être flashée depuis l’étape 1 ; l’application ne programme jamais une carte automatiquement.

@@ -1,3 +1,11 @@
+DeckPilot 1.9.1 improves the Atelier installer startup and adds automatic app and firmware update checks.
+
+- The installer launches Atelier in the signed-in Windows user session and safely stops/restarts it for upgrades.
+- Atelier checks GitHub on startup and on demand. It announces newer Atelier builds or bundled firmware, then downloads an installer verified against the published SHA-256 file.
+- Firmware is only flashed after the user chooses the flash action; an app update never writes to a connected board on its own.
+
+The Atelier installer also launches in the signed-in user's Windows session after a fresh installation. The release workflow now opens the installed app, then verifies upgrade and uninstall while it is running.
+
 DeckPilot 1.9.0 adds DeckPilot Atelier, a separate Windows workshop app for flashing new macropads and checking all 12 keys.
 
 - Install the included firmware on Leonardo / Pro Micro ATmega32U4 boards with the Caterina bootloader.

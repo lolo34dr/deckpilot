@@ -360,4 +360,8 @@ The firmware remains **1.1.1**. Accepting an automatic firmware offer now correc
 
 The separate **DeckPilot Atelier** Windows installer prepares new DIY macropads. It detects Leonardo/Caterina boards, validates and flashes the bundled firmware without overwriting the bootloader, then guides a physical 3×4 check of all 12 buttons. Each button must pass a short press and a hold of at least 700 ms. The tool records which F13–F24 signal belongs to each physical position, flags multiple or inconsistent signals, and exports a timestamped report. Download `DeckPilot-Atelier-Setup.exe` from the releases page. A Caterina bootloader must already be present; the tool does not install a missing bootloader.
 
+DeckPilot Atelier checks GitHub for app and bundled-firmware updates on startup and on demand. Updates require confirmation and use the release SHA-256 manifest. Firmware is never flashed by an update automatically; after Atelier updates, choose the firmware action when you are ready to program the connected board.
+
+Version 1.9.1 fixes launching Atelier after installation by starting it in the signed-in Windows session. Its updater can install a newer Atelier package or firmware bundle, then relaunch the app. The Windows release pipeline checks first launch, upgrade and uninstall for the Atelier installer.
+
 Validation covers legacy settings, accent validation, profile navigation and reference remapping, portable templates, native Windows template/undo/redo and profile switching, shortcut recording, copy/paste/reset, settings persistence, installation/update, layout resizing and an actual UI capture. Hardware-specific behavior still requires the macropad and audio devices on a Windows PC.
