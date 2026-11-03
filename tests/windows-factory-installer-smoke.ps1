@@ -17,6 +17,11 @@ function Run-Setup([string]$File, [string[]]$Options) {
     if (!$process.WaitForExit(90000)) { throw 'DeckPilot Atelier setup did not complete within 90 seconds.' }
     if ($process.ExitCode -ne 0) { throw "DeckPilot Atelier setup failed with code $($process.ExitCode)" }
 }
+function Get-AtelierStartupDiagnostics {
+    $path = Join-Path $env:LOCALAPPDATA 'DeckPilotFactory/startup-errors.log'
+    if (Test-Path $path) { return Get-Content $path -Raw }
+    return 'No startup-errors.log was created.'
+}
 $setup = (Resolve-Path $Installer).Path
 $directory = Join-Path $env:ProgramFiles 'DeckPilot Atelier'
 $executable = Join-Path $directory 'DeckPilot.Factory.exe'
@@ -37,8 +42,14 @@ try {
 
     $phase = 'start installed WPF application'
     $app = Start-Process $executable -PassThru
-    if (!$app.WaitForInputIdle(30000)) { throw 'Installed Atelier did not reach its WPF message loop.' }
-    Wait-Until { $app.Refresh(); !$app.HasExited -and $app.MainWindowHandle -ne [IntPtr]::Zero }
+    try { $idle = $app.WaitForInputIdle(30000) }
+    catch { $app.Refresh(); $exit = if ($app.HasExited) { $app.ExitCode } else { 'still running' }; throw "Installed Atelier failed to reach its WPF message loop (exit=$exit). $(Get-AtelierStartupDiagnostics)" }
+    if (!$idle) { $app.Refresh(); $exit = if ($app.HasExited) { $app.ExitCode } else { 'still running' }; throw "Installed Atelier did not reach its WPF message loop (exit=$exit). $(Get-AtelierStartupDiagnostics)" }
+    Wait-Until {
+        $app.Refresh()
+        if ($app.HasExited) { throw "Installed Atelier exited before showing its main window (exit=$($app.ExitCode)). $(Get-AtelierStartupDiagnostics)" }
+        $app.MainWindowHandle -ne [IntPtr]::Zero
+    }
     if ($app.MainWindowTitle -ne 'DeckPilot Atelier') { throw "Unexpected Atelier window title: $($app.MainWindowTitle)" }
     Write-Host 'PASS Atelier startup: the installed application opened its main window'
 
