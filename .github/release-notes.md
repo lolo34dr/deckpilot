@@ -1,3 +1,5 @@
+DeckPilot 1.9.3 fixes the Atelier build metadata to read the firmware manifest from the bundled firmware archive.
+
 DeckPilot 1.9.2 fixes the Atelier release packaging step and improves its build diagnostics.
 
 DeckPilot 1.9.1 improves the Atelier installer startup and adds automatic app and firmware update checks.

@@ -366,4 +366,6 @@ Version 1.9.1 fixes launching Atelier after installation by starting it in the s
 
 Version 1.9.2 improves the Atelier Windows packaging step and reports its exact failure location in CI.
 
+Version 1.9.3 corrects how the Windows package reads the included firmware version, so Atelier's update check tracks the firmware shipped in the installer.
+
 Validation covers legacy settings, accent validation, profile navigation and reference remapping, portable templates, native Windows template/undo/redo and profile switching, shortcut recording, copy/paste/reset, settings persistence, installation/update, layout resizing and an actual UI capture. Hardware-specific behavior still requires the macropad and audio devices on a Windows PC.
