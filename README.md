@@ -21,6 +21,7 @@
 <p align="center">
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&amp;color=78b7a0" alt="Latest release"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&amp;logo=windows" alt="Download for Windows x64"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe"><img src="https://img.shields.io/badge/Download-DeckPilot_Atelier-16856A?style=flat-square&amp;logo=windows" alt="Download DeckPilot Atelier"></a>
   <a href="https://github.com/lolo34dr/deckpilot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/lolo34dr/deckpilot?style=flat-square" alt="MIT license"></a>
   <a href="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml"><img src="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml/badge.svg?branch=main" alt="Windows build status"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&amp;color=70a7e8" alt="GitHub release downloads"></a>
@@ -260,6 +261,8 @@ Suggested credit:
 
 ## Macropad firmware updates
 
+For device preparation and workshop quality checks, install the separate [DeckPilot Atelier](docs/FACTORY.md) tool. Its installer is published as **[DeckPilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** alongside the main application. It can flash the included firmware to a Leonardo/Caterina board, then check short and long presses on all 12 physical keys and export a report.
+
 DeckPilot 1.1.0 includes a **Firmware du macropad…** dialog and firmware 1.0.0 for the Pro Micro ATmega32U4 **5 V / 16 MHz**, using the Leonardo/Caterina configuration confirmed by the owner's upload log. The bundled Windows flashing tool does not require Arduino IDE. Device selection and confirmation are mandatory; app updates never silently flash the board. Existing F13–F24 mappings, profiles and calibration remain compatible.
 
 **The owner has confirmed successful in-app flashing, firmware 1.0.0 identification and all 12 buttons on the reference board.** Keep the original sketch and access to RST/GND for recovery. Firmware flashing cannot be rolled back automatically. See [firmware documentation](firmware/README.md) for compatibility, validation, recovery, build steps and third-party licenses. Per-button USB modes and native media controls are not part of this firmware release.
@@ -352,5 +355,9 @@ The charcoal interface puts the action library first, separates profile controls
 - **Quick access:** Ctrl+K or the Library button focuses action search. **Activité récente** keeps the last 30 dispatched/failed actions in memory for this session, without storing program arguments or target paths. It can be cleared at any time. A successful dispatch does not guarantee completion in the target app.
 
 The firmware remains **1.1.1**. Accepting an automatic firmware offer now correctly opens the firmware manager; the previous modal guard prevented that handoff. Existing firmware identity, heartbeat, reconnect and flash checks remain in place. New workspace features do not need a firmware flash.
+
+## DeckPilot Atelier (1.9.0)
+
+The separate **DeckPilot Atelier** Windows installer prepares new DIY macropads. It detects Leonardo/Caterina boards, validates and flashes the bundled firmware without overwriting the bootloader, then guides a physical 3×4 check of all 12 buttons. Each button must pass a short press and a hold of at least 700 ms. The tool records which F13–F24 signal belongs to each physical position, flags multiple or inconsistent signals, and exports a timestamped report. Download `DeckPilot-Atelier-Setup.exe` from the releases page. A Caterina bootloader must already be present; the tool does not install a missing bootloader.
 
 Validation covers legacy settings, accent validation, profile navigation and reference remapping, portable templates, native Windows template/undo/redo and profile switching, shortcut recording, copy/paste/reset, settings persistence, installation/update, layout resizing and an actual UI capture. Hardware-specific behavior still requires the macropad and audio devices on a Windows PC.

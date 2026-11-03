@@ -1,0 +1,241 @@
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Threading;
+using DeckPilot.Core;
+using Microsoft.Win32;
+
+namespace DeckPilot.Factory;
+
+public partial class MainWindow : Window
+{
+    private const long LongPressMs = 700;
+    private readonly ObservableCollection<FactoryDevice> devices = [];
+    private readonly Button[] keys = new Button[12];
+    private readonly bool[] shortPassed = new bool[12], longPassed = new bool[12];
+    private readonly int[] pinForPhysical = Enumerable.Repeat(-1, 12).ToArray();
+    private readonly List<string> events = [];
+    private readonly DispatcherTimer scanTimer = new() { Interval = TimeSpan.FromSeconds(2) };
+    private bool scanning, flashBusy, testBusy, held, fail, firmwareAvailable;
+    private int physicalIndex, stage, heldPin = -1, previousMask;
+    private long pressedAt;
+    private CancellationTokenSource? testCancellation;
+    private string lastDevice = "";
+
+    public MainWindow()
+    {
+        InitializeComponent();
+        DeviceCombo.ItemsSource = devices;
+        BuildKeyGrid();
+        FirmwareManifest? manifest = null;
+        try { manifest = FactoryHardware.BundleInfo(); FirmwareVersionLabel.Text = "Firmware inclus : " + (manifest?.Version ?? "absent"); firmwareAvailable = manifest != null; }
+        catch (Exception ex) { FirmwareVersionLabel.Text = "Firmware invalide"; FlashStatus.Text = ex.Message; FlashButton.IsEnabled = false; }
+        if (manifest == null) { FlashStatus.Text = "Firmware non inclus. Réinstalle cette application depuis un installeur officiel."; FlashButton.IsEnabled = false; }
+        scanTimer.Tick += async (_, _) => await RefreshDevicesAsync(); scanTimer.Start();
+        Loaded += async (_, _) => await RefreshDevicesAsync();
+        Closing += (_, _) => { scanTimer.Stop(); testCancellation?.Cancel(); };
+    }
+
+    private void BuildKeyGrid()
+    {
+        for (int i = 0; i < 12; i++)
+        {
+            var panel = new StackPanel { HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
+            panel.Children.Add(new TextBlock { Text = (i + 1).ToString("00"), FontSize = 21, FontWeight = FontWeights.SemiBold, HorizontalAlignment = HorizontalAlignment.Center });
+            panel.Children.Add(new TextBlock { Text = "Court  ·  Long", FontSize = 11, Foreground = (Brush)FindResource("MutedBrush"), HorizontalAlignment = HorizontalAlignment.Center, Margin = new Thickness(0, 5, 0, 0) });
+            var button = new Button { Content = panel, Margin = new Thickness(5), MinHeight = 112, Background = (Brush)FindResource("Panel2Brush"), BorderBrush = (Brush)FindResource("LineBrush"), Tag = i, IsEnabled = false };
+            keys[i] = button; KeyGrid.Children.Add(button);
+        }
+    }
+
+    private async Task RefreshDevicesAsync()
+    {
+        if (scanning || flashBusy || testBusy) return;
+        scanning = true;
+        try
+        {
+            var found = await Task.Run(FactoryHardware.Discover);
+            var previous = DeviceCombo.SelectedItem as FactoryDevice;
+            devices.Clear(); foreach (var d in found) devices.Add(d);
+            DeviceCombo.SelectedItem = devices.FirstOrDefault(d => d.Id == previous?.Id)
+                ?? devices.FirstOrDefault(d => !string.IsNullOrWhiteSpace(previous?.Location) && d.Location == previous.Location)
+                ?? devices.FirstOrDefault(d => d.Bootloader) ?? (devices.Count == 1 ? devices[0] : null);
+            if (devices.Count == 0) { ConnectionDot.Fill = new SolidColorBrush(Color.FromRgb(139, 150, 145)); ConnectionLabel.Text = "Carte non détectée"; }
+            else if (devices.Count == 1) { ConnectionDot.Fill = (Brush)FindResource("AccentBrush"); ConnectionLabel.Text = devices[0].Bootloader ? "Bootloader détecté" : "Carte USB détectée"; }
+            else { ConnectionDot.Fill = Brushes.Orange; ConnectionLabel.Text = $"{devices.Count} cartes détectées"; }
+        }
+        catch (Exception ex) { FlashStatus.Text = "Détection USB indisponible : " + ex.Message; }
+        finally { scanning = false; }
+    }
+
+    private void DeviceCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (FlashButton == null) return;
+        var device = DeviceCombo.SelectedItem as FactoryDevice;
+        FlashButton.IsEnabled = device != null && firmwareAvailable && !flashBusy;
+        if (device != null) FlashStatus.Text = device.Bootloader ? "Bootloader Caterina prêt. Le firmware peut être installé." : "Carte Leonardo détectée. L’application redémarrera la carte en mode bootloader avant le flash.";
+    }
+
+    private async void FlashButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (DeviceCombo.SelectedItem is not FactoryDevice device || flashBusy) return;
+        if (string.IsNullOrWhiteSpace(device.Location)) { FlashStatus.Text = "Windows ne permet pas de vérifier l’emplacement USB physique. Aucun flash ne sera lancé."; return; }
+        flashBusy = true; FlashButton.IsEnabled = false; FlashProgress.Visibility = Visibility.Visible; FlashProgress.IsIndeterminate = true;
+        var progress = new Progress<string>(s => FlashStatus.Text = s);
+        try
+        {
+            await FactoryHardware.FlashAsync(device, progress, CancellationToken.None);
+            FlashStatus.Text = "Tout est prêt. Passe à l’étape 2 pour contrôler les 12 touches.";
+            ShowTestPage(); await RefreshDevicesAsync();
+        }
+        catch (Exception ex) { FlashStatus.Text = ex.Message; }
+        finally { flashBusy = false; FlashProgress.IsIndeterminate = false; FlashProgress.Visibility = Visibility.Collapsed; FlashButton.IsEnabled = firmwareAvailable && DeviceCombo.SelectedItem != null; }
+    }
+
+    private void FlashTab_Click(object sender, System.Windows.Input.MouseButtonEventArgs e) => ShowFlashPage();
+    private void TestTab_Click(object sender, System.Windows.Input.MouseButtonEventArgs e) => ShowTestPage();
+    private void ShowFlashPage()
+    {
+        StopTest(); FlashPage.Visibility = Visibility.Visible; TestPage.Visibility = Visibility.Collapsed;
+        FlashTab.Background = (Brush)FindResource("Panel2Brush"); TestTab.Background = Brushes.Transparent;
+        ((TextBlock)((Grid)TestTab.Child).Children[0]).Foreground = (Brush)FindResource("MutedBrush");
+        ((TextBlock)((Grid)FlashTab.Child).Children[0]).Foreground = Brushes.White;
+    }
+    private void ShowTestPage()
+    {
+        StopTest(); FlashPage.Visibility = Visibility.Collapsed; TestPage.Visibility = Visibility.Visible;
+        TestTab.Background = (Brush)FindResource("Panel2Brush"); FlashTab.Background = Brushes.Transparent;
+        ((TextBlock)((Grid)FlashTab.Child).Children[0]).Foreground = (Brush)FindResource("MutedBrush");
+        ((TextBlock)((Grid)TestTab.Child).Children[0]).Foreground = Brushes.White;
+    }
+
+    private async void ConnectTest_Click(object sender, RoutedEventArgs e)
+    {
+        if (testBusy) { StopTest(); ConnectTestButton.Content = "Démarrer le test USB"; TestStatus.Text = "Test interrompu."; return; }
+        await StartTestAsync();
+    }
+
+    private async Task StartTestAsync()
+    {
+        var candidates = devices.Where(d => !d.Bootloader).ToArray();
+        var device = (DeviceCombo.SelectedItem as FactoryDevice is { Bootloader: false } selected ? selected : null)
+            ?? candidates.FirstOrDefault(d => d.Id == lastDevice) ?? (candidates.Length == 1 ? candidates[0] : null);
+        if (device == null) { TestStatus.Text = candidates.Length == 0 ? "Carte avec firmware DeckPilot introuvable. Installe d’abord le firmware à l’étape 1." : "Plusieurs cartes détectées. Débranche les autres cartes pour choisir sans ambiguïté."; return; }
+        testBusy = true; lastDevice = device.Id; ConnectTestButton.Content = "Arrêter le test"; TestStatus.Text = "Connexion au firmware…";
+        testCancellation = new CancellationTokenSource(); var token = testCancellation.Token;
+        try
+        {
+            using var transport = new FactoryTransport(device.Port);
+            var client = new BoardProtocolClient(transport);
+            BoardInfo? info = null;
+            for (int attempt = 0; attempt < 8 && info == null; attempt++)
+            {
+                token.ThrowIfCancellationRequested();
+                try { info = await Task.Run(() => client.Connect(token), token); }
+                catch (IOException) when (attempt < 7) { await Task.Delay(400, token); }
+            }
+            if (info == null) throw new IOException("Le macropad ne répond pas. Vérifie qu’il n’est pas ouvert dans DeckPilot ou un autre outil série.");
+            if (info.Protocol != 2 || (info.Capabilities & 2) == 0) throw new IOException("Cette version du firmware ne transmet pas les événements des touches. Installe le firmware inclus dans l’outil Atelier.");
+            TestStatus.Text = $"Firmware {info.Firmware.Version} connecté. Appuie brièvement sur la touche physique 01.";
+            TestInstructions.Text = "Suis l’ordre des touches sur la grille. Pour chaque touche : appui court, puis maintien long.";
+            foreach (var key in keys) key.IsEnabled = true;
+            await Task.Run(() => client.Run(OnTelemetry, token), token);
+        }
+        catch (OperationCanceledException) { }
+        catch (Exception ex) { Dispatcher.Invoke(() => { TestStatus.Text = "Connexion échouée : " + ex.Message; Activity.Text = "Aucune mesure en cours."; }); }
+        finally { Dispatcher.Invoke(() => { testBusy = false; ConnectTestButton.Content = "Démarrer le test USB"; foreach (var key in keys) key.IsEnabled = false; }); }
+    }
+
+    private void StopTest()
+    {
+        testCancellation?.Cancel(); testCancellation?.Dispose(); testCancellation = null;
+        foreach (var key in keys) key.IsEnabled = false;
+    }
+
+    private void OnTelemetry(BoardTelemetry telemetry) => Dispatcher.BeginInvoke(() => ProcessMask(telemetry.Mask));
+
+    private void ProcessMask(int mask)
+    {
+        if (!testBusy) return;
+        if (fail) { if (mask == 0) { fail = false; previousMask = 0; } return; }
+        if (mask == previousMask) return;
+        if (held)
+        {
+            if (mask == 0) { long duration = Environment.TickCount64 - pressedAt; held = false; previousMask = 0; CompletePress(duration); return; }
+            SetFailure("Plusieurs touches détectées en même temps. Relâche tout et vérifie le câblage."); return;
+        }
+        previousMask = mask;
+        if (mask == 0) return;
+        if (physicalIndex >= 12) { Activity.Text = "Les 12 touches ont réussi. Aucune touche supplémentaire n’est attendue."; return; }
+        if (System.Numerics.BitOperations.PopCount((uint)mask) != 1) { SetFailure("Plusieurs entrées se sont activées ensemble. Relâche les touches puis vérifie le câblage."); return; }
+        int pin = System.Numerics.BitOperations.TrailingZeroCount((uint)mask);
+        int mappedPhysical = Array.IndexOf(pinForPhysical, pin);
+        if (mappedPhysical >= 0 && mappedPhysical != physicalIndex) { SetFailure($"Le signal F{13 + pin} a déjà été affecté à la touche physique {mappedPhysical + 1:00}. Vérifie qu’il n’y a pas de pont entre deux boutons."); return; }
+        if (stage == 1 && pinForPhysical[physicalIndex] != pin) { SetFailure($"La touche physique {physicalIndex + 1:00} a envoyé F{13 + pin} au lieu de F{13 + pinForPhysical[physicalIndex]}. Relâche et recommence."); return; }
+        held = true; heldPin = pin; pressedAt = Environment.TickCount64;
+        Activity.Text = $"Touche physique {physicalIndex + 1:00} détectée (F{13 + pin}). {(stage == 0 ? "Relâche avant 700 ms pour valider l’appui court." : "Garde la touche enfoncée au moins 700 ms pour valider l’appui long.")}";
+    }
+
+    private void CompletePress(long duration)
+    {
+        bool longPress = duration >= LongPressMs;
+        if (stage == 0 && longPress) { SetFailure($"Appui trop long ({duration} ms). Pour le test court, relâche en moins de 700 ms."); return; }
+        if (stage == 1 && !longPress) { SetFailure($"Appui trop court ({duration} ms). Maintiens la touche au moins 700 ms."); return; }
+        if (stage == 0)
+        {
+            pinForPhysical[physicalIndex] = heldPin; shortPassed[physicalIndex] = true; stage = 1;
+            events.Add($"{DateTimeOffset.Now:O} · Touche {physicalIndex + 1:00} · F{13 + heldPin} · court · {duration} ms · OK");
+            UpdateGrid(); Activity.Text = $"Appui court réussi sur {physicalIndex + 1:00}. Maintenant, garde cette même touche enfoncée au moins 700 ms.";
+        }
+        else
+        {
+            longPassed[physicalIndex] = true;
+            events.Add($"{DateTimeOffset.Now:O} · Touche {physicalIndex + 1:00} · F{13 + heldPin} · long · {duration} ms · OK");
+            int done = physicalIndex; physicalIndex++; stage = 0; UpdateGrid();
+            if (physicalIndex == 12)
+            {
+                Activity.Text = "Contrôle réussi : les 12 touches répondent en appui court et long."; ResultTitle.Text = "Contrôle réussi"; ResultTitle.Foreground = (Brush)FindResource("AccentBrush"); TestStatus.Text = "Les 12 touches et les 24 types d’appui sont validés. Tu peux enregistrer le rapport."; ExportButton.IsEnabled = true;
+            }
+            else Activity.Text = $"Appui long réussi sur {done + 1:00}. Passe à la touche physique {physicalIndex + 1:00} et commence par un appui court.";
+        }
+    }
+
+    private void SetFailure(string message)
+    {
+        fail = previousMask != 0; held = false; previousMask = fail ? -1 : 0; ResultTitle.Text = "À vérifier"; ResultTitle.Foreground = Brushes.Orange; Activity.Text = message;
+        TestStatus.Text = "Erreur de mesure détectée. Relâche les touches ; la séquence reprendra au même bouton.";
+    }
+
+    private void UpdateGrid()
+    {
+        int shortCount = shortPassed.Count(v => v), longCount = longPassed.Count(v => v);
+        ShortCount.Text = $"{shortCount} / 12"; LongCount.Text = $"{longCount} / 12";
+        for (int i = 0; i < 12; i++)
+        {
+            var root = (StackPanel)keys[i].Content; var number = (TextBlock)root.Children[0]; var status = (TextBlock)root.Children[1];
+            number.Text = pinForPhysical[i] < 0 ? $"{i + 1:00}" : $"{i + 1:00}   ·   F{13 + pinForPhysical[i]}";
+            status.Text = $"{(shortPassed[i] ? "✓ Court" : "○ Court")}     {(longPassed[i] ? "✓ Long" : "○ Long")}";
+            keys[i].BorderBrush = i == physicalIndex && physicalIndex < 12 ? (Brush)FindResource("AccentBrush") : shortPassed[i] && longPassed[i] ? (Brush)FindResource("AccentBrush") : (Brush)FindResource("LineBrush");
+        }
+        ExportButton.IsEnabled = shortCount == 12 && longCount == 12;
+        if (physicalIndex < 12) ResultTitle.Text = $"Touche {physicalIndex + 1:00} sur 12 · {(stage == 0 ? "appui court" : "appui long")}";
+    }
+
+    private void ResetTest_Click(object sender, RoutedEventArgs e)
+    {
+        Array.Clear(shortPassed); Array.Clear(longPassed); Array.Fill(pinForPhysical, -1); events.Clear(); physicalIndex = stage = 0; fail = held = false; previousMask = 0;
+        UpdateGrid(); ResultTitle.Text = "En attente"; ResultTitle.Foreground = (Brush)FindResource("MutedBrush"); Activity.Text = "En attente d’une touche…"; TestStatus.Text = "Appuie sur Démarrer le test USB pour commencer."; ExportButton.IsEnabled = false;
+    }
+
+    private void ExportButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (!ExportButton.IsEnabled) return;
+        var dialog = new SaveFileDialog { Title = "Enregistrer le rapport de contrôle", Filter = "Rapport texte (*.txt)|*.txt", FileName = $"DeckPilot-controle-{DateTime.Now:yyyyMMdd-HHmm}.txt", AddExtension = true, DefaultExt = ".txt" };
+        if (dialog.ShowDialog() != true) return;
+        var report = new StringBuilder(); report.AppendLine("DeckPilot Atelier — Rapport de contrôle"); report.AppendLine($"Date : {DateTimeOffset.Now:yyyy-MM-dd HH:mm:ss zzz}"); report.AppendLine("Résultat : RÉUSSI"); report.AppendLine("Touches contrôlées : 12 / 12"); report.AppendLine("Appuis courts : 12 / 12"); report.AppendLine("Appuis longs : 12 / 12"); report.AppendLine(); report.AppendLine("Détail des mesures :"); foreach (string item in events) report.AppendLine(item);
+        try { File.WriteAllText(dialog.FileName, report.ToString(), new UTF8Encoding(true)); TestStatus.Text = "Rapport enregistré : " + dialog.FileName; } catch (Exception ex) { TestStatus.Text = "Impossible d’enregistrer le rapport : " + ex.Message; }
+    }
+}
