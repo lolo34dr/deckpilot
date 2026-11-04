@@ -211,10 +211,10 @@
       <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,12,0,12"/>
       <Expander x:Name="SoundboardExpander" Header="Soundboard · micro virtuel" Margin="0,0,0,8">
        <StackPanel Margin="0,8,0,0">
-        <TextBlock Text="Choisis ton micro et la sortie du câble virtuel (CABLE Input). Dans Discord ou le jeu, choisis CABLE Output comme micro." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+        <TextBlock Text="Choisis ton micro physique. DeckPilot envoie la voix et les sons vers VB-CABLE. Dans Discord ou le jeu, choisis CABLE Output comme microphone." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,0,0,8"/>
         <TextBlock Text="Microphone physique"/><ComboBox x:Name="SoundboardMicrophonePicker" DisplayMemberPath="Name" SelectionChanged="SoundboardDevicesChanged"/>
-        <TextBlock Text="Sortie vers le micro virtuel"/><ComboBox x:Name="SoundboardOutputPicker" DisplayMemberPath="Name" SelectionChanged="SoundboardDevicesChanged"/>
         <Button Content="Actualiser les périphériques" Click="RefreshSoundboardDevicesClick" HorizontalAlignment="Left"/>
+        <Button Content="Installer le pilote audio virtuel…" Click="InstallVirtualCableClick" HorizontalAlignment="Left"/>
         <Button x:Name="SoundboardStartButton" Content="Activer le micro virtuel" Click="ToggleSoundboardClick" HorizontalAlignment="Left"/>
         <TextBlock x:Name="SoundboardStatus" Text="Micro virtuel arrêté." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,5,0,10"/>
         <Button Content="Ajouter un son MP3 ou WAV…" Click="AddSoundClipClick" HorizontalAlignment="Left"/>

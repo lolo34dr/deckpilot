@@ -23,6 +23,9 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v5
+      - name: Verify the official signed VB-CABLE installer
+        shell: pwsh
+        run: ./src/DeckPilot.Windows/Install-VBCABLE.ps1 -ValidateOnly
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '8.0.x'

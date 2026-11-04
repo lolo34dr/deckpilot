@@ -43,9 +43,15 @@ $app = $null; $updatedApp = $null
 try {
     $phase = 'fresh installation into Program Files'
     Run-Setup $setup @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART',('/LOG="' + (Join-Path $env:TEMP 'deckpilot-install.log') + '"'))
-    foreach ($file in @($executable, (Join-Path $directory 'DeckPilot.install'), (Join-Path $directory 'DeckPilot.ico'), $uninstaller, $desktop, $startMenu)) {
+    $driverBootstrapPath = Join-Path $directory 'Install-VBCABLE.ps1'
+    foreach ($file in @($executable, (Join-Path $directory 'DeckPilot.install'), (Join-Path $directory 'DeckPilot.ico'), $driverBootstrapPath, $uninstaller, $desktop, $startMenu)) {
         if (!(Test-Path $file)) { throw "Missing installed file: $file" }
     }
+    $driverBootstrap = Get-Content $driverBootstrapPath -Raw
+    if ($driverBootstrap -notmatch 'Get-AuthenticodeSignature' -or $driverBootstrap -notmatch 'VB-Audio') { throw 'The integrated VB-CABLE bootstrap must verify the official publisher before execution' }
+    if ($driverBootstrap -match 'bcdedit|testsigning') { throw 'The VB-CABLE bootstrap must not change Windows test-signing settings' }
+    $installerDefinition = Get-Content (Join-Path $PSScriptRoot '..\installer\DeckPilot.iss') -Raw
+    if ($installerDefinition -notmatch 'Install-VBCABLE\.ps1.*skipifsilent') { throw 'Silent installer runs must skip the interactive VB-CABLE driver setup' }
     if (!(Test-Path $uninstallKey)) { throw 'Missing Windows uninstall registration' }
     $shell = New-Object -ComObject WScript.Shell
     foreach ($shortcut in @($desktop, $startMenu)) {
@@ -54,6 +60,10 @@ try {
         if ($link.IconLocation -ne ((Join-Path $directory 'DeckPilot.ico') + ',0')) { throw 'Shortcut does not use the DeckPilot icon' }
     }
     if ((Read-RegistryValue $startupKey DeckPilot) -ne ('"' + $executable + '" --background')) { throw 'Startup is not enabled by default for the installing user' }
+    if (!(Test-Path $settingsPath)) { throw 'Installer preferences were not saved for the installing user' }
+    $installerSettings = Get-Content $settingsPath -Raw | ConvertFrom-Json
+    if ($installerSettings.AutoCheckUpdates -ne $true) { throw 'Automatic updates are not enabled by default by the installer' }
+    if ($installerSettings.ReduceMotion -ne $false) { throw 'Reduced motion should remain opt-in by default' }
     # Compare the actual PE icon resources, not GDI's rendered bitmap: Windows may
     # select a different resolution or alter transparent RGB pixels when rendering.
     Add-Type -TypeDefinition @'
