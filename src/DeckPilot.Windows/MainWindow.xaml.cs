@@ -253,7 +253,7 @@ public partial class MainWindow : Window
         ApplyHardwareHighlights();
         ActionExecutionStatus.Text = !string.IsNullOrEmpty(feedbackMessages[selected]) ? feedbackMessages[selected] :
             settings.ActiveProfile.Buttons[selected].Kind == ActionKind.Passthrough ? "Aucune action à tester pour une touche libre." : "Prêt à tester · L’action sera exécutée sur ce PC.";
-        ActionExecutionStatus.Foreground = Brush(feedback[selected] == DeckKeyFeedback.Error ? "#E1A398" : feedback[selected] == DeckKeyFeedback.Success ? "#BAAED3" : "#A8B6AC");
+        ActionExecutionStatus.Foreground = Brush(feedback[selected] == DeckKeyFeedback.Error ? "#E1A398" : feedback[selected] == DeckKeyFeedback.Success ? "#BAAED3" : "#ADADB9");
         TestActionButton.IsEnabled = settings.ActiveProfile.Buttons[selected].Kind != ActionKind.Passthrough && feedback[selected] != DeckKeyFeedback.Running && !firmwareOpen && !calibrating;
         if (pending) feedbackTimer.Start(); else feedbackTimer.Stop();
     }
@@ -691,8 +691,8 @@ public partial class MainWindow : Window
             BoardConnectionKind.Error => "Liaison indisponible",
             _ => "Connexion…"
         };
-        DeckConnectionDot.Fill = Brush(connected ? "#B3A5D1" : "#ADB6AF");
-        DeckConnectionPill.Background = Brush(connected ? "#373046" : "#363C37");
+        DeckConnectionDot.Fill = Brush(connected ? "#B3A5D1" : "#ADAEB9");
+        DeckConnectionPill.Background = Brush(connected ? "#373046" : "#36353E");
         DeckAvailabilityHint.Text = connected ? "Configuration sur ce PC · Cliquez sur une touche pour la modifier."
             : state.Kind == BoardConnectionKind.Disconnected ? "Carte débranchée · Modifiez et testez vos actions sur ce PC."
             : "Vos profils restent modifiables et testables pendant la connexion.";
