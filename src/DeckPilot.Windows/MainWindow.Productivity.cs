@@ -204,7 +204,7 @@ public partial class MainWindow
     private static TextBlock ActivityEmptyState() => new()
     {
         Text = "Les 30 dernières actions de cette session apparaîtront ici. Cet historique n’est pas enregistré.",
-        TextWrapping = TextWrapping.Wrap, Foreground = Brush("#AAB7B3"), FontSize = 11,
+        TextWrapping = TextWrapping.Wrap, Foreground = Brush("#B0B1BC"), FontSize = 11,
         Margin = new Thickness(0, 2, 0, 10)
     };
 
@@ -223,7 +223,7 @@ public partial class MainWindow
             });
             content.Children.Add(new TextBlock { Text = entry.Title, TextWrapping = TextWrapping.Wrap, FontWeight = FontWeights.SemiBold, FontSize = 12, Margin = new Thickness(0, 3, 0, 0) });
             if (entry.Detail.Length > 0)
-                content.Children.Add(new TextBlock { Text = entry.Detail, TextWrapping = TextWrapping.Wrap, FontSize = 11, Foreground = Brush("#AAB7B3"), Margin = new Thickness(0, 3, 0, 0) });
+                content.Children.Add(new TextBlock { Text = entry.Detail, TextWrapping = TextWrapping.Wrap, FontSize = 11, Foreground = Brush("#B0B1BC"), Margin = new Thickness(0, 3, 0, 0) });
             ActivityList.Children.Add(new Border { Child = content, BorderBrush = Brush("#393541"), BorderThickness = new Thickness(0, 0, 0, 1), Padding = new Thickness(0, 8, 0, 10) });
         }
         activityDirty = false;
