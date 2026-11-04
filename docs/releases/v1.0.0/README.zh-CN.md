@@ -1,9 +1,9 @@
-> 这是完整发行笔记的自动翻译,英文原文为参考文献.
+> 这是完整发行注释的自动翻译,英文正本是参考.
 
-版本 1.0.0 (原始内容存档于2018-07-26) (英语). publiée unition for tester la mise à jour automatique depuis 0.2.0.
+版本 1.0.0 (原始内容存档于2018-10-21) (英语). publiée unition for tester la mise à jour automatique depuis 0.2.0.
 
-Aucun de changement fonctionnel ni viuel. Seul le numéro de version de l ' application change; les profils et le 校正音节节。
+Aucun rechangement fonctionnel ni suuel. Seul le numéro de version de l ' sapplication changes; les profils and le collibrage sont conservés. 互联网档案馆的存檔,存档日期2013-12-02.
 
-丹丝 DeckPilot 0.2.0时,使用 **核查员护卫员**,Puis确认 **米特雷·乔尔(Mettre à Jour)**参加自学考试。
+丹丝 DeckPilot 0.2.0,使用兹 **核查员护卫员**,Puis确认 **梅特尔·乔尔**参加自学性研究,考试成绩合格。
 
-责任追究: **DeckPilotưμ㼯A**, **DeckPilot- win -x64.zip (英语).** e 与 **SHA256SUMS.txt (英语).**窗口 10/11 x64 (英语).
+责任追究: **DeckPilot一、导 言1 - 2 3**, **DeckPilot- win -x64.zip (英语).** 页:1 **SHA256SUMS.txt (英语).**窗口 10/11 x64 (英语).
