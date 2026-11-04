@@ -21,7 +21,7 @@ public partial class MainWindow : Window
     private readonly DispatcherTimer scanTimer = new() { Interval = TimeSpan.FromSeconds(2) };
     private readonly FactoryUpdateService updateService = new();
     private readonly CancellationTokenSource lifetime = new();
-    private bool scanning, flashBusy, testBusy, held, fail, firmwareAvailable, updateChecking;
+    private bool scanning, flashBusy, testBusy, held, fail, firmwareAvailable, resetImageAvailable, updateChecking;
     private int physicalIndex, stage, heldPin = -1, previousMask;
     private long pressedAt;
     private CancellationTokenSource? testCancellation;
@@ -34,7 +34,7 @@ public partial class MainWindow : Window
         DeviceCombo.ItemsSource = devices;
         BuildKeyGrid();
         FirmwareManifest? manifest = null;
-        try { manifest = FactoryHardware.BundleInfo(); FirmwareVersionLabel.Text = "Firmware inclus : " + (manifest?.Version ?? "absent"); firmwareAvailable = manifest != null; }
+        try { manifest = FactoryHardware.BundleInfo(); FirmwareVersionLabel.Text = "Firmware inclus : " + (manifest?.Version ?? "absent"); firmwareAvailable = manifest != null; resetImageAvailable = manifest != null; }
         catch (Exception ex) { FirmwareVersionLabel.Text = "Firmware invalide"; FlashStatus.Text = ex.Message; FlashButton.IsEnabled = false; }
         if (manifest == null) { FlashStatus.Text = "Firmware non inclus. Réinstalle cette application depuis un installeur officiel."; FlashButton.IsEnabled = false; }
         scanTimer.Tick += async (_, _) => await RefreshDevicesAsync(); scanTimer.Start();
@@ -77,9 +77,10 @@ public partial class MainWindow : Window
 
     private void DeviceCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (FlashButton == null) return;
+        if (FlashButton == null || ResetBoardButton == null) return;
         var device = DeviceCombo.SelectedItem as FactoryDevice;
         FlashButton.IsEnabled = device != null && firmwareAvailable && !flashBusy;
+        ResetBoardButton.IsEnabled = device != null && resetImageAvailable && !flashBusy;
         if (device != null) FlashStatus.Text = device.Bootloader ? "Bootloader Caterina prêt. Le firmware peut être installé." : "Carte Leonardo détectée. L’application redémarrera la carte en mode bootloader avant le flash.";
     }
 
@@ -129,7 +130,34 @@ public partial class MainWindow : Window
             ShowTestPage(); await RefreshDevicesAsync();
         }
         catch (Exception ex) { FlashStatus.Text = ex.Message; }
-        finally { flashBusy = false; FlashProgress.IsIndeterminate = false; FlashProgress.Visibility = Visibility.Collapsed; FlashButton.IsEnabled = firmwareAvailable && DeviceCombo.SelectedItem != null; }
+        finally { flashBusy = false; FlashProgress.IsIndeterminate = false; FlashProgress.Visibility = Visibility.Collapsed; UpdateDeviceActionButtons(); }
+    }
+
+    private async void ResetBoardButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (DeviceCombo.SelectedItem is not FactoryDevice device || flashBusy) return;
+        if (string.IsNullOrWhiteSpace(device.Location)) { FlashStatus.Text = "Windows ne permet pas de confirmer l’emplacement USB physique. Aucune écriture ne sera lancée."; return; }
+        var answer = MessageBox.Show(this,
+            "Cette opération efface toute la zone programme et laisse une instruction d’arrêt sûre. Le macropad cessera d’envoyer F13–F24 et ne sera plus reconnu comme clavier. Le bootloader Caterina, l’EEPROM et les profils de l’application PC sont préservés. Ce n’est pas un effacement intégral du composant.\n\nContinuer ?",
+            "Effacer le programme de la carte", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
+        if (answer != MessageBoxResult.Yes) return;
+
+        flashBusy = true; UpdateDeviceActionButtons(); FlashProgress.Visibility = Visibility.Visible; FlashProgress.IsIndeterminate = true;
+        var progress = new Progress<string>(s => FlashStatus.Text = s);
+        try { await FactoryHardware.ResetAsync(device, progress, CancellationToken.None); }
+        catch (Exception ex) { FlashStatus.Text = ex.Message; }
+        finally
+        {
+            flashBusy = false; FlashProgress.IsIndeterminate = false; FlashProgress.Visibility = Visibility.Collapsed;
+            await RefreshDevicesAsync(); UpdateDeviceActionButtons();
+        }
+    }
+
+    private void UpdateDeviceActionButtons()
+    {
+        var selected = DeviceCombo.SelectedItem as FactoryDevice;
+        if (FlashButton != null) FlashButton.IsEnabled = selected != null && firmwareAvailable && !flashBusy;
+        if (ResetBoardButton != null) ResetBoardButton.IsEnabled = selected != null && resetImageAvailable && !flashBusy;
     }
 
     private void FlashTab_Click(object sender, System.Windows.Input.MouseButtonEventArgs e) => ShowFlashPage();

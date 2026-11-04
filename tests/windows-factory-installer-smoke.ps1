@@ -1,6 +1,7 @@
 param([Parameter(Mandatory=$true)][string]$Installer)
 $ErrorActionPreference = 'Stop'
 if ($env:GITHUB_ACTIONS -ne 'true') { throw 'This installation test runs only on the disposable GitHub Actions Windows runner.' }
+Add-Type -AssemblyName UIAutomationClient
 $phase = 'initialize'
 trap {
     $detail = ($phase + ': ' + $_.Exception.Message + ' | ' + $_.ScriptStackTrace).Replace('%','%25').Replace("`r",'%0D').Replace("`n",'%0A')
@@ -59,6 +60,17 @@ try {
     }
     if ($app.MainWindowTitle -ne 'DeckPilot Atelier') { throw "Unexpected Atelier window title: $($app.MainWindowTitle)" }
     Write-Host 'PASS Atelier startup: the installed application opened its main window'
+
+    $phase = 'verify reset control and no-device safety'
+    $window = [System.Windows.Automation.AutomationElement]::FromHandle($app.MainWindowHandle)
+    $resetCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::AutomationIdProperty, 'ResetBoardButton')
+    $resetButton = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $resetCondition)
+    if (!$resetButton) { throw 'Atelier reset action is missing from the installed application.' }
+    if ($resetButton.Current.IsEnabled) { throw 'Reset action must remain disabled without a selected physical device.' }
+    $firmwareCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::AutomationIdProperty, 'FirmwareVersionLabel')
+    $firmwareLabel = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $firmwareCondition)
+    if (!$firmwareLabel -or $firmwareLabel.Current.Name -notlike 'Firmware inclus : *') { throw 'Atelier rejected the bundled firmware or reset image.' }
+    Write-Host 'PASS Atelier reset action: visible and disabled without a selected device'
 
     $phase = 'duplicate launch exits cleanly'
     $duplicate = Start-Process $executable -PassThru

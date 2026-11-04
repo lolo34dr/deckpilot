@@ -34,6 +34,8 @@ jobs:
       - name: Compile firmware and bundle verified AVRDUDE
         shell: pwsh
         run: ./firmware/tools/build.ps1
+      - name: Verify safe reset image boundaries
+        run: dotnet run --project tests/DeckPilot.Checks -c Release --no-build
       - name: Verify release version
         shell: pwsh
         run: |

@@ -362,6 +362,8 @@ The separate **DeckPilot Atelier** Windows installer prepares new DIY macropads.
 
 DeckPilot Atelier checks GitHub for app and bundled-firmware updates on startup and on demand. Updates require confirmation and use the release SHA-256 manifest. Firmware is never flashed by an update automatically; after Atelier updates, choose the firmware action when you are ready to program the connected board.
 
+Atelier 1.0.7 adds a confirmed **Effacer le programme DeckPilot** action. It clears the 28 KiB application area with a verified safe stop instruction, so the board stops acting as a keyboard while preserving Caterina for recovery and future flashing. It leaves the bootloader, EEPROM and Windows profiles untouched.
+
 Version 1.9.1 fixes launching Atelier after installation by starting it in the signed-in Windows session. Its updater can install a newer Atelier package or firmware bundle, then relaunch the app. The Windows release pipeline checks first launch, upgrade and uninstall for the Atelier installer.
 
 Version 1.9.2 improves the Atelier Windows packaging step and reports its exact failure location in CI.
@@ -373,5 +375,7 @@ The Atelier release check now reports startup diagnostics if Windows fails to op
 DeckPilot 1.9.6 fixes Atelier's Windows DPI manifest so the installed application launches correctly on Windows 10 and 11.
 
 DeckPilot 1.9.7 fixes uninstalling Atelier while it is running. The Windows release test also verifies launch, in-place update and uninstall.
+
+DeckPilot 1.9.8 adds an explicit, confirmed Atelier reset that replaces the board's user program with a verified empty sketch and preserves the Caterina bootloader.
 
 Validation covers legacy settings, accent validation, profile navigation and reference remapping, portable templates, native Windows template/undo/redo and profile switching, shortcut recording, copy/paste/reset, settings persistence, installation/update, layout resizing and an actual UI capture. Hardware-specific behavior still requires the macropad and audio devices on a Windows PC.

@@ -60,6 +60,22 @@ internal static class FirmwareChecks
         });
         string compiled = Path.Combine("artifacts", "firmware-build", "DeckPilot.ino.hex");
         if (File.Exists(compiled)) Check("The compiled ATmega32U4 image stays below Caterina", () => FirmwareManifest.ValidateHex(File.ReadAllText(compiled)));
+        string reset = Path.Combine("artifacts", "firmware-stage", "Blank.hex");
+        if (File.Exists(reset)) Check("The reset image clears only the 28 KiB application area and leaves a safe reset loop", () => {
+            string image = File.ReadAllText(reset);
+            FirmwareManifest.ValidateHex(image);
+            var bytes = new SortedDictionary<int, byte>();
+            foreach (string line in image.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+            {
+                var record = Convert.FromHexString(line[1..]);
+                if (record[3] != 0) continue;
+                int address = (record[1] << 8) | record[2];
+                for (int i = 0; i < record[0]; i++) bytes.Add(address + i, record[4 + i]);
+            }
+            Expect(bytes.Count == 28672 && bytes[0] == 0xFF && bytes[1] == 0xCF);
+            Expect(bytes.All(pair => pair.Value == 0xFF || pair.Key == 1));
+            Expect(bytes.Keys.Min() == 0 && bytes.Keys.Max() == 28671);
+        });
         return count;
     }
 }
