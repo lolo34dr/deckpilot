@@ -106,13 +106,16 @@ public partial class MainWindow
         var dialog = new OpenFileDialog { Filter = "Audio MP3 ou WAV|*.mp3;*.wav", Title = "Ajouter un son au soundboard" };
         if (dialog.ShowDialog(this) != true) return;
         if (settings.Soundboard.Clips.Count >= 48) { SoundboardStatus.Text = "Limite de 48 sons atteinte."; return; }
-        settings.Soundboard.Clips.Add(new SoundboardClip { Name = Path.GetFileNameWithoutExtension(dialog.FileName), FilePath = dialog.FileName });
+        string name = Path.GetFileNameWithoutExtension(dialog.FileName);
+        settings.Soundboard.Clips.Add(new SoundboardClip { Name = name[..Math.Min(64, name.Length)], FilePath = dialog.FileName });
         SaveSoundboardSettings(); RefreshSoundboardClips();
     }
     private void RefreshSoundboardClips()
     {
+        Guid selectedClipId = (SoundboardClipPicker.SelectedItem as SoundboardClip)?.Id ?? Guid.Empty;
         SoundboardClipList.Children.Clear();
         SoundboardClipPicker.ItemsSource = null; SoundboardClipPicker.ItemsSource = settings.Soundboard.Clips;
+        SoundboardClipPicker.SelectedItem = settings.Soundboard.Clips.FirstOrDefault(c => c.Id == selectedClipId);
         foreach (var clip in settings.Soundboard.Clips)
         {
             var row = new DockPanel { Margin = new Thickness(0, 3, 0, 3) };

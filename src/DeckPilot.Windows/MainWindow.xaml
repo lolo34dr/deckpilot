@@ -32,7 +32,7 @@
       <TextBlock x:Name="ProfileSummary" Grid.Row="2" Text="12 touches · Un espace pour chaque usage" Foreground="{StaticResource MutedBrush}" FontSize="11" Margin="0,10,0,0" TextWrapping="Wrap"/>
      </Grid>
      <Border x:Name="DeckSurface" Grid.Row="1" Margin="0,20,0,0" HorizontalAlignment="Center" Width="490" CornerRadius="16" BorderThickness="1" BorderBrush="#34343E" Padding="16,12,16,12">
-      <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="0,1"><GradientStop Color="#272E32" Offset="0"/><GradientStop Color="#111318" Offset="1"/></LinearGradientBrush></Border.Background>
+      <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="0,1"><GradientStop Color="#19191F" Offset="0"/><GradientStop Color="#0B0C10" Offset="1"/></LinearGradientBrush></Border.Background>
 
       <StackPanel>
        <Grid Margin="6,0,6,10">
