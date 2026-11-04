@@ -118,7 +118,7 @@ public partial class MainWindow : Window
         CreateTray();
         feedbackTimer.Tick += (_, _) => RefreshFeedback();
         Closing += WindowClosing;
-        Closed += (_, _) => { firmwareTimer.Stop(); boardConnection?.Dispose(); feedbackTimer.Stop(); updateTimer.Stop(); lifetime.Cancel(); updateService.Dispose(); soundboard.Dispose(); hook?.Dispose(); tray?.Dispose(); trayIcon?.Dispose(); };
+        Closed += (_, _) => { firmwareTimer.Stop(); boardConnection?.Dispose(); feedbackTimer.Stop(); updateTimer.Stop(); lifetime.Cancel(); updateService.Dispose(); soundboard?.Dispose(); hook?.Dispose(); tray?.Dispose(); trayIcon?.Dispose(); };
         loading = false;
         UpdateHistoryState();
         StatusText.Text = "Prêt · Choisissez un bouton pour le personnaliser.";
@@ -508,7 +508,7 @@ public partial class MainWindow : Window
             else if (action.Kind == ActionKind.Soundboard)
             {
                 if (!Guid.TryParse(action.Target, out var soundId) || settings.Soundboard.Clips.FirstOrDefault(c => c.Id == soundId) is not { } clip) throw new IOException("Son du soundboard introuvable. Choisis un son dans l’éditeur.");
-                soundboard.Toggle(clip.Id, clip.FilePath);
+                Audio.Toggle(clip.Id, clip.FilePath);
             }
             else if (action.Kind == ActionKind.Spotify)
                 await SpotifyController.RunAsync(action.Key, lifetime.Token);

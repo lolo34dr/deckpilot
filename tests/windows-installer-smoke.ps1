@@ -15,6 +15,8 @@ trap {
 function Wait-Until([scriptblock]$Condition) {
     $deadline = [DateTime]::UtcNow.AddSeconds(40)
     do { if (& $Condition) { return }; Start-Sleep -Milliseconds 200 } while ([DateTime]::UtcNow -lt $deadline)
+    $startupLog = Join-Path $env:LOCALAPPDATA 'DeckPilot/startup-error.log'
+    if (Test-Path $startupLog) { throw ('Timed out waiting for installed application. Startup error: ' + (Get-Content $startupLog -Raw)) }
     throw 'Timed out waiting for installed application.'
 }
 function Run-Setup([string]$File, [string[]]$Options) {
