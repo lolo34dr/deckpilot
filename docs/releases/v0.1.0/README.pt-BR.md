@@ -8,6 +8,6 @@ Première versão de DeckPilot descartar janelas 10/11 x64.
 - Zone de notification et démarrage Windows facultatif.
 - AUCUN pilote ni changement du programme du Leonardo.
 
-Téléchargez **DeckPilot.exe** pour la versão autonome, ou **DeckPilot-win-x64.zip** pour le dossier completo à extraire. Aucun runtime .NET ao instalador.
+Téléchargez **DeckPilot.exe** pour la version autonome, ou **DeckPilot-win-x64.zip** pour le dossier completo à extraire. Aucun runtime .NET ao instalador.
 
-Le code est compilé et les verifications automatiques sont exécutées par ce workflow. Le fonctionnement matériel et l’interface restont à validationer sur un PC Windows avec le Leonardo. Les exécutables ne sont pas signés.
+Le code est compilé et les verifications automatiques sont exécutées par ce workflow. Le fonctionnement matériel et l’interface restont à valider sur un PC Windows avec le Leonardo. Les exécutables ne sont pas signés.
