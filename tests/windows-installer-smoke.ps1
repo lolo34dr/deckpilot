@@ -51,7 +51,7 @@ try {
     if ($driverBootstrap -notmatch 'Get-AuthenticodeSignature' -or $driverBootstrap -notmatch 'VB-Audio') { throw 'The integrated VB-CABLE bootstrap must verify the official publisher before execution' }
     if ($driverBootstrap -match 'bcdedit|testsigning') { throw 'The VB-CABLE bootstrap must not change Windows test-signing settings' }
     $installerDefinition = Get-Content (Join-Path $PSScriptRoot '..\installer\DeckPilot.iss') -Raw
-    if ($installerDefinition -notmatch '(?s)\[Run\].*Install-VBCABLE\.ps1.*?Flags: runhidden waituntilterminated ignorefailure') { throw 'The signed VB-CABLE installer must run automatically and never block DeckPilot installation on driver errors' }
+    if ($installerDefinition -notmatch '(?s)\[Run\].*Install-VBCABLE\.ps1.*?Flags: runhidden waituntilterminated;') { throw 'The signed VB-CABLE installer must run automatically and wait for device setup to finish' }
     if ($installerDefinition -match '(?s)Install-VBCABLE\.ps1.{0,300}skipifsilent') { throw 'Silent and update installations must also check for VB-CABLE' }
     if ($installerDefinition -notmatch '--configure-microphone-if-needed') { throw 'The installer must only request microphone setup when the saved device is unavailable' }
     if (!(Test-Path $uninstallKey)) { throw 'Missing Windows uninstall registration' }
