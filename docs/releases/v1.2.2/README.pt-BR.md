@@ -4,6 +4,6 @@ DeckPilot agora exibe seu próprio logotipo no Windows em vez do ícone genéric
 
 - O executável da aplicação incorpora um ícone do Windows multi-resolução (16–256 px).
 - O instalador e a entrada de desinstalação do Windows usam o logotipo do projeto.
-- Os atalhos do ecrã e do menu Iniciar referem- se explicitamente ao instalado DeckPilot ícone, incluindo em atualizações.
+- Os atalhos do ecrã e do menu Iniciar referem- se explicitamente ao instalado DeckPilot ícone, incluindo em upgrades.
 
-Transferir **DeckPilot- Setup.exe** e instalar sobre a versão existente. Perfis, calibração e preferências de inicialização são mantidos. 1.0.0 está inalterado; nenhum flash de hardware é necessário.
+Baixar **DeckPilot- Setup.exe** e instalar sobre a versão existente. Perfis, calibração e preferências de inicialização são mantidos. 1.0.0 está inalterado; nenhum flash de hardware é necessário.
