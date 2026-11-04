@@ -5,7 +5,9 @@ using System.IO.Ports;
 using System.Management;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using DeckPilot.Core;
 
 namespace DeckPilot.Factory;
@@ -15,7 +17,7 @@ internal sealed record FactoryDevice(string Port, string Name, string Id, string
     public override string ToString() => $"{Name}  ·  {Port}";
 }
 
-internal sealed record FirmwarePackage(string Folder, FirmwareManifest Manifest) : IDisposable
+internal sealed record FirmwarePackage(string Folder, FirmwareManifest Manifest, string ResetImage) : IDisposable
 {
     public void Dispose() { try { Directory.Delete(Folder, true); } catch { } }
 }
@@ -29,11 +31,15 @@ internal static class FactoryHardware
         if (resource == null) return null;
         using var archive = new ZipArchive(resource, ZipArchiveMode.Read);
         var hex = archive.GetEntry("DeckPilot.hex") ?? throw new InvalidDataException("Image firmware manquante.");
+        var resetHex = archive.GetEntry("Blank.hex") ?? throw new InvalidDataException("Image vierge manquante.");
         var manifest = archive.GetEntry("manifest.json") ?? throw new InvalidDataException("Manifeste firmware manquant.");
-        if (hex.Length > 128 * 1024 || manifest.Length > 4096) throw new InvalidDataException("Archive firmware invalide.");
+        if (hex.Length > 128 * 1024 || resetHex.Length > 128 * 1024 || manifest.Length > 4096) throw new InvalidDataException("Archive firmware invalide.");
         using var bytes = new MemoryStream(); using (var stream = hex.Open()) stream.CopyTo(bytes);
-        using var reader = new StreamReader(manifest.Open());
-        return FirmwareManifest.Read(reader.ReadToEnd(), bytes.ToArray());
+        using var resetBytes = new MemoryStream(); using (var stream = resetHex.Open()) stream.CopyTo(resetBytes);
+        using var reader = new StreamReader(manifest.Open()); string json = reader.ReadToEnd();
+        var result = FirmwareManifest.Read(json, bytes.ToArray());
+        ValidateResetImage(json, resetBytes.ToArray());
+        return result;
     }
 
     public static FirmwarePackage Prepare()
@@ -57,12 +63,25 @@ internal static class FactoryHardware
                 entry.ExtractToFile(target, false);
             }
             byte[] image = File.ReadAllBytes(Path.Combine(folder, "DeckPilot.hex"));
-            var manifest = FirmwareManifest.Read(File.ReadAllText(Path.Combine(folder, "manifest.json")), image);
+            string json = File.ReadAllText(Path.Combine(folder, "manifest.json"));
+            var manifest = FirmwareManifest.Read(json, image);
+            string resetImage = Path.Combine(folder, "Blank.hex");
+            ValidateResetImage(json, File.ReadAllBytes(resetImage));
             if (!File.Exists(Path.Combine(folder, "tools", "bin", "avrdude.exe")) || !File.Exists(Path.Combine(folder, "tools", "etc", "avrdude.conf")))
                 throw new InvalidDataException("Outil de téléversement manquant.");
-            return new(folder, manifest);
+            return new(folder, manifest, resetImage);
         }
         catch { try { Directory.Delete(folder, true); } catch { } throw; }
+    }
+
+    private static void ValidateResetImage(string json, byte[] image)
+    {
+        using var document = JsonDocument.Parse(json);
+        string expected = document.RootElement.GetProperty("ResetSha256").GetString() ?? "";
+        if (image.Length == 0 || image.Length > 128 * 1024 || !CryptographicOperations.FixedTimeEquals(
+                Convert.FromHexString(expected), SHA256.HashData(image)))
+            throw new InvalidDataException("L’image de remise à zéro est endommagée (SHA-256).");
+        FirmwareManifest.ValidateHex(Encoding.ASCII.GetString(image));
     }
 
     public static IReadOnlyList<FactoryDevice> Discover()
@@ -139,18 +158,7 @@ internal static class FactoryHardware
             boot = await WaitForAsync(device.Location, true, TimeSpan.FromSeconds(20), cancellation);
         }
         progress.Report($"Écriture vérifiée sur {boot.Port}… Ne débranche pas la carte.");
-        string exe = Path.Combine(package.Folder, "tools", "bin", "avrdude.exe");
-        var start = new ProcessStartInfo(exe) { UseShellExecute = false, CreateNoWindow = true, RedirectStandardError = true, RedirectStandardOutput = true, WorkingDirectory = Path.GetDirectoryName(exe)! };
-        foreach (string arg in new[] { "-C" + Path.Combine(package.Folder, "tools", "etc", "avrdude.conf"), "-p", "atmega32u4", "-c", "avr109", "-P", boot.Port, "-b", "57600", "-D", "-U", "flash:w:" + Path.Combine(package.Folder, "DeckPilot.hex") + ":i" }) start.ArgumentList.Add(arg);
-        using var process = Process.Start(start) ?? throw new IOException("AVRDUDE n’a pas pu démarrer.");
-        Task<string> stdout = process.StandardOutput.ReadToEndAsync(), stderr = process.StandardError.ReadToEndAsync();
-        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellation); timeout.CancelAfter(TimeSpan.FromMinutes(2));
-        try { await process.WaitForExitAsync(timeout.Token); }
-        catch (OperationCanceledException) { if (!process.HasExited) process.Kill(true); await process.WaitForExitAsync(); throw new IOException("Téléversement interrompu ou délai dépassé. Le firmware peut être incomplet ; rebranche la carte et relance l’installation."); }
-        string log = await stdout + "\n" + await stderr;
-        string logPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DeckPilotFactory", "last-flash.log");
-        Directory.CreateDirectory(Path.GetDirectoryName(logPath)!); await File.WriteAllTextAsync(logPath, log, cancellation);
-        if (process.ExitCode != 0) throw new IOException($"AVRDUDE a signalé une erreur ({process.ExitCode}). Journal : {logPath}");
+        await ProgramAsync(package, boot, Path.Combine(package.Folder, "DeckPilot.hex"), "last-flash.log", "Téléversement", cancellation);
         progress.Report("Écriture vérifiée. Attente du redémarrage…");
         var runtime = await WaitForAsync(device.Location, false, TimeSpan.FromSeconds(25), cancellation);
         using var transport = new FactoryTransport(runtime.Port);
@@ -158,6 +166,41 @@ internal static class FactoryHardware
         var identity = await Task.Run(() => client.Identify(cancellation), cancellation);
         if (identity.Version != package.Manifest.Version) throw new IOException("La carte répond, mais avec une version firmware inattendue.");
         progress.Report($"Firmware {identity.Version} installé, relu et vérifié.");
+    }
+
+    public static async Task ResetAsync(FactoryDevice selected, IProgress<string> progress, CancellationToken cancellation)
+    {
+        if (string.IsNullOrWhiteSpace(selected.Location)) throw new IOException("Impossible de confirmer l’emplacement USB physique. Aucune écriture ne sera lancée.");
+        var device = Discover().SingleOrDefault(d => d.Id == selected.Id && d.Port == selected.Port && d.Location == selected.Location)
+            ?? throw new IOException("La carte sélectionnée a changé ou a été débranchée. Relance la détection.");
+        using var package = Prepare();
+        FactoryDevice boot = device.Bootloader ? device : await EnterBootloaderAsync(device, progress, cancellation);
+        progress.Report($"Effacement du programme DeckPilot sur {boot.Port}… Ne débranche pas la carte.");
+        await ProgramAsync(package, boot, package.ResetImage, "last-reset.log", "Remise à zéro", cancellation);
+        progress.Report("Zone programme effacée et vérifiée. Le bootloader Caterina est conservé ; la carte n’apparaît plus comme clavier USB.");
+    }
+
+    private static async Task<FactoryDevice> EnterBootloaderAsync(FactoryDevice device, IProgress<string> progress, CancellationToken cancellation)
+    {
+        progress.Report("Redémarrage vers le bootloader Caterina…");
+        using (var port = new SerialPort(device.Port, 1200) { DtrEnable = true }) { port.Open(); port.DtrEnable = false; }
+        return await WaitForAsync(device.Location, true, TimeSpan.FromSeconds(20), cancellation);
+    }
+
+    private static async Task ProgramAsync(FirmwarePackage package, FactoryDevice boot, string image, string logName, string action, CancellationToken cancellation)
+    {
+        string exe = Path.Combine(package.Folder, "tools", "bin", "avrdude.exe");
+        var start = new ProcessStartInfo(exe) { UseShellExecute = false, CreateNoWindow = true, RedirectStandardError = true, RedirectStandardOutput = true, WorkingDirectory = Path.GetDirectoryName(exe)! };
+        foreach (string arg in new[] { "-C" + Path.Combine(package.Folder, "tools", "etc", "avrdude.conf"), "-p", "atmega32u4", "-c", "avr109", "-P", boot.Port, "-b", "57600", "-D", "-U", "flash:w:" + image + ":i" }) start.ArgumentList.Add(arg);
+        using var process = Process.Start(start) ?? throw new IOException("AVRDUDE n’a pas pu démarrer.");
+        Task<string> stdout = process.StandardOutput.ReadToEndAsync(), stderr = process.StandardError.ReadToEndAsync();
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellation); timeout.CancelAfter(TimeSpan.FromMinutes(2));
+        try { await process.WaitForExitAsync(timeout.Token); }
+        catch (OperationCanceledException) { if (!process.HasExited) process.Kill(true); await process.WaitForExitAsync(); throw new IOException($"{action} interrompu ou délai dépassé. Le firmware peut être incomplet ; rebranche la carte et relance l’opération."); }
+        string log = await stdout + "\n" + await stderr;
+        string logPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DeckPilotFactory", logName);
+        Directory.CreateDirectory(Path.GetDirectoryName(logPath)!); await File.WriteAllTextAsync(logPath, log, cancellation);
+        if (process.ExitCode != 0) throw new IOException($"AVRDUDE a signalé une erreur ({process.ExitCode}). Journal : {logPath}");
     }
 
     private static async Task<FactoryDevice> WaitForAsync(string location, bool boot, TimeSpan duration, CancellationToken token)

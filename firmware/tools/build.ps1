@@ -23,6 +23,7 @@ Expand-Archive artifacts/firmware-downloads/avrdude.zip artifacts/firmware-downl
 Copy-Item artifacts/firmware-downloads/avrdude/avrdude.exe "$stage/tools/bin/avrdude.exe"
 Copy-Item artifacts/firmware-downloads/avrdude/avrdude.conf "$stage/tools/etc/avrdude.conf"
 Copy-Item artifacts/firmware-build/DeckPilot.ino.hex "$stage/DeckPilot.hex"
+./firmware/tools/create-blank-image.ps1 -OutputPath "$stage/Blank.hex"
 & "$stage/tools/bin/avrdude.exe" '-C' "$stage/tools/etc/avrdude.conf" '-?'
 if ($LASTEXITCODE -ne 0) { throw 'Bundled AVRDUDE cannot run on Windows' }
 Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -34,6 +35,7 @@ try {
 } finally { $source.Dispose() }
 Copy-Item firmware/README.md "$stage/README.md"
 Copy-Item firmware/Original/Original.ino "$stage/Original.ino"
+Copy-Item firmware/tools/create-blank-image.ps1 "$stage/create-blank-image.ps1"
 Copy-Item LICENSE "$stage/DECKPILOT-LICENSE.txt"
 New-Item -ItemType Directory -Force "$stage/source/DeckPilot" | Out-Null
 Copy-Item firmware/DeckPilot/*.ino, firmware/DeckPilot/*.h "$stage/source/DeckPilot"
@@ -41,5 +43,6 @@ $versionMatch = [regex]::Match((Get-Content firmware/DeckPilot/DeckPilotProtocol
 if (!$versionMatch.Success) { throw 'Firmware version is missing' }
 $firmwareVersion = $versionMatch.Groups[1].Value
 $hash = (Get-FileHash "$stage/DeckPilot.hex" -Algorithm SHA256).Hash.ToLowerInvariant()
-@{ Board = 'promicro-32u4-16mhz'; Version = $firmwareVersion; Sha256 = $hash } | ConvertTo-Json | Set-Content "$stage/manifest.json" -Encoding utf8
+$blankHash = (Get-FileHash "$stage/Blank.hex" -Algorithm SHA256).Hash.ToLowerInvariant()
+@{ Board = 'promicro-32u4-16mhz'; Version = $firmwareVersion; Sha256 = $hash; ResetSha256 = $blankHash } | ConvertTo-Json | Set-Content "$stage/manifest.json" -Encoding utf8
 Compress-Archive -Path "$stage/*" -DestinationPath artifacts/firmware/DeckPilot-firmware.zip -Force

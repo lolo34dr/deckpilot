@@ -6,6 +6,7 @@ DeckPilot Atelier est l’application Windows de préparation et de contrôle de
 
 1. Installe **DeckPilot-Atelier-Setup.exe**, puis branche un Leonardo ou Pro Micro ATmega32U4 en USB.
 2. Dans **Installer le firmware**, vérifie que la carte ou son bootloader Caterina apparaît puis lance le flash. L’outil vérifie l’image, conserve le bootloader et contrôle la version après le redémarrage. Ne débranche pas la carte pendant l’écriture.
+   - **Effacer le programme DeckPilot…** efface les 28 Kio de mémoire programme et laisse une instruction d’arrêt sûre après une seconde confirmation. La carte n’émet alors plus F13–F24 ; Caterina reste intact pour un futur flash. L’action ne touche ni au bootloader, ni à l’EEPROM, ni aux profils PC.
 3. Ouvre **Tester les touches**, démarre la liaison USB puis suis l’ordre de la grille : pour chacune des 12 touches, fais un appui bref puis un maintien d’au moins 700 ms.
 4. À la fin, enregistre le rapport de contrôle si tu veux conserver les durées et les associations entre emplacement physique et touche F13–F24.
 

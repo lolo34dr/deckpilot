@@ -25,11 +25,13 @@ No serial connection is required for normal keyboard operation. The identity is 
 
 The firmware and Windows AVRDUDE 8.0 are bundled inside the published app. No Arduino IDE or separate driver installation is performed by DeckPilot. Windows must already expose the board's USB serial port, as it did for the owner's successful upload. New firmware versions are delivered with app updates from GitHub; updating the app does **not** automatically flash hardware. Each flash requires confirmation.
 
+DeckPilot Atelier also offers **Effacer le programme DeckPilot**. After a separate confirmation, it clears all 28 KiB of application flash with a verified reset loop, stopping F13–F24 and USB keyboard enumeration. Caterina remains available so new firmware can be installed later. The bootloader and EEPROM are preserved, so this is not a full-chip erase. Profile data stays on the PC. The release smoke test checks that this action is visible and disabled unless a board is selected.
+
 DeckPilot checks SHA-256, Intel HEX record checksums, reset-vector presence, overlaps and the **28672-byte** application boundary before the reset. It matches the physical USB location across the runtime and bootloader ports, uses AVR109 at 57600 baud, requires AVRDUDE's write verification, then checks the running firmware's identity and version. It does not write fuses, EEPROM or the bootloader. Only Leonardo IDs `2341:8036` / `2A03:8036` and Caterina `2341:0036` / `2A03:0036` are accepted. If Windows cannot provide a matching physical connection, flashing is blocked rather than guessing a port.
 
 Flashing is not atomic: a cable disconnect or power loss can leave the application firmware incomplete. There is no automatic firmware backup or rollback. If necessary, re-upload the original sketch with Arduino IDE set to **Arduino Leonardo**. Depending on the board's bootloader, briefly connecting RST to GND twice may expose a temporary bootloader port; upload while that port is available. A damaged bootloader requires ISP hardware and cannot be repaired by this USB updater. Do not write a different board or clock variant.
 
-The last completed AVRDUDE process log is stored at `%LOCALAPPDATA%\DeckPilot\Firmware\last-flash.log`.
+The main app's last completed AVRDUDE log is stored at `%LOCALAPPDATA%\DeckPilot\Firmware\last-flash.log`. Atelier keeps install and reset logs in `%LOCALAPPDATA%\DeckPilotFactory\last-flash.log` and `last-reset.log`.
 
 ## Build
 
@@ -41,7 +43,7 @@ dotnet build DeckPilot.sln -c Release -p:RequireFirmwareBundle=true
 dotnet run --project tests/DeckPilot.Checks -c Release --no-build
 ```
 
-The script pins Arduino AVR core **1.8.6**, Keyboard **1.0.6**, and upstream AVRDUDE **8.0**. CLI-managed packages use Arduino's package checksum validation; AVRDUDE binary/source archives have explicit SHA-256 pins in the script. `artifacts/firmware/DeckPilot-firmware.zip` contains the HEX, manifest, Windows tool, license and corresponding upstream AVRDUDE source archive. Publishing CI requires the bundle; an ordinary developer build without it can run the app but cannot flash.
+The script pins Arduino AVR core **1.8.6**, Keyboard **1.0.6**, and upstream AVRDUDE **8.0**. CLI-managed packages use Arduino's package checksum validation; AVRDUDE binary/source archives have explicit SHA-256 pins in the script. `artifacts/firmware/DeckPilot-firmware.zip` contains the DeckPilot HEX, generated application-area reset HEX and its generator, checksums, Windows tool, license and corresponding upstream AVRDUDE source archive. Publishing CI requires the bundle; an ordinary developer build without it can run the app but cannot flash or reset a board.
 
 The original 12-button sketch was adapted from David Madison's **Stream Cheap** project, copyright 2018, MIT. Its notice remains in `DeckPilot.ino`. DeckPilot additions use the repository MIT license. **AVRDUDE is separate software under GPL-2.0-or-later**, with its notice/license and source bundled; the repository MIT license does not replace that license. See https://github.com/avrdudes/avrdude/tree/v8.0 for upstream build instructions and dependency notices.
 
