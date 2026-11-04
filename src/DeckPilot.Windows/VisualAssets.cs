@@ -26,7 +26,8 @@ public static class VectorIcons
         "M9,5 A3,3 0 0 1 15,5 L15,12 A3,3 0 0 1 9,12 Z M6,11 L6,12 A6,6 0 0 0 18,12 L18,11 M12,18 L12,22 M8,22 L16,22",
         "M3,10 L7,10 12,5 12,19 7,14 3,14 Z M16,7 C21,10 21,14 16,17 M16,11 L18,13 21,10",
         "M3,4 L10,4 10,11 3,11 Z M14,4 L21,4 21,11 14,11 Z M3,15 L10,15 10,22 3,22 Z M14,18 L22,18 M19,15 L22,18 19,21",
-        "M3,4 L21,4 21,17 3,17 Z M8,22 L16,22 M12,17 L12,22 M7,9 L10,12 16,7"
+        "M3,4 L21,4 21,17 3,17 Z M8,22 L16,22 M12,17 L12,22 M7,9 L10,12 16,7",
+        "M3,12 L5,12 M7,8 L7,16 M10,5 L10,19 M13,9 L13,15 M16,3 L16,21 M19,7 L19,17 M22,12 L23,12"
     ];
     private static readonly ImageSource[] Images = Create();
     private static ImageSource[] Create()
@@ -35,7 +36,7 @@ public static class VectorIcons
         foreach (string path in Paths)
         {
             var geometry = Geometry.Parse(path);
-            var drawing = new GeometryDrawing(null, new Pen(new SolidColorBrush(Color.FromRgb(202, 213, 207)), 1.35) { StartLineCap = PenLineCap.Round, EndLineCap = PenLineCap.Round, LineJoin = PenLineJoin.Round }, geometry);
+            var drawing = new GeometryDrawing(null, new Pen(new SolidColorBrush(Color.FromRgb(205, 207, 213)), 1.35) { StartLineCap = PenLineCap.Round, EndLineCap = PenLineCap.Round, LineJoin = PenLineJoin.Round }, geometry);
             var group = new DrawingGroup();
             group.Children.Add(new GeometryDrawing(Brushes.Transparent, null, new RectangleGeometry(new Rect(0, 0, 24, 24))));
             group.Children.Add(drawing);
@@ -43,7 +44,8 @@ public static class VectorIcons
         }
         return images.ToArray();
     }
-    public static ImageSource ForKind(ActionKind kind) => Images[(int)kind];
+    public static ImageSource ForKind(ActionKind kind) =>
+        (uint)kind < Images.Length ? Images[(int)kind] : Images[0];
 }
 public static class ApplicationIcons
 {
