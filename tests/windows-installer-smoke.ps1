@@ -22,7 +22,11 @@ function Wait-Until([scriptblock]$Condition) {
 function Run-Setup([string]$File, [string[]]$Options) {
     $process = Start-Process $File -ArgumentList $Options -PassThru
     if (!$process.WaitForExit(90000)) { throw 'Installer did not complete within 90 seconds.' }
-    if ($process.ExitCode -ne 0) { throw "Installer failed with code $($process.ExitCode)" }
+    if ($process.ExitCode -ne 0) {
+        $log = Join-Path $env:TEMP 'deckpilot-install.log'
+        $details = if (Test-Path $log) { (Get-Content $log -Tail 45) -join ' | ' } else { 'No setup log was created.' }
+        throw "Installer failed with code $($process.ExitCode). Setup log: $details"
+    }
 }
 $setup = (Resolve-Path $Installer).Path
 $directory = Join-Path $env:ProgramFiles 'DeckPilot'
