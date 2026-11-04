@@ -49,7 +49,7 @@ public partial class App : Application
             catch { Shutdown(1); }
             return;
         }
-        if (e.Args.Length == 1 && e.Args[0] == "--configure-microphone")
+        if (e.Args.Length == 1 && (e.Args[0] is "--configure-microphone" or "--configure-microphone-if-needed"))
         {
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
             try
@@ -58,6 +58,12 @@ public partial class App : Application
                 var settings = store.Load();
                 using var audio = new SoundboardEngine();
                 var physicalMicrophones = audio.Microphones().Where(m => !DeckPilot.Core.VirtualCableEndpoints.IsRecordingEndpoint(m.Name)).ToArray();
+                bool configureOnlyIfNeeded = e.Args[0] == "--configure-microphone-if-needed";
+                if (configureOnlyIfNeeded && physicalMicrophones.Any(m => string.Equals(m.Id, settings.Soundboard.MicrophoneId, StringComparison.OrdinalIgnoreCase)))
+                {
+                    Shutdown();
+                    return;
+                }
                 var dialog = new MicrophoneSetupWindow(physicalMicrophones, settings.Soundboard.MicrophoneId);
                 if (dialog.ShowDialog() == true && dialog.SelectedMicrophone is { } microphone)
                 {

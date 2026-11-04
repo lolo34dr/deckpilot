@@ -24,6 +24,15 @@ public static class StartupService
     {
         get { using var key = Registry.CurrentUser.OpenSubKey(Run); return string.Equals(key?.GetValue("DeckPilot") as string, Command, StringComparison.OrdinalIgnoreCase) && !BlockedByWindows; }
     }
+    public static bool PreferenceEnabled
+    {
+        get
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(Preferences);
+            object? value = key?.GetValue("StartupEnabled");
+            return value == null ? Enabled : Convert.ToInt32(value) != 0;
+        }
+    }
     public static string Status => BlockedByWindows ? "Windows bloque ce démarrage. Réactivez l’option ici ou dans Paramètres Windows > Applications > Démarrage."
         : Enabled ? "Activé pour votre session Windows · Démarre près de l’horloge."
         : "Démarrage automatique désactivé pour votre session Windows.";

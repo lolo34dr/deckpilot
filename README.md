@@ -76,9 +76,10 @@ The published downloads include the .NET runtime. **You do not need to install .
 ### Install and launch
 
 1. Download **[DeckPilot-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** and run the installer. Windows asks for administrator permission to install into **Program Files\DeckPilot**.
-2. The installer adds DeckPilot to Windows **Installed apps**, creates a Start menu shortcut, and selects the desktop shortcut and Windows startup options by default. You can deselect these optional tasks.
-3. Connect your macropad and open DeckPilot from its shortcut.
-4. Follow calibration from left to right across **four columns**, then the next row, for **three rows**. Every button must send a different F13–F24 key.
+2. The installer lets you choose whether DeckPilot starts with Windows, checks for app updates automatically, and reduces animations. Startup and update checks are on by default; reduced animations are off. It also checks for the signed VB-CABLE driver required by the Soundboard and installs it automatically if missing. An internet connection is required for that driver check.
+3. The installer adds DeckPilot to Windows **Installed apps** and creates a Start menu shortcut. A desktop shortcut is selected by default.
+4. Connect your macropad and open DeckPilot from its shortcut.
+5. Follow calibration from left to right across **four columns**, then the next row, for **three rows**. Every button must send a different F13–F24 key.
 
 When upgrading from the former 4-row layout, DeckPilot preserves profiles/actions and requests one new calibration for the corrected positions. Installing over an existing portable setup also preserves the settings in `%APPDATA%\DeckPilot`; quit the old copy if setup asks you to.
 
@@ -131,7 +132,7 @@ Windows launches the selected shortcuts. Catalog entries use `shell:AppsFolder`.
 
 Available since **0.2.0**, automatic update checks run at startup after calibration, then every six hours. They can be disabled in the sidebar. A manual check remains available.
 
-When a newer stable GitHub release is found, DeckPilot asks whether to update. **Installed copies** download and SHA-256 verify `DeckPilot-Setup.exe`, then launch the installer. Windows asks for administrator permission to update Program Files. The installer closes DeckPilot gracefully when ready, preserves profiles and startup preferences, installs the new version and relaunches the app. Cancelling the Windows permission prompt leaves the app open. Setup refuses to interrupt an open firmware session.
+When a newer stable GitHub release is found, DeckPilot asks whether to update. **Installed copies** download and SHA-256 verify `DeckPilot-Setup.exe`, then launch the installer with the current startup, automatic-update and reduced-motion preferences preselected. You can change them during the update. Windows asks for administrator permission to update Program Files. The installer closes DeckPilot gracefully when ready, preserves profiles and configuration, checks and installs the signed VB-CABLE driver if missing, and relaunches the app. Cancelling the installer leaves the app open. Setup refuses to interrupt an open firmware session.
 
 **Portable copies** retain the existing update mechanism. After confirmation, it:
 
@@ -360,7 +361,7 @@ The firmware remains **1.1.1**. Accepting an automatic firmware offer now correc
 
 DeckPilot now uses a deep black interface by default. In **Préférences de l’application**, change the background, panel and accent colors using `#RRGGBB` values; your theme is saved on this PC.
 
-The **Soundboard · micro virtuel** panel lets you select your physical microphone and MP3/WAV clips. DeckPilot automatically routes the mix to the VB-Audio VB-CABLE playback endpoint; in Discord or a game, choose **CABLE Output** as the microphone. On a new installation, the checked **Install the signed VB-CABLE audio driver** task downloads the official package over HTTPS, checks its Authenticode publisher before running it, and opens the vendor's driver setup. This requires an internet connection and administrator approval. DeckPilot does not bundle or redistribute VB-Audio files. If you skip the task, you can start the same checked installer from the Soundboard panel. The audio engine uses NAudio (MIT; see [third-party notice](third-party/NAudio-LICENSE.txt)). VB-CABLE is a separately licensed, signed Windows driver, not an MIT component.
+The **Soundboard · micro virtuel** panel lets you select your physical microphone and MP3/WAV clips. DeckPilot automatically routes the mix to the VB-Audio VB-CABLE playback endpoint; in Discord or a game, choose **CABLE Output** as the microphone. During installation and updates, DeckPilot checks for VB-CABLE and installs it when missing. It downloads the official package over HTTPS and verifies the Authenticode publisher before running the driver's silent installer. This requires an internet connection and administrator permission. DeckPilot does not bundle or redistribute VB-Audio files. If the driver is missing later, you can start the same signature-checked installer from the Soundboard panel. The audio engine uses NAudio (MIT; see [third-party notice](third-party/NAudio-LICENSE.txt)). VB-CABLE is a separately licensed, signed Windows driver, not an MIT component.
 
 ## DeckPilot Atelier (1.9.0)
 

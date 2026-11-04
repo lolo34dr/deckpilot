@@ -42,7 +42,7 @@ $oldApprovals = @($approvalPaths | ForEach-Object { ,(Read-RegistryValue $_ Deck
 $app = $null; $updatedApp = $null
 try {
     $phase = 'fresh installation into Program Files'
-    Run-Setup $setup @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART',('/LOG="' + (Join-Path $env:TEMP 'deckpilot-install.log') + '"'))
+    Run-Setup $setup @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/TESTDRIVER=1',('/LOG="' + (Join-Path $env:TEMP 'deckpilot-install.log') + '"'))
     $driverBootstrapPath = Join-Path $directory 'Install-VBCABLE.ps1'
     foreach ($file in @($executable, (Join-Path $directory 'DeckPilot.install'), (Join-Path $directory 'DeckPilot.ico'), $driverBootstrapPath, $uninstaller, $desktop, $startMenu)) {
         if (!(Test-Path $file)) { throw "Missing installed file: $file" }
@@ -51,7 +51,9 @@ try {
     if ($driverBootstrap -notmatch 'Get-AuthenticodeSignature' -or $driverBootstrap -notmatch 'VB-Audio') { throw 'The integrated VB-CABLE bootstrap must verify the official publisher before execution' }
     if ($driverBootstrap -match 'bcdedit|testsigning') { throw 'The VB-CABLE bootstrap must not change Windows test-signing settings' }
     $installerDefinition = Get-Content (Join-Path $PSScriptRoot '..\installer\DeckPilot.iss') -Raw
-    if ($installerDefinition -notmatch 'Install-VBCABLE\.ps1.*skipifsilent') { throw 'Silent installer runs must skip the interactive VB-CABLE driver setup' }
+    if ($installerDefinition -notmatch '(?s)\[Run\].*Install-VBCABLE\.ps1.*?Flags: runhidden waituntilterminated ignorefailure') { throw 'The signed VB-CABLE installer must run automatically and never block DeckPilot installation on driver errors' }
+    if ($installerDefinition -match '(?s)Install-VBCABLE\.ps1.{0,300}skipifsilent') { throw 'Silent and update installations must also check for VB-CABLE' }
+    if ($installerDefinition -notmatch '--configure-microphone-if-needed') { throw 'The installer must only request microphone setup when the saved device is unavailable' }
     if (!(Test-Path $uninstallKey)) { throw 'Missing Windows uninstall registration' }
     $shell = New-Object -ComObject WScript.Shell
     foreach ($shortcut in @($desktop, $startMenu)) {
@@ -109,7 +111,7 @@ public static class DeckPilotIconResource {
 
     $profileId = [Guid]::NewGuid().ToString()
     New-Item -ItemType Directory -Force (Split-Path $settingsPath) | Out-Null
-    @{ Version = 1; LayoutColumns = 4; AutoCheckUpdates = $false; KeyMap = @(124..135); ActiveProfileId = $profileId; Profiles = @(@{
+    @{ Version = 1; LayoutColumns = 4; AutoCheckUpdates = $false; ReduceMotion = $true; KeyMap = @(124..135); ActiveProfileId = $profileId; Profiles = @(@{
         Id = $profileId; Name = 'Installer test'; Buttons = @(1..12 | ForEach-Object { @{ Kind = 'Passthrough'; Label = 'Keep me'; Target = ''; Arguments = ''; Key = 65 } })
     }) } | ConvertTo-Json -Depth 10 | Set-Content $settingsPath -Encoding UTF8
     $phase = 'respect a Windows startup block until explicit activation'
@@ -145,7 +147,7 @@ public static class DeckPilotIconResource {
     if ($null -ne (Read-RegistryValue $startupKey DeckPilot)) { throw 'Startup preference could not be disabled' }
 
     $phase = 'upgrade while the installed app is running'
-    Run-Setup $setup @('/UPDATE=1','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART')
+    Run-Setup $setup @('/UPDATE=1','/STARTUP=off','/AUTOCHECKUPDATES=off','/REDUCEMOTION=on','/TESTDRIVER=1','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART')
     Wait-Until { $app.Refresh(); $app.HasExited }
     Wait-Until {
         $script:updatedApp = Get-Process -Name DeckPilot -ErrorAction SilentlyContinue | Where-Object { $_.Path -eq $executable } | Select-Object -First 1
@@ -155,7 +157,22 @@ public static class DeckPilotIconResource {
     if ($null -ne (Read-RegistryValue $startupKey DeckPilot)) { throw 'Upgrade overwrote the disabled startup preference' }
     $settings = Read-SharedJson $settingsPath
     if ($settings.Profiles[0].Id -ne $profileId -or $settings.KeyMap.Count -ne 12) { throw 'Upgrade lost profiles or calibration' }
-    Write-Host 'PASS installed upgrade: graceful app shutdown, successful replacement and restart, profiles preserved, disabled startup preference respected'
+    if ($settings.AutoCheckUpdates -ne $false -or $settings.ReduceMotion -ne $true) { throw 'Upgrade overwrote the saved automatic-update or reduced-motion preference' }
+    Write-Host 'PASS installed upgrade: saved startup, update and animation preferences and user profiles preserved'
+
+    $phase = 'apply preference choices supplied to an upgrade'
+    $previousUpdatedApp = $updatedApp
+    Run-Setup $setup @('/UPDATE=1','/STARTUP=on','/AUTOCHECKUPDATES=on','/REDUCEMOTION=off','/TESTDRIVER=1','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART')
+    Wait-Until { $previousUpdatedApp.Refresh(); $previousUpdatedApp.HasExited }
+    Wait-Until {
+        $script:updatedApp = Get-Process -Name DeckPilot -ErrorAction SilentlyContinue | Where-Object { $_.Path -eq $executable -and $_.Id -ne $previousUpdatedApp.Id } | Select-Object -First 1
+        $null -ne $script:updatedApp
+    }
+    if (!$updatedApp.WaitForInputIdle(30000)) { throw 'App did not restart after applying update preferences' }
+    if ((Read-RegistryValue $startupKey DeckPilot) -ne ('"' + $executable + '" --background')) { throw 'The setup did not apply the selected Windows startup preference' }
+    $settings = Read-SharedJson $settingsPath
+    if ($settings.AutoCheckUpdates -ne $true -or $settings.ReduceMotion -ne $false) { throw 'The setup did not apply the selected update or animation preferences' }
+    Write-Host 'PASS installed upgrade: setup-applied startup, automatic-update and reduced-motion choices'
 
     $phase = 'uninstall while the app is running'
     Run-Setup $executable @('--configure-startup','on')
