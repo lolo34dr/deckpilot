@@ -29,13 +29,8 @@ jobs:
           $source = Get-Content -LiteralPath ./src/DeckPilot.Windows/Install-VBCABLE.ps1 -Raw
           [void][System.Management.Automation.ScriptBlock]::Create($source)
       - name: Verify the official signed VB-CABLE installer when its site is reachable
-        id: verify-vbcable
         shell: pwsh
-        continue-on-error: true
         run: ./src/DeckPilot.Windows/Install-VBCABLE.ps1 -ValidateOnly
-      - name: Report deferred VB-CABLE package verification
-        if: steps.verify-vbcable.outcome == 'failure'
-        run: echo "::warning::The hosted runner could not validate the official VB-CABLE download; DeckPilot still verifies the vendor signature before running it on the user's PC."
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '8.0.x'
