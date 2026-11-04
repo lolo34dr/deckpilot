@@ -26,10 +26,8 @@ jobs:
       - name: Parse the VB-CABLE bootstrap script
         shell: pwsh
         run: |
-          $tokens = $null
-          $errors = $null
-          [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path ./src/DeckPilot.Windows/Install-VBCABLE.ps1).Path, [ref]$tokens, [ref]$errors) | Out-Null
-          if ($errors.Count -gt 0) { $errors | Format-List | Out-String | Write-Host; throw "VB-CABLE bootstrap PowerShell syntax is invalid." }
+          $source = Get-Content -LiteralPath ./src/DeckPilot.Windows/Install-VBCABLE.ps1 -Raw
+          [void][System.Management.Automation.ScriptBlock]::Create($source)
       - name: Verify the official signed VB-CABLE installer when its site is reachable
         id: verify-vbcable
         shell: pwsh
