@@ -23,9 +23,21 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v5
-      - name: Verify the official signed VB-CABLE installer when its site is reachable
+      - name: Parse the VB-CABLE bootstrap script
         shell: pwsh
+        run: |
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path ./src/DeckPilot.Windows/Install-VBCABLE.ps1).Path, [ref]$tokens, [ref]$errors) | Out-Null
+          if ($errors.Count -gt 0) { $errors | Format-List | Out-String | Write-Host; throw "VB-CABLE bootstrap PowerShell syntax is invalid." }
+      - name: Verify the official signed VB-CABLE installer when its site is reachable
+        id: verify-vbcable
+        shell: pwsh
+        continue-on-error: true
         run: ./src/DeckPilot.Windows/Install-VBCABLE.ps1 -ValidateOnly
+      - name: Report deferred VB-CABLE package verification
+        if: steps.verify-vbcable.outcome == 'failure'
+        run: echo "::warning::The hosted runner could not validate the official VB-CABLE download; DeckPilot still verifies the vendor signature before running it on the user's PC."
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '8.0.x'
@@ -113,10 +125,28 @@ jobs:
           name: DeckPilot-release-${{ github.ref_name }}
           path: artifacts/release/*
           if-no-files-found: error
-      - name: Create GitHub release
+      - name: Publish release assets
         env:
           GH_TOKEN: ${{ github.token }}
         shell: pwsh
         run: |
-          gh release create "$env:GITHUB_REF_NAME" artifacts/release/DeckPilot-Setup.exe artifacts/release/DeckPilot.exe artifacts/release/DeckPilot-Atelier-Setup.exe artifacts/release/DeckPilot-Atelier.exe artifacts/release/DeckPilot-Atelier-version.json artifacts/release/DeckPilot-win-x64.zip artifacts/release/DeckPilot-firmware.zip artifacts/release/SHA256SUMS.txt --verify-tag --latest --title "DeckPilot $env:GITHUB_REF_NAME" --notes-file .github/release-notes.md
+          $tag = $env:GITHUB_REF_NAME
+          $assets = @(
+            'artifacts/release/DeckPilot-Setup.exe',
+            'artifacts/release/DeckPilot.exe',
+            'artifacts/release/DeckPilot-Atelier-Setup.exe',
+            'artifacts/release/DeckPilot-Atelier.exe',
+            'artifacts/release/DeckPilot-Atelier-version.json',
+            'artifacts/release/DeckPilot-win-x64.zip',
+            'artifacts/release/DeckPilot-firmware.zip',
+            'artifacts/release/SHA256SUMS.txt'
+          )
+          gh release view "$tag" --json tagName *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release edit "$tag" --title "DeckPilot $tag" --notes-file .github/release-notes.md --latest
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            gh release upload "$tag" @assets --clobber
+          } else {
+            gh release create "$tag" @assets --verify-tag --latest --title "DeckPilot $tag" --notes-file .github/release-notes.md
+          }
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
