@@ -68,7 +68,12 @@ catch {
         Write-Warning 'The official VB-Audio package could not be downloaded or unpacked on this runner; signature verification is deferred to the user installation.'
         exit 0
     }
-    if ($ValidateOnly) { Write-Error $_; exit 1 }
+    if ($ValidateOnly) {
+        $detail = ($_.Exception.Message -replace '[\r\n]+', ' ').Trim()
+        Write-Host "::error title=VB-CABLE validation failed::$detail"
+        Write-Error $_
+        exit 1
+    }
     try {
         Add-Type -AssemblyName System.Windows.Forms -ErrorAction SilentlyContinue
         Show-Notice ($_.Exception.Message + "`r`n`r`nDeckPilot n'a exécuté aucun installateur non vérifié. Tu peux consulter la page officielle VB-Audio pour installer le pilote manuellement.") 'Installation de VB-CABLE' 'Warning'
