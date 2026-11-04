@@ -4,7 +4,7 @@
   <local:ApplicationIconConverter x:Key="AppIcon"/>
   <Style TargetType="ListBoxItem">
    <Setter Property="Padding" Value="12,10"/><Setter Property="HorizontalContentAlignment" Value="Stretch"/><Setter Property="Margin" Value="0,0,0,4"/>
-   <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ListBoxItem"><Border x:Name="Item" Background="#292D2B" CornerRadius="7" Padding="{TemplateBinding Padding}"><ContentPresenter/></Border><ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Item" Property="Background" Value="#343B36"/></Trigger><Trigger Property="IsSelected" Value="True"><Setter TargetName="Item" Property="Background" Value="#3D4D42"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
+   <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ListBoxItem"><Border x:Name="Item" Background="#292D2B" CornerRadius="7" Padding="{TemplateBinding Padding}"><ContentPresenter/></Border><ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Item" Property="Background" Value="#36343B"/></Trigger><Trigger Property="IsSelected" Value="True"><Setter TargetName="Item" Property="Background" Value="#423D4D"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
   </Style>
  </Window.Resources>
  <Grid Margin="24">
@@ -22,7 +22,7 @@
   <TextBlock x:Name="ResultsText" Grid.Row="3" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,12,0,14"/>
   <Grid Grid.Row="4"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
    <Button x:Name="RefreshButton" Content="Actualiser" HorizontalAlignment="Left" Click="RefreshClick"/>
-   <StackPanel Grid.Column="1" Orientation="Horizontal"><Button Content="Annuler" IsCancel="True"/><Button x:Name="ChooseButton" AutomationProperties.AutomationId="ChooseInstalledApplication" Content="Choisir l’application" IsDefault="True" IsEnabled="False" Click="ChooseClick" Background="#3E5849"/></StackPanel>
+   <StackPanel Grid.Column="1" Orientation="Horizontal"><Button Content="Annuler" IsCancel="True"/><Button x:Name="ChooseButton" AutomationProperties.AutomationId="ChooseInstalledApplication" Content="Choisir l’application" IsDefault="True" IsEnabled="False" Click="ChooseClick" Background="#463E58"/></StackPanel>
   </Grid>
  </Grid>
 </Window>

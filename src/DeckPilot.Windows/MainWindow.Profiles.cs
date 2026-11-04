@@ -43,6 +43,7 @@ public partial class MainWindow
         if (action.Kind == ActionKind.Shortcut && ShortcutPicker.SelectedItem is Choice shortcut) action.Key = shortcut.Key;
         if (action.Kind == ActionKind.Media && MediaPicker.SelectedItem is Choice media) action.Key = media.Key;
         if (action.Kind == ActionKind.Spotify && SpotifyPicker.SelectedItem is Choice spotify) action.Key = spotify.Key;
+        if (action.Kind == ActionKind.Soundboard) action.Target = (SoundboardClipPicker.SelectedItem as SoundboardClip)?.Id.ToString() ?? action.Target;
         if (action.Kind == ActionKind.AudioOutput)
         {
             action.Target = (PrimaryOutputPicker.SelectedItem as AudioDevice)?.Id ?? action.Target;

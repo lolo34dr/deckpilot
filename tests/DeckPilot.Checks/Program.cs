@@ -23,6 +23,15 @@ Check("Duplicate, missing and foreign calibration keys are rejected", () => {
     var foreign = map.ToList(); foreign[0] = 0x41;
     Expect(!Calibration.IsValid(foreign));
 });
+Check("Version 2 theme and soundboard preferences validate without breaking old settings", () => {
+    var prefs = new Settings(); prefs.Validate();
+    prefs.Theme.Accent = "#AABBCC";
+    prefs.Soundboard.Clips.Add(new() { Name = "Intro", FilePath = @"C:\sounds\intro.mp3" });
+    prefs.Validate();
+    prefs.Theme.Accent = "green"; Reject(prefs.Validate);
+    prefs.Theme.Accent = "#AABBCC";
+    prefs.Soundboard.Clips[0].FilePath = "sound.exe"; Reject(prefs.Validate);
+});
 Check("A new profile leaves all twelve keys free", () => {
     var settings = new Settings(); settings.Validate();
     Expect(!settings.IsCalibrated);

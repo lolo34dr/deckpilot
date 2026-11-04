@@ -1,5 +1,5 @@
 <Window x:Class="DeckPilot.Windows.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
- Icon="/Assets/DeckPilot.png" Title="DeckPilot" Width="1180" Height="900" MinWidth="960" MinHeight="720" Background="#181C20" FontFamily="Segoe UI" FontSize="13" UseLayoutRounding="True" SnapsToDevicePixels="True" TextOptions.TextFormattingMode="Display" WindowStartupLocation="CenterScreen">
+ Icon="/Assets/DeckPilot.png" Title="DeckPilot" Width="1180" Height="900" MinWidth="960" MinHeight="720" Background="{DynamicResource AppBackgroundBrush}" FontFamily="Segoe UI" FontSize="13" UseLayoutRounding="True" SnapsToDevicePixels="True" TextOptions.TextFormattingMode="Display" WindowStartupLocation="CenterScreen">
  <Grid x:Name="WindowContent">
   <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="32"/></Grid.RowDefinitions>
   <Grid>
@@ -16,7 +16,7 @@
        <StackPanel Orientation="Horizontal">
         <Image Source="/Assets/DeckPilot.png" Width="30" Height="30" Margin="0,0,10,0"/>
         <TextBlock VerticalAlignment="Center" Text="DeckPilot" FontWeight="SemiBold" FontSize="21"/>
-        <Border Background="#263C3B" CornerRadius="5" Padding="7,3" Margin="10,0,0,0" VerticalAlignment="Center"><TextBlock x:Name="VersionLabel" Foreground="#98D6CB" FontSize="10" FontWeight="SemiBold"/></Border>
+        <Border Background="#27232F" CornerRadius="5" Padding="7,3" Margin="10,0,0,0" VerticalAlignment="Center"><TextBlock x:Name="VersionLabel" Foreground="{DynamicResource AccentBrush}" FontSize="10" FontWeight="SemiBold"/></Border>
        </StackPanel>
        <Button Grid.Column="1" Content="Bibliothèque" Click="FocusActionSearchClick" Margin="12,0,0,0" Padding="12,7" ToolTip="Rechercher une action ou une application (Ctrl+K)" AutomationProperties.AutomationId="FocusActionSearchButton"/>
       </Grid>
@@ -31,23 +31,23 @@
       </Grid>
       <TextBlock x:Name="ProfileSummary" Grid.Row="2" Text="12 touches · Un espace pour chaque usage" Foreground="{StaticResource MutedBrush}" FontSize="11" Margin="0,10,0,0" TextWrapping="Wrap"/>
      </Grid>
-     <Border x:Name="DeckSurface" Grid.Row="1" Margin="0,20,0,0" HorizontalAlignment="Center" Width="490" CornerRadius="16" BorderThickness="1" BorderBrush="#384348" Padding="16,12,16,12">
-      <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="0,1"><GradientStop Color="#272E32" Offset="0"/><GradientStop Color="#1C2226" Offset="1"/></LinearGradientBrush></Border.Background>
+     <Border x:Name="DeckSurface" Grid.Row="1" Margin="0,20,0,0" HorizontalAlignment="Center" Width="490" CornerRadius="16" BorderThickness="1" BorderBrush="#34343E" Padding="16,12,16,12">
+      <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="0,1"><GradientStop Color="#272E32" Offset="0"/><GradientStop Color="#111318" Offset="1"/></LinearGradientBrush></Border.Background>
 
       <StackPanel>
        <Grid Margin="6,0,6,10">
-        <TextBlock Text="VOTRE DECK / 3 × 4" FontSize="11" FontWeight="SemiBold" Foreground="#A5B4BC" VerticalAlignment="Center"/>
-        <Border x:Name="DeckConnectionPill" Background="#363C37" CornerRadius="9" Padding="8,3" HorizontalAlignment="Right">
-         <StackPanel Orientation="Horizontal"><Ellipse x:Name="DeckConnectionDot" Width="5" Height="5" Fill="#ADB6AF" Margin="0,0,6,0"/><TextBlock x:Name="DeckAvailabilityStatus" Text="Recherche…" FontSize="11" Foreground="#C8D1CA" AutomationProperties.AutomationId="DeckAvailabilityStatus"/></StackPanel>
+        <TextBlock Text="VOTRE DECK / 3 × 4" FontSize="11" FontWeight="SemiBold" Foreground="#B8B7C2" VerticalAlignment="Center"/>
+        <Border x:Name="DeckConnectionPill" Background="#34343A" CornerRadius="9" Padding="8,3" HorizontalAlignment="Right">
+         <StackPanel Orientation="Horizontal"><Ellipse x:Name="DeckConnectionDot" Width="5" Height="5" Fill="#AAA8B2" Margin="0,0,6,0"/><TextBlock x:Name="DeckAvailabilityStatus" Text="Recherche…" FontSize="11" Foreground="#D0CED7" AutomationProperties.AutomationId="DeckAvailabilityStatus"/></StackPanel>
         </Border>
        </Grid>
        <UniformGrid x:Name="DeckGrid" Rows="3" Columns="4" Width="456" Height="318"/>
-       <TextBlock x:Name="DeckAvailabilityHint" Text="Vos profils restent modifiables pendant la connexion." FontSize="12" Foreground="#ADBAC2" Margin="6,10,6,0" TextWrapping="Wrap" AutomationProperties.AutomationId="DeckAvailabilityHint"/>
+       <TextBlock x:Name="DeckAvailabilityHint" Text="Vos profils restent modifiables pendant la connexion." FontSize="12" Foreground="#B8B7C2" Margin="6,10,6,0" TextWrapping="Wrap" AutomationProperties.AutomationId="DeckAvailabilityHint"/>
       </StackPanel>
      </Border>
 
     </Grid>
-    <Border x:Name="EditorPanel" Grid.Row="1" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" CornerRadius="12" Background="#20262B" Padding="20" Margin="24,0,24,24">
+    <Border x:Name="EditorPanel" Grid.Row="1" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" CornerRadius="12" Background="{DynamicResource CardBrush}" Padding="20" Margin="24,0,24,24">
       <StackPanel>
        <Grid Margin="0,0,0,14">
         <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
@@ -55,7 +55,7 @@
          <TextBlock x:Name="SelectedTitle" FontSize="16" FontWeight="SemiBold"/>
          <TextBlock x:Name="SelectedKey" TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}" Margin="0,5,0,0"/>
         </StackPanel>
-        <Border Grid.Column="1" Background="#293637" CornerRadius="5" Padding="8,5" HorizontalAlignment="Right" VerticalAlignment="Top"><TextBlock x:Name="EditorActionTitle" MaxWidth="175" TextWrapping="Wrap" Foreground="#ACD4CD" FontSize="11"/></Border>
+        <Border Grid.Column="1" Background="#23232C" CornerRadius="5" Padding="8,5" HorizontalAlignment="Right" VerticalAlignment="Top"><TextBlock x:Name="EditorActionTitle" MaxWidth="175" TextWrapping="Wrap" Foreground="#C5C0DC" FontSize="11"/></Border>
        </Grid>
        <ComboBox x:Name="ActionPicker" Visibility="Collapsed" SelectionChanged="ActionChanged"/>
        <CheckBox x:Name="LongPressCheck" Content="Deux actions : appui court et appui long" Click="LongPressClick"/>
@@ -71,15 +71,15 @@
         <StackPanel Grid.Column="1"><TextBlock Text="Couleur de la touche" Foreground="{StaticResource MutedBrush}" FontSize="11"/><ComboBox x:Name="AccentPicker" DisplayMemberPath="Name" AutomationProperties.Name="Couleur de la touche"/></StackPanel>
        </Grid>
        <StackPanel x:Name="ApplicationPanel" Margin="0,0,0,10">
-        <Button AutomationProperties.AutomationId="ChooseApplication" AutomationProperties.Name="Choisir une application" Click="ChooseApplicationClick" HorizontalContentAlignment="Stretch" Padding="12" Margin="0,0,0,8" Background="#303C34" BorderBrush="#4F6858">
+        <Button AutomationProperties.AutomationId="ChooseApplication" AutomationProperties.Name="Choisir une application" Click="ChooseApplicationClick" HorizontalContentAlignment="Stretch" Padding="12" Margin="0,0,0,8" Background="#302D38" BorderBrush="#6F667D">
          <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="36"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
           <Image x:Name="SelectedApplicationIcon" Width="25" Height="25" HorizontalAlignment="Left"/>
-          <StackPanel Grid.Column="1"><TextBlock Text="Choisir une application" FontWeight="SemiBold"/><TextBlock x:Name="SelectedApplicationName" Foreground="#B0C0B5" FontSize="11" Margin="0,4,0,0" TextTrimming="CharacterEllipsis"/></StackPanel>
-          <TextBlock Grid.Column="2" Text="›" FontSize="22" Foreground="#A7B8AD" VerticalAlignment="Center" Margin="10,0,0,0"/>
+          <StackPanel Grid.Column="1"><TextBlock Text="Choisir une application" FontWeight="SemiBold"/><TextBlock x:Name="SelectedApplicationName" Foreground="#C0BDC9" FontSize="11" Margin="0,4,0,0" TextTrimming="CharacterEllipsis"/></StackPanel>
+          <TextBlock Grid.Column="2" Text="›" FontSize="22" Foreground="#B7B5C1" VerticalAlignment="Center" Margin="10,0,0,0"/>
          </Grid>
         </Button>
        </StackPanel>
-       <Expander x:Name="AdvancedOptionsExpander" Foreground="#A7B2AB" Header="Options avancées" Margin="0,0,0,10" IsExpanded="False" AutomationProperties.AutomationId="AdvancedOptionsExpander">
+       <Expander x:Name="AdvancedOptionsExpander" Foreground="#B1B0BA" Header="Options avancées" Margin="0,0,0,10" IsExpanded="False" AutomationProperties.AutomationId="AdvancedOptionsExpander">
        <StackPanel>
        <StackPanel x:Name="TargetPanel" Margin="0,10,0,0">
         <TextBlock x:Name="TargetLabel" Foreground="{StaticResource MutedBrush}"/>
@@ -116,6 +116,11 @@
         <TextBlock Text="Commande Spotify" Foreground="{StaticResource MutedBrush}"/>
         <ComboBox x:Name="SpotifyPicker" DisplayMemberPath="Name" AutomationProperties.Name="Commande Spotify"/>
        </StackPanel>
+       <StackPanel x:Name="SoundboardActionPanel" Visibility="Collapsed">
+        <TextBlock Text="Son à jouer sur cette touche" Foreground="{StaticResource MutedBrush}"/>
+        <ComboBox x:Name="SoundboardClipPicker" DisplayMemberPath="Name" AutomationProperties.Name="Son du soundboard"/>
+        <TextBlock Text="Active le micro virtuel dans le panneau Soundboard avant d’utiliser cette touche." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap"/>
+       </StackPanel>
        <StackPanel x:Name="AudioOutputPanel" Visibility="Collapsed">
         <TextBlock Text="Première sortie audio" Foreground="{StaticResource MutedBrush}"/>
         <ComboBox x:Name="PrimaryOutputPicker" DisplayMemberPath="Name" AutomationProperties.Name="Première sortie audio"/>
@@ -127,12 +132,12 @@
         <Button x:Name="SaveActionButton" Style="{StaticResource PrimaryButton}" Content="Enregistrer" Click="SaveClick" Padding="18,7" ToolTip="Les changements sont aussi enregistrés en changeant de touche ou de profil."/>
         <Button x:Name="TestActionButton" Content="Tester l’action" Click="TestActionClick" Padding="16,7" AutomationProperties.AutomationId="TestActionButton" ToolTip="Enregistre et exécute cette action sur ce PC, même sans la carte."/>
        </WrapPanel>
-       <TextBlock x:Name="ActionExecutionStatus" Text="" Foreground="#A8B6AC" TextWrapping="Wrap" FontSize="11" Margin="0,3,0,0" AutomationProperties.AutomationId="ActionExecutionStatus"/>
+       <TextBlock x:Name="ActionExecutionStatus" Text="" Foreground="#B4B2BE" TextWrapping="Wrap" FontSize="11" Margin="0,3,0,0" AutomationProperties.AutomationId="ActionExecutionStatus"/>
       </StackPanel>
     </Border>
    </Grid>
    </ScrollViewer>
-   <Border Grid.Column="1" Background="#1D2328" BorderBrush="{StaticResource LineBrush}" BorderThickness="1,0,0,0" Padding="18,22,14,16">
+   <Border Grid.Column="1" Background="{DynamicResource PanelBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1,0,0,0" Padding="18,22,14,16">
     <ScrollViewer x:Name="SidebarScroll" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,0,6,0">
      <StackPanel>
        <TextBlock Text="Bibliothèque d’actions" FontSize="16" FontWeight="SemiBold"/>
@@ -143,23 +148,23 @@
        <StackPanel x:Name="ActionCatalog"/>
        <StackPanel x:Name="ActionSearchResults" Visibility="Collapsed"/>
        <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,18,0,16"/>
-       <Border Background="#242C31" BorderBrush="#364149" BorderThickness="1" CornerRadius="10" Padding="12" Margin="0,0,0,14">
+       <Border Background="{DynamicResource CardBrush}" BorderBrush="#30313A" BorderThickness="1" CornerRadius="10" Padding="12" Margin="0,0,0,14">
         <StackPanel>
          <TextBlock Text="Votre macropad" FontWeight="SemiBold" Margin="0,0,0,8"/>
-         <TextBlock x:Name="BoardConnectionStatus" Text="Recherche du macropad…" TextWrapping="Wrap" MaxHeight="40" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" Foreground="#A8C4AF" AutomationProperties.AutomationId="BoardConnectionStatus"/>
+         <TextBlock x:Name="BoardConnectionStatus" Text="Recherche du macropad…" TextWrapping="Wrap" MaxHeight="40" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" Foreground="#B8B6C4" AutomationProperties.AutomationId="BoardConnectionStatus"/>
          <TextBlock x:Name="BoardFirmwareStatus" Text="Vérification du firmware…" FontSize="11" TextWrapping="Wrap" Margin="0,6,0,0"/>
          <Button x:Name="FirmwareButton" Content="Firmware du macropad…" AutomationProperties.AutomationId="OpenFirmware" Click="FirmwareClick" HorizontalAlignment="Stretch" FontSize="11" Margin="0,8,0,6"/>
-         <Expander x:Name="BoardDiagnosticExpander" Header="Connexion et diagnostic" FontSize="11" Foreground="#C1CDC4">
+         <Expander x:Name="BoardDiagnosticExpander" Header="Connexion et diagnostic" FontSize="11" Foreground="#C7C5D1">
           <StackPanel Margin="0,6,0,0">
            <ComboBox x:Name="BoardDevicePicker" SelectionChanged="BoardDeviceChanged" Visibility="Collapsed" Margin="0,4,0,0" AutomationProperties.AutomationId="BoardDevicePicker"/>
-           <TextBlock x:Name="BoardLinkDetails" Foreground="#A4ADA6" FontSize="11" TextWrapping="Wrap" Margin="0,4,0,6"/>
+           <TextBlock x:Name="BoardLinkDetails" Foreground="#A8A7B1" FontSize="11" TextWrapping="Wrap" Margin="0,4,0,6"/>
            <CheckBox x:Name="AutoFirmwareCheck" Click="AutoFirmwareClick" Margin="0,6,0,6"><TextBlock Text="Proposer les mises à jour du firmware" FontSize="11" TextWrapping="Wrap"/></CheckBox>
            <Button Content="Copier le diagnostic" Click="CopyDiagnosticClick" HorizontalAlignment="Left" FontSize="11"/>
           </StackPanel>
          </Expander>
         </StackPanel>
        </Border>
-       <Border Background="#242C31" BorderBrush="#364149" BorderThickness="1" CornerRadius="10" Padding="12" Margin="0,0,0,14">
+       <Border Background="{DynamicResource CardBrush}" BorderBrush="#30313A" BorderThickness="1" CornerRadius="10" Padding="12" Margin="0,0,0,14">
         <StackPanel>
          <TextBlock Text="Audio Windows" FontWeight="SemiBold" Margin="0,0,0,6"/>
          <TextBlock x:Name="MicrophoneStatus" Text="Recherche des micros…" TextWrapping="Wrap" AutomationProperties.AutomationId="MicrophoneStatus"/>
@@ -185,9 +190,13 @@
        </Expander>
 
       <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,16,0,12"/>
-      <Expander x:Name="PreferencesExpander" Header="Préférences de l’application" Foreground="#C1CDC4" IsExpanded="False" AutomationProperties.AutomationId="ApplicationPreferences">
+      <Expander x:Name="PreferencesExpander" Header="Préférences de l’application" Foreground="#C7C5D1" IsExpanded="False" AutomationProperties.AutomationId="ApplicationPreferences">
        <StackPanel Margin="0,10,0,0">
       <TextBlock Text="Apparence" FontWeight="SemiBold" Margin="0,0,0,4"/>
+      <TextBlock Text="Fond · #RRGGBB" Foreground="{StaticResource MutedBrush}"/><TextBox x:Name="ThemeBackgroundInput" MaxLength="7"/>
+      <TextBlock Text="Panneaux · #RRGGBB" Foreground="{StaticResource MutedBrush}"/><TextBox x:Name="ThemePanelInput" MaxLength="7"/>
+      <TextBlock Text="Accent · #RRGGBB" Foreground="{StaticResource MutedBrush}"/><TextBox x:Name="ThemeAccentInput" MaxLength="7"/>
+      <Button Content="Appliquer le thème" Click="ApplyThemeClick" HorizontalAlignment="Left"/>
       <CheckBox x:Name="ReduceMotionCheck" Content="Réduire les animations" Checked="ReduceMotionChanged" Unchecked="ReduceMotionChanged"/>
       <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,8,0,12"/>
       <TextBlock Text="Mises à jour" FontWeight="SemiBold" Margin="0,0,0,6"/>
@@ -200,6 +209,18 @@
        </StackPanel>
       </Expander>
       <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,12,0,12"/>
+      <Expander x:Name="SoundboardExpander" Header="Soundboard · micro virtuel" Margin="0,0,0,8">
+       <StackPanel Margin="0,8,0,0">
+        <TextBlock Text="Choisis ton micro et la sortie du câble virtuel (CABLE Input). Dans Discord ou le jeu, choisis CABLE Output comme micro." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+        <TextBlock Text="Microphone physique"/><ComboBox x:Name="SoundboardMicrophonePicker" DisplayMemberPath="Name" SelectionChanged="SoundboardDevicesChanged"/>
+        <TextBlock Text="Sortie vers le micro virtuel"/><ComboBox x:Name="SoundboardOutputPicker" DisplayMemberPath="Name" SelectionChanged="SoundboardDevicesChanged"/>
+        <Button Content="Actualiser les périphériques" Click="RefreshSoundboardDevicesClick" HorizontalAlignment="Left"/>
+        <Button x:Name="SoundboardStartButton" Content="Activer le micro virtuel" Click="ToggleSoundboardClick" HorizontalAlignment="Left"/>
+        <TextBlock x:Name="SoundboardStatus" Text="Micro virtuel arrêté." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,5,0,10"/>
+        <Button Content="Ajouter un son MP3 ou WAV…" Click="AddSoundClipClick" HorizontalAlignment="Left"/>
+        <StackPanel x:Name="SoundboardClipList"/>
+       </StackPanel>
+      </Expander>
       <Expander x:Name="ActivityExpander" Header="Activité récente" Margin="0,0,0,8">
        <StackPanel Margin="0,8,0,0">
         <StackPanel x:Name="ActivityList"/>
@@ -207,19 +228,19 @@
        </StackPanel>
       </Expander>
       <Button x:Name="CalibrateButton" Content="Calibrer les touches" Click="CalibrateClick" HorizontalAlignment="Left"/>
-      <TextBlock Text="Fermer la fenêtre garde DeckPilot actif près de l’horloge." Foreground="#B9C4BC" FontSize="11" TextWrapping="Wrap" Margin="0,8,0,0"/>
+      <TextBlock Text="Fermer la fenêtre garde DeckPilot actif près de l’horloge." Foreground="#BDBCC6" FontSize="11" TextWrapping="Wrap" Margin="0,8,0,0"/>
 
      </StackPanel>
     </ScrollViewer>
    </Border>
   </Grid>
-  <Border Grid.Row="1" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Background="#151A1E" Padding="16,0">
+  <Border Grid.Row="1" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Background="{DynamicResource PanelBrush}" Padding="16,0">
    <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-   <TextBlock x:Name="StatusText" Foreground="#BBC5BE" FontSize="12" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"/>
-    <TextBlock x:Name="HeaderMicrophoneStatus" Grid.Column="1" Text="Micro : lecture de l’état…" FontSize="11" Foreground="#BAC4BD" VerticalAlignment="Center" Margin="12,0,0,0"/>
+   <TextBlock x:Name="StatusText" Foreground="#BEBCC7" FontSize="12" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"/>
+    <TextBlock x:Name="HeaderMicrophoneStatus" Grid.Column="1" Text="Micro : lecture de l’état…" FontSize="11" Foreground="#BDBCC6" VerticalAlignment="Center" Margin="12,0,0,0"/>
    </Grid>
   </Border>
-  <Border x:Name="CalibrationOverlay" Grid.RowSpan="2" Background="#181C20" Visibility="Collapsed" Padding="32">
+  <Border x:Name="CalibrationOverlay" Grid.RowSpan="2" Background="{DynamicResource AppBackgroundBrush}" Visibility="Collapsed" Padding="32">
    <Grid>
     <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
     <StackPanel>

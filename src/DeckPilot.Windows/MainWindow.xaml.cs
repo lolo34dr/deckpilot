@@ -81,6 +81,7 @@ public partial class MainWindow : Window
             }
         }
         layoutChanged = settings.MigrateLayout();
+        InitializeThemeAndSoundboard();
         InitializeProfileTools();
         InitializeAudioGestures();
         ActionPicker.ItemsSource = ActionNames;
@@ -117,7 +118,7 @@ public partial class MainWindow : Window
         CreateTray();
         feedbackTimer.Tick += (_, _) => RefreshFeedback();
         Closing += WindowClosing;
-        Closed += (_, _) => { firmwareTimer.Stop(); boardConnection?.Dispose(); feedbackTimer.Stop(); updateTimer.Stop(); lifetime.Cancel(); updateService.Dispose(); hook?.Dispose(); tray?.Dispose(); trayIcon?.Dispose(); };
+        Closed += (_, _) => { firmwareTimer.Stop(); boardConnection?.Dispose(); feedbackTimer.Stop(); updateTimer.Stop(); lifetime.Cancel(); updateService.Dispose(); soundboard.Dispose(); hook?.Dispose(); tray?.Dispose(); trayIcon?.Dispose(); };
         loading = false;
         UpdateHistoryState();
         StatusText.Text = "Prêt · Choisissez un bouton pour le personnaliser.";
@@ -252,7 +253,7 @@ public partial class MainWindow : Window
         ApplyHardwareHighlights();
         ActionExecutionStatus.Text = !string.IsNullOrEmpty(feedbackMessages[selected]) ? feedbackMessages[selected] :
             settings.ActiveProfile.Buttons[selected].Kind == ActionKind.Passthrough ? "Aucune action à tester pour une touche libre." : "Prêt à tester · L’action sera exécutée sur ce PC.";
-        ActionExecutionStatus.Foreground = Brush(feedback[selected] == DeckKeyFeedback.Error ? "#E1A398" : feedback[selected] == DeckKeyFeedback.Success ? "#AED3B8" : "#A8B6AC");
+        ActionExecutionStatus.Foreground = Brush(feedback[selected] == DeckKeyFeedback.Error ? "#E1A398" : feedback[selected] == DeckKeyFeedback.Success ? "#BAAED3" : "#A8B6AC");
         TestActionButton.IsEnabled = settings.ActiveProfile.Buttons[selected].Kind != ActionKind.Passthrough && feedback[selected] != DeckKeyFeedback.Running && !firmwareOpen && !calibrating;
         if (pending) feedbackTimer.Start(); else feedbackTimer.Stop();
     }
@@ -295,6 +296,8 @@ public partial class MainWindow : Window
         ShortcutPicker.SelectedItem = ((IEnumerable<Choice>)ShortcutPicker.ItemsSource).FirstOrDefault(c => c.Key == action.Key) ?? ((IEnumerable<Choice>)ShortcutPicker.ItemsSource).First();
         MediaPicker.SelectedItem = ((IEnumerable<Choice>)MediaPicker.ItemsSource).FirstOrDefault(c => c.Key == action.Key) ?? ((IEnumerable<Choice>)MediaPicker.ItemsSource).First();
         SpotifyPicker.SelectedItem = ((IEnumerable<Choice>)SpotifyPicker.ItemsSource).FirstOrDefault(c => c.Key == action.Key) ?? ((IEnumerable<Choice>)SpotifyPicker.ItemsSource).First();
+        SoundboardClipPicker.ItemsSource = settings.Soundboard.Clips;
+        SoundboardClipPicker.SelectedItem = settings.Soundboard.Clips.FirstOrDefault(c => c.Id.ToString() == action.Target);
         PopulateWorkspaceEditor(action);
         UpdateActionFields(); PopulateAudioPickers(action); RenderGrid(); loading = previous; UpdateHistoryState(); if (IsInterfaceActive) Motion.Reveal(EditorPanel);
     }
@@ -342,8 +345,8 @@ public partial class MainWindow : Window
         EditorActionTitle.Text = ActionNames[(int)kind];
         for (int i = 0; i < actionButtons.Count; i++)
         {
-            actionButtons[i].Background = Brush(i == (int)kind ? "#203B39" : "#1B2025");
-            actionButtons[i].BorderBrush = Brush(i == (int)kind ? "#71B8AB" : "#1B2025");
+            actionButtons[i].Background = Brush(i == (int)kind ? "#29203B" : "#1B2025");
+            actionButtons[i].BorderBrush = Brush(i == (int)kind ? "#8871B8" : "#1B2025");
         }
         ApplicationPanel.Visibility = kind == ActionKind.Application ? Visibility.Visible : Visibility.Collapsed;
         AdvancedOptionsExpander.Visibility = kind is ActionKind.Application or ActionKind.Folder or ActionKind.Website ? Visibility.Visible : Visibility.Collapsed;
@@ -355,6 +358,7 @@ public partial class MainWindow : Window
         MediaPanel.Visibility = kind == ActionKind.Media ? Visibility.Visible : Visibility.Collapsed;
         SpotifyPanel.Visibility = kind == ActionKind.Spotify ? Visibility.Visible : Visibility.Collapsed;
         AudioOutputPanel.Visibility = kind == ActionKind.AudioOutput ? Visibility.Visible : Visibility.Collapsed;
+        SoundboardActionPanel.Visibility = kind == ActionKind.Soundboard ? Visibility.Visible : Visibility.Collapsed;
         ProfileActionPanel.Visibility = kind == ActionKind.Profile ? Visibility.Visible : Visibility.Collapsed;
         SystemActionPanel.Visibility = kind == ActionKind.System ? Visibility.Visible : Visibility.Collapsed;
         BrowseButton.Visibility = kind == ActionKind.Website ? Visibility.Collapsed : Visibility.Visible;
@@ -366,6 +370,7 @@ public partial class MainWindow : Window
             ActionKind.Folder => "Ouvre le dossier dans l’Explorateur Windows.",
             ActionKind.Website => "Ouvre une adresse http:// ou https:// dans votre navigateur par défaut.",
             ActionKind.Shortcut => "Envoie ce raccourci à la fenêtre active. Les touches F13–F24 simulées ne déclenchent pas d’autres actions DeckPilot.",
+            ActionKind.Soundboard => "Joue ou arrête le son sélectionné dans le micro virtuel. Ajoute d’abord un MP3/WAV dans le panneau Soundboard.",
             ActionKind.Microphone => "Coupe ou réactive tous les microphones Windows actifs. L’état est affiché dans la carte Audio Windows.",
             ActionKind.AudioOutput => "Alterne entre deux sorties par défaut Windows. Les applications réglées sur une sortie fixe peuvent ne pas suivre ce changement.",
             ActionKind.Spotify => "Contrôle uniquement Spotify pour Windows, même si YouTube est actif. Ouvrez Spotify et lancez une lecture. Le lecteur Spotify dans un navigateur n’est pas pris en charge.",
@@ -500,6 +505,11 @@ public partial class MainWindow : Window
                 await Task.Run(() => { if (action.Kind == ActionKind.Microphone) WindowsAudio.ToggleMicrophones(); else WindowsAudio.ToggleOutput(action.Target, action.Arguments); });
                 await RefreshAudioAsync();
             }
+            else if (action.Kind == ActionKind.Soundboard)
+            {
+                if (!Guid.TryParse(action.Target, out var soundId) || settings.Soundboard.Clips.FirstOrDefault(c => c.Id == soundId) is not { } clip) throw new IOException("Son du soundboard introuvable. Choisis un son dans l’éditeur.");
+                soundboard.Toggle(clip.Id, clip.FilePath);
+            }
             else if (action.Kind == ActionKind.Spotify)
                 await SpotifyController.RunAsync(action.Key, lifetime.Token);
             else if (action.Kind is ActionKind.Application or ActionKind.Folder or ActionKind.Website or ActionKind.System)
@@ -571,8 +581,8 @@ public partial class MainWindow : Window
         CalibrationPrompt.Text = $"Étape {captured.Count + 1}/12 · Appuyez sur le bouton ligne {captured.Count / 4 + 1}, colonne {captured.Count % 4 + 1}.";
         for (int i = 0; i < 12; i++)
         {
-            calibrationCells[i].Background = Brush(i == captured.Count ? "#3C4A3F" : i < captured.Count ? "#2D332E" : "#1C1D1C");
-            calibrationCells[i].BorderBrush = Brush(i == captured.Count ? "#91B39A" : "#505350");
+            calibrationCells[i].Background = Brush(i == captured.Count ? "#403C4A" : i < captured.Count ? "#2F2D33" : "#1C1D1C");
+            calibrationCells[i].BorderBrush = Brush(i == captured.Count ? "#9C91B3" : "#505350");
             calibrationLabels[i].Text = i < captured.Count ? Calibration.KeyName(captured[i]) + " ✓" : $"{i + 1:00}";
         }
     }
@@ -681,13 +691,13 @@ public partial class MainWindow : Window
             BoardConnectionKind.Error => "Liaison indisponible",
             _ => "Connexion…"
         };
-        DeckConnectionDot.Fill = Brush(connected ? "#A5D1B1" : "#ADB6AF");
-        DeckConnectionPill.Background = Brush(connected ? "#304639" : "#363C37");
+        DeckConnectionDot.Fill = Brush(connected ? "#B3A5D1" : "#ADB6AF");
+        DeckConnectionPill.Background = Brush(connected ? "#373046" : "#363C37");
         DeckAvailabilityHint.Text = connected ? "Configuration sur ce PC · Cliquez sur une touche pour la modifier."
             : state.Kind == BoardConnectionKind.Disconnected ? "Carte débranchée · Modifiez et testez vos actions sur ce PC."
             : "Vos profils restent modifiables et testables pendant la connexion.";
         BoardConnectionStatus.Text = state.Message;
-        BoardConnectionStatus.Foreground = Brush(state.Kind == BoardConnectionKind.Connected ? "#A8C4AF" : state.Kind is BoardConnectionKind.Error or BoardConnectionKind.Unidentified ? "#D1B18C" : "#A5AAA6");
+        BoardConnectionStatus.Foreground = Brush(state.Kind == BoardConnectionKind.Connected ? "#B1A8C4" : state.Kind is BoardConnectionKind.Error or BoardConnectionKind.Unidentified ? "#D1B18C" : "#A5AAA6");
         string signature = string.Join("|", state.Devices.Select(d => d.DeviceId + ":" + d.Port + ":" + d.Location + ":" + d.Name));
         if (signature != deviceListSignature)
         {

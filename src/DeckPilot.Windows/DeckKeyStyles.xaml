@@ -14,21 +14,21 @@
       <Image Source="{TemplateBinding KindSource}" Width="12" Height="14" Opacity="0.9" HorizontalAlignment="Left"/>
       <TextBlock Text="{TemplateBinding KeyCaption}" FontSize="11" Foreground="#A6BAC5" HorizontalAlignment="Right"/>
       <Image Grid.Row="1" Source="{TemplateBinding IconSource}" Width="36" Height="36" RenderOptions.BitmapScalingMode="HighQuality" Margin="0,2,0,2"/>
-      <Border x:Name="StateBadge" Grid.Row="1" Width="18" Height="18" CornerRadius="9" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="#34473A" Visibility="Collapsed">
-       <TextBlock x:Name="StateGlyph" Text="✓" FontSize="11" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#C5E3CE"/>
+      <Border x:Name="StateBadge" Grid.Row="1" Width="18" Height="18" CornerRadius="9" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="#36313F" Visibility="Collapsed">
+       <TextBlock x:Name="StateGlyph" Text="✓" FontSize="11" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#E2DCFF"/>
       </Border>
       <TextBlock Grid.Row="2" Text="{TemplateBinding Label}" FontSize="12" FontWeight="Medium" TextAlignment="Center" TextTrimming="CharacterEllipsis" VerticalAlignment="Bottom"/>
      </Grid>
     </Border>
    </Border>
    <ControlTemplate.Triggers>
-    <Trigger Property="IsSelected" Value="True"><Setter TargetName="KeyBody" Property="BorderBrush" Value="#83CABA"/><Setter TargetName="KeyFace" Property="Background" Value="#2A393B"/></Trigger>
+    <Trigger Property="IsSelected" Value="True"><Setter TargetName="KeyBody" Property="BorderBrush" Value="#A89AE3"/><Setter TargetName="KeyFace" Property="Background" Value="#302D3A"/></Trigger>
     <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="KeyFace" Property="Background" Value="#304049"/></Trigger>
 
     <Trigger Property="IsPressed" Value="True"><Setter TargetName="KeyBody" Property="Padding" Value="3,5,3,4"/></Trigger>
-    <Trigger Property="IsHardwarePressed" Value="True"><Setter TargetName="KeyBody" Property="Padding" Value="3,5,3,4"/><Setter TargetName="KeyFace" Property="Background" Value="#2E544D"/><Setter TargetName="KeyBody" Property="BorderBrush" Value="#A1DDCF"/></Trigger>
+    <Trigger Property="IsHardwarePressed" Value="True"><Setter TargetName="KeyBody" Property="Padding" Value="3,5,3,4"/><Setter TargetName="KeyFace" Property="Background" Value="#40395C"/><Setter TargetName="KeyBody" Property="BorderBrush" Value="#BDB0FF"/></Trigger>
     <Trigger Property="Feedback" Value="{x:Static local:DeckKeyFeedback.Running}"><Setter TargetName="StateBadge" Property="Visibility" Value="Visible"/><Setter TargetName="StateBadge" Property="Background" Value="#38434C"/><Setter TargetName="StateGlyph" Property="Text" Value="…"/><Setter TargetName="StateGlyph" Property="Foreground" Value="#C5D9E8"/><Setter TargetName="KeyBody" Property="BorderBrush" Value="#8EAABD"/></Trigger>
-    <Trigger Property="Feedback" Value="{x:Static local:DeckKeyFeedback.Success}"><Setter TargetName="StateBadge" Property="Visibility" Value="Visible"/><Setter TargetName="KeyBody" Property="BorderBrush" Value="#82B892"/></Trigger>
+    <Trigger Property="Feedback" Value="{x:Static local:DeckKeyFeedback.Success}"><Setter TargetName="StateBadge" Property="Visibility" Value="Visible"/><Setter TargetName="KeyBody" Property="BorderBrush" Value="#A89AE3"/></Trigger>
     <Trigger Property="Feedback" Value="{x:Static local:DeckKeyFeedback.Error}"><Setter TargetName="StateBadge" Property="Visibility" Value="Visible"/><Setter TargetName="StateBadge" Property="Background" Value="#5D3533"/><Setter TargetName="StateGlyph" Property="Text" Value="!"/><Setter TargetName="StateGlyph" Property="Foreground" Value="#FFD1C9"/><Setter TargetName="KeyBody" Property="BorderBrush" Value="#D38D80"/></Trigger>
     <Trigger Property="IsEnabled" Value="False"><Setter TargetName="KeyBody" Property="Opacity" Value="0.45"/></Trigger>
     <Trigger Property="IsDropTarget" Value="True"><Setter TargetName="KeyBody" Property="BorderBrush" Value="#A8D7ED"/><Setter TargetName="KeyFace" Property="Background" Value="#344E5C"/></Trigger>

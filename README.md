@@ -356,6 +356,12 @@ The charcoal interface puts the action library first, separates profile controls
 
 The firmware remains **1.1.1**. Accepting an automatic firmware offer now correctly opens the firmware manager; the previous modal guard prevented that handoff. Existing firmware identity, heartbeat, reconnect and flash checks remain in place. New workspace features do not need a firmware flash.
 
+## DeckPilot 2.0.0: themes and soundboard
+
+DeckPilot now uses a deep black interface by default. In **Préférences de l’application**, change the background, panel and accent colors using `#RRGGBB` values; your theme is saved on this PC.
+
+The **Soundboard · micro virtuel** panel lets you select your physical microphone, the playback endpoint of a virtual audio cable, and MP3/WAV clips. Activate the virtual microphone, then use a clip button in the panel or assign **Soundboard** to a macropad key. DeckPilot mixes your voice with the playing clip into the selected cable playback endpoint. In Discord or a game, select the cable's matching recording endpoint as the microphone. The audio engine uses NAudio (MIT; see [third-party notice](third-party/NAudio-LICENSE.txt)). A Windows virtual audio cable such as VB-CABLE must be installed separately; DeckPilot cannot create a Windows recording device by itself. Do not choose your speakers as the cable output or your microphone will play through them.
+
 ## DeckPilot Atelier (1.9.0)
 
 Atelier now checks the selected board and firmware before flashing, compares installed and bundled versions, and offers a verified retry after interrupted writes. **Mode atelier en série…** diagnoses and flashes all detected boards sequentially and can export a batch report. The 12-key test verifies the physical 01→12 layout, records the F13–F24 mapping, and includes firmware and per-key results in the quality report.
