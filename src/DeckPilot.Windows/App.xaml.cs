@@ -31,6 +31,48 @@ public partial class App : Application
             catch { Shutdown(1); }
             return;
         }
+        if (e.Args.Length == 3 && e.Args[0] == "--configure-preferences")
+        {
+            try
+            {
+                bool autoUpdates = e.Args[1] == "on";
+                bool reduceMotion = e.Args[2] == "on";
+                if ((e.Args[1] is not ("on" or "off")) || (e.Args[2] is not ("on" or "off"))) throw new ArgumentException("Invalid installer preferences.");
+                var path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DeckPilot", "settings.json");
+                var store = new DeckPilot.Core.SettingsStore(path);
+                var settings = store.Load();
+                settings.AutoCheckUpdates = autoUpdates;
+                settings.ReduceMotion = reduceMotion;
+                store.Save(settings);
+                Shutdown();
+            }
+            catch { Shutdown(1); }
+            return;
+        }
+        if (e.Args.Length == 1 && e.Args[0] == "--configure-microphone")
+        {
+            ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            try
+            {
+                var store = new DeckPilot.Core.SettingsStore(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DeckPilot", "settings.json"));
+                var settings = store.Load();
+                using var audio = new SoundboardEngine();
+                var physicalMicrophones = audio.Microphones().Where(m => !DeckPilot.Core.VirtualCableEndpoints.IsRecordingEndpoint(m.Name)).ToArray();
+                var dialog = new MicrophoneSetupWindow(physicalMicrophones, settings.Soundboard.MicrophoneId);
+                if (dialog.ShowDialog() == true && dialog.SelectedMicrophone is { } microphone)
+                {
+                    settings.Soundboard.MicrophoneId = microphone.Id;
+                    store.Save(settings);
+                }
+                Shutdown();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Le choix du microphone n’a pas pu être enregistré : " + ex.Message, "DeckPilot", MessageBoxButton.OK, MessageBoxImage.Warning);
+                Shutdown(1);
+            }
+            return;
+        }
         if (e.Args.Length == 1 && e.Args[0] == "--remove-startup")
         {
             try { StartupService.RemoveInstalledEntry(); Shutdown(); }

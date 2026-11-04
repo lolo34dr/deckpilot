@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -14,6 +15,7 @@ public partial class MainWindow
     private SoundboardEngine? soundboard;
     private SoundboardEngine Audio => soundboard ??= new SoundboardEngine();
     private bool soundboardRefreshing;
+    private AudioEndpoint? virtualCableInput;
     private void InitializeThemeAndSoundboard()
     {
         ThemeBackgroundInput.Text = settings.Theme.Background;
@@ -51,20 +53,30 @@ public partial class MainWindow
     private void RefreshSoundboardDevicesClick(object sender, RoutedEventArgs e) => RefreshSoundboardDevices();
     private void RefreshSoundboardDevices()
     {
+        virtualCableInput = null;
         try
         {
-            var inputs = Audio.Microphones(); var outputs = Audio.Outputs();
+            var inputs = Audio.Microphones().Where(x => !VirtualCableEndpoints.IsRecordingEndpoint(x.Name)).ToArray();
+            virtualCableInput = Audio.Outputs().FirstOrDefault(x => VirtualCableEndpoints.IsPlaybackEndpoint(x.Name));
             soundboardRefreshing = true;
             try
             {
                 SoundboardMicrophonePicker.ItemsSource = inputs;
-                SoundboardOutputPicker.ItemsSource = outputs;
                 SoundboardMicrophonePicker.SelectedItem = inputs.FirstOrDefault(x => x.Id == settings.Soundboard.MicrophoneId);
-                SoundboardOutputPicker.SelectedItem = outputs.FirstOrDefault(x => x.Id == settings.Soundboard.VirtualOutputId);
             }
             finally { soundboardRefreshing = false; }
-            if (outputs.All(x => !x.Name.Contains("CABLE", StringComparison.OrdinalIgnoreCase) && !x.Name.Contains("virtual", StringComparison.OrdinalIgnoreCase) && !x.Name.Contains("Voicemeeter", StringComparison.OrdinalIgnoreCase)))
-                SoundboardStatus.Text = "Aucun câble audio virtuel détecté. Installe VB-CABLE ou un équivalent, puis actualise.";
+            string outputId = virtualCableInput?.Id ?? "";
+            if (settings.Soundboard.VirtualOutputId != outputId)
+            {
+                settings.Soundboard.VirtualOutputId = outputId;
+                SaveSoundboardSettings();
+            }
+            if (virtualCableInput == null)
+                SoundboardStatus.Text = "VB-CABLE n’est pas détecté. Installe le pilote depuis le site officiel, puis actualise les périphériques.";
+            else if (string.IsNullOrWhiteSpace(settings.Soundboard.MicrophoneId))
+                SoundboardStatus.Text = "VB-CABLE est prêt. Choisis ton microphone physique.";
+            else
+                SoundboardStatus.Text = "VB-CABLE est prêt. Dans Discord ou le jeu, choisis CABLE Output comme microphone.";
         }
         catch (Exception ex) { SoundboardStatus.Text = "Périphériques audio indisponibles : " + ex.Message; }
     }
@@ -73,9 +85,34 @@ public partial class MainWindow
         if (loading || soundboardRefreshing) return;
         if (soundboard?.IsRunning == true) { soundboard.Stop(); SoundboardStartButton.Content = "Activer le micro virtuel"; }
         settings.Soundboard.MicrophoneId = (SoundboardMicrophonePicker.SelectedItem as AudioEndpoint)?.Id ?? "";
-        settings.Soundboard.VirtualOutputId = (SoundboardOutputPicker.SelectedItem as AudioEndpoint)?.Id ?? "";
         SaveSoundboardSettings();
-        SoundboardStatus.Text = "Périphériques sélectionnés. Active le micro virtuel pour envoyer la voix et les sons.";
+        SoundboardStatus.Text = virtualCableInput == null
+            ? "VB-CABLE n’est pas détecté. Installe le pilote depuis le site officiel, puis actualise les périphériques."
+            : "Microphone sélectionné. Active le micro virtuel pour envoyer la voix et les sons.";
+    }
+    private void InstallVirtualCableClick(object sender, RoutedEventArgs e)
+    {
+        string script = Path.Combine(AppContext.BaseDirectory, "Install-VBCABLE.ps1");
+        if (!File.Exists(script))
+        {
+            SoundboardStatus.Text = "Le programme d’installation intégré est absent. Le site officiel VB-Audio va s’ouvrir.";
+            try { Process.Start(new ProcessStartInfo("https://vb-audio.com/Cable/") { UseShellExecute = true }); }
+            catch (Exception ex) { SoundboardStatus.Text = "Impossible d’ouvrir le site VB-Audio : " + ex.Message; }
+            return;
+        }
+        try
+        {
+            string powershell = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "WindowsPowerShell", "v1.0", "powershell.exe");
+            var start = new ProcessStartInfo(powershell, $"-NoProfile -ExecutionPolicy Bypass -File \"{script}\"")
+            {
+                UseShellExecute = true,
+                Verb = "runas",
+                WindowStyle = ProcessWindowStyle.Hidden
+            };
+            Process.Start(start);
+            SoundboardStatus.Text = "L’installation sécurisée de VB-CABLE a démarré. Autorise Windows, suis l’installateur, puis actualise les périphériques.";
+        }
+        catch (Exception ex) { SoundboardStatus.Text = "Installation de VB-CABLE annulée ou impossible : " + ex.Message; }
     }
     private void ToggleSoundboardClick(object sender, RoutedEventArgs e)
     {
@@ -88,14 +125,10 @@ public partial class MainWindow
             }
             else
             {
-                var selected = SoundboardOutputPicker.SelectedItem as AudioEndpoint;
-                if (selected != null && !selected.Name.Contains("CABLE", StringComparison.OrdinalIgnoreCase) && !selected.Name.Contains("virtual", StringComparison.OrdinalIgnoreCase) && !selected.Name.Contains("Voicemeeter", StringComparison.OrdinalIgnoreCase))
-                {
-                    if (MessageBox.Show(this, "La sortie choisie ne semble pas être un câble audio virtuel. La voix pourrait sortir par les haut-parleurs et produire un larsen. Continuer ?", "Vérifier la sortie audio", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) != MessageBoxResult.Yes) return;
-                }
-                Audio.Start(settings.Soundboard.MicrophoneId, settings.Soundboard.VirtualOutputId);
+                if (virtualCableInput == null) { RefreshSoundboardDevices(); if (virtualCableInput == null) return; }
+                Audio.Start(settings.Soundboard.MicrophoneId, virtualCableInput.Id);
                 SoundboardStartButton.Content = "Arrêter le micro virtuel";
-                SoundboardStatus.Text = "Voix et sons envoyés vers la sortie virtuelle choisie. Dans le jeu, choisis la capture correspondante comme micro.";
+                SoundboardStatus.Text = "Voix et sons envoyés vers VB-CABLE. Dans Discord ou le jeu, choisis CABLE Output comme microphone.";
             }
             RefreshSoundboardClips();
         }

@@ -32,6 +32,13 @@ Check("Version 2 theme and soundboard preferences validate without breaking old 
     prefs.Theme.Accent = "#AABBCC";
     prefs.Soundboard.Clips[0].FilePath = "sound.exe"; Reject(prefs.Validate);
 });
+Check("VB-CABLE routes only to its playback endpoint and hides its virtual microphone from physical input choices", () => {
+    Expect(VirtualCableEndpoints.IsPlaybackEndpoint("CABLE Input (VB-Audio Virtual Cable)"));
+    Expect(VirtualCableEndpoints.IsRecordingEndpoint("CABLE Output (VB-Audio Virtual Cable)"));
+    Expect(!VirtualCableEndpoints.IsPlaybackEndpoint("Speakers (Realtek Audio)"));
+    Expect(!VirtualCableEndpoints.IsPlaybackEndpoint("VoiceMeeter Aux Input"));
+    Expect(!VirtualCableEndpoints.IsRecordingEndpoint("CABLE Input (VB-Audio Virtual Cable)"));
+});
 Check("A new profile leaves all twelve keys free", () => {
     var settings = new Settings(); settings.Validate();
     Expect(!settings.IsCalibrated);

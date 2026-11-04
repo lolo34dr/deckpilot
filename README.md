@@ -356,11 +356,11 @@ The charcoal interface puts the action library first, separates profile controls
 
 The firmware remains **1.1.1**. Accepting an automatic firmware offer now correctly opens the firmware manager; the previous modal guard prevented that handoff. Existing firmware identity, heartbeat, reconnect and flash checks remain in place. New workspace features do not need a firmware flash.
 
-## DeckPilot 2.0.0: themes and soundboard
+## DeckPilot 2.1.0: fixed signed virtual microphone routing
 
 DeckPilot now uses a deep black interface by default. In **Préférences de l’application**, change the background, panel and accent colors using `#RRGGBB` values; your theme is saved on this PC.
 
-The **Soundboard · micro virtuel** panel lets you select your physical microphone, the playback endpoint of a virtual audio cable, and MP3/WAV clips. Activate the virtual microphone, then use a clip button in the panel or assign **Soundboard** to a macropad key. DeckPilot mixes your voice with the playing clip into the selected cable playback endpoint. In Discord or a game, select the cable's matching recording endpoint as the microphone. The audio engine uses NAudio (MIT; see [third-party notice](third-party/NAudio-LICENSE.txt)). A Windows virtual audio cable such as VB-CABLE must be installed separately; DeckPilot cannot create a Windows recording device by itself. Do not choose your speakers as the cable output or your microphone will play through them.
+The **Soundboard · micro virtuel** panel lets you select your physical microphone and MP3/WAV clips. DeckPilot automatically routes the mix to the VB-Audio VB-CABLE playback endpoint; in Discord or a game, choose **CABLE Output** as the microphone. On a new installation, the checked **Install the signed VB-CABLE audio driver** task downloads the official package over HTTPS, checks its Authenticode publisher before running it, and opens the vendor's driver setup. This requires an internet connection and administrator approval. DeckPilot does not bundle or redistribute VB-Audio files. If you skip the task, you can start the same checked installer from the Soundboard panel. The audio engine uses NAudio (MIT; see [third-party notice](third-party/NAudio-LICENSE.txt)). VB-CABLE is a separately licensed, signed Windows driver, not an MIT component.
 
 ## DeckPilot Atelier (1.9.0)
 
