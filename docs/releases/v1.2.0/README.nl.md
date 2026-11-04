@@ -2,10 +2,10 @@
 
 DeckPilot nu installeert als een gewone Windows-toepassing, met de juiste **3 rijen × 4 Kolommen** macropad layout.
 
-- Downloaden **DeckPilot-Setup.exe** te installeren in **Program Files\DeckPilot**, met het menu Start en sneltoetsen van het bureaublad en een Windows verwijderen ingang.
+- Downloaden **DeckPilot-Setup.exe** te installeren in **Program Files\DeckPilot**, met Start menu en desktop sneltoetsen en een Windows verwijderen ingang.
 - Windows opstarten is standaard ingeschakeld en kan worden uitgeschakeld tijdens de installatie of vanuit de app. Updates behouden die keuze.
 - Geïnstalleerde app-updates downloaden en controleren van de setup pakket, verzoeken normale Windows-beheerder toestemming, vervolgens installeren en herstart de app.
 - Het hoofdrooster, de positielabels en de geleide kalibratie gebruiken nu drie rijen van vier sleutels. Bestaande profielen/acties worden bewaard; de vorige lay-out vereist een nieuwe kalibratie.
-- Firmware 1.0.0 De eigenaar heeft bevestigd dat het knipperen, versie-identificatie en alle twaalf sleutels op het referentiemacropad succesvol zijn. Deze app-update knippert niet met hardware.
+- Firmware 1.0.0 De eigenaar heeft bevestigd dat het knipperen succesvol is, versie-identificatie en alle twaalf toetsen op het referentie macropad. Deze app-update heeft geen flash hardware.
 
 Vensters 10/11 x64. De standalone **DeckPilot.exe** en draagbare ZIP blijven beschikbaar voor oudere updater compatibiliteit. Persoonlijke profielen blijven in `%APPDATA%\DeckPilot` en worden bewaard op uninstall.
