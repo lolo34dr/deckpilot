@@ -152,7 +152,7 @@ public static class DeckPilotIconResource {
     if ($null -ne (Read-RegistryValue $startupKey DeckPilot)) { throw 'Startup preference could not be disabled' }
 
     $phase = 'upgrade while the installed app is running'
-    Run-Setup $setup @('/UPDATE=1','/STARTUP=off','/AUTOCHECKUPDATES=off','/REDUCEMOTION=on','/TESTDRIVER=1','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART')
+    Run-Setup $setup @('/STARTUP=off','/AUTOCHECKUPDATES=off','/REDUCEMOTION=on','/TESTDRIVER=1','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART')
     Wait-Until { $app.Refresh(); $app.HasExited }
     Wait-Until {
         $script:updatedApp = Get-Process -Name DeckPilot -ErrorAction SilentlyContinue | Where-Object { $_.Path -eq $executable } | Select-Object -First 1

@@ -65,10 +65,25 @@ var
   SavedStartup, SavedAutoUpdates, SavedReduceMotion: Boolean;
   SetupStateInitialized, UpdateInstall: Boolean;
 
+function PreviousInstallFound: Boolean;
+var ExistingDirectory: String;
+begin
+  Result := False;
+  ExistingDirectory := '';
+  if not RegQueryStringValue(HKEY_LOCAL_MACHINE,
+    'Software\Microsoft\Windows\CurrentVersion\Uninstall\{4B12540A-BC41-4A58-B4C6-B71C9D1FC664}_is1',
+    'Inno Setup: App Path', ExistingDirectory) then
+    RegQueryStringValue(HKEY_LOCAL_MACHINE,
+      'Software\Microsoft\Windows\CurrentVersion\Uninstall\{4B12540A-BC41-4A58-B4C6-B71C9D1FC664}_is1',
+      'InstallLocation', ExistingDirectory);
+  if ExistingDirectory <> '' then
+    Result := FileExists(AddBackslash(ExistingDirectory) + 'DeckPilot.install');
+end;
+
 function IsUpdate: Boolean;
 begin
   if SetupStateInitialized then Result := UpdateInstall
-  else Result := (ExpandConstant('{param:UPDATE|0}') <> '0') or FileExists(ExpandConstant('{app}\DeckPilot.install'));
+  else Result := (ExpandConstant('{param:UPDATE|0}') <> '0') or PreviousInstallFound;
 end;
 
 function ParseOnOff(const Value: String; var Parsed: Boolean): Boolean;
@@ -100,7 +115,7 @@ begin
   ScriptPath := ExpandConstant('{tmp}\Export-DeckPilotPreferences.ps1');
   PowerShellPath := ExpandConstant('{sys}\WindowsPowerShell\v1.0\powershell.exe');
   Parameters := '-NoProfile -ExecutionPolicy Bypass -File "' + ScriptPath + '" -OutputPath "' + OutputPath + '"';
-  if not ExecAsOriginalUser(PowerShellPath, Parameters, ExpandConstant('{app}'), SW_HIDE, ewWaitUntilTerminated, Code) then exit;
+  if not ExecAsOriginalUser(PowerShellPath, Parameters, '', SW_HIDE, ewWaitUntilTerminated, Code) then exit;
   if (Code <> 0) or not LoadStringsFromFile(OutputPath, Values) or (GetArrayLength(Values) < 3) then exit;
   Result := ParseOnOff(Values[0], InitialStartup) and
     ParseOnOff(Values[1], InitialAutoUpdates) and
@@ -115,7 +130,7 @@ end;
 function InitializeSetup: Boolean;
 var HasPersistedPreferences: Boolean;
 begin
-  UpdateInstall := (ExpandConstant('{param:UPDATE|0}') <> '0') or FileExists(ExpandConstant('{app}\DeckPilot.install'));
+  UpdateInstall := (ExpandConstant('{param:UPDATE|0}') <> '0') or PreviousInstallFound;
   SetupStateInitialized := True;
   InitialStartup := True;
   InitialAutoUpdates := True;
