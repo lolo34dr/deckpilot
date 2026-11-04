@@ -26,8 +26,8 @@ try {
     New-Item -ItemType Directory -Path $work -Force | Out-Null
     $archive = Join-Path $work 'VBCABLE.zip'
     Invoke-WebRequest -Uri $downloadUrl -OutFile $archive -UseBasicParsing
-    $downloadComplete = $true
     Expand-Archive -LiteralPath $archive -DestinationPath (Join-Path $work 'package') -Force
+    $downloadComplete = $true
 
     $setups = @(Get-ChildItem -Path (Join-Path $work 'package') -Filter 'VBCABLE_Setup_x64.exe' -File -Recurse)
     if ($setups.Count -ne 1) { throw 'Le paquet officiel ne contient pas un installateur x64 unique.' }
@@ -65,7 +65,7 @@ try {
 }
 catch {
     if ($ValidateOnly -and !$downloadComplete) {
-        Write-Warning 'The official VB-Audio download is unavailable from this runner; signature verification is deferred to the user installation.'
+        Write-Warning 'The official VB-Audio package could not be downloaded or unpacked on this runner; signature verification is deferred to the user installation.'
         exit 0
     }
     if ($ValidateOnly) { Write-Error $_; exit 1 }
