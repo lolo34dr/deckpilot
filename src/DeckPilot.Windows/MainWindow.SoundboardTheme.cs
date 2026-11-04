@@ -11,7 +11,8 @@ namespace DeckPilot.Windows;
 
 public partial class MainWindow
 {
-    private readonly SoundboardEngine soundboard = new();
+    private SoundboardEngine? soundboard;
+    private SoundboardEngine Audio => soundboard ??= new SoundboardEngine();
     private bool soundboardRefreshing;
     private void InitializeThemeAndSoundboard()
     {
@@ -52,7 +53,7 @@ public partial class MainWindow
     {
         try
         {
-            var inputs = soundboard.Microphones(); var outputs = soundboard.Outputs();
+            var inputs = Audio.Microphones(); var outputs = Audio.Outputs();
             soundboardRefreshing = true;
             try
             {
@@ -70,7 +71,7 @@ public partial class MainWindow
     private void SoundboardDevicesChanged(object sender, SelectionChangedEventArgs e)
     {
         if (loading || soundboardRefreshing) return;
-        if (soundboard.IsRunning) { soundboard.Stop(); SoundboardStartButton.Content = "Activer le micro virtuel"; }
+        if (soundboard?.IsRunning == true) { soundboard.Stop(); SoundboardStartButton.Content = "Activer le micro virtuel"; }
         settings.Soundboard.MicrophoneId = (SoundboardMicrophonePicker.SelectedItem as AudioEndpoint)?.Id ?? "";
         settings.Soundboard.VirtualOutputId = (SoundboardOutputPicker.SelectedItem as AudioEndpoint)?.Id ?? "";
         SaveSoundboardSettings();
@@ -80,7 +81,7 @@ public partial class MainWindow
     {
         try
         {
-            if (soundboard.IsRunning)
+            if (soundboard?.IsRunning == true)
             {
                 soundboard.Stop(); SoundboardStartButton.Content = "Activer le micro virtuel";
                 SoundboardStatus.Text = "Micro virtuel arrêté.";
@@ -92,7 +93,7 @@ public partial class MainWindow
                 {
                     if (MessageBox.Show(this, "La sortie choisie ne semble pas être un câble audio virtuel. La voix pourrait sortir par les haut-parleurs et produire un larsen. Continuer ?", "Vérifier la sortie audio", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) != MessageBoxResult.Yes) return;
                 }
-                soundboard.Start(settings.Soundboard.MicrophoneId, settings.Soundboard.VirtualOutputId);
+                Audio.Start(settings.Soundboard.MicrophoneId, settings.Soundboard.VirtualOutputId);
                 SoundboardStartButton.Content = "Arrêter le micro virtuel";
                 SoundboardStatus.Text = "Voix et sons envoyés vers la sortie virtuelle choisie. Dans le jeu, choisis la capture correspondante comme micro.";
             }
@@ -116,12 +117,12 @@ public partial class MainWindow
         {
             var row = new DockPanel { Margin = new Thickness(0, 3, 0, 3) };
             var remove = new Button { Content = "×", ToolTip = "Retirer ce son", MinWidth = 28, Padding = new Thickness(7, 3, 7, 3) };
-            remove.Click += (_, _) => { soundboard.StopClip(clip.Id); settings.Soundboard.Clips.Remove(clip); SaveSoundboardSettings(); RefreshSoundboardClips(); };
+            remove.Click += (_, _) => { soundboard?.StopClip(clip.Id); settings.Soundboard.Clips.Remove(clip); SaveSoundboardSettings(); RefreshSoundboardClips(); };
             DockPanel.SetDock(remove, Dock.Right); row.Children.Add(remove);
             var play = new Button { Content = clip.Name, ToolTip = clip.FilePath, HorizontalContentAlignment = HorizontalAlignment.Left };
             play.Click += (_, _) =>
             {
-                try { play.Content = soundboard.Toggle(clip.Id, clip.FilePath) ? "■ " + clip.Name : clip.Name; }
+                try { play.Content = Audio.Toggle(clip.Id, clip.FilePath) ? "■ " + clip.Name : clip.Name; }
                 catch (Exception ex) { SoundboardStatus.Text = "Son indisponible : " + ex.Message; }
             };
             row.Children.Add(play); SoundboardClipList.Children.Add(row);

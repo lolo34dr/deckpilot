@@ -44,7 +44,19 @@ public partial class App : Application
             Shutdown();
             return;
         }
-        var window = new MainWindow(e.Args.Contains("--background")) { ShowActivated = !e.Args.Contains("--background") };
+        MainWindow window;
+        try { window = new MainWindow(e.Args.Contains("--background")) { ShowActivated = !e.Args.Contains("--background") }; }
+        catch (Exception ex)
+        {
+            try
+            {
+                var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DeckPilot");
+                System.IO.Directory.CreateDirectory(folder);
+                System.IO.File.WriteAllText(System.IO.Path.Combine(folder, "startup-error.log"), ex.ToString());
+            }
+            catch { }
+            throw;
+        }
         installerExit = new EventWaitHandle(false, EventResetMode.AutoReset, @"Local\DeckPilot.InstallExit");
         installerWait = ThreadPool.RegisterWaitForSingleObject(installerExit, (_, _) => Dispatcher.BeginInvoke(window.RequestInstallerExit), null, Timeout.Infinite, false);
         int healthArgument = Array.IndexOf(e.Args, "--update-health");
