@@ -23,7 +23,7 @@
 <p align="center">
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&color=78b7a0" alt="Последний релиз"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&logo=windows" alt="Скачать для Windows x64"></a>
-  <a href="https://github.com/lolo34dr/deckpilot/releases?q=atelier"><img src="https://img.shields.io/badge/Download-DeckPilot_Atelier-16856A?style=flat-square&logo=windows" alt="Скачать DeckPilot Atelier"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe"><img src="https://img.shields.io/badge/Download-DeckPilot_Atelier-16856A?style=flat-square&logo=windows" alt="Скачать DeckPilot Atelier"></a>
   <a href="https://github.com/lolo34dr/deckpilot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/lolo34dr/deckpilot?style=flat-square" alt="Лицензия MIT"></a>
   <a href="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml"><img src="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml/badge.svg?branch=main" alt="Статус сборки Windows"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&color=70a7e8" alt="GitHub скачать"></a>
@@ -283,7 +283,7 @@ DeckPilot Освобождается под **[Лицензия MIT](../../LICEN
 <a id="macropad-firmware-updates"></a>
 ## Обновления прошивки Macropad
 
-Для подготовки устройства и проверки качества мастерской установите отдельную [Производитель: Pilot Atelier](docs/FACTORY.md) Инструмент. Его установщик публикуется как **[DeckPilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases?q=atelier)** Наряду с основным приложением он может мигать встроенную прошивку на доску Leonardo / Caterina, а затем проверять короткие и длинные нажатия на всех устройствах. 12 Физические ключи и экспортный отчет.
+Для подготовки устройства и проверки качества мастерской установите отдельную [Производитель: Pilot Atelier](docs/FACTORY.md) Инструмент. Его установщик публикуется как **[DeckPilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** Наряду с основным приложением он может мигать встроенную прошивку на доску Leonardo / Caterina, а затем проверять короткие и длинные нажатия на всех устройствах. 12 Физические ключи и экспортный отчет.
 
 DeckPilot 1.1.0 включает в себя **Firmware du macropad…** Диалог и прошивка 1.0.0 Производитель: Pro Micro ATmega32U4 **5 В. 16 МГц**, используя конфигурацию Leonardo/Caterina, подтвержденную журналом загрузки владельца. Пакетный инструмент флеширования Windows не требует Arduino IDE. Выбор и подтверждение устройства являются обязательными; обновления приложений никогда молча не мигают на доску. Существующие отображения F13-F24, профили и калибровка остаются совместимыми.
 

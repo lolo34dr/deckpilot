@@ -23,7 +23,7 @@
 <p align="center">
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&color=78b7a0" alt="最新リリース"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&logo=windows" alt="Windowsのx64のためのダウンロード"></a>
-  <a href="https://github.com/lolo34dr/deckpilot/releases?q=atelier"><img src="https://img.shields.io/badge/Download-DeckPilot_Atelier-16856A?style=flat-square&logo=windows" alt="DeckPilot Atelierをダウンロード"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe"><img src="https://img.shields.io/badge/Download-DeckPilot_Atelier-16856A?style=flat-square&logo=windows" alt="DeckPilot Atelierをダウンロード"></a>
   <a href="https://github.com/lolo34dr/deckpilot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/lolo34dr/deckpilot?style=flat-square" alt="MITライセンス"></a>
   <a href="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml"><img src="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml/badge.svg?branch=main" alt="Windowsビルドステータス"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&color=70a7e8" alt="GitHubリリースのダウンロード"></a>
@@ -283,7 +283,7 @@ DeckPilot リリース中 **[MITライセンス](../../LICENSE)**。 ライセ�
 <a id="macropad-firmware-updates"></a>
 ## Macropadファームウェアのアップデート
 
-装置の準備および研修会の質点検のために、別々に取付けて下さい [デッキパイロットアトリエ](docs/FACTORY.md) ツール。そのインストーラは、として公開されています **[デッキPilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases?q=atelier)** メインアプリケーションと一緒に。 付属のファームウェアをレオナルド/カテリナボードにフラッシュし、すべての上でショートプレスとロングプレスをチェックすることができます 12 物理的なキーおよびレポートを輸出して下さい。
+装置の準備および研修会の質点検のために、別々に取付けて下さい [デッキパイロットアトリエ](docs/FACTORY.md) ツール。そのインストーラは、として公開されています **[デッキPilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** メインアプリケーションと一緒に。 付属のファームウェアをレオナルド/カテリナボードにフラッシュし、すべての上でショートプレスとロングプレスをチェックすることができます 12 物理的なキーおよびレポートを輸出して下さい。
 
 DeckPilot 1.1.0 含まれるもの **Firmware du macropad…** ダイアログとファームウェア 1.0.0 プロ用マイクロ ATmega32U4 **5 V・V・V 16 MHzの**、所有者のアップロードログによって確認されたLeonardo/Caterina構成を使用して。束ねられたWindowsの点滅用具はArduino IDEを必要としません。装置の選択および確認は必須です;appの更新は静かに板を点滅しません。既存のF13–F24のマッピング、プロフィールおよび口径測定は互換性がありません。
 

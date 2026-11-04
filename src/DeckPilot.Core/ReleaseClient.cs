@@ -17,17 +17,17 @@ public sealed class ReleaseClient : IDisposable
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellation);
         timeout.CancelAfter(TimeSpan.FromSeconds(30));
         cancellation = timeout.Token;
-        using var response = await RequestAsync(new Uri($"https://api.github.com/repos/{UpdateRelease.Repository}/releases?per_page=100"), cancellation);
+        using var response = await RequestAsync(new Uri($"https://api.github.com/repos/{UpdateRelease.Repository}/releases/latest"), cancellation);
         if (response.StatusCode == HttpStatusCode.NotFound)
         {
             // The transition release works before the repository is renamed as well as afterward.
-            using var legacy = await RequestAsync(new Uri($"https://api.github.com/repos/{UpdateRelease.LegacyRepository}/releases?per_page=100"), cancellation);
+            using var legacy = await RequestAsync(new Uri($"https://api.github.com/repos/{UpdateRelease.LegacyRepository}/releases/latest"), cancellation);
             if (legacy.StatusCode == HttpStatusCode.NotFound) return null;
             legacy.EnsureSuccessStatusCode();
-            return UpdateRelease.ParseLatest(await ReadTextAsync(legacy, 4 * 1024 * 1024, cancellation), current);
+            return UpdateRelease.Parse(await ReadTextAsync(legacy, 1024 * 1024, cancellation), current);
         }
         response.EnsureSuccessStatusCode();
-        return UpdateRelease.ParseLatest(await ReadTextAsync(response, 4 * 1024 * 1024, cancellation), current);
+        return UpdateRelease.Parse(await ReadTextAsync(response, 1024 * 1024, cancellation), current);
     }
     public async Task<string> DownloadAsync(UpdateRelease release, string directory, IProgress<double>? progress, CancellationToken cancellation, string assetName = "DeckPilot.exe")
     {
