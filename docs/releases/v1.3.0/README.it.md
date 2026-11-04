@@ -4,7 +4,7 @@ DeckPilot 1.3.0 migliora la connessione USB e controlla il firmware macropad all
 
 - cruscotto di connessione con ricollegamento automatico, firmware rilevato, stato del pulsante vivo / diagnostica USB e selezione esplicita della scheda quando diversi dispositivi sono presenti.
 - Avviare i controlli del firmware e aggiornare le proposte, con un 24-ora ritardo del promemoria e un'opzione per disabilitare le notifiche del firmware.
-- Nuovo firmware **1.1.0**: messaggi di protocollo rilegati, token di sessione freschi, risposte di battito cardiaco correlate e eventi key-state. La mappatura F13-F24 rimane invariata, compreso l'uso standalone.
+- Nuovo firmware **1.1.0**: messaggi di protocollo rilegati, token di sessione freschi, risposte battito cardiaco correlate e eventi key-state. La mappatura F13-F24 rimane invariata, compreso l'uso standalone.
 - Firmware manager rilascia automaticamente la porta seriale del monitor prima dell'identificazione/flashing e ricollega dopo. 1.0.0 e le query di identità legacy rimangono sostenute.
 - I profili possono essere selezionati dal menu del vassoio; Ctrl+S salva le modifiche; la diagnostica di connessione può essere copiata per il supporto.
 

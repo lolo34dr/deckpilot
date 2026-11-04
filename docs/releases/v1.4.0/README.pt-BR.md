@@ -4,7 +4,7 @@ DeckPilot 1.4.0 atualiza a interface do teclado em torno das teclas pretas do ma
 
 - Maior 3 × 4 chaves em um compartimento escuro, com 36 ícone px, uma etiqueta curta, uma legenda F13-F24 e um pequeno ícone do tipo ação. As etiquetas completas permanecem disponíveis nas dicas.
 - Feedback independente para prensas físicas, ações em andamento, despacho bem sucedido e erros. Animações sutis respeitam a configuração de animação do Windows; erros incluem uma explicação no editor.
-- A **Tester l’action** o botão salva e executa a ação selecionada no PC, incluindo sem uma placa conectada. Um indicador de sucesso significa que a ação foi enviada, não que o aplicativo lançado terminou seu trabalho.
+- A **Tester l’action** o botão salva e executa a ação selecionada no PC, inclusive sem uma placa conectada. Um indicador de sucesso significa que a ação foi enviada, não que a aplicação lançada tenha terminado seu trabalho.
 - Caminhos e argumentos de aplicativos manuais são agrupados em opções avançadas colapsadas. Os destinos da pasta e do site permanecem expandidos. As preferências da aplicação também são colapsadas por padrão.
 - O teclado mostra claramente o seu estado de conexão e explica que os perfis permanecem editáveis e as ações são testadas offline. Reconectar restaura o feedback do botão ao vivo sem alterar a configuração.
 

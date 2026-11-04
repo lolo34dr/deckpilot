@@ -7,7 +7,7 @@ DeckPilot 1.7.0 réduit le travail répété pendant l'édition des profils, la 
 - La recherche d'application et le sélectionneur partagent un cache de catalogue de cinq minutes et une tâche de découverte. Découverte fonctionne à l'extérieur de WPF; Refresh force toujours un nouveau scan. Chaque sélectionneur possède son filtre et garde les résultats actuels utilisables pendant le rafraîchissement.
 - Remplacer le permanent 100 ms board UI sondage avec des notifications de connexion ordonnées. Cellboard-hook callbacks file d'attente travail visuel au lieu de rendre douze touches synchrone.
 - Les sondages d'état audio toutes les deux secondes alors que visible et toutes les dix secondes lorsque caché/minimisé, rafraîchissant immédiatement lors de la réouverture et après les commandes audio.
-- Les fenêtres cachées arrêtent les minuteurs de rétroaction visuelle et sautent les attentes de rendu cosmétique. Brosses UI congelées sont réutilisées et les enveloppes de processus d'application lancées sont éliminées.
+- Les fenêtres cachées arrêtent les minuteurs de rétroaction visuelle et sautent les attentes de rendu cosmétique. Les pinceaux UI congelés sont réutilisés et les enveloppes de processus d'application lancées sont éliminées.
 
 Télécharger **DeckPilot-Setup.exe** ou mise à jour depuis l'application. Profils, calibrage et préférences de démarrage sont préservés. Aucun flash firmware n'est requis.
 

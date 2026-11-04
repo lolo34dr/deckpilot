@@ -8,7 +8,7 @@ Per la configurazione hardware testata: **Pro Micro ATmega32U4, 5 V / 16 MHz**, 
 <a id="wiring-and-behavior"></a>
 ## Cablaggio e comportamento
 
-Ogni interruttore collega un perno a GND. Sono abilitate le pull-up interne. **2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15, 16** invio **F13 fino a F24** in quell'ordine. 30 Il comportamento della tastiera, i profili di Windows e la calibrazione rimangono compatibili; il rollover della tastiera USB rimane limitato dalla libreria di tastiera di Arduino. Il firmware non introduce le modalità USB per pulsante o i controlli dei media nativi.
+Ogni interruttore collega un perno a GND. Le pull-up interne sono abilitate. Perni **2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15, 16** invio **F13 fino a F24** in quell'ordine. 30 Il comportamento della tastiera, i profili di Windows e la calibrazione rimangono compatibili; il rollover della tastiera USB rimane limitato dalla libreria di tastiera di Arduino. Il firmware non introduce le modalità USB per pulsante o i controlli dei media nativi.
 
 Pinocchina **1** tenuto a GND all'avvio disabilita il funzionamento della tastiera, mantenendo il failsafe originale. Il nucleo USB può ancora supportare l'ingresso del bootloader.
 
@@ -82,6 +82,6 @@ Board: DP2|KEYS|1234ABCD|10|1
 
 Le richieste di battito cardiaco vengono normalmente inviate ogni due secondi. L'app si riconnette se manca una risposta corrispondente 1.5 secondi; il firmware smette di diagnostica non sollecitata dopo sei secondi senza battito cardiaco o quando la connessione seriale si chiude. 1.0.0 rimane supportato attraverso la query di identità legacy, senza diagnostica chiave dal vivo. DeckPilot le app possono ancora leggere l'identità legacy del firmware 1.1.1.
 
-La versione sorgente in `DeckPilotProtocol.h` fornisce la versione del manifesto di rilascio. I pacchetti del firmware pubblicati ora contengono anche lo schizzo/header corrente sotto `source/DeckPilot`, lo schizzo di recupero e DeckPilot Patente MIT.
+La versione sorgente in `DeckPilotProtocol.h` fornisce la versione del manifesto di rilascio. I pacchetti del firmware pubblicati ora contengono anche lo schizzo/intestazione corrente sotto `source/DeckPilot`, lo schizzo di recupero e DeckPilot Patente MIT.
 
 Il collegamento diagnostico utilizza deliberatamente `Serial.dtr()` piuttosto che `bool(Serial)`: Nucleo AVR Arduino 1.8.6 inserisce un 10 ms ritardo nel `Serial_::operator bool()`. Lettura DTR mantiene direttamente il percorso diagnostico dall'aggiunta di quella pausa ad ogni ciclo key-scan. Il test del protocollo host elimina la conversione implicita bool in modo che questo modello di blocco non possa essere reintrodotto nell'implementazione del protocollo condiviso inosservato.

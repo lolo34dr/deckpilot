@@ -41,4 +41,4 @@ DeckPilot 1.8.0 ajoute un espace de travail rafraîchi et des façons plus rapid
 
 Télécharger **DeckPilot-Setup.exe** ou mise à jour à partir de l'application. Les profils existants, les préférences de calibrage et de démarrage sont préservés. **1.1.1**; aucun flash n'est requis pour ces caractéristiques.
 
-La validation inclut la compatibilité de base/navigation/importation/template checks et l'installation native de Windows, mise à jour, sélectionneur, glisser-déposer, défaire/refaire, création de modèles, actions de profil, capture de raccourcis, édition de presse, mise en page et de minimiser/restaurer les vérifications.
+La validation inclut la compatibilité de base/navigation/importation/template checks et l'installation native de Windows, mise à jour, sélectionneur, glisser-déposer, défaire/refaire, création de modèles, actions de profil, capture de raccourci, édition de presse, mise en page et de minimiser/restaurer les vérifications.

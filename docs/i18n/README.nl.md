@@ -82,9 +82,10 @@ De gepubliceerde downloads omvatten de .NET runtime. **U hoeft .NET niet te inst
 ### Installeren en starten
 
 1. Downloaden **[DeckPilot-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** en voer het installatieprogramma uit. Windows vraagt om toestemming van de beheerder om te installeren in **Program Files\DeckPilot**.
-2. Het installatieprogramma voegt DeckPilot naar Windows **Geïnstalleerde apps**, maakt een Start menu snelkoppeling, en selecteert u de snelkoppeling van het bureaublad en Windows opstartopties standaard. U kunt deze optionele taken deselecteren.
-3. Verbind uw macropad en open DeckPilot van de kortere weg.
-4. Volg kalibratie van links naar rechts over **vier kolommen**, dan de volgende rij, voor **drie rijen**. Elke knop moet een andere F13.F24 sleutel sturen.
+2. Het installatieprogramma kunt u kiezen of DeckPilot begint met Windows, controleert automatisch op updates van de app en vermindert animaties. Opstarten en update controles zijn standaard aan; verminderde animaties zijn uitgeschakeld. Het controleert ook voor de ondertekende VB-CABLE stuurprogramma vereist door het Soundboard en installeert het automatisch als het ontbreekt. Een internetverbinding is vereist voor die driver controle.
+3. Het installatieprogramma voegt DeckPilot naar Windows **Geïnstalleerde apps** en maakt een snelkoppeling van het menu Start aan. Standaard wordt een snelkoppeling van het bureaublad geselecteerd.
+4. Verbind uw macropad en open DeckPilot van de kortere weg.
+5. Volg kalibratie van links naar rechts over **vier kolommen**, dan de volgende rij, voor **drie rijen**. Elke knop moet een andere F13.F24 sleutel sturen.
 
 Bij het upgraden van de eerste 4-rijindeling, DeckPilot behoudt profielen/acties en vraagt om een nieuwe kalibratie voor de gecorrigeerde posities. Het installeren over een bestaande draagbare setup behoudt ook de instellingen in `%APPDATA%\DeckPilot`; stop de oude kopie als de setup u vraagt.
 
@@ -142,7 +143,7 @@ Windows start de geselecteerde sneltoetsen. Catalogusitems gebruiken `shell:Apps
 
 Beschikbaar sinds **0.2.0**, automatische update controles worden uitgevoerd bij het opstarten na kalibratie, dan elke zes uur. Ze kunnen worden uitgeschakeld in de zijbalk. Een handmatige controle blijft beschikbaar.
 
-Wanneer een nieuwere stabielere GitHub release wordt gevonden, DeckPilot vraagt of het moet worden bijgewerkt. **Geïnstalleerde kopieën** downloaden en SHA-256 verifiëren `DeckPilot-Setup.exe`, start dan het installatieprogramma. Windows vraagt om toestemming van de beheerder om programmabestanden bij te werken. Het installatieprogramma sluit DeckPilot Wanneer klaar, behoudt profielen en opstartvoorkeuren, installeert de nieuwe versie en herstart de app. Het annuleren van de Windows-permissieprompt laat de app open. Setup weigert een open firmwaresessie te onderbreken.
+Wanneer een nieuwere stabielere GitHub release wordt gevonden, DeckPilot vraagt of het moet worden bijgewerkt. **Geïnstalleerde kopieën** downloaden en SHA-256 verifiëren `DeckPilot-Setup.exe`, start dan het installatieprogramma met de huidige opstart-, automatische-update- en reduced-motion voorkeuren voorgeselecteerd. U kunt ze wijzigen tijdens de update. Windows vraagt om toestemming van de beheerder om programmabestanden bij te werken. Het installatieprogramma sluit DeckPilot Prestigieus wanneer klaar, behoudt profielen en configuratie, controleert en installeert de ondertekende VB-CABLE stuurprogramma indien ontbreken, en herstart de app. Annuleert het installatieprogramma laat de app open. Setup weigert om een open firmware sessie te onderbreken.
 
 **Draagbare kopieën** het bestaande updatemechanisme te behouden. Na bevestiging:
 
@@ -355,7 +356,7 @@ Windows rook controles blijven uitvoeren native muis slepen en valideren opgesla
 
 Bouw en release workflows gebruiken Node.js 24 De Arduino compiler blijft op CLI 1.2.2; CI downloadt het Windows-archief met een gepinde SHA-256 checksum. De firmware en de toolchain versies zijn ongewijzigd.
 
-Instellingen leest in Windows-tests expliciet toestaan lezen / schrijven / verwijderen delen en ontleden UTF-8 na het sluiten van de lezer. Dit voorkomt dat de test zelf de vervanging van het atoombestand van de app te weigeren. De geschiedenistest houdt een oude snapshot open over drie undo/redo cycli en controleert of het intact blijft terwijl de live-instellingen veranderen.
+Instellingen leest in Windows-tests expliciet toestaan lezen / schrijven / verwijderen delen en ontleden UTF-8 na het sluiten van de lezer. Dit voorkomt dat de test zelf de vervanging van het atoombestand van de app te weigeren. De geschiedenis test houdt een oude snapshot open over drie undo/redo cycli en controleert of het intact blijft terwijl de live-instellingen veranderen.
 
 Op Windows, bestaande instellingen bestanden zijn vastgelegd met `File.Replace` in plaats van overschrijven-modus `File.Move`. Dit ondersteunt lezers die het verwijderen toestaan met behoud van een volledige oude snapshot. De core suite test drie vervangingen met een lezer gehouden open; Windows core controles lopen voordat firmware compilatie en publishing zodat persistentie mislukkingen worden gedetecteerd vroeg.
 
@@ -391,7 +392,7 @@ De firmware blijft **1.1.1**. Het accepteren van een automatische firmware aanbo
 
 DeckPilot gebruikt nu standaard een diepzwarte interface. **Préférences de l’application**, Verander de achtergrond, paneel en accent kleuren met behulp van `#RRGGBB` waarden; uw thema wordt opgeslagen op deze PC.
 
-De **Soundboard · micro deugd** paneel kunt u uw fysieke microfoon en MP3/WAV clips te selecteren. DeckPilot de mix automatisch routeert naar het VB-Audio VB-CABLE afspeeleindpunt; in Discord of een spel kiest u **KABEL-uitvoer** als de microfoon. Op een nieuwe installatie, de gecontroleerd **Installeer het ondertekende VB-CABLE audio-stuurprogramma** taak downloadt het officiële pakket via HTTPS, controleert zijn Authenticode uitgever voordat het wordt uitgevoerd, en opent de driver setup van de verkoper. Dit vereist een internetverbinding en goedkeuring van de beheerder. DeckPilot bundelt of herdistribueert VB-Audio-bestanden niet. Als u de taak overslaat, kunt u hetzelfde geselecteerde installatieprogramma starten vanaf het Soundboard-paneel. De audio-engine maakt gebruik van NAudio (MIT; zie [Kennisgeving van derden](third-party/NAudio-LICENSE.txt)VB-CABLE is een afzonderlijk gelicentieerd, gesigneerd Windows-stuurprogramma, geen MIT-component.
+De **Soundboard · micro deugd** paneel kunt u uw fysieke microfoon en MP3/WAV clips te selecteren. DeckPilot de mix automatisch routeert naar het VB-Audio VB-CABLE afspeeleindpunt; in Discord of een spel kiest u **KABEL-uitvoer** als microfoon. Tijdens installatie en updates, DeckPilot controleert op VB-CABLE en installeert het wanneer het ontbreekt. Het downloadt het officiële pakket via HTTPS en controleert de Authenticode uitgever voordat het stil installatieprogramma van de bestuurder wordt gestart. Dit vereist een internetverbinding en toestemming van de beheerder. DeckPilot niet bundelt of herdistribueert VB-Audio-bestanden. Als het stuurprogramma later ontbreekt, kunt u hetzelfde signature-gecheckte installatieprogramma starten vanuit het Soundboard-paneel. De audio-engine gebruikt NAudio (MIT; zie [Kennisgeving van derden](third-party/NAudio-LICENSE.txt)VB-CABLE is een afzonderlijk gelicentieerd, gesigneerd Windows-stuurprogramma, geen MIT-component.
 
 <a id="deckpilot-atelier-190"></a>
 ## DeckPilot Atelier (1.9.0)
@@ -403,7 +404,7 @@ De afzonderlijke **DeckPilot Atelier** Windows installatie bereidt nieuwe DIY ma
 
 DeckPilot Atelier controleert GitHub voor app en gebundeld-firmware-updates bij het opstarten en op verzoek. Updates vereisen bevestiging en gebruik de release SHA-256 manifest. Firmware wordt nooit automatisch geflitst door een update; na Atelier updates, kies de firmware actie wanneer u klaar bent om het aangesloten bord te programmeren.
 
-Atelier 1.0.7 voegt een bevestigde **Programma Effacer le DeckPilot** De Commissie is van mening dat de 28 KiB toepassingsgebied met een geverifieerde veilige stop instructie, zodat het bord stopt met werken als een toetsenbord terwijl het behoud van Caterina voor herstel en toekomstige knipperen. Het laat de bootloader, EEPROM en Windows profielen onaangeroerd.
+Atelier 1.0.7 voegt een bevestigde **Programma Effacer le DeckPilot** De Commissie is van mening dat de 28 KiB toepassingsgebied met een geverifieerde veilige stop-instructie, zodat het bord stopt met werken als een toetsenbord terwijl het behoud van Caterina voor herstel en toekomstige knipperen. Het laat de bootloader, EEPROM en Windows profielen onaangeroerd.
 
 Versie 1.9.1 Repareert de lancering van Atelier na installatie door het te starten in de ingelogde Windows-sessie. De updater kan een nieuwere Atelier pakket of firmware bundel installeren, vervolgens de app opnieuw opstarten. De Windows release pipeline controleert eerst starten, upgraden en verwijderen voor het Atelier installatieprogramma.
 

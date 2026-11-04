@@ -41,4 +41,4 @@ DeckPilot 1.8.0 fügt einen aktualisierten Arbeitsbereich und schnellere Möglic
 
 Download **DeckPilotSetup.exe** oder Update aus der App. Bestehende Profile, Kalibrierungs- und Startpräferenzen bleiben erhalten. Firmware bleibt erhalten **1.1.1**Für diese Features ist kein Flash erforderlich.
 
-Die Validierung umfasst Kernkompatibilität / Navigation / Import / Template-Prüfungen und native Windows-Installation, Update, Picker, Drag-and-Drop, Undo / Redo, Template-Erstellung, Profilaktionen, Shortcut-Erfassung, Clipboard-Bearbeitung, Layout und Minimierung / Wiederherstellung von Prüfungen. Das Verhalten von Macropads und Audiogeräten hängt immer noch von der Windows-Hardware des Besitzers ab.
+Die Validierung umfasst Kernkompatibilität / Navigation / Import / Template-Prüfungen und native Windows-Installation, Update, Picker, Drag-and-Drop, Rückgängigmachen / Redo, Vorlagenerstellung, Profilaktionen, Verknüpfungserfassung, Clipboard-Bearbeitung, Layout und Minimierung / Wiederherstellung von Prüfungen. Das Verhalten von Macropads und Audiogeräten hängt immer noch von der Windows-Hardware des Besitzers ab.
