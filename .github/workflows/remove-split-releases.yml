@@ -1,0 +1,34 @@
+name: Remove obsolete split releases
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/remove-split-releases.yml]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  cleanup:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Delete only the two obsolete releases, preserving Git tags
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        shell: python
+        run: |
+          import json, os, urllib.request, urllib.error
+          base = 'https://api.github.com/repos/' + os.environ['REPOSITORY'] + '/releases'
+          headers = {'Authorization': 'Bearer ' + os.environ['GH_TOKEN'], 'Accept': 'application/vnd.github+json', 'User-Agent': 'DeckPilot-release-cleanup'}
+          for tag in ('atelier-v1.0.8', 'v1.9.9'):
+              try:
+                  with urllib.request.urlopen(urllib.request.Request(base + '/tags/' + tag, headers=headers), timeout=60) as response:
+                      release = json.load(response)
+              except urllib.error.HTTPError as error:
+                  if error.code == 404:
+                      print(tag + ' already absent')
+                      continue
+                  raise
+              assert release['tag_name'] == tag
+              with urllib.request.urlopen(urllib.request.Request(base + '/' + str(release['id']), headers=headers, method='DELETE'), timeout=60) as response:
+                  assert response.status == 204
+              print('Deleted release ' + tag)

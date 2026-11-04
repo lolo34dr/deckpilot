@@ -62,7 +62,8 @@ FREE_KEYS = {
 def clean_prose(text,language):
     text=text.replace('▁',' ')
     text=re.sub(r'&\s+#(\d+)\s*;',r'&#\1;',text)
-    text=html.unescape(text)
+    # Markdown code delimiters belong to the source, never to model-generated prose.
+    text=html.unescape(text).replace('`', '’')
     if language=='fr':
         text=re.sub(r'\bclés\b','touches',text,flags=re.I)
         text=re.sub(r'\bclé\b','touche',text,flags=re.I)
@@ -213,7 +214,7 @@ class Engine:
         for i,part in enumerate(PROTECTED.split(line)):
             if i%2:
                 m=re.fullmatch(r'(!?)\[([^\]]*)\]\(([^)]*)\)',part)
-                if m:part=f'{m[1]}[{self.text(m[2])}]({m[3]})'
+                if m:part=f'{m[1]}[{self.inline(m[2])}]({m[3]})'
                 elif part.startswith('<'):
                     part=re.sub(r'(alt=")([^"]*)(")',lambda m:m[1]+self.text(m[2])+m[3],part)
                 result.append(part)
