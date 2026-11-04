@@ -8,7 +8,7 @@ Applicazioni installées, interfaccia affinée et mises à jour automatiques.
 - Vérification SHA-256 et conservazione de l’ancien exécutable jusqu’à conferma du démarrage, avec restauration en cas d’échec.
 - Profils et calibrage existants conservés.
 
-**Depuis 0.1.x: quittez l’ancienne versione près de l’horloge et remplacez l’exécutable une dernière fois manuellement.** Les mises à jour suivantes seront proposées automatiquement. Utilisez un dossier personal modifiable pour permettre le sostitument.
+**Depuis 0.1.x: quittez l’ancienne versione près de l’horloge et remplacez l’exécutable une dernière fois manuellement.** Les mises à jour suivantes seront proposées automatiquement. Utilisez un dossier personale modifiable pour permettre le sostitument.
 
 Téléchargez **DeckPilot.exe** versare la versione autonome, ou **DeckPilot-win-x64.zip** versare il dossier completo. Windows 10/11 x64 ; aucun runtime .NET à installer.
 

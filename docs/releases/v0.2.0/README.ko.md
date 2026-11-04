@@ -8,7 +8,7 @@
 - 평가 SHA-256 기타 보존 de l'ancien exécutable jusqu'à 확인 du démarrage, avec restauration en cas d'échec.
 - Profils et Calibrage는 필수품을 제공합니다.
 
-**뚱 베어 0.1.x : 종료 l'ancienne 버전 près de l'horloge et remplacez l'exécutable une dernière fois manuellement.** Les mises à jour suivantes seront proposées automatiquement. Utilisez un dosssier 인사 modifiable 부 permettre le remplacement.
+**모리셔스 0.1.x : 종료 l'ancienne 버전 près de l'horloge et remplacez l'exécutable une dernière fois manuellement.** Les mises à jour suivantes seront proposées automatiquement. Utilisez un dosssier 인사 modifiable 부 permettre le remplacement.
 
 Téléchargez의 특징 **DeckPilot.exe를** 붓다 버전 autonome, ou **DeckPilot-윈-x64.zip** 붓 le dossier 완료. 윈도우 10/11 x64; aucun 런타임 .NET à 설치 프로그램.
 
