@@ -358,6 +358,9 @@ The firmware remains **1.1.1**. Accepting an automatic firmware offer now correc
 
 ## DeckPilot Atelier (1.9.0)
 
+Atelier now checks the selected board and firmware before flashing, compares installed and bundled versions, and offers a verified retry after interrupted writes. **Mode atelier en série…** diagnoses and flashes all detected boards sequentially and can export a batch report. The 12-key test verifies the physical 01→12 layout, records the F13–F24 mapping, and includes firmware and per-key results in the quality report.
+
+
 The separate **DeckPilot Atelier** Windows installer prepares new DIY macropads. It detects Leonardo/Caterina boards, validates and flashes the bundled firmware without overwriting the bootloader, then guides a physical 3×4 check of all 12 buttons. Each button must pass a short press and a hold of at least 700 ms. The tool records which F13–F24 signal belongs to each physical position, flags multiple or inconsistent signals, and exports a timestamped report. Download `DeckPilot-Atelier-Setup.exe` from the releases page. A Caterina bootloader must already be present; the tool does not install a missing bootloader.
 
 DeckPilot Atelier checks GitHub for app and bundled-firmware updates on startup and on demand. Updates require confirmation and use the release SHA-256 manifest. Firmware is never flashed by an update automatically; after Atelier updates, choose the firmware action when you are ready to program the connected board.

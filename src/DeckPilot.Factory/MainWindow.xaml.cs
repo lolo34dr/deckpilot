@@ -26,6 +26,8 @@ public partial class MainWindow : Window
     private long pressedAt;
     private CancellationTokenSource? testCancellation;
     private string lastDevice = "";
+    private string lastFirmwareVersion = "inconnue";
+    private bool recoveryAvailable;
 
     public MainWindow()
     {
@@ -117,20 +119,113 @@ public partial class MainWindow : Window
         finally { updateChecking = false; if (!IsClosing) { UpdateButton.IsEnabled = true; UpdateButton.Content = "Vérifier les mises à jour"; } }
     }
 
+    private async void DiagnosticsButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (flashBusy || testBusy) { DiagnosticsResult.Text = "Termine le flash ou le contrôle des touches avant le diagnostic."; return; }
+        if (DeviceCombo.SelectedItem is not FactoryDevice device) { DiagnosticsResult.Text = "Diagnostic impossible : sélectionne d’abord une carte."; return; }
+        DiagnosticsButton.IsEnabled = false;
+        DiagnosticsResult.Text = "Vérification de la carte et du firmware…";
+        try { DiagnosticsResult.Text = await DiagnoseAsync(device); }
+        catch (Exception ex) { DiagnosticsResult.Text = "Diagnostic incomplet : " + ex.Message; }
+        finally { DiagnosticsButton.IsEnabled = true; }
+    }
+
+    private async Task<string> DiagnoseAsync(FactoryDevice device)
+    {
+        if (string.IsNullOrWhiteSpace(device.Location)) throw new IOException("Emplacement USB physique indisponible. Le flash est bloqué par sécurité.");
+        if (!FactoryHardware.Discover().Any(d => d.Id == device.Id && d.Port == device.Port && d.Location == device.Location))
+            throw new IOException("La carte a changé de port ou a été débranchée. Relance la détection.");
+        using var package = FactoryHardware.Prepare();
+        string bundled = package.Manifest.Version;
+        string result = $"Diagnostic OK · {device.Name} ({device.Port}) · carte {package.Manifest.Board} · firmware inclus {bundled} · image HEX vérifiée ({new FileInfo(Path.Combine(package.Folder, "DeckPilot.hex")).Length:N0} octets). ";
+        if (device.Bootloader) return result + "Bootloader Caterina prêt ; version actuellement installée non lisible en mode bootloader.";
+        using var transport = new FactoryTransport(device.Port);
+        var identity = await Task.Run(() => new BoardProtocolClient(transport).Identify(CancellationToken.None));
+        lastFirmwareVersion = identity.Version;
+        var installed = Version.Parse(identity.Version); var available = Version.Parse(bundled);
+        if (installed > available) return result + $"ATTENTION : firmware installé {installed} plus récent que l’image incluse. Flash bloqué.";
+        if (installed == available) return result + $"Comparaison : firmware installé {installed}, identique à l’image incluse.";
+        return result + $"Comparaison : mise à niveau {installed} → {available} disponible.";
+    }
+
     private async void FlashButton_Click(object sender, RoutedEventArgs e)
     {
         if (DeviceCombo.SelectedItem is not FactoryDevice device || flashBusy) return;
+        await FlashOneAsync(device);
+    }
+
+    private async void RecoverButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (!recoveryAvailable || flashBusy) return;
+        var selected = DeviceCombo.SelectedItem as FactoryDevice;
+        var candidates = devices.Where(d => !string.IsNullOrWhiteSpace(d.Location)).ToArray();
+        var device = selected is { Location.Length: > 0 } ? selected : candidates.Length == 1 ? candidates[0] : null;
+        if (device == null) { FlashStatus.Text = "Mode récupération : rebranche la carte, sélectionne son port, puis relance le flash."; return; }
+        var answer = MessageBox.Show(this, $"Relancer l’installation vérifiée du firmware sur {device.Port} ?\n\nLaisse la carte branchée pendant la récupération.", "Récupération après échec", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
+        if (answer == MessageBoxResult.Yes) await FlashOneAsync(device);
+    }
+
+    private async Task FlashOneAsync(FactoryDevice device)
+    {
         if (string.IsNullOrWhiteSpace(device.Location)) { FlashStatus.Text = "Windows ne permet pas de vérifier l’emplacement USB physique. Aucun flash ne sera lancé."; return; }
-        flashBusy = true; FlashButton.IsEnabled = false; FlashProgress.Visibility = Visibility.Visible; FlashProgress.IsIndeterminate = true;
-        var progress = new Progress<string>(s => FlashStatus.Text = s);
+        flashBusy = true; FlashButton.IsEnabled = false; RecoverButton.IsEnabled = false; DiagnosticsButton.IsEnabled = false; BatchFlashButton.IsEnabled = false; ResetBoardButton.IsEnabled = false; FlashProgress.Visibility = Visibility.Visible; FlashProgress.IsIndeterminate = true;
+        var progress = new Progress<string>(s => FlashStatus.Text = s); bool writeAttempted = false;
         try
         {
+            DiagnosticsResult.Text = await DiagnoseAsync(device);
+            if (DiagnosticsResult.Text.Contains("Flash bloqué", StringComparison.Ordinal)) { FlashStatus.Text = "Flash refusé par le diagnostic : la carte contient un firmware plus récent."; return; }
+            writeAttempted = true; recoveryAvailable = true;
             await FactoryHardware.FlashAsync(device, progress, CancellationToken.None);
+            recoveryAvailable = false; RecoverButton.IsEnabled = false;
+            lastFirmwareVersion = FactoryHardware.BundleInfo()?.Version ?? lastFirmwareVersion;
             FlashStatus.Text = "Tout est prêt. Passe à l’étape 2 pour contrôler les 12 touches.";
-            ShowTestPage(); await RefreshDevicesAsync();
+            ShowTestPage();
         }
-        catch (Exception ex) { FlashStatus.Text = ex.Message; }
-        finally { flashBusy = false; FlashProgress.IsIndeterminate = false; FlashProgress.Visibility = Visibility.Collapsed; UpdateDeviceActionButtons(); }
+        catch (Exception ex)
+        {
+            recoveryAvailable = writeAttempted; RecoverButton.IsEnabled = recoveryAvailable;
+            FlashStatus.Text = writeAttempted ? ex.Message + " La récupération reste disponible : rebranche ou sélectionne le port bootloader, puis relance." : ex.Message;
+        }
+        finally { flashBusy = false; FlashProgress.IsIndeterminate = false; FlashProgress.Visibility = Visibility.Collapsed; UpdateDeviceActionButtons(); RecoverButton.IsEnabled = recoveryAvailable; DiagnosticsButton.IsEnabled = true; BatchFlashButton.IsEnabled = true; await RefreshDevicesAsync(); }
+    }
+
+    private async void BatchFlashButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (flashBusy || testBusy) return;
+        var batch = devices.Where(d => !string.IsNullOrWhiteSpace(d.Location)).GroupBy(d => d.Location, StringComparer.OrdinalIgnoreCase).Select(g => g.First()).OrderBy(d => d.Port, StringComparer.OrdinalIgnoreCase).ToArray();
+        if (batch.Length == 0) { FlashStatus.Text = "Aucune carte avec un emplacement USB vérifiable. Branche une ou plusieurs cartes puis réessaie."; return; }
+        string list = string.Join(Environment.NewLine, batch.Select(d => $"• {d.Name} · {d.Port}"));
+        if (MessageBox.Show(this, $"Atelier en série : {batch.Length} carte(s) détectée(s). Chaque carte sera diagnostiquée puis flashée séparément.\n\n{list}\n\nNe débranche aucune carte avant la fin. Continuer ?", "Mode atelier en série", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) != MessageBoxResult.Yes) return;
+        flashBusy = true; recoveryAvailable = false; UpdateDeviceActionButtons(); BatchFlashButton.IsEnabled = false; DiagnosticsButton.IsEnabled = false; ResetBoardButton.IsEnabled = false; FlashProgress.Visibility = Visibility.Visible; FlashProgress.IsIndeterminate = false; FlashProgress.Maximum = batch.Length;
+        var outcomes = new List<string>(); int index = 0;
+        try
+        {
+            foreach (var device in batch)
+            {
+                index++; FlashProgress.Value = index - 1;
+                FlashStatus.Text = $"Carte {index}/{batch.Length} · diagnostic {device.Port}…";
+                try
+                {
+                    string diagnosis = await DiagnoseAsync(device); DiagnosticsResult.Text = diagnosis;
+                    if (diagnosis.Contains("Flash bloqué", StringComparison.Ordinal)) throw new IOException("Firmware installé plus récent ; carte ignorée.");
+                    var progress = new Progress<string>(message => FlashStatus.Text = $"Carte {index}/{batch.Length} · {message}");
+                    await FactoryHardware.FlashAsync(device, progress, CancellationToken.None);
+                    outcomes.Add($"OK · {device.Name} · {device.Port} · firmware {FactoryHardware.BundleInfo()?.Version}");
+                }
+                catch (Exception ex) { recoveryAvailable = true; outcomes.Add($"ÉCHEC · {device.Name} · {device.Port} · {ex.Message}"); }
+                FlashProgress.Value = index;
+            }
+            var report = new StringBuilder(); report.AppendLine("DeckPilot Atelier — Rapport de série"); report.AppendLine($"Date : {DateTimeOffset.Now:yyyy-MM-dd HH:mm:ss zzz}"); report.AppendLine($"Firmware inclus : {FactoryHardware.BundleInfo()?.Version ?? "inconnu"}"); report.AppendLine(); foreach (var outcome in outcomes) report.AppendLine(outcome);
+            var dialog = new SaveFileDialog { Title = "Enregistrer le rapport de série", Filter = "Rapport texte (*.txt)|*.txt", FileName = $"DeckPilot-serie-{DateTime.Now:yyyyMMdd-HHmm}.txt", AddExtension = true, DefaultExt = ".txt" };
+            if (dialog.ShowDialog() == true)
+            {
+                try { File.WriteAllText(dialog.FileName, report.ToString(), new UTF8Encoding(true)); }
+                catch (Exception ex) { FlashStatus.Text = "La série est terminée, mais le rapport n’a pas pu être enregistré : " + ex.Message; }
+            }
+            int success = outcomes.Count(x => x.StartsWith("OK ·", StringComparison.Ordinal));
+            FlashStatus.Text = $"Série terminée : {success}/{batch.Length} firmware(s) vérifié(s). Relance le contrôle des touches pour la disposition et les appuis.";
+        }
+        finally { flashBusy = false; BatchFlashButton.IsEnabled = true; FlashProgress.Visibility = Visibility.Collapsed; await RefreshDevicesAsync(); UpdateDeviceActionButtons(); RecoverButton.IsEnabled = recoveryAvailable; DiagnosticsButton.IsEnabled = true; }
     }
 
     private async void ResetBoardButton_Click(object sender, RoutedEventArgs e)
@@ -203,6 +298,7 @@ public partial class MainWindow : Window
                 catch (IOException) when (attempt < 7) { await Task.Delay(400, token); }
             }
             if (info == null) throw new IOException("Le macropad ne répond pas. Vérifie qu’il n’est pas ouvert dans DeckPilot ou un autre outil série.");
+            lastFirmwareVersion = info.Firmware.Version;
             var bundledFirmware = Version.Parse(FactoryHardware.BundleInfo()!.Version);
             if (Version.Parse(info.Firmware.Version) < bundledFirmware)
             {
@@ -318,7 +414,7 @@ public partial class MainWindow : Window
         if (!ExportButton.IsEnabled) return;
         var dialog = new SaveFileDialog { Title = "Enregistrer le rapport de contrôle", Filter = "Rapport texte (*.txt)|*.txt", FileName = $"DeckPilot-controle-{DateTime.Now:yyyyMMdd-HHmm}.txt", AddExtension = true, DefaultExt = ".txt" };
         if (dialog.ShowDialog() != true) return;
-        var report = new StringBuilder(); report.AppendLine("DeckPilot Atelier — Rapport de contrôle"); report.AppendLine($"Date : {DateTimeOffset.Now:yyyy-MM-dd HH:mm:ss zzz}"); report.AppendLine("Résultat : RÉUSSI"); report.AppendLine("Touches contrôlées : 12 / 12"); report.AppendLine("Appuis courts : 12 / 12"); report.AppendLine("Appuis longs : 12 / 12"); report.AppendLine(); report.AppendLine("Détail des mesures :"); foreach (string item in events) report.AppendLine(item);
+        var report = new StringBuilder(); report.AppendLine("DeckPilot Atelier — Rapport de contrôle"); report.AppendLine($"Date : {DateTimeOffset.Now:yyyy-MM-dd HH:mm:ss zzz}"); report.AppendLine($"Carte : {(DeviceCombo.SelectedItem as FactoryDevice)?.Name ?? "non sélectionnée"} · {(DeviceCombo.SelectedItem as FactoryDevice)?.Port ?? "port inconnu"}"); report.AppendLine($"Firmware testé : {lastFirmwareVersion}"); report.AppendLine($"Firmware inclus : {FactoryHardware.BundleInfo()?.Version ?? "inconnu"}"); report.AppendLine("Disposition physique 01→12 :"); for (int i = 0; i < pinForPhysical.Length; i++) report.AppendLine($"  Touche {i + 1:00} → {(pinForPhysical[i] >= 0 ? $"F{13 + pinForPhysical[i]}" : "non détectée")} · court {(shortPassed[i] ? "OK" : "ÉCHEC")} · long {(longPassed[i] ? "OK" : "ÉCHEC")}"); report.AppendLine("Résultat : RÉUSSI"); report.AppendLine("Touches contrôlées : 12 / 12"); report.AppendLine("Appuis courts : 12 / 12"); report.AppendLine("Appuis longs : 12 / 12"); report.AppendLine(); report.AppendLine("Détail des mesures :"); foreach (string item in events) report.AppendLine(item);
         try { File.WriteAllText(dialog.FileName, report.ToString(), new UTF8Encoding(true)); TestStatus.Text = "Rapport enregistré : " + dialog.FileName; } catch (Exception ex) { TestStatus.Text = "Impossible d’enregistrer le rapport : " + ex.Message; }
     }
 }
