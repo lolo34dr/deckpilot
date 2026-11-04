@@ -2,7 +2,7 @@
 
 Preparación del renombre del repositorio: `streamdeck-diy` → `deckpilot`.
 
-- Los cheques de actualización soportan los nombres de los repositorios, antes y después del renombre.
+- Los cheques de actualización soportan los nombres de repositorio, antes y después del renombre.
 - La validación de descarga acepta sólo las rutas exactas de activos de liberación pertenecientes a estos dos repositorios.
 - Los perfiles, la calibración y las acciones de aplicación no cambian.
 
