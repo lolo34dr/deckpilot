@@ -23,7 +23,7 @@
 <p align="center">
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&color=78b7a0" alt="최근 출시"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&logo=windows" alt="다운로드 Windows x64"></a>
-  <a href="https://github.com/lolo34dr/deckpilot/releases?q=atelier"><img src="https://img.shields.io/badge/Download-DeckPilot_Atelier-16856A?style=flat-square&logo=windows" alt="다운로드 DeckPilot Atelier"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe"><img src="https://img.shields.io/badge/Download-DeckPilot_Atelier-16856A?style=flat-square&logo=windows" alt="다운로드 DeckPilot Atelier"></a>
   <a href="https://github.com/lolo34dr/deckpilot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/lolo34dr/deckpilot?style=flat-square" alt="MIT 라이센스"></a>
   <a href="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml"><img src="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml/badge.svg?branch=main" alt="Windows 빌드 상태"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&color=70a7e8" alt="GitHub 릴리스 다운로드"></a>
@@ -283,7 +283,7 @@ DeckPilot 아래에 발표됩니다. **[MIT 라이센스](../../LICENSE)**. 당�
 <a id="macropad-firmware-updates"></a>
 ## Macropad 펌웨어 업데이트
 
-장치 준비 및 워크샵 품질 검사를 위해 별도의 설치 [갑판Pilot Atelier](docs/FACTORY.md) 도구. 그것의 installer는 간행됩니다 **[갑판Pilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases?q=atelier)** 주요 응용 프로그램에 따라. 그것은 레오나르도 / 카테리나 보드에 포함 된 펌웨어를 플래시 할 수 있으며, 모든 것에 짧은 긴 압박을 확인합니다. 12 물리적 키와 수출 보고서.
+장치 준비 및 워크샵 품질 검사를 위해 별도의 설치 [갑판Pilot Atelier](docs/FACTORY.md) 도구. 그것의 installer는 간행됩니다 **[갑판Pilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** 주요 응용 프로그램에 따라. 그것은 레오나르도 / 카테리나 보드에 포함 된 펌웨어를 플래시 할 수 있으며, 모든 것에 짧은 긴 압박을 확인합니다. 12 물리적 키와 수출 보고서.
 
 DeckPilot 1.1.0 다음을 포함합니다. **Firmware du macropad…** 대화 및 펌웨어 1.0.0 직업적인 마이크로 ATmega32U4를 위해 **5 ₢ 킹 16 MHz의**, 레오나르도/카테리나 구성을 사용하여 소유자의 업로드 로그에 의해 확인. 번들 된 Windows 번쩍이는 도구는 Arduino IDE가 필요하지 않습니다. 장치 선택 및 확인은 필수입니다. 앱 업데이트는 절대 조용히 보드를 플래시하지 않습니다. 기존 F13–F24 매핑, 프로필 및 교정은 호환되지 않습니다.
 
