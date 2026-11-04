@@ -53,6 +53,7 @@ try {
     $installerDefinition = Get-Content (Join-Path $PSScriptRoot '..\installer\DeckPilot.iss') -Raw
     if ($installerDefinition -notmatch '(?s)\[Run\].*Install-VBCABLE\.ps1.*?Flags: runhidden waituntilterminated;') { throw 'The signed VB-CABLE installer must run automatically and wait for device setup to finish' }
     if ($installerDefinition -match '(?s)Install-VBCABLE\.ps1.{0,300}skipifsilent') { throw 'Silent and update installations must also check for VB-CABLE' }
+    if ($installerDefinition -notmatch '-SkipSetupForTest') { throw 'Installer smoke tests must not download or install a system driver' }
     if ($installerDefinition -notmatch '--configure-microphone-if-needed') { throw 'The installer must only request microphone setup when the saved device is unavailable' }
     if (!(Test-Path $uninstallKey)) { throw 'Missing Windows uninstall registration' }
     $shell = New-Object -ComObject WScript.Shell

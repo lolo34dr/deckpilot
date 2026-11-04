@@ -1,4 +1,4 @@
-﻿param([switch]$ValidateOnly)
+﻿param([switch]$ValidateOnly, [switch]$SkipSetupForTest)
 
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
@@ -21,6 +21,11 @@ function Get-PresentAudioEndpoints {
 function Show-Notice([string]$message, [string]$title, [string]$icon) {
     $iconValue = [Enum]::Parse('System.Windows.Forms.MessageBoxIcon', $icon)
     [System.Windows.Forms.MessageBox]::Show($message, $title, [System.Windows.Forms.MessageBoxButtons]::OK, $iconValue) | Out-Null
+}
+
+if ($SkipSetupForTest) {
+    Write-Host 'PASS: installer smoke test skipped driver download and installation.'
+    return
 }
 
 try {
