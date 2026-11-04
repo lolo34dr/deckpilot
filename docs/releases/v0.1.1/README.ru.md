@@ -1,6 +1,6 @@
 > Это автоматический перевод полного выпуска примечаний. Английский оригинал - ссылка.
 
-Интерфейс плюс грязь DeckPilot, inspirée de la disposition Stream Deck.
+Интерфейс плюс грязь DeckPilot"Вдохновляющее устройство" "Stream Deck".
 
 - Palette anthracite et gris, typographie plus compacte et suppression du grand texte d'accueil.
 - Гриль-де 4 × 3 касаться avec pictogrammes et bordure de sélection discrète.
