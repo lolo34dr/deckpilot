@@ -6,10 +6,34 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+  actions: write
 jobs:
   cleanup:
     runs-on: ubuntu-24.04
     steps:
+      - name: Cancel obsolete translation snapshots before removing releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          CURRENT_SHA: ${{ github.sha }}
+        shell: python
+        run: |
+          import json, os, urllib.request, urllib.error
+          base = 'https://api.github.com/repos/' + os.environ['REPOSITORY'] + '/actions'
+          headers = {'Authorization': 'Bearer ' + os.environ['GH_TOKEN'], 'Accept': 'application/vnd.github+json', 'User-Agent': 'DeckPilot-release-cleanup'}
+          for status in ('in_progress', 'queued', 'waiting'):
+              url = base + '/workflows/translations.yml/runs?per_page=100&status=' + status
+              with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=60) as response:
+                  runs = json.load(response)['workflow_runs']
+              for run in runs:
+                  if run['head_sha'] == os.environ['CURRENT_SHA']:
+                      continue
+                  try:
+                      with urllib.request.urlopen(urllib.request.Request(base + '/runs/' + str(run['id']) + '/cancel', headers=headers, method='POST'), timeout=60) as response:
+                          print('Cancelled obsolete translation snapshot', run['id'])
+                  except urllib.error.HTTPError as error:
+                      if error.code != 409:
+                          raise
       - name: Delete only the two obsolete releases, preserving Git tags
         env:
           GH_TOKEN: ${{ github.token }}
