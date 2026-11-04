@@ -6,4 +6,4 @@ Aucun changement fonctionnel visuel. Seul le numéro de version de l’applicati
 
 دانس DeckPilot 0.2.0utilisez **Vérifier maintenant**(بويس) يؤكد ذلك **Mettre à jour**ou attendez la recherche automatique. Aucun téléchargement manuel n’est nécessaire pour ce test.
 
-Téléchargements également disponibles : **DeckPilot.....**, **DeckPilot-W-X64.zip** et **SHA256SUMS.tx**النوافذ 10/11 X64.
+Téléchargements également disponibles : **DeckPilot-هناك .**, **DeckPilot-W-X64.zip** et **SHA256SUMS.tx**النوافذ 10/11 X64.
