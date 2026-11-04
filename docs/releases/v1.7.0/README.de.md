@@ -2,13 +2,13 @@
 
 DeckPilot 1.7.0 Reduziert wiederholte Arbeit beim Bearbeiten von Profilen, beim Finden von Anwendungen und beim Ausführen im Hintergrund.
 
-- Das Speichern unveränderter Einstellungen ersetzt nicht mehr die Datei oder erstellt Backups. Tatsächliche Festplatteninhalte werden weiterhin überprüft, sodass externe Bearbeitungen, Löschungen und fehlgeschlagene Speicher nicht ausgeblendet werden.
-- Profilverlauf hält losgelöste Modell-Snapshots. Unveränderte Bearbeitungen und Rückgängigmachen/Redo vermeiden JSON Roundtrips; Action Editing verwendet Wertevergleiche anstelle von wiederholter Serialisierung.
+- Durch das Speichern unveränderter Einstellungen wird die Datei nicht mehr ersetzt oder Backups erstellt. Tatsächliche Festplatteninhalte werden weiterhin überprüft, sodass externe Bearbeitungen, Löschungen und fehlgeschlagene Speicher nicht ausgeblendet werden.
+- Die Profilhistorie hält losgelöste Modell-Snapshots. Unveränderte Bearbeitungen und Rückgängigmachen/Wiederholen vermeiden JSON-Roundtrips; Action-Editing verwendet Wertevergleiche anstelle von wiederholter Serialisierung.
 - Anwendungssuche und Picker teilen sich einen fünfminütigen Katalog-Cache und eine Discovery-Task. Discovery läuft außerhalb von WPF; Refresh erzwingt immer noch einen neuen Scan. Jeder Picker besitzt seinen Filter und hält aktuelle Ergebnisse während des Aktualisierens nutzbar.
-- Ersetzen Sie die permanente 100 ms Board UI Poll mit bestellten Verbindungsbenachrichtigungen. Keyboard-Hook Callbacks Warteschlangen visuelle Arbeit statt Rendering von zwölf Tasten synchron.
+- Ersetzen Sie die permanente 100 ms Board UI Poll mit bestellten Verbindungsbenachrichtigungen. Keyboard-Hook Callbacks Warteschlangen für visuelle Arbeit, anstatt zwölf Tasten synchron zu rendern.
 - Audiostatus-Umfragen alle zwei Sekunden im sichtbaren Zustand und alle zehn Sekunden im verborgenen/minimierten Zustand, sofort beim erneuten Öffnen und nach Audiobefehlen aktualisierend. Überlappende Aktualisierungsanforderungen werden zusammengeführt, ohne das Update nach dem Befehl fallen zu lassen.
 - Versteckte Fenster stoppen visuelle Feedback-Timer und überspringen kosmetische Rendering-Wartezeiten. Gefrorene UI-Bürsten werden wiederverwendet und gestartete Anwendungsprozess-Wrapper werden entsorgt.
 
 Download **DeckPilotSetup.exe** oder Update aus der App. Profile, Kalibrierungs- und Starteinstellungen bleiben erhalten. Es ist kein Firmware-Flash erforderlich.
 
-Die Validierung umfasst Einstellungen/Historie/Cache-Regressionen und Windows-Installation, Update, Picker, Drag-and-Drop, Kurz-/Lang-Action-Bearbeitung und Minimierung/Wiederherstellungsprüfungen. Dies sind strukturelle Optimierungen, nicht ein gemessener Anspruch auf eine bestimmte CPU- oder RAM-Speicherung auf jedem PC.
+Die Validierung umfasst Einstellungen/Historie/Cache-Regressionen und Windows-Installation, Update, Picker, Drag-and-Drop, Kurz-/Lang-Action-Bearbeitung und Minimierung/Wiederherstellungsprüfungen.

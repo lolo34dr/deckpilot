@@ -1,10 +1,10 @@
 > Dies ist eine automatische Übersetzung der vollständigen Release Notes. Das englische Original ist die Referenz.
 
-Applications installées, interface affinée et mises à jour automatiques.
+Anwendungen installées, interface affinée et mises à jour automatiques.
 
 - Sélecteur d’applications avec recherche par nom : menü Démarrer et catalog Windows/Microsoft Store. Le choix manuel d’un `.exe` reste disponible.
 - Icônes des applications lorsqu'elles sont disponibles, pictogrammes vectoriels et animations discrètes respectant les préférences Windows.
-- Recherche automatique des version stables sur GitHub. Une confirmation suffit pour télécharger, vérifier, installer et redémarrer.
+- Recherche automatique des version stables sur GitHub Une confirmation suffit pour télécharger, vérifier, installer et redémarrer.
 - Vérifizierung SHA-256 et conservation de l’ancien exécutable jusqu’à confirmation du démarrage, avec restauration en cas d’échec.
 - Profils et calibrage existants conservés.
 

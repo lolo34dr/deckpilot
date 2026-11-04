@@ -8,6 +8,6 @@ DeckPilot Firmware kann jetzt direkt aus der App auf dem DIY Pro Micro Macropad 
 - Validierte Firmware-Prüfsumme und Speichergrenzen, Übereinstimmung der physischen USB-Verbindung, Schreibverifizierung und Überprüfung der Post-Flash-Version.
 - Bestehende PC-Profile und die Kalibrierung bleiben erhalten. Die Aktualisierung der App blinkt niemals automatisch auf die Hardware.
 
-**Erster Hardware-Test noch erforderlich:** Caterina-Upload-Prozedur der ursprünglichen Firmware wird bestätigt; die neue Firmware/Updater muss noch auf dem eigentlichen Makropad ausprobiert werden. **ATmega32U4 5 V / 16 MHz**, verdrahtet auf **2–10, 14, 15, 16**, nur mit Leonardo USB IDs und Caterina Bootloader. Behalten Sie die Originalskizze und den RST/GND-Zugriff für die Wiederherstellung. Keine Firmware-Backup oder automatisches Rollback.
+**Erster Hardware-Test noch erforderlich:** die ursprüngliche Firmware-Upload-Prozedur wird bestätigt; die neue Firmware/Updater muss noch auf dem eigentlichen Makropad ausprobiert werden. **ATmega32U4 5 V / 16 MHz**, verdrahtet auf **2–10, 14, 15, 16**, nur mit Leonardo USB IDs und Caterina Bootloader. Behalten Sie die Originalskizze und den RST/GND-Zugang für die Wiederherstellung. Keine Firmware-Backup oder automatisches Rollback.
 
 Windows 10/11 x64. Download **DeckPilot.exe** oder **DeckPilot-win-x64.zip**Die Firmware/Tools sind in die App eingebettet und auch in **DeckPilot-firmware.zip**AVRDUDE verfügt über eine eigene GPL-Lizenz und eine gebündelte Quelle.
