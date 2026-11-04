@@ -241,7 +241,7 @@ end;
 
 function DriverInstallArgument(Param: String): String;
 begin
-  if ExpandConstant('{param:TESTDRIVER|0}') = '1' then Result := '-ValidateOnly' else Result := '';
+  if ExpandConstant('{param:TESTDRIVER|0}') = '1' then Result := '-SkipSetupForTest' else Result := '';
 end;
 
 function StopDeckPilot(Exe: String; OriginalUser: Boolean): Boolean;
