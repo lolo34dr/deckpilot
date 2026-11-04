@@ -38,8 +38,8 @@ Name: "startup"; Description: "Lancer DeckPilot avec Windows"; Languages: french
 Name: "startup"; Description: "Start DeckPilot with Windows"; Languages: english; Flags: checkedonce
 Name: "autoupdates"; Description: "Rechercher automatiquement les mises à jour"; Languages: french; Flags: checkedonce
 Name: "autoupdates"; Description: "Check for updates automatically"; Languages: english; Flags: checkedonce
-Name: "reducemotion"; Description: "Réduire les animations"; Languages: french
-Name: "reducemotion"; Description: "Reduce animations"; Languages: english
+Name: "reducemotion"; Description: "Réduire les animations"; Languages: french; Flags: unchecked
+Name: "reducemotion"; Description: "Reduce animations"; Languages: english; Flags: unchecked
 Name: "soundboarddriver"; Description: "Installer le pilote audio signé VB-CABLE pour le soundboard (confirmation VB-Audio)"; Languages: french; Flags: checkedonce
 Name: "soundboarddriver"; Description: "Install the signed VB-CABLE audio driver for the soundboard (VB-Audio confirmation)"; Languages: english; Flags: checkedonce
 
