@@ -25,7 +25,7 @@ DeckPilot 1.9.2 fija el paso de embalaje de liberación de Atelier y mejora su d
 DeckPilot 1.9.1 mejora la puesta en marcha del instalador Atelier y añade controles automáticos de actualización de aplicaciones y firmware.
 
 - El instalador lanza Atelier en la sesión de usuario de Windows firmada y detiene/restringe de forma segura para las actualizaciones.
-- Atelier comprueba GitHub sobre la puesta en marcha y bajo demanda. Anuncia el nuevo Atelier construye o firmware agrupado, luego descarga un instalador verificado contra el publicado SHA-256 archivo.
+- Atelier comprueba GitHub sobre la puesta en marcha y bajo demanda. anuncia el nuevo Atelier construye o firmware empaquetado, luego descarga un instalador verificado contra el publicado SHA-256 archivo.
 - Firmware sólo se flashiza después de que el usuario elija la acción flash; una actualización de la aplicación nunca escribe a una tabla conectada por su cuenta.
 
 El instalador Atelier también se lanza en la sesión de Windows del usuario firmado después de una instalación fresca. El flujo de trabajo de lanzamiento ahora abre la aplicación instalada, luego verifica la actualización y desinstalación mientras se está ejecutando.

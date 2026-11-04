@@ -56,7 +56,7 @@ El original 12- el boceto de botones fue adaptado de David Madison **Flujo barat
 <a id="firmware-111-and-usb-protocol-2"></a>
 ## Firmware 1.1.1 y protocolo USB 2
 
-Firmware 1.1.1 añade un enlace de diagnóstico de sólo lectura mientras retiene la misma asignación de teclado F13–F24 y pin-1 startup failsafe. **La prueba física del propietario cubrió el firmware 1.0.0. Firmware 1.1.1 tiene pruebas de protocolo automatizadas y una construcción AVR, pero todavía necesita su primera prueba en la tabla real.** Los perfiles y calibración permanecen en el PC y no necesitan ser recreados para esta actualización de firmware.
+Firmware 1.1.1 añade un enlace de diagnóstico de sólo lectura mientras retiene el mismo teclado F13–F24 y el pin-1 startup failsafe. **La prueba física del propietario cubrió el firmware 1.0.0. Firmware 1.1.1 tiene pruebas de protocolo automatizadas y una construcción AVR, pero todavía necesita su primera prueba en la tabla real.** Los perfiles y calibración permanecen en el PC y no necesitan ser recreados para esta actualización de firmware.
 
 La nueva aplicación identifica la tarjeta conectada, mantiene su puerto serie abierto, vuelve a conectarse después de desconectar, y comprueba su versión de firmware al inicio y después de la reconexión. Actualizaciones de firmware se entregan con versiones de aplicaciones: cheques de arranque comparan el firmware conectado con el paquete validado incluido en la aplicación instalada. Los cheques de actualización de la aplicación todavía obtienen nuevas versiones de GitHub.
 
@@ -64,7 +64,7 @@ Un firmware detectado más viejo requiere una vez por sesión de aplicación, co
 
 **Para una carga manual de Arduino IDE, renuncie DeckPilot desde su icono de bandeja primero.** El cierre de la ventana principal sólo lo oculta, por lo que sigue siendo dueño de la conexión en serie. DeckPilot y otro monitor de serie no puede utilizar el mismo puerto simultáneamente. Si otra herramienta ya posee el puerto, la aplicación reporta el problema y retries sin afectar las teclas de teclado ordinario.
 
-El nuevo `DeckPilotProtocol.h` es la misma aplicación ejercida por `tests/firmware-protocol.cpp`. Utiliza buffers de tamaño fijo, procesamiento de entrada enlazado y espacio de transmisión USB disponible; el escaneo de botones nunca se retrasa deliberadamente mientras espera un host. La última máscara de botón pendiente se coalesce bajo la presión trasera. No hay comandos para ejecutar macros, escribir EEPROM, deshabilitar el teclado, modificar perfiles o firmware flash sobre este protocolo de diagnóstico.
+El nuevo `DeckPilotProtocol.h` es la misma aplicación ejercida por `tests/firmware-protocol.cpp`. Utiliza buffers de tamaño fijo, procesamiento de entrada atado y espacio de transmisión USB disponible; el escaneo de botones nunca se retrasa deliberadamente mientras espera un host. La última máscara de botón pendiente se coalesce bajo la presión trasera. No hay comandos para ejecutar macros, escribir EEPROM, deshabilitar el teclado, modificar perfiles o firmware flash sobre este protocolo de diagnóstico.
 
 Atentos 115200 baud, líneas terminan con LF (CRLF es aceptado). Las fichas de sesión contienen exactamente ocho caracteres hexadecimales mayúsculas. Todos los números son decimales sin firmar. Ejemplos:
 

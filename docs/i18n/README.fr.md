@@ -82,9 +82,10 @@ Les téléchargements publiés incluent le .NET runtime. **Vous n'avez pas besoi
 ### Installer et lancer
 
 1. Télécharger **[DeckPilot-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** et exécutez l'installateur. Windows demande la permission de l'administrateur d'installer dans **Program Files\DeckPilot**.
-2. L'installateur ajoute DeckPilot vers Windows **Installé des applications**, crée un raccourci de menu Démarrer et sélectionne le raccourci de bureau et les options de démarrage de Windows par défaut. Vous pouvez désélectionner ces tâches optionnelles.
-3. Connectez votre macropad et ouvrez DeckPilot de son raccourci.
-4. Suivre le calibrage de gauche à droite **quatre colonnes**, puis la prochaine rangée, pour **trois lignes**. Chaque bouton doit envoyer une autre touche F13–F24.
+2. L'installateur vous permet de choisir si DeckPilot Commence par Windows, vérifie automatiquement les mises à jour de l'application et réduit les animations. Les vérifications de démarrage et de mise à jour sont effectuées par défaut; les animations réduites sont désactivées. Il vérifie également le pilote VB-CABLE signé requis par le Soundboard et l'installe automatiquement en cas de défaut.
+3. L'installateur ajoute DeckPilot vers Windows **Installé des applications** et crée un raccourci de menu Démarrer. Un raccourci de bureau est sélectionné par défaut.
+4. Connectez votre macropad et ouvrez DeckPilot de son raccourci.
+5. Suivre le calibrage de gauche à droite **quatre colonnes**, puis la prochaine rangée, pour **trois lignes**. Chaque bouton doit envoyer une autre touche F13–F24.
 
 Dans le cadre de la mise à niveau 4-la disposition des lignes, DeckPilot Préserve les profils/actions et demande un nouveau calibrage pour les positions corrigées. L'installation sur une configuration portable existante préserve également les paramètres dans `%APPDATA%\DeckPilot`; quitter l'ancienne copie si l'installation vous le demande.
 
@@ -133,7 +134,7 @@ Le démarrage de Windows est activé par défaut pour l'utilisateur actuel. Vous
 
 Le sélectionneur lit les raccourcis à partir des menus de l'utilisateur actuel et de l'ensemble du système, puis les complète avec `Get-StartApps` résultats du catalogue d'applications Windows.
 
-La recherche ignore le cas et les accents. Les noms des duplicata sont groupés, les entrées de menu Démarrer prenant la priorité. Les applications et les programmes portables sans raccourcis enregistrés peuvent encore être sélectionnés manuellement. Si le catalogue Windows n'est pas disponible, les raccourcis de menu Démarrer sont lisibles.
+La recherche ignore le cas et les accents. Les noms des duplicata sont regroupés, les entrées de menu Démarrer prenant la priorité. Les applications et programmes portables sans raccourcis enregistrés peuvent encore être sélectionnés manuellement. Si le catalogue Windows n'est pas disponible, les raccourcis de menu Démarrer sont lisibles.
 
 Windows lance les raccourcis sélectionnés. Utilisation des entrées du catalogue `shell:AppsFolder`. Les arguments optionnels s'appliquent aux programmes et raccourcis basés sur des fichiers; ils sont cachés pour les entrées AppsFolder. Listing applications ne les lance pas.
 
@@ -142,7 +143,7 @@ Windows lance les raccourcis sélectionnés. Utilisation des entrées du catalog
 
 Disponible depuis **0.2.0**, les contrôles automatiques de mise à jour s'effectuent au démarrage après calibrage, puis toutes les six heures. Ils peuvent être désactivés dans la barre latérale.
 
-Quand une nouvelle version stable de GitHub est trouvée, DeckPilot demande s'il faut mettre à jour. **Copies installées** téléchargement et SHA-256 vérifier `DeckPilot-Setup.exe`, puis lancez l'installateur. Windows demande la permission de l'administrateur de mettre à jour les fichiers du programme. DeckPilot gracieusement quand prêt, conserve les profils et les préférences de démarrage, installe la nouvelle version et relance l'application. Annuler l'invite d'autorisation Windows laisse l'application ouverte. Configuration refuse d'interrompre une session firmware ouverte.
+Quand une nouvelle version stable de GitHub est trouvée, DeckPilot demande s'il faut mettre à jour. **Copies installées** téléchargement et SHA-256 vérifier `DeckPilot-Setup.exe`, puis lancez l'installateur avec les préférences actuelles de démarrage, de mise à jour automatique et de réduction des mouvements présélectionnés. Vous pouvez les modifier lors de la mise à jour. Windows demande la permission de l'administrateur de mettre à jour les fichiers du programme. DeckPilot gracieusement quand prêt, conserve les profils et la configuration, vérifie et installe le pilote VB-CABLE signé s'il manque, et relance l'application. L'annulation de l'installateur laisse l'application ouverte. Setup refuse d'interrompre une session firmware ouverte.
 
 **Copies portatives** conserver le mécanisme de mise à jour existant. Après confirmation, il:
 
@@ -165,7 +166,7 @@ Les copies portables nécessitent un dossier personnel enregistrable. Les copies
 
 Version **1.0.1** prépare le déménagement de `lolo34dr/streamdeck-diy` à `lolo34dr/deckpilot`. Le dépôt est maintenant `lolo34dr/deckpilot`. Les vérifications de mise à jour utilisent le nouveau nom et conservent la compatibilité avec le nom original. Les téléchargements de publication sont validés en fonction de ces deux chemins de dépôt exacts.
 
-Utilisation **1.0.1 ou plus tard** avec le dépôt renommé. 0.2.0 et 1.0.0 valider strictement les chemins d'actifs originaux et peut avoir besoin d'une mise à jour manuelle. Télécharger l'exécutable courant à partir de la page des versions si une version plus ancienne ne peut pas se mettre à jour.
+Utilisation **1.0.1 ou plus tard** avec le dépôt renommé. 0.2.0 et 1.0.0 valider strictement les chemins d'actifs originaux et peut avoir besoin d'une mise à jour manuelle. Télécharger l'exécutable courant depuis la page des versions si une version plus ancienne ne peut pas se mettre à jour.
 
 <a id="settings-and-backups"></a>
 ## Paramètres et sauvegardes
@@ -178,7 +179,7 @@ Profils et calibrage sont stockés à l'extérieur du dossier d'application:
 
 Quitter DeckPilot avant de copier ce fichier pour sauvegarder ou restaurer votre configuration. Si un fichier de paramètres ne peut pas être lu, DeckPilot conserve une copie avec une `.backup-<date>` suffixe avant d'utiliser une configuration fraîche.
 
-Aucun compte n'est requis. Les vérifications de mise à jour contactent GitHub et peuvent être désactivées dans l'interface.
+Aucun compte n'est nécessaire. La mise à jour vérifie de contacter GitHub et peut être désactivée dans l'interface.
 
 <a id="development"></a>
 ## Développement
@@ -252,7 +253,7 @@ Avec le Leonardo connecté:
 ## Limites actuelles
 
 - Les touches F13–F24 physiques d'un autre clavier suivent la même configuration. Les événements de clavier injectés par le logiciel sont ignorés pour empêcher les boucles d'action.
-- Certains jeux, systèmes anti-chaleur ou programmes utilisant l'entrée d'appareil direct peuvent encore recevoir des touches interceptées. Le mode touche libre reste disponible. L'écran de connexion, le bureau sécurisé et d'autres sessions sont hors du contrôle de l'application.
+- Certains jeux, systèmes anti-chaleur ou programmes utilisant l'entrée d'appareil direct peuvent encore recevoir des touches interceptées. Le mode touche libre reste disponible. L'écran d'enregistrement, le bureau sécurisé et d'autres sessions sont hors du contrôle de l'application.
 - Windows peut bloquer les raccourcis envoyés aux applications fonctionnant avec les privilèges de l'administrateur. DeckPilot fonctionne sans droits d'administrateur et ne contourne pas cette restriction.
 - Release Ctrl, Alt, Shift et Windows avant de déclencher une action de raccourci. Les combinaisons telles que Alt+Tab restent soumises au comportement de Windows.
 - Déconnecter la détection, les profils automatiques par jeu et un installateur signé sont des améliorations futures. Les profils sont actuellement sélectionnés manuellement.
@@ -306,7 +307,7 @@ Firmware **1.1.1** ajoute l'identification de session, les réponses corrélées
 <a id="keypad-interface-140"></a>
 ## Interface clavier (1.4.0)
 
-La plus grande 3 × 4 Chaque touche affiche son icône principale, son étiquette, la cartographie F13–F24 et une petite icône de type action ; les tooltips conservent l'étiquette et la position complète. Appuyez sur les commentaires, les actions en cours, l'expédition réussie et les erreurs ont des apparences distinctes, y compris des symboles plutôt que de la couleur seule.
+La plus grande 3 × 4 Chaque touche affiche son icône principale, son étiquette, sa cartographie F13–F24 et une petite icône de type action; les tooltips conservent l'étiquette et la position complètes. Appuyez sur les commentaires, les actions en cours, l'expédition réussie et les erreurs ont des apparences distinctes, y compris des symboles plutôt que de la couleur seule.
 
 Choisissez une touche pour la modifier. **Options avancées · fichier et arguments** garde les chemins d'applications manuelles et les arguments de lancement effondrés par défaut, tandis que les destinations essentielles du dossier et du site Web restent élargies. **Tester l’action** enregistre et envoie l'action sélectionnée sur le PC en cours; un indicateur de succès confirme l'expédition, pas la réalisation dans une autre application. Les raccourcis clavier ciblent la fenêtre active. Les touches F13–F24 libres n'ont aucune action de test.
 
@@ -323,9 +324,9 @@ Pour les téléchargements IDE manuel Arduino, **arrêter DeckPilot à partir de
 
 Utilisation **Rechercher une action ou une application** pour des questions telles que `volume`, `skip`, `Spotify` ou le nom d'une application installée. L'index de l'application installée se charge de la première recherche et est mis en cache pendant cinq minutes; la sélection manuelle des fichiers reste disponible. Cliquez sur un résultat pour configurer la touche sélectionnée ou la glisser sur une autre touche.
 
-Faites glisser une action depuis le catalogue ou les résultats de recherche sur une touche pour l'assigner. Faites glisser une touche configurée sur une autre pour **échange de leurs actions**; le calibrage physique reste inchangé. `.exe`, `.lnk`, `.appref-ms`, dossier ou URL HTTP(S) sur une touche. Dropping ne configure que la touche et n'exécute jamais l'action. Compléter les paramètres manquants dans l'éditeur.
+Faites glisser une action à partir du catalogue ou des résultats de recherche sur une touche pour l'assigner. Faites glisser une touche configurée sur une autre pour **échange de leurs actions**; le calibrage physique reste inchangé. `.exe`, `.lnk`, `.appref-ms`, dossier ou URL HTTP(S) sur une touche. Dropping ne configure que la touche et n'exécute jamais l'action. Compléter les paramètres manquants dans l'éditeur.
 
-Windows startup conserve maintenant une préférence explicite par utilisateur, répare une entrée d'exécution ou manquante, et signale que Windows startup connu désactiver les drapeaux. **Lancer avec Windows** efface le connu DeckPilot désactiver le drapeau pour l'utilisateur actuel. Les lancements d'arrière-plan restent cachés même avant l'étalonnage, et les lancements d'arrière-plan dupliqués sortent tranquillement. **Préférences de l’application**, vérifiez l'état de démarrage et réactivez l'option si Windows l'a bloquée. Une vraie connexion sur le PC de l'utilisateur reste la dernière vérification des politiques de Windows ou des restrictions spécifiques à la machine.
+Le démarrage de Windows conserve désormais une préférence explicite par utilisateur, répare une entrée d'exécution ou manquante et signale que le démarrage connu de Windows désactive les drapeaux. **Lancer avec Windows** efface le connu DeckPilot désactiver le drapeau pour l'utilisateur actuel. Les lancements d'arrière-plan restent cachés même avant l'étalonnage, et les lancements d'arrière-plan dupliqués sortent tranquillement. **Préférences de l’application**, vérifiez l'état de démarrage et réactivez l'option si Windows l'a bloquée. Une vraie connexion sur le PC de l'utilisateur reste la dernière vérification des politiques de Windows ou des restrictions spécifiques à la machine.
 
 <a id="sharp-keypad-rendering-profile-recovery-and-audio-controls-161"></a>
 ## Le rendu de clavier pointu, la récupération de profil et les commandes audio (1.6.1)
@@ -349,7 +350,7 @@ Les contrôles de base couvrent les limites de répétition/release, les cales s
 <a id="search-and-ci-reliability-fixes-164"></a>
 ## Corrections de la fiabilité de la recherche et de l'IC (1.6.4)
 
-Les résultats de recherche équivalents conservent leurs boutons WPF existants. Le catalogue de l'application installée et débunce timer reporter le résultat de remplacement pendant qu'un bouton de recherche est capturé ou une traînée est en cours. Cela empêche un bouton source d'être supprimé pendant une interaction.
+Les résultats de recherche équivalents conservent leurs boutons WPF existants. Le catalogue de l'application installée et débunce timer reporter le résultat de remplacement pendant qu'un bouton de recherche est capturé ou un glisser est en cours. Cela empêche un bouton source d'être supprimé pendant une interaction.
 
 Le client de test utilise des coordonnées de curseur physiques pour correspondre aux limites d'automatisation de l'interface, indépendamment du DPI, se concentre avant de mesurer et scanne tous les pourcentages de défilement. Une vérification de régression vérifie également que les recherches équivalentes conservent le même bouton accessible. Les affirmations de démarrage de fond attendent le gestionnaire chargé de WPF et nécessitent cinq observations consécutives de fenêtre cachée pendant que l'application reste en vie. Les défaillances rapportent la phase, les cibles de curseur, le DPI et la géométrie du dernier défilement.
 
@@ -375,7 +376,7 @@ Ces changements réduisent le travail spécifié; ils n'établissent pas un pour
 <a id="workspace-tools-and-refreshed-interface-180"></a>
 ## Outils d'espace de travail et interface rafraîchie (1.8.0)
 
-L'interface de charbon place la bibliothèque d'action en premier, sépare les contrôles de profil de la taille native croustillante 3 × 4 clavier, et les paramètres d'action de groupes dans une carte. Les accents touches distinguent vos propres catégories; la sélection, la focalisation du clavier et la rétroaction d'action restent séparés. **Réduire les animations** dans les préférences complète le paramètre d'animation Windows. Les petites fenêtres conservent l'accès au défilement au lieu de réduire le texte de la touche.
+L'interface charbon de bois place la bibliothèque d'action en premier, sépare les contrôles de profil de la taille native croustillante 3 × 4 clavier, et les paramètres d'action de groupes dans une carte. Les accents touches distinguent vos propres catégories; la sélection, la focalisation du clavier et la rétroaction d'action restent séparés. **Réduire les animations** dans les préférences complète le paramètre d'animation Windows. Les petites fenêtres conservent l'accès au défilement au lieu de réduire le texte de la touche.
 
 - **Modèles de profil :** sous **Gérer les profils**Chaque modèle crée un profil modifiable séparé et n'exécute jamais ses actions. Les profils existants et l'étalonnage physique sont conservés. Les raccourcis clavier utilisent l'application active, dont les liaisons peuvent différer.
 - **touches du profil :** attribuer **Changer de profil**, puis sélectionnez un profil nommé ou cycle vers l'avant/vers l'arrière. Les références entre les profils sont recaptées lors de l'importation d'un jeu ou duplication d'un profil auto-référencé. Une destination manquante signale une erreur et peut être remplacée dans l'éditeur.
@@ -391,7 +392,7 @@ Le firmware reste **1.1.1**. Accepter une offre de firmware automatique ouvre ma
 
 DeckPilot maintenant utilise une interface noire profonde par défaut. **Préférences de l’application**, changer les couleurs d'arrière-plan, de panneau et d'accent en utilisant `#RRGGBB` valeurs; votre thème est sauvegardé sur ce PC.
 
-Les **Tableau de bord · micro vertus** panneau vous permet de sélectionner votre microphone physique et clips MP3/WAV. DeckPilot automatiquement l'itinéraire du mix vers le paramètre de lecture VB-Audio VB-CABLE; dans Discord ou un jeu, choisissez **Produit CABLE** comme le microphone. Sur une nouvelle installation, la vérification **Installez le pilote audio VB-CABLE signé** tâche télécharge le paquet officiel sur HTTPS, vérifie son éditeur Authenticode avant de l'exécuter, et ouvre la configuration du pilote du fournisseur. Cela nécessite une connexion internet et l'approbation de l'administrateur. DeckPilot ne regroupe pas ou redistribue les fichiers VB-Audio. Si vous sautez la tâche, vous pouvez démarrer le même installateur vérifié à partir du panneau Soundboard. Le moteur audio utilise NAudio (MIT; voir [avis de tiers](third-party/NAudio-LICENSE.txt)). VB-CABLE est un pilote Windows signé sous licence séparée, pas un composant MIT.
+Les **Tableau de bord · micro vertus** panneau vous permet de sélectionner votre microphone physique et clips MP3/WAV. DeckPilot automatiquement l'itinéraire du mix vers le paramètre de lecture VB-Audio VB-CABLE; dans Discord ou un jeu, choisissez **Produit CABLE** pendant l'installation et les mises à jour, DeckPilot Il télécharge le paquet officiel via HTTPS et vérifie l'éditeur Authenticode avant d'exécuter l'installateur silencieux du pilote. Cela nécessite une connexion internet et une autorisation de l'administrateur. DeckPilot ne regroupe pas ou ne redistribue pas de fichiers VB-Audio. Si le pilote manque plus tard, vous pouvez démarrer le même installateur vérifié par signature à partir du panneau Soundboard. Le moteur audio utilise NAudio (MIT; voir [avis de tiers](third-party/NAudio-LICENSE.txt)). VB-CABLE est un pilote Windows signé sous licence séparée, pas un composant MIT.
 
 <a id="deckpilot-atelier-190"></a>
 ## DeckPilot Atelier (1.9.0)

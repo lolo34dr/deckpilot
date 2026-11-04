@@ -8,7 +8,7 @@
 <h1 align="center">DeckPilot</h1>
 
 <p align="center">
-  Towarzysz Windows dla Twojego 12- Klucz do makropadu DIY.<br>
+  Towarzysz Windows dla Twojego 12- Klucz do makra DIY 'ego.<br>
   Konfiguracja kluczy, programów startowych, nośników sterowania i profili przełączników.
 </p>
 
@@ -82,15 +82,16 @@ Opublikowane pliki do pobrania zawierają runtime .NET. **Nie trzeba instalować
 ### Zainstaluj i uruchom
 
 1. Pobieranie **[DeckPilot-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** i uruchom instalatora. Windows prosi o zgodę administratora na instalację do **Program Files\DeckPilot**.
-2. Instalator dodaje DeckPilot do Windows **Instalowane aplikacje**, tworzy skrót Menu Start i domyślnie wybiera skrót pulpitu i opcje uruchamiania systemu Windows. Możesz wybrać te opcjonalne zadania.
-3. Połącz makro-pad i otwórz DeckPilot ze skrótu.
-4. Postępuj zgodnie z kalibracją od lewej do prawej strony **4 kolumny**, następnie w następnym wierszu, dla **trzy wiersze**. Każdy przycisk musi wysłać inny klawisz F13- F24.
+2. Instalator pozwala wybrać, czy DeckPilot zaczyna się od systemu Windows, automatycznie sprawdza aktualizacje aplikacji i redukuje animacje. Domyślnie uruchamia się sprawdzanie i aktualizuje; zmniejszone animacje są wyłączone. Sprawdza również podany sterownik VB- CABLE wymagany przez tablicę Soundboard i instaluje go automatycznie w przypadku braku. Do tego sprawdzenia wymagane jest połączenie z Internetem.
+3. Instalator dodaje DeckPilot do Windows **Instalowane aplikacje** i tworzy skrót Menu Start. Skrót pulpitu jest domyślnie wybierany.
+4. Połącz makro-pad i otwórz DeckPilot ze skrótu.
+5. Postępuj zgodnie z kalibracją od lewej do prawej strony **4 kolumny**, następnie w następnym wierszu, dla **trzy wiersze**. Każdy przycisk musi wysłać inny klawisz F13- F24.
 
 Podczas modernizacji od pierwszego 4- układ wiersza, DeckPilot zachowuje profile / działania i żąda jednej nowej kalibracji dla skorygowanych pozycji. Instalacja nad istniejącym przenośnym ustawieniem zachowuje również ustawienia w `%APPDATA%\DeckPilot`; rzucić starą kopię, jeśli konfiguracja poprosi.
 
 Przenośny [DeckPilot.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot.exe) oraz [ZIP](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-win-x64.zip) pozostają dostępne dla kompatybilności. Do użytku przenośnego, przechowywać wykonywalny w osobnym folderze do zapisu.
 
-Odinstaluj z systemu Windows **Instalowane aplikacje**. Deinstalacja usuwa program i jego skróty, zachowując profile osobiste, aby później można je ponownie zainstalować.
+Odinstaluj z systemu Windows **Instalowane aplikacje**. Deinstalacja usuwa program i jego skróty, zachowując profile osobiste tak, aby później można je ponownie zainstalować.
 
 Pojedynczy plik wykonywalny pobiera swoje powiązane zależności do pamięci podręcznej .NET użytkownika przy pierwszym uruchomieniu, co może potrwać nieco dłużej. Opublikowane pliki wykonywalne są obecnie niepodpisane, więc Windows może wyświetlić ostrzeżenie SmartScreen.
 
@@ -105,7 +106,7 @@ Pojedynczy plik wykonywalny pobiera swoje powiązane zależności do pamięci po
 | --- | --- |
 | Wolny klawisz | Przesyłki F13- F24 przez normalnie. Przypisz go bezpośrednio w grze lub aplikacji. |
 | Stosowanie | Otwiera zainstalowaną aplikację lub ręcznie wybrany program lub skrót. |
-| Folder | Otwiera folder w systemie Windows Explorer. |
+| Katalog | Otwiera folder w systemie Windows Explorer. |
 | Strona internetowa | Otwiera adres HTTP lub HTTPS w domyślnej przeglądarce. |
 | Skrót klawiszowy | Wysyła kombinację kluczy do aktywnego okna. |
 | Media | Kontroluje odtwarzanie, utwory, głośność lub wyciszenie. |
@@ -142,7 +143,7 @@ Windows uruchamia wybrane skróty. `shell:AppsFolder`. Opcjonalne argumenty odno
 
 Dostępne od **0.2.0**, automatyczne kontrole aktualizacji uruchomić przy starcie po kalibracji, a następnie co sześć godzin. Mogą być wyłączone w pasku bocznym. Kontrola manualna pozostaje dostępna.
 
-Kiedy zostanie znaleziona nowsza stabilna wersja GitHub, DeckPilot Pyta, czy uaktualnić. **Zainstalowane kopie** pobierz i SHA-256 weryfikuj `DeckPilot-Setup.exe`, następnie uruchomić instalatora. Windows prosi o zgodę administratora na aktualizację plików programu. Instalator zamyka DeckPilot Z wdzięcznością, gdy jest gotowy, zachowuje profile i preferencje startowe, instaluje nową wersję i ponownie uruchamia aplikację. Anulowanie polecenia zgody systemu Windows pozostawia aplikację otwartą. Setup odmawia przerwania otwartej sesji oprogramowania firmowego.
+Kiedy zostanie znaleziona nowsza stabilna wersja GitHub, DeckPilot Pyta, czy uaktualnić. **Zainstalowane kopie** pobierz i SHA-256 weryfikuj `DeckPilot-Setup.exe`, następnie uruchomić instalatora z aktualnym startup, automatic- update i reduced- motion preferencje presected. Możesz je zmienić podczas aktualizacji. Windows prosi o zgodę administratora na aktualizację plików programu. Instalator zamyka DeckPilot wdzięcznie, gdy jest gotowy, zachowuje profile i konfigurację, sprawdza i instaluje podpisany sterownik VB- CABLE, jeśli brakuje, i ponownie uruchamia aplikację. Anulowanie instalatora pozostawia aplikację otwartą. Setup odmawia przerwania otwartej sesji oprogramowania firmowego.
 
 **Kopie przenośne** zachowuje istniejący mechanizm aktualizacji. Po potwierdzeniu:
 
@@ -287,7 +288,7 @@ Dla przygotowania urządzenia i kontroli jakości warsztatu, zainstalować oddzi
 
 DeckPilot 1.1.0 zawiera **Firmware du macropad…** okno dialogowe i oprogramowanie firmowe 1.0.0 dla Pro Micro ATmega32U4 **5 V / 16 MHz**, przy użyciu konfiguracji Leonardo / Caterina potwierdzonej przez właściciela dziennika wysyłania. Narzędzie do migania w pakiecie Windows nie wymaga Arduino IDE. Wybór urządzenia i potwierdzenie są obowiązkowe; aktualizacje aplikacji nigdy po cichu nie świecą planszą. Istniejące mappingi, profile i kalibracja F13- F24 pozostają kompatybilne.
 
-**Właściciel potwierdził udaną migawkę w aplikacji, oprogramowanie firmowe 1.0.0 identyfikacja i wszystkie 12 przyciski na tablicy odniesienia.** Zachowaj oryginalny szkic i dostęp do RST / GND do odzysku. Nie można automatycznie obracać migawki firmware. Zobacz [dokumentacja firmware](FIRMWARE.pl.md) dla kompatybilności, walidacji, odzyskiwania, budowania kroków i licencji trzeciej strony. Przyciski Per- tryby USB i natywnych kontroli mediów nie są częścią tej wersji oprogramowania firmowego.
+**Właściciel potwierdził udaną migawkę w aplikacji, firmware 1.0.0 identyfikacja i wszystkie 12 przyciski na tablicy odniesienia.** Zachowaj oryginalny szkic i dostęp do RST / GND do odzysku. Nie można automatycznie obracać migawki firmware. Zobacz [dokumentacja firmware](FIRMWARE.pl.md) dla kompatybilności, walidacji, odzyskiwania, budowania kroków i licencji trzeciej strony. Przyciski Per- tryby USB i natywnych kontroli mediów nie są częścią tej wersji oprogramowania firmowego.
 
 <a id="building-the-windows-installer"></a>
 ### Budowa instalatora systemu Windows
@@ -310,7 +311,7 @@ Im większy 3 × 4 klawiatura śledzi fizyczną obudowę i czarne nasadki klawis
 
 Wybierz klucz do edycji. **Options avancées · fichier et arguments** utrzymuje ręczne ścieżki aplikacji i argumenty startowe zawalone domyślnie, podczas gdy podstawowe foldery i cele strony internetowej pozostają rozszerzone. **Tester l’action** zapisuje i wysyła wybrane działanie na bieżącym komputerze PC; wskaźnik sukcesu potwierdza wysyłkę, a nie ukończenie wewnątrz innej aplikacji. Skróty klawiszowe mają na celu aktywne okno. Wolne klawisze F13- F24 nie mają działania testowego.
 
-Kiedy makropad jest odłączony, **Hors ligne** i towarzysząca podpowiedź wyjaśnia, że profile mogą być wciąż edytowane i testowane. Konfiguracja jest przechowywana na komputerze PC i pozostaje dostępna przez cały czas rozłączania i ponownego łączenia. Te usprawnienia interfejsu działają z istniejącym oprogramowaniem firmowym i nie wymagają dodatkowego błysku.
+Kiedy makropad jest odłączony, **Hors ligne** i towarzysząca podpowiedź wyjaśnia, że profile mogą być nadal edytowane i testowane. Konfiguracja jest przechowywana na komputerze PC i pozostaje dostępna przez cały czas rozłączania i ponownego łączenia. Te usprawnienia interfejsu działają z istniejącym oprogramowaniem firmowym i nie wymagają dodatkowego błysku.
 
 Menu obszaru zgłoszeniowego włącza teraz bezpośrednio profile. **Ctrl + S** Zapisuje bieżącą konfigurację przycisku. Nieprawidłowe pliki konfiguracyjne są kopiowane zanim zostanie użyta świeża konfiguracja. Instalacja aplikacji, ikony menu desktop / Start, preferencje startowe i istniejący automatyczny updater są zatrzymywane.
 
@@ -349,7 +350,7 @@ Sprawdzenia podstawowe obejmują granice powtarzania / uwalniania, jednoczesne t
 <a id="search-and-ci-reliability-fixes-164"></a>
 ## Wyszukiwarka i niezawodność CI (1.6.4)
 
-Równoważne wyniki wyszukiwania zachowują swoje istniejące przyciski WPF. Katalog instalalled- app i debuunce timer defer result result result while a search short is capture or a drag is in progress. To zapobiega usuwaniu przycisku źródłowego podczas interakcji.
+Równoważne wyniki wyszukiwania zachowują swoje istniejące przyciski WPF. Katalog instalalled- app i debuunce timer defer result result result while a search short is catching or a drag is in progress. To zapobiega usuwaniu przycisku źródłowego podczas interakcji.
 
 Kontrola dymu w systemie Windows nadal wykonuje natywne przeciągnięcia myszy i sprawdza zapisane zadania, swapy, cofnięcie / redo i oba gesty prasowe. Klient testowy używa fizycznych współrzędnych kursora, aby dopasować się do granic Automatyzacji UI niezależnie od DPI, skupia się przed pomiarem i skanuje wszystkie wartości procentowe przewijania. Sprawdzenie regresji sprawdza również, czy równoważne przeszukiwania zachowują ten sam dostępny przycisk. Podręczne poświadczenia startowe czekają na załadowany uchwyt WPF i wymagają pięciu kolejnych obserwacji hidden- okiennych, podczas gdy aplikacja pozostaje przy życiu.
 
@@ -357,7 +358,7 @@ Zbuduj i wydaj Workflows za pomocą Node.js 24 działania. Kompilator Arduino po
 
 Ustawienia odczytywane w testach Windows wyraźnie pozwalają odczytywać / pisać / usuwać udostępnianie i parse UTF-8 po zamknięciu czytnika. To zapobiega temu, że test sam w sobie odmawia wymiany plików atomowych aplikacji. Test historyczny utrzymuje stare zdjęcie otwarte w trzech cyklach cofania / ponownego wykonania i sprawdza, czy pozostaje nienaruszony podczas zmiany ustawień na żywo.
 
-W systemie Windows istniejące pliki konfiguracyjne są oddane `File.Replace` zamiast trybu nadpisarskiego `File.Move`Wspiera to czytniki, które pozwalają na usuwanie przy zachowaniu kompletnego starego migawki. Podstawowy apartament testuje trzy zastępstwa z czytnikiem utrzymywanym w otwartym; Kontrola rdzenia systemu Windows działa przed kompilacją oprogramowania firmowego i publikacją, tak więc błędy trwałości są wykrywane wcześnie.
+W systemie Windows istniejące pliki konfiguracyjne są oddane `File.Replace` a nie tryb nadpisarski `File.Move`Wspiera to czytniki, które pozwalają na usuwanie przy zachowaniu kompletnego starego migawki. Podstawowy apartament testuje trzy zastępstwa z czytnikiem utrzymywanym w otwartym; Kontrola rdzenia systemu Windows działa przed kompilacją oprogramowania firmowego i publikacją, tak więc błędy trwałości są wykrywane wcześnie.
 
 Czytnik migawek testowych może czekać aż 500 ms dla Windows udostępniania / naruszenia blokady podczas `ReplaceFile` commits. Czekanie dotyczy tylko otwarcia migawki, nigdy nie wykonywania lub ponownego wykonania działania aplikacji. Inne błędy, źle ukształtowany JSON i trwałe zamki pozostają niepowodzeniem.
 
@@ -378,10 +379,10 @@ Zmiany te zmniejszają określoną pracę; nie tworzą niezależnej od maszyn wa
 Interfejs węglowy stawia bibliotekę działania na pierwszym miejscu, oddziela kontrolę profilu od chrupiącej native- size 3 × 4 klawiatura i grupy ustawień akcji w karcie. Kluczowe akcenty wyróżniają własne kategorie; wybór, ostrość klawiatury i informacje zwrotne akcji pozostają oddzielone. **Réduire les animations** w preferencjach uzupełnia ustawienia animacji systemu Windows. Mniejsze okna zachowują dostęp do przewijania zamiast kurczenia się tekstu klucza.
 
 - **Szablony profilu:** poniżej **Gérer les profils**, Dodaj muzykę i dźwięk, pulpit i wydajność, lub Tworzenie. Każdy szablon tworzy osobny edytowalny profil i nigdy nie wykonuje swoich działań. Istniejące profile i kalibracja fizyczna są zachowane. Skróty klawiszowe używają aktywnej aplikacji, której wiązania mogą się różnić.
-- **Klucze profilu:** przypisywanie **Changer de profil**, następnie wybierz nazwany profil lub cykl do przodu / do tyłu. Referencje pomiędzy profilami są remapped podczas importowania zestawu lub powielanie profilu samoodsyłającego. Brak miejsca docelowego zgłasza błąd i może być zastąpiony w edytorze.
+- **Klucze profilu:** przypisz **Changer de profil**, następnie wybierz nazwany profil lub cykl do przodu / do tyłu. Referencje pomiędzy profilami są remapped podczas importowania zestawu lub powielanie profilu samoodsyłającego. Brak miejsca docelowego zgłasza błąd i może być zastąpiony w edytorze.
 - **Polecenia Windows:** do stosowania **Commandes Windows** aby otworzyć wspólne ustawienia lub Task Manager, lub wyraźnie zablokować komputer PC. Polecenia pochodzą ze stałej listy, bez skryptu do wprowadzenia. Akcja blokady wymaga podpisanie z powrotem do systemu Windows.
 - **Komplete- klucz schowka:** ctrl + C / X / V i Delete pracy, podczas gdy klawisz pokładowy ma ostrość klawiatury; zwykłe pola tekstowe utrzymują swoje skróty edycji. Klawisz schowka pozostaje wewnątrz DeckPilot i jest oczyszczony przy wyjściu. Te edytuje wsparcie cofnij / redo.
-- **Rejestrator skrótów:** wybierz akcję klawiatury i kliknij **Enregistrer un raccourci**. Naciśnij wspieraną kombinację, a następnie zapisać go. Anulowanie ucieczki; F13- F24 jest zarezerwowane dla makro pad podczas nagrywania.
+- **Rejestrator skrótów:** wybierz akcję klawiatury i kliknij **Enregistrer un raccourci**. Naciśnij wspieraną kombinację, a następnie zapisać go. Anulowanie ucieczki; F13- F24 jest zarezerwowany dla makro pad podczas nagrywania.
 - **Szybki dostęp:** Ctrl + K lub przycisk Biblioteka skupia wyszukiwanie akcji. **Activité récente** utrzymuje ostatni 30 wysłanie / nieudana akcja w pamięci dla tej sesji, bez zapisywania argumentów programu lub ścieżek docelowych. Można ją w każdej chwili wyczyścić. Udane wysłanie nie gwarantuje zakończenia w aplikacji docelowej.
 
 Oprogramowanie firmowe pozostaje **1.1.1**. Akceptowanie automatycznej oferty oprogramowania firmowego teraz poprawnie otwiera menedżera oprogramowania firmowego; poprzednia ochrona modalna uniemożliwiła przekazanie go. Istniejąca tożsamość oprogramowania firmowego, bicie serca, ponowne podłączenie i kontrola flash pozostają na miejscu. Nowe funkcje przestrzeni roboczej nie potrzebują błysku firmware.
@@ -391,7 +392,7 @@ Oprogramowanie firmowe pozostaje **1.1.1**. Akceptowanie automatycznej oferty op
 
 DeckPilot teraz domyślnie używa głębokiego, czarnego interfejsu. **Préférences de l’application**, zmienić kolory tła, panelu i akcentu za pomocą `#RRGGBB` wartości; Twój motyw jest zapisany na tym komputerze.
 
-W **Soundboard · micro virtuel** panel pozwala na wybór mikrofonu fizycznego i klipów MP3 / WAV. DeckPilot automatycznie przekierowuje mix do punktu końcowego odtwarzania VB- Audio VB- Cable; w Discord lub grze, wybierz **Wyjście kable** jako mikrofon. W nowej instalacji, sprawdzone **Instalacja podanego sterownika audio VB- Cable** zadanie pobiera oficjalny pakiet przez HTTPS, sprawdza jego wydawcę Authenticode przed uruchomieniem go i otwiera konfigurację sterownika sprzedawcy. Wymaga to połączenia internetowego i zatwierdzenia administratora. DeckPilot nie gromadzi ani nie redystrybuuje plików VB- Audio. Jeśli pominiesz zadanie, możesz uruchomić ten sam sprawdzony instalator z panelu Soundboard. Silnik audio używa NAAudio (MIT; patrz [Ogłoszenie stron trzecich](third-party/NAudio-LICENSE.txt)). VB- Cable jest oddzielnie licencjonowany, podpisany sterownik systemu Windows, a nie komponent MIT.
+W **Soundboard · micro virtuel** panel pozwala na wybór mikrofonu fizycznego i klipów MP3 / WAV. DeckPilot automatycznie przekierowuje mix do punktu końcowego odtwarzania VB- Audio VB- Cable; w Discord lub grze, wybierz **Wyjście kable** jako mikrofon. Podczas instalacji i aktualizacji, DeckPilot sprawdza VB- Cable i instaluje go w przypadku braku. Pobiera oficjalny pakiet ponad HTTPS i weryfikuje wydawcę Authenticode przed uruchomieniem cichego instalatora kierowcy. Wymaga to połączenia internetowego i zezwolenia administratora. DeckPilot nie gromadzi ani nie rozprowadza plików VB- Audio. Jeżeli później nie ma sterownika, można uruchomić tego samego instalatora sprawdzonego sygnałem z panelu Soundboard. Silnik audio używa NAAudio (MIT; patrz [Ogłoszenie stron trzecich](third-party/NAudio-LICENSE.txt)). VB- Cable jest oddzielnie licencjonowany, podpisany sterownik systemu Windows, a nie komponent MIT.
 
 <a id="deckpilot-atelier-190"></a>
 ## DeckPilot Atelier (1.9.0)

@@ -47,7 +47,7 @@
 
 ---
 
-DeckPilot konfiguriert Arduino Leonardo-kompatible Makropads, die bereits senden **F13-F24** als USB-Tastatureingänge, angeordnet in **3 Reihen von 4 Schlüssel**Die physische Schlüsselreihenfolge kann beliebig sein: Eine geführte Kalibrierung bildet jede Schaltfläche auf ihre Position ab.
+DeckPilot konfiguriert Arduino Leonardo-kompatible Makropads, die bereits senden **F13-F24** als USB-Tastatureingänge, angeordnet in **3 Reihen von 4 Schlüssel**Die physische Schlüsselreihenfolge kann beliebig sein: Eine geführte Kalibrierung bildet jede Taste auf ihre Position ab.
 
 **Es sind keine zusätzlichen Treiber- oder Firmware-Änderungen erforderlich.** Die Anwendungsoberfläche ist derzeit in Französisch. Wählen Sie oben eine Sprache für eine vollständige übersetzte README, einschließlich der technischen Referenz und Versionshistorie. Übersetzungen werden automatisch generiert; dieses englische Original ist die Referenz.
 
@@ -81,10 +81,11 @@ Die veröffentlichten Downloads beinhalten die .NET Runtime. **Sie müssen .NET 
 <a id="install-and-launch"></a>
 ### Installation und Start
 
-1. Download **[DeckPilotSetup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** und führen Sie das Installationsprogramm aus. Windows bittet um die Administratorberechtigung für die Installation in **Program Files\DeckPilot**.
-2. Der Installateur fügt hinzu DeckPilot für Windows **Installierte Apps**, erstellt eine Startmenü-Verknüpfung und wählt standardmäßig die Desktop-Verknüpfung und die Windows-Startoptionen aus.
-3. Verbinden Sie Ihr Makropad und öffnen DeckPilot Aus seiner Abkürzung.
-4. Folgen Sie der Kalibrierung von links nach rechts quer **vier Spalten**, dann die nächste Reihe, für **drei Reihen**Jede Taste muss eine andere F13-F24-Taste senden.
+1. Download **[DeckPilotSetup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** und führen Sie das Installationsprogramm aus. Windows bittet um Administratorberechtigung für die Installation in **Program Files\DeckPilot**.
+2. Der Installateur lässt Sie wählen, ob DeckPilot Sie beginnt mit Windows, sucht automatisch nach App-Updates und reduziert Animationen. Start- und Update-Checks sind standardmäßig eingeschaltet; reduzierte Animationen sind ausgeschaltet. Sie überprüft auch den signierten VB-CABLE-Treiber, der vom Soundboard benötigt wird, und installiert ihn automatisch, wenn er fehlt. Eine Internetverbindung ist für diese Treiberüberprüfung erforderlich.
+3. Der Installateur fügt hinzu DeckPilot für Windows **Installierte Apps** und erstellt eine Startmenü-Verknüpfung. Eine Desktop-Verknüpfung wird standardmäßig ausgewählt.
+4. Verbinden Sie Ihr Makropad und öffnen DeckPilot Aus seiner Abkürzung.
+5. Folgen Sie der Kalibrierung von links nach rechts quer **vier Spalten**dann die nächste Reihe, für **drei Reihen**Jede Taste muss eine andere F13-F24-Taste senden.
 
 Beim Upgrade von der ehemaligen 4-Zeilenlayout, DeckPilot bewahrt Profile/Aktionen und fordert eine neue Kalibrierung für die korrigierten Positionen an. `%APPDATA%\DeckPilot`Beenden Sie die alte Kopie, wenn das Setup Sie auffordert.
 
@@ -142,7 +143,7 @@ Windows startet die ausgewählten Verknüpfungen. Katalogeinträge verwenden `sh
 
 Verfügbar seit **0.2.0**Automatische Update-Checks laufen beim Start nach der Kalibrierung, dann alle sechs Stunden. Sie können in der Seitenleiste deaktiviert werden. Eine manuelle Überprüfung bleibt verfügbar.
 
-Wenn eine neuere stabile GitHub-Version gefunden wird, DeckPilot fragt, ob aktualisiert werden soll. **Installierte Kopien** Download und SHA-256 Überprüfung `DeckPilot-Setup.exe`Windows bittet um Administratorberechtigung zum Aktualisieren von Programmdateien. Das Installationsprogramm wird geschlossen DeckPilot Wenn es fertig ist, behält es Profile und Starteinstellungen bei, installiert die neue Version und startet die App neu. Stornieren der Windows-Eingabeaufforderung lässt die App offen. Setup weigert sich, eine offene Firmware-Sitzung zu unterbrechen.
+Wenn eine neuere stabile GitHub-Version gefunden wird, DeckPilot fragt, ob aktualisiert werden soll. **Installierte Kopien** Download und SHA-256 Überprüfung `DeckPilot-Setup.exe`, dann starten Sie das Installationsprogramm mit dem aktuellen Start, automatische Aktualisierung und reduzierte Bewegungseinstellungen vorgewählt. Sie können sie während des Updates ändern. Windows bittet um Administratorberechtigung zum Aktualisieren von Programmdateien. Das Installationsprogramm schließt DeckPilot Wenn es fertig ist, behält es Profile und Konfiguration bei, überprüft und installiert den signierten VB-CABLE-Treiber, falls er fehlt, und startet die App neu. Stornieren des Installationsprogramms lässt die App offen. Setup weigert sich, eine offene Firmware-Sitzung zu unterbrechen.
 
 **Tragbare Kopien** den bestehenden Aktualisierungsmechanismus beibehalten; nach Bestätigung
 
@@ -243,7 +244,7 @@ Mit dem Leonardo verbunden:
 - Weisen Sie einen freien Schlüssel in einem Spiel zu und überprüfen Sie, ob das Spiel ihn normalerweise erhält.
 - Starten Sie ein konfiguriertes Programm und halten Sie dann die Schaltfläche gedrückt: Es sollte einmal bis zum Release gestartet werden.
 - Testen Sie einen Ordner, eine Website, eine Verknüpfung in einer gewöhnlichen Anwendung und Mediensteuerungen.
-- Senden Sie F13-F24 durch eine Verknüpfungsaktion und bestätigen Sie, dass es keine Schleife von DeckPilot Aktionen.
+- Senden Sie F13-F24 durch eine Shortcut-Aktion und bestätigen Sie, dass es keine Schleife von DeckPilot Aktionen.
 - Erstellen Sie zwei Profile mit unterschiedlichen Aktionen, wechseln Sie zwischen ihnen, beenden Sie und starten Sie neu. Profile und Kalibrierung sollten bestehen bleiben.
 - Schließen Sie das Fenster, lösen Sie eine Aktion aus, öffnen Sie sie erneut und beenden Sie sie durch das Symbol für den Benachrichtigungsbereich. Einmal DeckPilot Ausgänge, sollten alle Schlüssel normal durchlaufen.
 - Aktivieren Sie Windows-Start und Test nach erneuter Anmeldung; Deaktivieren Sie es anschließend, wenn dies nicht gewünscht ist.
@@ -306,7 +307,7 @@ Firmware **1.1.1** Sitzungsidentifikation, korrelierte Heartbeat-Antworten, begr
 <a id="keypad-interface-140"></a>
 ## Tastaturschnittstelle (Keypad)1.4.0)
 
-Der größere 3 × 4 Die Tastatur folgt dem physischen Gehäuse und den schwarzen Tastenkappen. Jede Taste zeigt ihr Hauptsymbol, ihr Label, ein F13-F24-Mapping und ein kleines Aktionssymbol; Tooltips behalten das vollständige Label und die Position bei. Drücken Sie Feedback, führen Sie Aktionen aus, erfolgreicher Versand und Fehler haben unterschiedliche Erscheinungsbilder, einschließlich Symbole und nicht nur Farbe. Animationen folgen der Windows-Animation Präferenz.
+Der größere 3 × 4 Die Tastatur folgt dem physischen Gehäuse und den schwarzen Tastenkappen. Jede Taste zeigt ihr Hauptsymbol, ihr Label, das F13-F24-Mapping und ein kleines Aktionssymbol; Tooltips behalten das vollständige Label und die Position bei. Drücken Sie Feedback, führen Sie Aktionen aus, erfolgreicher Versand und Fehler haben unterschiedliche Erscheinungsbilder, einschließlich Symbole und nicht nur Farbe. Animationen folgen der Windows-Animation Präferenz.
 
 Wählen Sie einen Schlüssel, um es zu bearbeiten. **Options avancées · fichier et arguments** hält manuelle Anwendungspfade und Startargumente standardmäßig zusammen, während wichtige Ordner und Website-Ziele erweitert bleiben. **Tester l’action** Speichert und sendet die ausgewählte Aktion auf dem aktuellen PC; ein Erfolgsindikator bestätigt den Versand, nicht den Abschluss in einer anderen App. Tastenkombinationen zielen auf das aktive Fenster. Kostenlose F13-F24-Tasten haben keine Testaktion.
 
@@ -330,7 +331,7 @@ Windows-Startup behält nun eine explizite Präferenz pro Benutzer, repariert ei
 <a id="sharp-keypad-rendering-profile-recovery-and-audio-controls-161"></a>
 ## Sharp Keypad Rendering, Profilwiederherstellung und Audiosteuerung ()1.6.1)
 
-Die Tastatur wird jetzt in nativen WPF-Größen dargestellt, anstatt Text durch eine Viewbox zu skalieren. Eltern-/Tastenschatteneffekte und Textskalierungsanimationen wurden entfernt; kleinere Fenster scrollen, anstatt die Tastatur zu verkleinern. Die App deklariert die DPI-Awareness pro Monitor und verwendet größere Windows-Shell-Symbole für Desktop-Anwendungen.
+Die Tastatur wird nun in nativen WPF-Größen dargestellt, anstatt Text durch eine Viewbox zu skalieren. Parent/key Shadow-Effekte und textskalierte Animationen wurden entfernt; kleinere Fenster scrollen, anstatt die Tastatur zu verkleinern. Die App deklariert die DPI-Awareness pro Monitor und verwendet größere Windows-Shell-Symbole für Desktop-Anwendungen.
 
 **Annuler / Rétablir** Wiederherstellung von Profilbearbeitungen, einschließlich Drag-and-Drop-Swaps, Aktionseinstellungen, Importen und Profilerstellung/-löschung. 50 Bearbeitungen während der App-Sitzung. Ctrl+Z/Ctrl+Y arbeiten auf Profilen außerhalb von Textfeldern; Textfelder behalten ihre eigene Rückgängigmachung/Wiederholung bei. Kalibrierung, Starteinstellungen und ausgeführte Aktionen werden nicht rückgängig gemacht.
 
@@ -338,7 +339,7 @@ Unter **Gérer les profils**Exportieren Sie das aktuelle Profil oder alle Profil
 
 Vor dem Speichern geänderter Profile, DeckPilot hält die vorherigen Profile in `%APPDATA%\DeckPilot\Backups` (20 Versionen, Content-dedupliziert). Preference-only speichert keine Profil-Backups. Ein Backup-Fehler verhindert das Überschreiben der aktuellen Einstellungen. Restore ersetzt Profile nach Bestätigung und kann selbst rückgängig gemacht werden; die Kalibrierung bleibt unverändert.
 
-**Microphone Windows** Die permanente Statusleiste und die Audio-Windows-Karte zeigen den Status active/muted/mixed/unavailable an, der alle zwei Sekunden und nach App-Befehlen aktualisiert wird. Ein fehlgeschlagenes Multi-Endpoint-Update versucht, frühere Mute-Zustände wiederherzustellen. Diese Indikatoren beschreiben den Windows-Endpunktzustand, nicht einen Hardware-Switch oder eine anwendungseigene Stummschaltfläche.
+**Microphone Windows** Die persistente Statusleiste und die Audio-Windows-Karte zeigen den Status active/muted/mixed/unavailable an, der alle zwei Sekunden und nach App-Befehlen aktualisiert wird. Ein fehlgeschlagenes Multi-Endpoint-Update versucht, frühere Mute-Zustände wiederherzustellen. Diese Indikatoren beschreiben den Windows-Endpunktzustand, nicht einen Hardware-Switch oder eine anwendungseigene Stummschaltfläche.
 
 **Changer de sortie audio** Wechsel zwischen zwei ausgewählten, angeschlossenen Ausgabegeräten für Windows-Konsole, Multimedia und Kommunikationsstandards. Ein fehlendes Ziel führt zu einem Fehler, ohne ein anderes Gerät auszuwählen. Anwendungen mit eigenem festen Ausgang folgen möglicherweise nicht dem Windows-Standard. Importierte Endpunkt-IDs werden als nicht verfügbar angezeigt, bis sie an den aktuellen PC angepasst sind. Durch fehlgeschlagene Routing-Änderungen wird versucht, die vorherigen Standardwerte wiederherzustellen.
 
@@ -370,7 +371,7 @@ Search und Picker teilen sich einen unveränderlichen Installed-App-Katalog für
 
 Board-UI-Updates folgen jetzt Verbindungsbenachrichtigungen, anstatt alle zu wecken 100 Ausgeblendete/minimierte Fenster stoppen Feedback-Animationen und verwenden ein zehnsekündiges Audio-Abfrageintervall anstelle von zwei Sekunden; Wiedereröffnen oder Ausgeben eines Audio-Befehls sofort frischer Zustand. Ausstehende Audio-Aktualisierungen teilen sich eine Schleife und schließen Anfragen ein, die während eines vorhandenen Lesens ankommen. Unveränderte Audio-Schnappschüsse und eingefrorene Pinsel vermeiden wiederholte UI-Zuordnungen. Prozess-Wrapper, die durch das Starten einer App zurückgegeben werden, werden ohne Schließen des gestarteten Programms angeordnet.
 
-Diese Änderungen reduzieren die spezifizierte Arbeit; sie legen keinen maschinenunabhängigen CPU/RAM-Prozentsatz fest. Native Hardware-Audioschaltung und physisches Schlüsselverhalten erfordern immer noch eine Validierung auf einem Windows-PC mit dem Makropad.
+Diese Änderungen reduzieren die angegebene Arbeit; sie legen keinen maschinenunabhängigen CPU/RAM-Prozentsatz fest. Native Hardware-Audioschaltung und physisches Schlüsselverhalten erfordern weiterhin eine Validierung auf einem Windows-PC mit dem Makropad.
 
 <a id="workspace-tools-and-refreshed-interface-180"></a>
 ## Workspace Tools und aktualisiertes Interface ()1.8.0)
@@ -379,7 +380,7 @@ Die Holzkohle-Schnittstelle stellt die Aktionsbibliothek an die erste Stelle, tr
 
 - **Profilvorlagen:** unter **Gérer les profils**, Musik und Audio, Desktop und Produktivität oder Erstellung hinzufügen. Jede Vorlage erstellt ein separates editierbares Profil und führt niemals seine Aktionen aus. Bestehende Profile und physische Kalibrierung werden beibehalten. Tastenkombinationen verwenden die aktive Anwendung, deren Bindungen unterschiedlich sein können.
 - **Profilschlüssel:** Zuweisung **Changer de profil**, wählen Sie dann ein benanntes Profil oder einen Zyklus vorwärts/rückwärts. Verweise zwischen Profilen werden beim Importieren eines Satzes oder beim Duplizieren eines selbstreferenzierenden Profils neu zugeordnet. Ein fehlendes Ziel meldet einen Fehler und kann im Editor ersetzt werden.
-- **Windows Befehle:** Verwendung **Commandes Windows** um gemeinsame Einstellungen oder den Task-Manager zu öffnen oder den PC explizit zu sperren. Befehle kommen von einer festen Liste, ohne dass ein Skript eingegeben werden muss.
+- **Windows Befehle:** Verwendung **Commandes Windows** Befehle kommen von einer festen Liste, ohne dass man ein Skript eingeben muss. Die Sperraktion erfordert die Rückmeldung bei Windows.
 - **Zwischenablage mit vollständigem Schlüssel:** Klicken Sie mit der rechten Maustaste auf eine Taste, um sie zu kopieren, zu schneiden, einzufügen oder zurückzusetzen, einschließlich der langen Aktion und des Akzents. Strg + C / X / V und Löschen funktionieren, während eine Decktaste den Tastaturfokus hat; gewöhnliche Textfelder behalten ihre Bearbeitungskürzel. Die Tastenzwischenablage bleibt im Inneren DeckPilot Diese Bearbeitungen unterstützen das Undo/Redo.
 - **Kurzschreiber:** Wählen Sie eine Tastaturaktion und klicken Sie **Enregistrer un raccourci**. Drücken Sie eine unterstützte Kombination und speichern Sie sie dann. Escape bricht ab; F13-F24 ist während der Aufzeichnung für das Makropad reserviert. Windows-reservierte Kombinationen können immer noch die manuelle Steuerung erfordern.
 - **Schnellzugriff:** Ctrl+K oder die Library-Schaltfläche fokussiert die Aktionssuche. **Activité récente** hält den letzten 30 Dispatched/Failed-Aktionen im Speicher für diese Sitzung, ohne Programmargumente oder Zielpfade zu speichern. Sie können jederzeit gelöscht werden. Ein erfolgreicher Versand garantiert keinen Abschluss in der Ziel-App.
@@ -391,7 +392,7 @@ Die Firmware bleibt **1.1.1**. Die Annahme eines automatischen Firmware-Angebots
 
 DeckPilot verwendet jetzt standardmäßig eine tiefschwarze Schnittstelle. **Préférences de l’application**Ändern Sie Hintergrund, Panel und Akzentfarben mit `#RRGGBB` Werte; Ihr Theme wird auf diesem PC gespeichert.
 
-Die **Soundboard · Micro virtuel** Mit dem Panel können Sie Ihr physisches Mikrofon und MP3/WAV-Clips auswählen. DeckPilot Routen Sie den Mix automatisch zum VB-Audio VB-CABLE-Wiedergabeendpunkt; in Discord oder einem Spiel wählen Sie **CABLE-Ausgabe** Bei einer neuen Installation wird die Überprüfung **Installieren Sie den signierten VB-CABLE-Audiotreiber** Task lädt das offizielle Paket über HTTPS herunter, überprüft den Authenticode-Publisher, bevor es ausgeführt wird, und öffnet das Treiber-Setup des Anbieters. DeckPilot Es werden keine VB-Audio-Dateien gebündelt oder weiterverteilt. Wenn Sie die Aufgabe überspringen, können Sie dasselbe aktivierte Installationsprogramm über das Soundboard-Panel starten. [Bekanntmachung durch Dritte](third-party/NAudio-LICENSE.txt)VB-CABLE ist ein separat lizenzierter, signierter Windows-Treiber, keine MIT-Komponente.
+Die **Soundboard · Micro virtuel** Mit dem Panel können Sie Ihr physisches Mikrofon und MP3/WAV-Clips auswählen. DeckPilot Routen Sie den Mix automatisch zum VB-Audio VB-CABLE-Wiedergabeendpunkt; in Discord oder einem Spiel wählen Sie **CABLE-Ausgabe** während der Installation und Aktualisierungen, DeckPilot Es lädt das offizielle Paket über HTTPS herunter und überprüft den Authenticode-Publisher, bevor es das stille Installationsprogramm des Fahrers ausführt. Dies erfordert eine Internetverbindung und Administratorberechtigung. DeckPilot VB-Audio-Dateien werden nicht gebündelt oder weiterverteilt. Wenn der Treiber später fehlt, können Sie das gleiche signaturgeprüfte Installationsprogramm über das Soundboard-Panel starten. [Bekanntmachung durch Dritte](third-party/NAudio-LICENSE.txt)VB-CABLE ist ein separat lizenzierter, signierter Windows-Treiber, keine MIT-Komponente.
 
 <a id="deckpilot-atelier-190"></a>
 ## DeckPilot Atelier1.9.0)

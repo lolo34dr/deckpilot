@@ -9,4 +9,4 @@ DeckPilot 1.5.0 aggiunge i controlli Spotify-specific, la ricerca di azione e dr
 
 La costruzione richiede Windows 10 versione 2004 o più tardi, o Windows 11. Scarica **DeckPilot-Setup.exe** o aggiornamento da DeckPilot. Profili e taratura sono conservati; non è necessario alcun flash firmware. Per riparare un'avvio precedentemente bloccato, controllare il suo stato in **Préférences de l’application** e abilitare **Lancer avec Windows** di nuovo.
 
-La convalida include l'isolamento simulato di Spotify/browser, i controlli di ricerca e impostazioni, i test di riparazione di Windows installer/startup, i controlli reali di drag-and-drop del mouse e di aggiornamento/UI nativo.
+La validazione include l'isolamento simulato di Spotify/browser, i controlli di ricerca e impostazioni, i test di riparazione di Windows installer/startup, i controlli reali di drag-and-drop del mouse e di aggiornamento/UI nativo.

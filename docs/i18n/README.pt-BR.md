@@ -82,9 +82,10 @@ Os downloads publicados incluem o tempo de execução .NET. **Você não precisa
 ### Instalar e lançar
 
 1. Transferir **[DeckPilot- Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** e executar o instalador. Windows pede permissão de administrador para instalar em **Program Files\DeckPilot**.
-2. O instalador adiciona DeckPilot para Windows **Aplicações instaladas**, cria um atalho de menu Iniciar, e seleciona o atalho de desktop e as opções de inicialização do Windows por padrão. Você pode desmarcar essas tarefas opcionais.
-3. Conecte seu macropad e abra DeckPilot do seu atalho.
-4. Siga a calibração da esquerda para a direita através **quatro colunas**, em seguida, a próxima linha, para **três linhas**. Cada botão deve enviar uma chave F13–F24 diferente.
+2. O instalador permite- lhe escolher se DeckPilot começa com o Windows, verifica as actualizações automáticas da aplicação e reduz as animações. As verificações de arranque e actualização são efectuadas por omissão; as animações reduzidas estão desligadas. Verifica também o controlador VB-CABLE assinado exigido pelo Soundboard e instala-o automaticamente se faltar. É necessária uma ligação à Internet para essa verificação do condutor.
+3. O instalador adiciona DeckPilot para Windows **Aplicações instaladas** e cria um atalho de menu Iniciar. Um atalho de área de trabalho é selecionado por padrão.
+4. Conecte seu macropad e abra DeckPilot do seu atalho.
+5. Siga a calibração da esquerda para a direita através **quatro colunas**, em seguida, a próxima linha, para **três linhas**. Cada botão deve enviar uma chave F13–F24 diferente.
 
 Ao atualizar a partir do primeiro 4- disposição da linha, DeckPilot preserva perfis/ações e solicita uma nova calibração para as posições corrigidas. Instalar sobre uma configuração portátil existente também preserva as configurações em `%APPDATA%\DeckPilot`; saia da cópia antiga se a configuração lhe pedir.
 
@@ -142,7 +143,7 @@ O Windows lança os atalhos seleccionados. Os itens de catálogo usam `shell:App
 
 Disponível desde **0.2.0**, verificações automáticas de atualização executadas na inicialização após a calibração, em seguida, a cada seis horas. Eles podem ser desativados na barra lateral. Uma verificação manual permanece disponível.
 
-Quando uma versão mais recente do GitHub estável é encontrada, DeckPilot pergunta se deseja atualizar. **Cópias instaladas** download e SHA-256 verificar `DeckPilot-Setup.exe`, em seguida, iniciar o instalador. Windows pede permissão de administrador para atualizar arquivos de programa. O instalador fecha DeckPilot graciosamente quando estiver pronto, preserva perfis e preferências de inicialização, instala a nova versão e libera o aplicativo. Cancelar o pedido de permissão do Windows deixa o aplicativo aberto. A configuração se recusa a interromper uma sessão de firmware aberta.
+Quando uma versão mais recente do GitHub estável é encontrada, DeckPilot pergunta se deseja atualizar. **Cópias instaladas** download e SHA-256 verificar `DeckPilot-Setup.exe`, em seguida, inicie o instalador com a inicialização atual, atualização automática e preferências de movimento reduzido pré-selecionado. Você pode alterá-los durante a atualização. Windows pede permissão do administrador para atualizar arquivos de programa. O instalador fecha DeckPilot graciosamente quando estiver pronto, preserva perfis e configuração, verifica e instala o driver VB-CABLE assinado se faltar, e libera o aplicativo. Cancelar o instalador deixa o aplicativo aberto. A configuração se recusa a interromper uma sessão de firmware aberto.
 
 **Cópias portáteis** reter o mecanismo de atualização existente. Após confirmação, ele:
 
@@ -306,7 +307,7 @@ Firmware **1.1.1** adiciona identificação da sessão, respostas cardíacas cor
 <a id="keypad-interface-140"></a>
 ## Interface de teclado (1.4.0)
 
-O maior 3 × 4 O teclado segue o gabinete físico e as teclas-caps pretas. Cada tecla mostra o seu ícone principal, a legenda, o mapeamento F13-F24 e um pequeno ícone do tipo de ação; as dicas de ferramentas mantêm a etiqueta completa e a posição. Pressione o feedback, as ações de execução, o envio bem sucedido e os erros têm aparências distintas, incluindo símbolos em vez de cores sozinho. As animações seguem a preferência de animação do Windows.
+O maior 3 × 4 O teclado segue o gabinete físico e as teclas pretas. Cada tecla mostra o seu ícone principal, a legenda, o mapeamento F13-F24 e um pequeno ícone do tipo de ação; as dicas de ferramenta mantêm a etiqueta completa e a posição. Pressione o feedback, as ações em execução, o envio bem sucedido e os erros têm aparências distintas, incluindo símbolos em vez de cores sozinho. As animações seguem a preferência de animação do Windows.
 
 Escolha uma chave para editá-la. **Options avancées · fichier et arguments** mantém os caminhos manuais da aplicação e os argumentos de lançamento colapsados por omissão, enquanto os destinos essenciais da pasta e do website permanecem expandidos. As configurações de colapsamento não limpam os seus valores. **Tester l’action** salva e envia a ação selecionada no PC atual; um indicador de sucesso confirma despacho, não completa dentro de outra aplicação. Os atalhos do teclado visam a janela ativa. Teclas F13-F24 livres não têm ação de teste.
 
@@ -359,7 +360,7 @@ As configurações lidas nos testes do Windows explicitamente permitem o compart
 
 No Windows, os arquivos de configurações existentes são comprometidos com `File.Replace` em vez de substituir o modo `File.Move`. Isto suporta os leitores que permitem a exclusão enquanto retém um instantâneo antigo completo. O conjunto central testa três substituições com um leitor aberto; as verificações do núcleo do Windows são executadas antes da compilação de firmware e da publicação, pelo que as falhas de persistência são detectadas precocemente.
 
-Um leitor de instantâneos de teste pode esperar até 500 ms para o compartilhamento/travamento do Windows enquanto `ReplaceFile` commits. A espera aplica- se apenas à abertura do instantâneo, nunca à execução ou re- execução de uma acção de aplicação. Outros erros, JSON malformados e bloqueios persistentes permanecem falhas.
+Um leitor de instantâneos de teste pode esperar até 500 ms para o compartilhamento/travamento do Windows enquanto `ReplaceFile` commits. A espera se aplica apenas à abertura do instantâneo, nunca execução ou re- execução de uma ação da aplicação. Outros erros, JSON malformado e bloqueios persistentes permanecem falhas.
 
 <a id="runtime-and-editing-optimizations-170"></a>
 ## Otimização de execução e edição (1.7.0)
@@ -391,7 +392,7 @@ O firmware permanece **1.1.1**. Aceitar uma oferta de firmware automática agora
 
 DeckPilot agora usa uma interface preta profunda por padrão. In **Préférences de l’application**, alterar o fundo, painel e cores acento usando `#RRGGBB` valores; o seu tema é salvo neste PC.
 
-A **Placa de som · micro virtudel** painel permite que você selecione seu microfone físico e clipes MP3/WAV. DeckPilot encaminha automaticamente a mistura para o ponto final de reprodução VB-Audio VB-CABLE; em Discórdia ou um jogo, escolha **Saída CABLE** como microfone. Em uma nova instalação, o verificado **Instale o driver de áudio VB-CABLE assinado** tarefa baixa o pacote oficial sobre HTTPS, verifica o seu editor Authenticode antes de executá-lo, e abre a configuração do driver do fornecedor. Isto requer uma conexão à internet e aprovação do administrador. DeckPilot não agrupa ou redistribui arquivos VB-Audio. Se você pular a tarefa, você pode iniciar o mesmo instalador selecionado do painel Soundboard. O motor de áudio usa NAudio (MIT; veja [aviso de terceiros](third-party/NAudio-LICENSE.txt)). VB-CABLE é um driver do Windows licenciado e assinado separadamente, e não um componente do MIT.
+A **Placa de som · micro virtudel** painel permite que você selecione seu microfone físico e clipes MP3/WAV. DeckPilot encaminha automaticamente a mistura para o ponto final de reprodução VB-Audio VB-CABLE; em Discórdia ou um jogo, escolha **Saída CABLE** como microfone. Durante a instalação e atualizações, DeckPilot verifica o VB-CABLE e instala- o quando está em falta. Ele baixa o pacote oficial através do HTTPS e verifica o editor Authenticode antes de executar o instalador silencioso do driver. Isto requer uma ligação à Internet e permissão de administrador. DeckPilot não agrupa ou redistribui arquivos VB-Audio. Se o driver estiver faltando mais tarde, você pode iniciar o mesmo instalador verificado com a assinatura no painel Soundboard. O motor de áudio usa NAudio (MIT; veja [aviso de terceiros](third-party/NAudio-LICENSE.txt)). VB-CABLE é um driver do Windows licenciado e assinado separadamente, e não um componente do MIT.
 
 <a id="deckpilot-atelier-190"></a>
 ## DeckPilot Atelier (1.9.0)

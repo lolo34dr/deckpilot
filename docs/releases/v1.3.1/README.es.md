@@ -10,4 +10,4 @@ DeckPilot 1.3.1 mejora la conexión USB y comprueba el firmware macropad al inic
 
 Las actualizaciones de firmware se entregan en versiones de aplicaciones; cheques de arranque comparan la versión detectada contra el paquete incluido. Ningún hardware se flashea silenciosamente. **Firmware 1.1.0 todavía necesita una primera prueba de tablero físico:** firmware 1.0.0 y el procedimiento flash anterior fue validado por el propietario, mientras que este nuevo protocolo está cubierto por pruebas de host y compilación AVR.
 
-Descargar **DeckPilot-Setup.exe** o actualización de la aplicación. Se conservan los perfiles, las preferencias de calibración y puesta en marcha. DeckPilot antes de utilizar Arduino IDE u otro monitor de serie; abrir el administrador de firmware de aplicación libera la conexión automáticamente.
+Descargar **DeckPilot-Setup.exe** o actualización de la aplicación. Se conservan los perfiles, las preferencias de calibración y puesta en marcha. DeckPilot antes de utilizar Arduino IDE u otro monitor de serie; abrir el gestor de firmware de la aplicación libera la conexión automáticamente.

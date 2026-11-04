@@ -62,8 +62,8 @@ DeckPilot configura Arduino Leonardo-compatible macropads que ya envía **F13-F2
 - **Perfiles listos:** empezar con plantillas de música, productividad o creación, a continuación, personalizarlas. Cambiar a un perfil específico, próximo o anterior de una clave física.
 - **Edición más rápida:** copy/cut/paste/reset teclas completas, atajos de teclado para grabar, elegir colores de acento clave, y deshacer cambios.
 - **Herramientas de Windows:** abrir sonido, visualización, Bluetooth y configuración de red, Administrador de tareas, o bloquear la sesión.
-- **Interfaz oscura compacta:** iconos vectoriales, iconos de aplicación donde esté disponible, y animaciones sutiles que respetan las preferencias de animación de Windows.
-- **Operación de antecedentes:** Manténganse. DeckPilot en el área de notificación, con inicio en el registro de Windows habilitado por defecto (puede ser deshabilitado).
+- **Interfaz oscura compacta:** iconos vectoriales, iconos de aplicación donde está disponible, y animaciones sutiles que respetan las preferencias de animación de Windows.
+- **Operación de antecedentes:** Manténganse. DeckPilot en el área de notificación, con el inicio de sesión de Windows habilitado por defecto (puede ser deshabilitado).
 - **Actualizaciones automáticas:** aprobar una nueva versión, entonces dejar DeckPilot descargar, verificar, reemplazar y reiniciar en sí mismo.
 
 <a id="getting-started"></a>
@@ -82,9 +82,10 @@ Las descargas publicadas incluyen el tiempo de ejecución .NET. **Usted no neces
 ### Instalación y lanzamiento
 
 1. Descargar **[DeckPilot-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** y ejecutar el instalador. Windows pide permiso de administrador para instalar **Program Files\DeckPilot**.
-2. El instalador añade DeckPilot a Windows **Aplicaciones instaladas**, crea un atajo de menú Inicio, y selecciona las opciones de inicio de escritorio y Windows por defecto. Puede deseleccionar estas tareas opcionales.
-3. Conecta tu macropado y abre DeckPilot de su atajo.
-4. Siga la calibración de izquierda a derecha a través **cuatro columnas**, entonces la siguiente fila, para **tres filas**. Cada botón debe enviar una tecla F13-F24 diferente.
+2. El instalador le permite elegir si DeckPilot Comienza con Windows, comprueba las actualizaciones de la aplicación automáticamente, y reduce las animaciones. Los cheques de inicio y actualización están por defecto; las animaciones reducidas están apagadas. También comprueba el controlador VB-CABLE firmado requerido por el Soundboard y lo instala automáticamente si falta. Se requiere una conexión a Internet para ese control de controlador.
+3. El instalador añade DeckPilot a Windows **Aplicaciones instaladas** y crea un atajo de menú Inicio. Un atajo de escritorio es seleccionado por defecto.
+4. Conecta tu macropado y abre DeckPilot de su atajo.
+5. Siga la calibración de izquierda a derecha a través **cuatro columnas**, entonces la siguiente fila, para **tres filas**. Cada botón debe enviar una tecla F13-F24 diferente.
 
 Al actualizarse de la primera 4- diseño de la hoja, DeckPilot conserva perfiles/acciones y solicita una nueva calibración para las posiciones corregidas. Instalar una configuración portátil existente también preserva la configuración en `%APPDATA%\DeckPilot`; renunciar a la copia vieja si la configuración le pide.
 
@@ -92,7 +93,7 @@ Un portátil [DeckPilot.exe](https://github.com/lolo34dr/deckpilot/releases/late
 
 Desinstalación de Windows **Aplicaciones instaladas**. La desinstalación elimina el programa y sus atajos, al tiempo que conserva los perfiles personales para que una reinstalación posterior pueda reutilizarlos.
 
-El ejecutable de un solo fichero extrae sus dependencias agrupadas en el caché .NET del usuario en el primer lanzamiento, que puede tardar un poco más. Los ejecutables publicados están actualmente sin firmar, por lo que Windows puede mostrar una advertencia SmartScreen.
+El ejecutable de un solo fichero extrae sus dependencias agrupadas en la caché .NET del usuario en el primer lanzamiento, que puede tardar un poco más. Los ejecutables publicados están actualmente sin firmar, por lo que Windows puede mostrar una advertencia SmartScreen.
 
 <a id="configure-a-key"></a>
 ### Configurar una clave
@@ -142,7 +143,7 @@ Windows lanza los atajos seleccionados. `shell:AppsFolder`. Los argumentos opcio
 
 Disponible desde **0.2.0**, cheques automáticos de actualización se ejecutan al inicio después de la calibración, luego cada seis horas. Pueden ser deshabilitados en la barra lateral.
 
-Cuando se encuentra una nueva versión estable de GitHub, DeckPilot pregunta si actualizar. **Copias instaladas** descarga y SHA-256 verificar `DeckPilot-Setup.exe`, luego lanzar el instalador. Windows pide permiso de administrador para actualizar Archivos del programa. El instalador cierra DeckPilot Agraciadamente cuando esté listo, conserva perfiles y preferencias de inicio, instala la nueva versión y relanza la aplicación. Cancelando el aviso de permiso de Windows deja abierta la aplicación. Setup se niega a interrumpir una sesión de firmware abierto.
+Cuando se encuentra una nueva versión estable de GitHub, DeckPilot pregunta si actualizar. **Copias instaladas** descarga y SHA-256 verificar `DeckPilot-Setup.exe`, luego lanzar el instalador con la startup actual, las preferencias de actualización automática y reducción de las emociones preseleccionadas. Usted puede cambiar durante la actualización. Windows pide permiso de administrador para actualizar los archivos del programa. DeckPilot Agraciadamente cuando esté listo, conserva perfiles y configuración, comprueba e instala el controlador VB-CABLE firmado si falta, y relanza la aplicación. Cancelando el instalador deja abierta la aplicación. Setup se niega a interrumpir una sesión de firmware abierto.
 
 **Copias portátiles** conservar el mecanismo de actualización existente. Después de la confirmación, se:
 
@@ -154,7 +155,7 @@ Cuando se encuentra una nueva versión estable de GitHub, DeckPilot pregunta si 
 
 Elegir para actualizar más adelante pospone los impulsos automáticos para 24 horas. bypass manual checks que posponen.
 
-Las descargas utilizan HTTPS, con redirecciones restringidas a los hosts GitHub esperados. Los archivos temporales se almacenan en `%LOCALAPPDATA%\DeckPilot\Updates`; descargas mayores de siete días se limpian. La entrada de inicio de Windows continúa utilizando el mismo camino ejecutable después de una actualización.
+Las descargas utilizan HTTPS, con redirecciones restringidas a los hosts GitHub esperados. Los archivos temporales se almacenan en `%LOCALAPPDATA%\DeckPilot\Updates`; descargas mayores de siete días se limpian. La entrada de inicio de Windows sigue utilizando el mismo camino ejecutable después de una actualización.
 
 Las copias portátiles requieren una carpeta personal de escritura. Las copias instaladas utilizan el instalador para directorios protegidos; DeckPilot app en sí sigue funcionando sin derechos de administrador.
 
@@ -299,14 +300,14 @@ Después de producir `artifacts/standalone/DeckPilot.exe` con el paquete de firm
 
 El **Votre macropad** tarjeta muestra estado de conexión, el firmware detectado y cualquier actualización de paquetes disponibles. **Connexion et diagnostic** expone selección de tablero cuando varios Leonardos están conectados, el estado de enlace USB en vivo, cuenta de botones físicos, preferencias de notificación de firmware y un resumen de diagnóstico copiable. Los diagnósticos no copian las acciones de perfil o identificadores de serie USB. El monitor se conecta después de desconectar y deja su puerto serial automáticamente mientras el administrador de firmware está abierto. 1.0.0 y sin el vínculo de diagnóstico.
 
-Las comprobaciones de firmware de inicio están activadas por defecto. Después de la actualización de la aplicación, el cheque y la calibración están fuera del camino, un firmware identificado más antiguo puede impulsar la instalación; enviar recordatorios de demoras para 24 horas. Los tableros desconocidos y múltiples candidatos no seleccionados no se destellan automáticamente. Los lanzamientos de firmware se agrupan con actualizaciones de aplicaciones de GitHub, en lugar de obtener de una alimentación independiente de firmware.
+Los cheques de firmware de inicio están habilitados por defecto. Después de la actualización de la aplicación, el cheque y la calibración están fuera del camino, un firmware identificado más antiguo puede impulsar la instalación; enviar recordatorios de demoras para 24 horas. Los tableros desconocidos y múltiples candidatos no seleccionados no se destellan automáticamente. Los lanzamientos de firmware se agrupan con actualizaciones de aplicaciones de GitHub, en lugar de obtener de una alimentación independiente de firmware.
 
 Firmware **1.1.1** añade identificación de sesión, respuestas de latidos cardíacos correlativos, mensajes encuadernados y eventos físicos de estado clave. Estos eventos animan los botones mapeados y actualizan el diagnóstico; nunca invocan acciones por segunda vez. Su primera validación de tablero físico todavía es necesaria, aunque el firmware anterior 1.0.0 y el procedimiento flash han sido confirmados por el propietario. [protocolo y documentación de compatibilidad](FIRMWARE.es.md).
 
 <a id="keypad-interface-140"></a>
 ## Interfaz de teclado (interfaz de teclado)1.4.0)
 
-El más grande 3 × 4 keypad sigue el recinto físico y las teclas negras. Cada clave muestra su icono principal, etiqueta, cartografía F13–F24 y un pequeño icono de tipo de acción; las puntas de las herramientas conservan la etiqueta completa y la posición. Pulsa retroalimentación, acciones de ejecución, envío exitoso y errores tienen apariencias distintas, incluyendo símbolos en lugar de color solo.
+El más grande 3 × 4 keypad sigue el recinto físico y los teclados negros. Cada clave muestra su icono principal, etiqueta, cartografía F13–F24 y un pequeño icono de tipo de acción; las puntas de las herramientas conservan la etiqueta completa y la posición. Pulse la retroalimentación, las acciones de ejecución, el envío exitoso y los errores tienen apariencias distintas, incluyendo símbolos en lugar de color solo.
 
 Elija una clave para editarla. **Options avancées · fichier et arguments** mantiene las trayectorias manuales de aplicación y los argumentos de lanzamiento colapsados por defecto, mientras que los destinos esenciales de carpetas y sitios web se siguen expandiendo. **Tester l’action** guarda y envía la acción seleccionada en el PC actual; un indicador de éxito confirma el envío, no la terminación dentro de otra aplicación. Atajos de teclado apuntan a la ventana activa. Las teclas F13-F24 libres no tienen ninguna acción de prueba.
 
@@ -336,11 +337,11 @@ El teclado ahora renderiza en tamaños nativos de WPF en lugar de escalar texto 
 
 Under **Gérer les profils**, exportar el perfil actual o todos los perfiles como `.deckpilot.json`, los perfiles de importación como copias nuevas, o restaurar una copia de seguridad de todos los perfiles. Importar nunca ejecuta acciones y nunca reemplaza la calibración del PC. Los perfiles contienen trayectorias de acción, argumentos y IDs de terminales de audio, que pueden necesitar ajustarse en otro PC. Se rechazan formatos desconocidos, archivos de tamaño excesivo y configuraciones de gesto malformadas.
 
-Antes de guardar perfiles cambiados, DeckPilot mantiene los perfiles anteriores en `%APPDATA%\DeckPilot\Backups` (20 Versiones, deduplicadas por contenido).Los ahorros de preferencia no crean copias de seguridad de perfil. Un fallo de copia de seguridad evita la sobreescritura de la configuración actual. Restaurar reemplaza los perfiles después de la confirmación y se puede deshacer; la calibración permanece inalterada.
+Antes de guardar perfiles cambiados, DeckPilot mantiene los perfiles anteriores en `%APPDATA%\DeckPilot\Backups` (20 Versiones, deduplicadas por contenido). Los ahorros sólo de preferencia no crean copias de seguridad de perfil. Un fallo de copia de seguridad evita la sobreescritura de la configuración actual. Restaurar reemplaza los perfiles después de la confirmación y puede ser deshecho; la calibración permanece inalterada.
 
 **Microphone Windows** toggles mute on all currently active Windows capture endpoints. La barra de estado persistente y la tarjeta Audio Windows muestran estado activo/muted/mixed/unavailable, refrescado cada dos segundos y después de los comandos de la aplicación. Una actualización multi-endpoint fallido intenta restaurar estados mudos anteriores. Estos indicadores describen el estado de Windows endpoint, no un interruptor de hardware o un botón mute de la aplicación.
 
-**Changer de sortie audio** alterna entre dos dispositivos de salida seleccionados conectados, para la consola de Windows, multimedia y predeterminados de comunicaciones. Un objetivo perdido da un error sin elegir otro dispositivo. Las aplicaciones con su propia salida fija pueden no seguir el predeterminado de Windows. Los IDs de endpoint importados se muestran como indisponibles hasta que se adaptan al PC actual.
+**Changer de sortie audio** alterna entre dos dispositivos de salida seleccionados, conectados, para la consola de Windows, multimedia y predeterminados de comunicaciones. Un objetivo perdido da un error sin elegir otro dispositivo. Las aplicaciones con su propia salida fija pueden no seguir el predeterminado de Windows. Los IDs de endpoint importados se muestran como indisponibles hasta que se adaptan al PC actual.
 
 Para configurar **appui court / appui long**, primero elegir una acción configurada, habilitar la opción de dos acciones, seleccionar el gesto para editar y establecer un umbral desde 200 a 3000 ms. Sin este modo, las acciones conservan el comportamiento inmediato de arriba abajo. Con él, las acciones cortas se ejecutan en la liberación antes del umbral; las acciones largas se ejecutan una vez en el umbral (o en la liberación si el temporizador todavía no ha funcionado). Una acción larga nunca también corre el corto. Las teclas de paso F13–F24 no pueden usar el modo de doble acción.
 
@@ -391,7 +392,7 @@ El firmware sigue **1.1.1**. Aceptar una oferta automática de firmware ahora ab
 
 DeckPilot ahora utiliza una interfaz negra profunda por defecto. **Préférences de l’application**, cambiar el fondo, panel y colores de acento utilizando `#RRGGBB` valores; su tema se guarda en este PC.
 
-El **Soundboard · micro virtudes** panel le permite seleccionar su micrófono físico y clips MP3/WAV. DeckPilot rutas automáticas de la mezcla al punto final de reproducción VB-Audio VB-CABLE; en disco o un juego, elija **CABLE Output** como el micrófono. En una nueva instalación, la **Instalar el controlador de audio VB-CABLE firmado** tarea descarga el paquete oficial sobre HTTPS, comprueba su editor de Authenticode antes de ejecutarlo, y abre la configuración del controlador del proveedor. Esto requiere una conexión a Internet y la aprobación del administrador. DeckPilot no empaqueta o redistribuye archivos VB-Audio. Si se salta la tarea, puede iniciar el mismo instalador comprobado del panel Soundboard. El motor de audio utiliza NAudio (MIT; véase [notificación de terceros](third-party/NAudio-LICENSE.txt)). VB-CABLE es un controlador de Windows firmado por separado, no un componente MIT.
+El **Soundboard · micro virtudes** panel le permite seleccionar su micrófono físico y clips MP3/WAV. DeckPilot rutas automáticas de la mezcla al punto final de reproducción VB-Audio VB-CABLE; en disco o un juego, elija **CABLE Output** como el micrófono. Durante la instalación y actualizaciones, DeckPilot checks for VB-CABLE and installs it when missing. Se descarga el paquete oficial sobre HTTPS y verifica el editor de Authenticode antes de ejecutar el instalador silencioso del controlador. Esto requiere una conexión a Internet y permiso de administrador. DeckPilot no empaqueta o redistribuye archivos VB-Audio. Si el controlador falta más tarde, puede iniciar el mismo instalador de la firma del panel Soundboard. El motor de audio utiliza NAudio (MIT; ver [notificación de terceros](third-party/NAudio-LICENSE.txt)). VB-CABLE es un controlador de Windows firmado por separado, no un componente MIT.
 
 <a id="deckpilot-atelier-190"></a>
 ## DeckPilot Atelier (Atelier)1.9.0)

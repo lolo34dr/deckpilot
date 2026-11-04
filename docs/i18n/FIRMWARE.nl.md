@@ -8,7 +8,7 @@ Alleen voor de geteste hardwareconfiguratie: **Pro Micro ATmega32U4, 5 V / 16 MH
 <a id="wiring-and-behavior"></a>
 ## Bedrading en gedrag
 
-Elke schakelaar verbindt één speld met GND. Interne pull-ups zijn ingeschakeld. **2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15, 16** verzenden **F13 tot en met F24** Een stal in die volgorde. 30 ms debounce handvatten drukken en vrijgeven onafhankelijk van elkaar. Toetsenbordgedrag, Windows-side profielen en kalibratie blijven compatibel; USB-toetsenbordroller blijft beperkt door de toetsenbordbibliotheek van Arduino. De firmware introduceert nog geen USB-modi per knop of native media controls.
+Elke schakelaar verbindt één pin met GND. Interne pull-ups zijn ingeschakeld. Pins **2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15, 16** verzenden **F13 tot en met F24** Een stal in die volgorde. 30 ms debounce handvatten drukken en vrijgeven onafhankelijk van elkaar. Toetsenbordgedrag, Windows-side profielen en kalibratie blijven compatibel; USB-toetsenbordroller blijft beperkt door de toetsenbordbibliotheek van Arduino. De firmware introduceert nog geen USB-modi per knop of native media controls.
 
 Pin **1** wordt vastgehouden aan GND bij het opstarten schakelt de toetsenbordbewerking uit, waarbij de originele failsafe behouden blijft. De USB-kern kan nog steeds bootloader-invoer ondersteunen. Verbind VNC niet met GND.
 
