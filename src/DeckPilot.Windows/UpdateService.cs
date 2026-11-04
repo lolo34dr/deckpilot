@@ -28,15 +28,18 @@ public sealed class UpdateService : IDisposable
         string hash = await client.DownloadAsync(download, directory, progress, cancellation, installed ? "DeckPilot-Setup.exe" : "DeckPilot.exe");
         return new(directory, hash, release, installed);
     }
-    public async Task<bool> StartInstallerAsync(StagedUpdate staged, bool background)
+    public async Task<bool> StartInstallerAsync(StagedUpdate staged, bool background, bool startupEnabled, bool autoCheckUpdates, bool reduceMotion)
     {
         if (staged.Installed)
         {
             string installer = Path.Combine(staged.Directory, "DeckPilot-Setup.exe");
             await UpdateRelease.VerifyFileAsync(installer, staged.Hash);
             var setup = new ProcessStartInfo(installer) { UseShellExecute = true, WorkingDirectory = staged.Directory };
-            setup.ArgumentList.Add("/UPDATE=1"); setup.ArgumentList.Add("/SILENT"); setup.ArgumentList.Add("/NORESTART");
+            setup.ArgumentList.Add("/UPDATE=1"); setup.ArgumentList.Add("/NORESTART");
             setup.ArgumentList.Add("/DIR=" + Path.GetDirectoryName(ExecutablePath())!);
+            setup.ArgumentList.Add("/STARTUP=" + (startupEnabled ? "on" : "off"));
+            setup.ArgumentList.Add("/AUTOCHECKUPDATES=" + (autoCheckUpdates ? "on" : "off"));
+            setup.ArgumentList.Add("/REDUCEMOTION=" + (reduceMotion ? "on" : "off"));
             using var process = Process.Start(setup) ?? throw new IOException("Impossible de démarrer l’installateur.");
             return false; // Setup asks the running app to exit only when it is ready to install.
         }

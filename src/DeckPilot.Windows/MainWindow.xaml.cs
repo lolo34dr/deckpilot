@@ -790,12 +790,13 @@ public partial class MainWindow : Window
             }
             if (!SaveEditor()) { UpdateStatus.Text = "Mise à jour suspendue : vos réglages n’ont pas pu être enregistrés."; return; }
             UpdateStatus.Text = "Redémarrage pour installer la mise à jour…";
-            bool shutdown = await updateService.StartInstallerAsync(dialog.Staged, !IsVisible);
+            bool shutdown = await updateService.StartInstallerAsync(dialog.Staged, !IsVisible,
+                StartupService.PreferenceEnabled, settings.AutoCheckUpdates, settings.ReduceMotion);
             if (shutdown) { quitting = true; Application.Current.Shutdown(); }
             else
             {
                 firmwareQuietUntil = Environment.TickCount64 + 300000;
-                UpdateStatus.Text = "L’installateur prendra le relais. Vos réglages seront conservés.";
+                UpdateStatus.Text = "L’installateur va s’ouvrir pour confirmer vos préférences et terminer la mise à jour.";
             }
         }
         catch (OperationCanceledException) { if (!lifetime.IsCancellationRequested) UpdateStatus.Text = "La vérification a pris trop de temps. Réessayez plus tard."; }

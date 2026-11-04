@@ -3,9 +3,20 @@
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 $downloadUrl = 'https://download.vb-audio.com/Download_CABLE/VBCABLE_Driver_Pack45.zip'
-$officialPage = 'https://vb-audio.com/Cable/'
 $work = Join-Path $env:TEMP ('DeckPilot-VBCABLE-' + [Guid]::NewGuid().ToString('N'))
 $downloadComplete = $false
+
+function Get-PresentAudioEndpoints {
+    if (Get-Command Get-PnpDevice -ErrorAction SilentlyContinue) {
+        return @(Get-PnpDevice -Class AudioEndpoint -PresentOnly -ErrorAction SilentlyContinue |
+            Where-Object { $_.Status -eq 'OK' } | ForEach-Object { $_.FriendlyName })
+    }
+    if (Get-Command Get-CimInstance -ErrorAction SilentlyContinue) {
+        return @(Get-CimInstance -ClassName Win32_PnPEntity -ErrorAction SilentlyContinue |
+            Where-Object { $_.PNPClass -eq 'AudioEndpoint' -and $_.Status -eq 'OK' } | ForEach-Object { $_.Name })
+    }
+    return @()
+}
 
 function Show-Notice([string]$message, [string]$title, [string]$icon) {
     $iconValue = [Enum]::Parse('System.Windows.Forms.MessageBoxIcon', $icon)
@@ -13,11 +24,9 @@ function Show-Notice([string]$message, [string]$title, [string]$icon) {
 }
 
 try {
-    if (!$ValidateOnly -and (Get-Command Get-PnpDevice -ErrorAction SilentlyContinue)) {
-        $endpoints = @(Get-PnpDevice -Class AudioEndpoint -PresentOnly -ErrorAction SilentlyContinue | Where-Object { $_.Status -eq 'OK' } | ForEach-Object { $_.FriendlyName })
+    if (!$ValidateOnly) {
+        $endpoints = @(Get-PresentAudioEndpoints)
         if (($endpoints | Where-Object { $_ -like 'CABLE Input*' }) -and ($endpoints | Where-Object { $_ -like 'CABLE Output*' })) {
-            Add-Type -AssemblyName System.Windows.Forms
-            Show-Notice 'VB-CABLE est déjà installé et détecté. Aucune modification n''a été faite.' 'DeckPilot' 'Information'
             return
         }
     }
@@ -63,9 +72,17 @@ try {
     }
 
     Add-Type -AssemblyName System.Windows.Forms
-    $process = Start-Process -FilePath $setup.FullName -Wait -PassThru
+    $process = Start-Process -FilePath $setup.FullName -ArgumentList @('-i', '-h') -Wait -PassThru
     if ($process.ExitCode -ne 0) { throw ('L''installateur VB-Audio s''est terminé avec le code ' + $process.ExitCode + '.') }
-    Show-Notice 'L''installateur VB-Audio est terminé. Si tu as installé le pilote, actualise les périphériques dans DeckPilot. Redémarre Windows si VB-CABLE n''apparaît pas.' 'DeckPilot' 'Information'
+    if ((Get-Command Get-PnpDevice -ErrorAction SilentlyContinue) -or (Get-Command Get-CimInstance -ErrorAction SilentlyContinue)) {
+        $verified = $false
+        for ($attempt = 0; $attempt -lt 20; $attempt++) {
+            $endpoints = @(Get-PresentAudioEndpoints)
+            if (($endpoints | Where-Object { $_ -like 'CABLE Input*' }) -and ($endpoints | Where-Object { $_ -like 'CABLE Output*' })) { $verified = $true; break }
+            Start-Sleep -Milliseconds 500
+        }
+        if (!$verified) { throw 'VB-Audio Setup finished, but Windows has not exposed both VB-CABLE endpoints yet. A restart may be required.' }
+    }
 }
 catch {
     if ($ValidateOnly -and !$downloadComplete) {
@@ -80,10 +97,12 @@ catch {
     }
     try {
         Add-Type -AssemblyName System.Windows.Forms -ErrorAction SilentlyContinue
-        Show-Notice ($_.Exception.Message + "`r`n`r`nDeckPilot n'a exécuté aucun installateur non vérifié. Tu peux consulter la page officielle VB-Audio pour installer le pilote manuellement.") 'Installation de VB-CABLE' 'Warning'
-        Start-Process $officialPage
+        $message = $_.Exception.Message + "`r`n`r`nDeckPilot n'a exécuté aucun installateur non vérifié. Vérifie ta connexion puis relance l'installation depuis les préférences Soundboard."
+        if ((Get-Culture).TwoLetterISOLanguageName -eq 'en') { $message = $_.Exception.Message + "`r`n`r`nDeckPilot did not run any unverified installer. Check your connection, then retry from Soundboard preferences." }
+        Show-Notice $message 'DeckPilot · VB-CABLE' 'Warning'
     }
     catch { }
+    exit 1
 }
 finally {
     Remove-Item -LiteralPath $work -Recurse -Force -ErrorAction SilentlyContinue

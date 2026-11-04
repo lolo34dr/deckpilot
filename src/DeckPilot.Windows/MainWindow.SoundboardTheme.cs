@@ -110,7 +110,7 @@ public partial class MainWindow
                 WindowStyle = ProcessWindowStyle.Hidden
             };
             Process.Start(start);
-            SoundboardStatus.Text = "L’installation sécurisée de VB-CABLE a démarré. Autorise Windows, suis l’installateur, puis actualise les périphériques.";
+            SoundboardStatus.Text = "DeckPilot vérifie la signature puis installe VB-CABLE en arrière-plan. Autorise Windows si demandé, puis actualise les périphériques.";
         }
         catch (Exception ex) { SoundboardStatus.Text = "Installation de VB-CABLE annulée ou impossible : " + ex.Message; }
     }
