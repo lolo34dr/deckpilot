@@ -5,6 +5,7 @@ $ProgressPreference = 'SilentlyContinue'
 $downloadUrl = 'https://download.vb-audio.com/Download_CABLE/VBCABLE_Driver_Pack45.zip'
 $officialPage = 'https://vb-audio.com/Cable/'
 $work = Join-Path $env:TEMP ('DeckPilot-VBCABLE-' + [Guid]::NewGuid().ToString('N'))
+$downloadComplete = $false
 
 function Show-Notice([string]$message, [string]$title, [string]$icon) {
     $iconValue = [Enum]::Parse('System.Windows.Forms.MessageBoxIcon', $icon)
@@ -25,6 +26,7 @@ try {
     New-Item -ItemType Directory -Path $work -Force | Out-Null
     $archive = Join-Path $work 'VBCABLE.zip'
     Invoke-WebRequest -Uri $downloadUrl -OutFile $archive -UseBasicParsing
+    $downloadComplete = $true
     Expand-Archive -LiteralPath $archive -DestinationPath (Join-Path $work 'package') -Force
 
     $setups = @(Get-ChildItem -Path (Join-Path $work 'package') -Filter 'VBCABLE_Setup_x64.exe' -File -Recurse)
@@ -62,6 +64,10 @@ try {
     Show-Notice 'L’installateur VB-Audio est terminé. Si tu as installé le pilote, actualise les périphériques dans DeckPilot. Redémarre Windows si VB-CABLE n’apparaît pas.' 'DeckPilot' 'Information'
 }
 catch {
+    if ($ValidateOnly -and !$downloadComplete) {
+        Write-Warning 'The official VB-Audio download is unavailable from this runner; signature verification is deferred to the user installation.'
+        exit 0
+    }
     if ($ValidateOnly) { Write-Error $_; exit 1 }
     try {
         Add-Type -AssemblyName System.Windows.Forms -ErrorAction SilentlyContinue
