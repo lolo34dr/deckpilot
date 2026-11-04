@@ -23,7 +23,7 @@
 <p align="center">
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&color=78b7a0" alt="Laatste release"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&logo=windows" alt="Downloaden voor Windows x64"></a>
-  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe"><img src="https://img.shields.io/badge/Download-DeckPilot_Atelier-16856A?style=flat-square&logo=windows" alt="Download DeckPilot Atelier"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases?q=atelier"><img src="https://img.shields.io/badge/Download-DeckPilot_Atelier-16856A?style=flat-square&logo=windows" alt="Download DeckPilot Atelier"></a>
   <a href="https://github.com/lolo34dr/deckpilot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/lolo34dr/deckpilot?style=flat-square" alt="MIT-licentie"></a>
   <a href="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml"><img src="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml/badge.svg?branch=main" alt="Windows-bouwstatus"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&color=70a7e8" alt="GitHub release downloads"></a>
@@ -283,7 +283,7 @@ Voorgesteld krediet:
 <a id="macropad-firmware-updates"></a>
 ## Macropad firmware updates
 
-Voor de voorbereiding van het apparaat en de kwaliteitscontrole van de werkplaats, installeer de afzonderlijke [DeckPilot Atelier](docs/FACTORY.md) hulpmiddel. Het installatieprogramma wordt gepubliceerd als **[DeckPilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** naast de belangrijkste toepassing. Het kan knipperen van de meegeleverde firmware naar een Leonardo / Caterina bord, dan controleren korte en lange persen op alle 12 fysieke sleutels en export van een rapport.
+Voor de voorbereiding van het apparaat en de kwaliteitscontrole van de werkplaats, installeer de afzonderlijke [DeckPilot Atelier](docs/FACTORY.md) hulpmiddel. Het installatieprogramma wordt gepubliceerd als **[DeckPilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases?q=atelier)** naast de belangrijkste toepassing. Het kan knipperen van de meegeleverde firmware naar een Leonardo / Caterina bord, dan controleren korte en lange persen op alle 12 fysieke sleutels en export van een rapport.
 
 DeckPilot 1.1.0 bevat a **Firmware du macropad…** dialoogvenster en firmware 1.0.0 voor de Pro Micro ATmega32U4 **5 V / 16 MHz**, met behulp van de Leonardo / Caterina configuratie bevestigd door de eigenaar upload log. De gebundelde Windows knipperende tool vereist geen Arduino IDE. Apparaat selectie en bevestiging zijn verplicht; app-updates nooit stil knipperen het bord. Bestaande F13.F24 mappen, profielen en kalibratie blijven compatibel.
 

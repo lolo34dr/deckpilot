@@ -21,6 +21,7 @@ internal static class AdditionalChecks
             assets = new[] { new { name = "DeckPilot.exe", browser_download_url = $"https://github.com/{UpdateRelease.Repository}/releases/download/{tag}/DeckPilot.exe", size = 2048 },
                 new { name = "SHA256SUMS.txt", browser_download_url = $"https://github.com/{UpdateRelease.Repository}/releases/download/{tag}/SHA256SUMS.txt", size = 160 } }
         });
+        string ReleaseList(params string[] releases) => "[" + string.Join(',', releases) + "]";
         var current = new Version(0, 1, 1, 0);
         await Check("Application search ignores accents and case", () => {
             Expect(new InstalledApplication("Éditeur vidéo", "editor.lnk", "Menu Démarrer").Matches("EDITEUR")); return Task.CompletedTask;
@@ -45,6 +46,19 @@ internal static class AdditionalChecks
             Expect(UpdateRelease.Parse(ReleaseJson("v0.3.0-beta"), current) == null);
             return Task.CompletedTask;
         });
+        await Check("DeckPilot update selection ignores independent Atelier releases", () => {
+            string list = ReleaseList(ReleaseJson("atelier-v9.0.0"), ReleaseJson("v0.2.0"), ReleaseJson("v0.10.0"), ReleaseJson("v0.11.0", prerelease: true));
+            Expect(UpdateRelease.ParseLatest(list, current)?.Tag == "v0.10.0");
+            return Task.CompletedTask;
+        });
+        await Check("Atelier update selection ignores DeckPilot releases and compares numeric tags", () => {
+            string list = ReleaseList(ReleaseJson("v9.0.0"), ReleaseJson("atelier-v1.0.9"), ReleaseJson("atelier-v1.0.10"), ReleaseJson("atelier-v1.0.11", draft: true));
+            string? latest = ReleaseChannels.LatestStableReleaseJson(list, "atelier-v");
+            Expect(latest != null);
+            using var document = JsonDocument.Parse(latest!);
+            Expect(document.RootElement.GetProperty("tag_name").GetString() == "atelier-v1.0.10");
+            return Task.CompletedTask;
+        });
         await Check("Foreign repositories and insecure asset URLs are refused", async () => {
             await Reject(() => { UpdateRelease.Parse(ReleaseJson().Replace("https://github.com/", "http://github.com/"), current); return Task.CompletedTask; });
             await Reject(() => { UpdateRelease.Parse(ReleaseJson().Replace(UpdateRelease.Repository, "someone/other"), current); return Task.CompletedTask; });
@@ -63,18 +77,18 @@ internal static class AdditionalChecks
             var requested = new List<string>();
             using var client = new ReleaseClient(new FakeHandler(request => {
                 requested.Add(request.RequestUri!.AbsolutePath);
-                return request.RequestUri.AbsolutePath == $"/repos/{UpdateRelease.Repository}/releases/latest"
+                return request.RequestUri.AbsolutePath == $"/repos/{UpdateRelease.Repository}/releases"
                     ? new(HttpStatusCode.NotFound)
-                    : new(HttpStatusCode.OK) { Content = new StringContent(ReleaseJson().Replace(UpdateRelease.Repository, UpdateRelease.LegacyRepository)) };
+                    : new(HttpStatusCode.OK) { Content = new StringContent(ReleaseList(ReleaseJson().Replace(UpdateRelease.Repository, UpdateRelease.LegacyRepository))) };
             }));
             Expect((await client.CheckAsync(current))?.Tag == "v0.2.0");
-            Expect(requested.SequenceEqual(new[] { $"/repos/{UpdateRelease.Repository}/releases/latest", $"/repos/{UpdateRelease.LegacyRepository}/releases/latest" }));
+            Expect(requested.SequenceEqual(new[] { $"/repos/{UpdateRelease.Repository}/releases", $"/repos/{UpdateRelease.LegacyRepository}/releases" }));
         });
         await Check("After the rename, the new repository is used directly", async () => {
             int requests = 0;
             using var client = new ReleaseClient(new FakeHandler(request => {
-                requests++; Expect(request.RequestUri!.AbsolutePath == $"/repos/{UpdateRelease.Repository}/releases/latest");
-                return new(HttpStatusCode.OK) { Content = new StringContent(ReleaseJson()) };
+                requests++; Expect(request.RequestUri!.AbsolutePath == $"/repos/{UpdateRelease.Repository}/releases");
+                return new(HttpStatusCode.OK) { Content = new StringContent(ReleaseList(ReleaseJson("atelier-v1.0.0"), ReleaseJson())) };
             }));
             Expect((await client.CheckAsync(current))?.Tag == "v0.2.0" && requests == 1);
         });
@@ -184,7 +198,7 @@ internal static class AdditionalChecks
             await Check("Latest-release checking handles no release and surfaces HTTP errors", async () => {
                 using var absent = new ReleaseClient(new FakeHandler(_ => new(HttpStatusCode.NotFound)));
                 Expect(await absent.CheckAsync(current) == null);
-                using var success = new ReleaseClient(new FakeHandler(_ => new(HttpStatusCode.OK) { Content = new StringContent(ReleaseJson()) }));
+                using var success = new ReleaseClient(new FakeHandler(_ => new(HttpStatusCode.OK) { Content = new StringContent(ReleaseList(ReleaseJson())) }));
                 Expect((await success.CheckAsync(current))?.Tag == "v0.2.0");
                 using var denied = new ReleaseClient(new FakeHandler(_ => new(HttpStatusCode.Forbidden)));
                 bool failed = false; try { await denied.CheckAsync(current); } catch (HttpRequestException) { failed = true; }

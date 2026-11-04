@@ -59,28 +59,9 @@ jobs:
           }
           ./installer/build.ps1
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-      - name: Build DeckPilot Atelier installer
-        shell: pwsh
-        run: ./installer/build-factory.ps1
       - name: Verify Windows installation, upgrade and uninstall
         shell: powershell
         run: ./tests/windows-installer-smoke.ps1 -Installer artifacts/installer/DeckPilot-Setup.exe
-      - name: Verify Atelier installation, launch, upgrade and uninstall
-        shell: powershell
-        run: ./tests/windows-factory-installer-smoke.ps1 -Installer artifacts/installer/DeckPilot-Atelier-Setup.exe
-      - name: Save Atelier startup diagnostics
-        if: always()
-        shell: pwsh
-        run: |
-          $source = Join-Path $env:LOCALAPPDATA 'DeckPilotFactory/startup-errors.log'
-          if (Test-Path $source) { New-Item -ItemType Directory -Force artifacts/factory-smoke | Out-Null; Copy-Item $source artifacts/factory-smoke/startup-errors.log -Force }
-      - name: Upload Atelier startup diagnostics
-        if: always()
-        uses: actions/upload-artifact@v6
-        with:
-          name: Atelier-startup-diagnostics-${{ github.run_id }}
-          path: artifacts/factory-smoke/startup-errors.log
-          if-no-files-found: ignore
       - name: Verify native update and application picker
         shell: powershell
         run: ./tests/windows-update-smoke.ps1 -Executable artifacts/standalone/DeckPilot.exe
@@ -97,11 +78,8 @@ jobs:
           Compress-Archive -Path artifacts/win-x64/* -DestinationPath artifacts/release/DeckPilot-win-x64.zip
           Copy-Item artifacts/installer/DeckPilot-Setup.exe artifacts/release/DeckPilot-Setup.exe
           Copy-Item artifacts/standalone/DeckPilot.exe artifacts/release/DeckPilot.exe
-          Copy-Item artifacts/installer/DeckPilot-Atelier-Setup.exe artifacts/release/DeckPilot-Atelier-Setup.exe
-          Copy-Item artifacts/factory-standalone/DeckPilot.Factory.exe artifacts/release/DeckPilot-Atelier.exe
-          Copy-Item artifacts/factory-standalone/DeckPilot-Atelier-version.json artifacts/release/DeckPilot-Atelier-version.json
           Copy-Item artifacts/firmware/DeckPilot-firmware.zip artifacts/release/DeckPilot-firmware.zip
-          Get-ChildItem artifacts/release -File | Where-Object { $_.Name -in @("DeckPilot-Setup.exe", "DeckPilot.exe", "DeckPilot-Atelier-Setup.exe", "DeckPilot-Atelier.exe", "DeckPilot-Atelier-version.json", "DeckPilot-win-x64.zip", "DeckPilot-firmware.zip") } | ForEach-Object {
+          Get-ChildItem artifacts/release -File | Where-Object { $_.Name -in @("DeckPilot-Setup.exe", "DeckPilot.exe", "DeckPilot-win-x64.zip", "DeckPilot-firmware.zip") } | ForEach-Object {
             $hash = (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
             "$hash  $($_.Name)"
           } | Set-Content artifacts/release/SHA256SUMS.txt -Encoding ascii
@@ -115,5 +93,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         shell: pwsh
         run: |
-          gh release create "$env:GITHUB_REF_NAME" artifacts/release/DeckPilot-Setup.exe artifacts/release/DeckPilot.exe artifacts/release/DeckPilot-Atelier-Setup.exe artifacts/release/DeckPilot-Atelier.exe artifacts/release/DeckPilot-Atelier-version.json artifacts/release/DeckPilot-win-x64.zip artifacts/release/DeckPilot-firmware.zip artifacts/release/SHA256SUMS.txt --verify-tag --title "DeckPilot $env:GITHUB_REF_NAME" --notes-file .github/release-notes.md
+          gh release create "$env:GITHUB_REF_NAME" artifacts/release/DeckPilot-Setup.exe artifacts/release/DeckPilot.exe artifacts/release/DeckPilot-win-x64.zip artifacts/release/DeckPilot-firmware.zip artifacts/release/SHA256SUMS.txt --verify-tag --latest --title "DeckPilot $env:GITHUB_REF_NAME" --notes-file .github/release-notes-deckpilot.md
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

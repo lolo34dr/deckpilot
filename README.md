@@ -21,7 +21,7 @@
 <p align="center">
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&amp;color=78b7a0" alt="Latest release"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&amp;logo=windows" alt="Download for Windows x64"></a>
-  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe"><img src="https://img.shields.io/badge/Download-DeckPilot_Atelier-16856A?style=flat-square&amp;logo=windows" alt="Download DeckPilot Atelier"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases?q=atelier"><img src="https://img.shields.io/badge/Download-DeckPilot_Atelier-16856A?style=flat-square&amp;logo=windows" alt="Download DeckPilot Atelier"></a>
   <a href="https://github.com/lolo34dr/deckpilot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/lolo34dr/deckpilot?style=flat-square" alt="MIT license"></a>
   <a href="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml"><img src="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml/badge.svg?branch=main" alt="Windows build status"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&amp;color=70a7e8" alt="GitHub release downloads"></a>
@@ -207,15 +207,19 @@ Distribute the complete archive. The Windows build workflow also produces this p
 
 ### Publish a GitHub release
 
-Update the application version and `.github/release-notes.md`, then push a matching `v*` tag, such as `v1.0.0`. The release workflow checks that the tag matches the project version and runs validation before publishing:
+Update the application version and `.github/release-notes-deckpilot.md`, then push a matching `vX.Y.Z` tag. DeckPilot uses the `v1.9.x` release stream; the workflow publishes only DeckPilot downloads and keeps this channel marked as the repository's latest release.
 
 | Download | Contents |
 | --- | --- |
+| `DeckPilot-Setup.exe` | Windows installer. |
 | `DeckPilot.exe` | Self-contained, single-file Windows x64 application. |
 | `DeckPilot-win-x64.zip` | Complete self-contained application folder. |
-| `SHA256SUMS.txt` | SHA-256 hashes for both downloads. |
+| `DeckPilot-firmware.zip` | Verified firmware package for the main app. |
+| `SHA256SUMS.txt` | SHA-256 hashes for the release assets. |
 
 For Windows ARM64, publish separately with `-r win-arm64` and validate on the target machine.
+
+DeckPilot Atelier is published independently. Set `src/DeckPilot.Factory/DeckPilot.Factory.csproj` to its own `1.0.x` version, update `.github/release-notes-atelier.md`, then push the matching `atelier-vX.Y.Z` tag. The Atelier workflow publishes only its installer, executable, metadata and firmware bundle; it does not replace DeckPilot's latest release.
 
 ## Hardware checks on Windows
 
@@ -261,7 +265,7 @@ Suggested credit:
 
 ## Macropad firmware updates
 
-For device preparation and workshop quality checks, install the separate [DeckPilot Atelier](docs/FACTORY.md) tool. Its installer is published as **[DeckPilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** alongside the main application. It can flash the included firmware to a Leonardo/Caterina board, then check short and long presses on all 12 physical keys and export a report.
+For device preparation and workshop quality checks, install the separate [DeckPilot Atelier](docs/FACTORY.md) tool. Its current installer is listed in the [DeckPilot Atelier releases](https://github.com/lolo34dr/deckpilot/releases?q=atelier), independently from DeckPilot `v1.9.x`. It can flash the included firmware to a Leonardo/Caterina board, then check short and long presses on all 12 physical keys and export a report.
 
 DeckPilot 1.1.0 includes a **Firmware du macropad…** dialog and firmware 1.0.0 for the Pro Micro ATmega32U4 **5 V / 16 MHz**, using the Leonardo/Caterina configuration confirmed by the owner's upload log. The bundled Windows flashing tool does not require Arduino IDE. Device selection and confirmation are mandatory; app updates never silently flash the board. Existing F13–F24 mappings, profiles and calibration remain compatible.
 
@@ -356,26 +360,16 @@ The charcoal interface puts the action library first, separates profile controls
 
 The firmware remains **1.1.1**. Accepting an automatic firmware offer now correctly opens the firmware manager; the previous modal guard prevented that handoff. Existing firmware identity, heartbeat, reconnect and flash checks remain in place. New workspace features do not need a firmware flash.
 
-## DeckPilot Atelier (1.9.0)
+## DeckPilot Atelier (1.0.x)
 
-The separate **DeckPilot Atelier** Windows installer prepares new DIY macropads. It detects Leonardo/Caterina boards, validates and flashes the bundled firmware without overwriting the bootloader, then guides a physical 3×4 check of all 12 buttons. Each button must pass a short press and a hold of at least 700 ms. The tool records which F13–F24 signal belongs to each physical position, flags multiple or inconsistent signals, and exports a timestamped report. Download `DeckPilot-Atelier-Setup.exe` from the releases page. A Caterina bootloader must already be present; the tool does not install a missing bootloader.
+The separate **DeckPilot Atelier** Windows installer prepares new DIY macropads. It detects Leonardo/Caterina boards, validates and flashes the bundled firmware without overwriting the bootloader, then guides a physical 3×4 check of all 12 buttons. Each button must pass a short press and a hold of at least 700 ms. The tool records which F13–F24 signal belongs to each physical position, flags multiple or inconsistent signals, and exports a timestamped report. Download `DeckPilot-Atelier-Setup.exe` from the [separate Atelier releases](https://github.com/lolo34dr/deckpilot/releases?q=atelier). A Caterina bootloader must already be present; the tool does not install a missing bootloader.
 
-DeckPilot Atelier checks GitHub for app and bundled-firmware updates on startup and on demand. Updates require confirmation and use the release SHA-256 manifest. Firmware is never flashed by an update automatically; after Atelier updates, choose the firmware action when you are ready to program the connected board.
+DeckPilot Atelier checks only the `atelier-v1.0.x` GitHub channel for app and bundled-firmware updates on startup and on demand. Updates require confirmation and use the release SHA-256 manifest. Firmware is never flashed by an update automatically; after Atelier updates, choose the firmware action when you are ready to program the connected board. DeckPilot checks only its `v1.9.x` channel.
 
 Atelier 1.0.7 adds a confirmed **Effacer le programme DeckPilot** action. It clears the 28 KiB application area with a verified safe stop instruction, so the board stops acting as a keyboard while preserving Caterina for recovery and future flashing. It leaves the bootloader, EEPROM and Windows profiles untouched.
 
-Version 1.9.1 fixes launching Atelier after installation by starting it in the signed-in Windows session. Its updater can install a newer Atelier package or firmware bundle, then relaunch the app. The Windows release pipeline checks first launch, upgrade and uninstall for the Atelier installer.
+Atelier 1.0.8 begins the independent `atelier-v1.0.x` release series. Earlier 1.9.x tags were shared release bundles; future DeckPilot and Atelier releases are independent.
 
-Version 1.9.2 improves the Atelier Windows packaging step and reports its exact failure location in CI.
-
-Version 1.9.3 corrects how the Windows package reads the included firmware version, so Atelier's update check tracks the firmware shipped in the installer.
-
-The Atelier release check now reports startup diagnostics if Windows fails to open its installed window.
-
-DeckPilot 1.9.6 fixes Atelier's Windows DPI manifest so the installed application launches correctly on Windows 10 and 11.
-
-DeckPilot 1.9.7 fixes uninstalling Atelier while it is running. The Windows release test also verifies launch, in-place update and uninstall.
-
-DeckPilot 1.9.8 adds an explicit, confirmed Atelier reset that replaces the board's user program with a verified empty sketch and preserves the Caterina bootloader.
+Earlier combined releases v1.9.1–v1.9.8 introduced Atelier's installer, app/firmware updater, startup fixes, and confirmed board reset. Starting with Atelier 1.0.8, it has an independent `atelier-v1.0.x` release and update channel; DeckPilot remains on `v1.9.x`.
 
 Validation covers legacy settings, accent validation, profile navigation and reference remapping, portable templates, native Windows template/undo/redo and profile switching, shortcut recording, copy/paste/reset, settings persistence, installation/update, layout resizing and an actual UI capture. Hardware-specific behavior still requires the macropad and audio devices on a Windows PC.

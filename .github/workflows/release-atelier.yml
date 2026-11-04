@@ -1,0 +1,99 @@
+name: Publish DeckPilot Atelier
+
+on:
+  push:
+    tags:
+      - 'atelier-v*'
+
+permissions:
+  contents: write
+
+jobs:
+  firmware-protocol:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - name: Verify firmware protocol without hardware
+        run: |
+          g++ -std=c++11 -Wall -Wextra -Werror tests/firmware-protocol.cpp -o /tmp/deckpilot-firmware-check
+          /tmp/deckpilot-firmware-check
+
+  release:
+    needs: firmware-protocol
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.0.x'
+      - name: Verify shared core behavior
+        run: dotnet run --project tests/DeckPilot.Checks -c Release
+      - name: Install verified Arduino CLI 1.2.2
+        shell: pwsh
+        run: ./firmware/tools/install-cli.ps1
+      - name: Build firmware and bundled flashing tools
+        shell: pwsh
+        run: ./firmware/tools/build.ps1
+      - name: Verify reset image boundaries
+        run: dotnet run --project tests/DeckPilot.Checks -c Release --no-build
+      - name: Verify Atelier tag and version
+        shell: pwsh
+        run: |
+          [xml]$project = Get-Content src/DeckPilot.Factory/DeckPilot.Factory.csproj
+          $expected = "atelier-v$($project.Project.PropertyGroup.Version)"
+          if ($env:GITHUB_REF_NAME -ne $expected) { throw "Expected tag $expected but received $env:GITHUB_REF_NAME." }
+      - name: Build DeckPilot Atelier installer
+        shell: pwsh
+        run: |
+          if (!(Test-Path "${env:ProgramFiles(x86)}/Inno Setup 6/ISCC.exe")) {
+            choco install innosetup --no-progress -y
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+          ./installer/build-factory.ps1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify Atelier installation, launch, update and uninstall
+        shell: powershell
+        run: ./tests/windows-factory-installer-smoke.ps1 -Installer artifacts/installer/DeckPilot-Atelier-Setup.exe
+      - name: Save Atelier startup diagnostics
+        if: always()
+        shell: pwsh
+        run: |
+          $source = Join-Path $env:LOCALAPPDATA 'DeckPilotFactory/startup-errors.log'
+          if (Test-Path $source) { New-Item -ItemType Directory -Force artifacts/factory-smoke | Out-Null; Copy-Item $source artifacts/factory-smoke/startup-errors.log -Force }
+      - name: Upload Atelier startup diagnostics
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: Atelier-startup-diagnostics-${{ github.run_id }}
+          path: artifacts/factory-smoke/startup-errors.log
+          if-no-files-found: ignore
+      - name: Package Atelier downloads and checksums
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force artifacts/release-atelier | Out-Null
+          Copy-Item artifacts/installer/DeckPilot-Atelier-Setup.exe artifacts/release-atelier/DeckPilot-Atelier-Setup.exe
+          Copy-Item artifacts/factory-standalone/DeckPilot.Factory.exe artifacts/release-atelier/DeckPilot-Atelier.exe
+          Copy-Item artifacts/factory-standalone/DeckPilot-Atelier-version.json artifacts/release-atelier/DeckPilot-Atelier-version.json
+          Copy-Item artifacts/firmware/DeckPilot-firmware.zip artifacts/release-atelier/DeckPilot-firmware.zip
+          Get-ChildItem artifacts/release-atelier -File | ForEach-Object {
+            $hash = (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+            "$hash  $($_.Name)"
+          } | Set-Content artifacts/release-atelier/SHA256SUMS.txt -Encoding ascii
+      - uses: actions/upload-artifact@v6
+        with:
+          name: DeckPilot-Atelier-release-${{ github.ref_name }}
+          path: artifacts/release-atelier/*
+          if-no-files-found: error
+      - name: Create separate Atelier release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: |
+          $version = $env:GITHUB_REF_NAME -replace '^atelier-v', ''
+          gh release create "$env:GITHUB_REF_NAME" artifacts/release-atelier/DeckPilot-Atelier-Setup.exe artifacts/release-atelier/DeckPilot-Atelier.exe artifacts/release-atelier/DeckPilot-Atelier-version.json artifacts/release-atelier/DeckPilot-firmware.zip artifacts/release-atelier/SHA256SUMS.txt --verify-tag --title "DeckPilot Atelier v$version" --notes-file .github/release-notes-atelier.md
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $releaseId = gh api "repos/$env:GITHUB_REPOSITORY/releases/tags/$env:GITHUB_REF_NAME" --jq .id
+          if ($LASTEXITCODE -ne 0 -or !$releaseId) { throw 'Could not identify the Atelier release for latest-channel configuration.' }
+          gh api --method PATCH "repos/$env:GITHUB_REPOSITORY/releases/$releaseId" -f make_latest=false
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
