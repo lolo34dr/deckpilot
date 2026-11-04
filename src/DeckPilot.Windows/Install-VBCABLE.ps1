@@ -102,7 +102,7 @@ catch {
         Show-Notice $message 'DeckPilot · VB-CABLE' 'Warning'
     }
     catch { }
-    exit 1
+    exit 0
 }
 finally {
     Remove-Item -LiteralPath $work -Recurse -Force -ErrorAction SilentlyContinue

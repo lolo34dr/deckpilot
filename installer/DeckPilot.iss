@@ -50,8 +50,8 @@ Name: "{autodesktop}\DeckPilot"; Filename: "{app}\DeckPilot.exe"; WorkingDir: "{
 [Run]
 Filename: "{app}\DeckPilot.exe"; Parameters: "--configure-startup {code:StartupArg}"; Flags: runhidden waituntilterminated runasoriginaluser; Check: ConfigureStartup
 Filename: "{app}\DeckPilot.exe"; Parameters: "--configure-preferences {code:AutoUpdatesArg} {code:ReduceMotionArg}"; Flags: runhidden waituntilterminated runasoriginaluser; Check: ConfigurePreferences
-Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\Install-VBCABLE.ps1"" {code:DriverInstallArgument}"; Flags: runhidden waituntilterminated ignorefailure; StatusMsg: "Recherche, vérification et installation automatique de VB-CABLE…"; Languages: french
-Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\Install-VBCABLE.ps1"" {code:DriverInstallArgument}"; Flags: runhidden waituntilterminated ignorefailure; StatusMsg: "Checking, verifying and automatically installing VB-CABLE…"; Languages: english
+Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\Install-VBCABLE.ps1"" {code:DriverInstallArgument}"; Flags: runhidden waituntilterminated; StatusMsg: "Recherche, vérification et installation automatique de VB-CABLE…"; Languages: french
+Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\Install-VBCABLE.ps1"" {code:DriverInstallArgument}"; Flags: runhidden waituntilterminated; StatusMsg: "Checking, verifying and automatically installing VB-CABLE…"; Languages: english
 Filename: "{app}\DeckPilot.exe"; Parameters: "--configure-microphone-if-needed"; Flags: waituntilterminated runasoriginaluser skipifsilent
 Filename: "{app}\DeckPilot.exe"; Description: "Ouvrir DeckPilot"; Flags: postinstall nowait skipifsilent runasoriginaluser; Check: not IsUpdate
 Filename: "{app}\DeckPilot.exe"; Flags: nowait runasoriginaluser; Check: IsUpdate
