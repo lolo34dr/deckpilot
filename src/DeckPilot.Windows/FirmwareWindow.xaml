@@ -8,13 +8,13 @@
   <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
   <StackPanel>
    <TextBlock Text="Votre DeckPilot, à jour" FontSize="22" FontWeight="SemiBold"/>
-   <TextBlock Text="Pro Micro ATmega32U4 · Leonardo · 16 MHz" Foreground="#A5B9AA" Margin="0,8,0,16"/>
+   <TextBlock Text="Pro Micro ATmega32U4 · Leonardo · 16 MHz" Foreground="#ABA5B9" Margin="0,8,0,16"/>
   </StackPanel>
   <StackPanel Grid.Row="1">
    <TextBlock Text="Fermez l’IDE Arduino et son moniteur série. Branchez uniquement le macropad à mettre à jour, puis sélectionnez sa carte." TextWrapping="Wrap" Margin="0,0,0,12"/>
    <ComboBox x:Name="Devices" SelectionChanged="DeviceChanged" MinHeight="34" AutomationProperties.AutomationId="FirmwareDevices"/>
    <Button x:Name="RefreshButton" Content="Actualiser les cartes" Click="RefreshClick" HorizontalAlignment="Left" Margin="0,8,0,12"/>
-   <TextBlock x:Name="DeviceStatus" TextWrapping="Wrap" Foreground="#A5B9AA"/>
+   <TextBlock x:Name="DeviceStatus" TextWrapping="Wrap" Foreground="#ABA5B9"/>
    <TextBlock x:Name="PackageStatus" TextWrapping="Wrap" Margin="0,8,0,12"/>
   </StackPanel>
   <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Margin="0,10,0,16">

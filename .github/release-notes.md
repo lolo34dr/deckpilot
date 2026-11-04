@@ -1,3 +1,5 @@
+DeckPilot 2.0.0 introduces a deep black interface with saved background, panel and accent colors. The new soundboard accepts MP3/WAV clips, lets users choose a physical microphone and a virtual cable output, and mixes voice with clips for use as a microphone in games or calls. Clips can be started from the app or assigned to a macropad key. A virtual audio cable such as VB-CABLE must be installed separately on Windows; Atelier remains at version 1.0.10.
+
 DeckPilot 1.9.11 and DeckPilot Atelier 1.0.10 add pre-flash hardware and firmware diagnostics, a firmware version comparison, a guided recovery action after interrupted writes, sequential multi-board flashing with a batch report, and a physical-position-to-F13–F24 layout check in every key-control report.
 
 DeckPilot 1.9.11 includes the same Atelier update in the shared installer release.

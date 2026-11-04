@@ -113,7 +113,7 @@ public partial class MainWindow
             _ => "Microphones indisponibles"
         };
         HeaderMicrophoneStatus.Text = snapshot.Microphones switch { MicrophoneState.Muted => "● Micro coupé", MicrophoneState.Active => "● Micro actif", MicrophoneState.Mixed => "● Micro partiel", MicrophoneState.None => "Micro : aucun", _ => "Micro : indisponible" };
-        MicrophoneStatus.Foreground = Brush(snapshot.Microphones == MicrophoneState.Muted ? "#F1AFA5" : snapshot.Microphones == MicrophoneState.Mixed ? "#E1C294" : "#B9D5C2");
+        MicrophoneStatus.Foreground = Brush(snapshot.Microphones == MicrophoneState.Muted ? "#F1AFA5" : snapshot.Microphones == MicrophoneState.Mixed ? "#E1C294" : "#C2B9D5");
         HeaderMicrophoneStatus.Foreground = MicrophoneStatus.Foreground;
         MicrophoneStatus.ToolTip = snapshot.Error.Length > 0 ? snapshot.Error : "État des périphériques de capture Windows actifs ; actualisation toutes les 2 secondes au premier plan, 10 secondes en arrière-plan.";
         MicrophoneToggleButton.Content = snapshot.Microphones == MicrophoneState.Muted ? "Réactiver les micros" : "Couper les micros";

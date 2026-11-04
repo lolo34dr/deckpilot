@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace DeckPilot.Core;
 
-public enum ActionKind { Passthrough, Application, Folder, Website, Shortcut, Media, Spotify, Microphone, AudioOutput, Profile, System }
+public enum ActionKind { Passthrough, Application, Folder, Website, Shortcut, Media, Spotify, Microphone, AudioOutput, Profile, System, Soundboard }
 public sealed record ButtonAction
 {
     public string Label { get; set; } = "";
@@ -52,6 +52,26 @@ public sealed class Profile
         return copy;
     }
 }
+public sealed class ThemeSettings
+{
+    public string Background { get; set; } = "#08090B";
+    public string Panel { get; set; } = "#14161A";
+    public string Accent { get; set; } = "#9B8CFF";
+    public bool IsValid() => new[] { Background, Panel, Accent }.All(c => c != null && System.Text.RegularExpressions.Regex.IsMatch(c, "^#[0-9A-Fa-f]{6}$"));
+}
+public sealed class SoundboardClip
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public string Name { get; set; } = "";
+    public string FilePath { get; set; } = "";
+}
+public sealed class SoundboardSettings
+{
+    public string MicrophoneId { get; set; } = "";
+    public string VirtualOutputId { get; set; } = "";
+    public List<SoundboardClip> Clips { get; set; } = [];
+    public bool IsValid() => MicrophoneId != null && VirtualOutputId != null && MicrophoneId.Length < 1024 && VirtualOutputId.Length < 1024 && Clips != null && Clips.Count <= 48 && Clips.All(c => c != null && c.Id != Guid.Empty && c.Name is { Length: > 0 and <= 64 } && c.FilePath is { Length: > 0 and <= 4096 } && (c.FilePath.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) || c.FilePath.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))) && Clips.Select(c => c.Id).Distinct().Count() == Clips.Count;
+}
 public sealed class Settings
 {
     public int Version { get; set; } = 1;
@@ -61,6 +81,8 @@ public sealed class Settings
     public string PreferredBoardDeviceId { get; set; } = "";
     public bool AutoCheckUpdates { get; set; } = true;
     public bool ReduceMotion { get; set; }
+    public ThemeSettings Theme { get; set; } = new();
+    public SoundboardSettings Soundboard { get; set; } = new();
     public DateTimeOffset UpdateSnoozedUntil { get; set; }
     public List<int> KeyMap { get; set; } = [];
     public List<Profile> Profiles { get; set; } = [new()];
@@ -75,7 +97,7 @@ public sealed class Settings
     }
     public void Validate()
     {
-        if (PreferredBoardDeviceId is null || PreferredBoardDeviceId.Length > 512 || Version != 1 || LayoutColumns is not (3 or 4) || Profiles is null || Profiles.Count == 0 ||
+        if (Theme is null || !Theme.IsValid() || Soundboard is null || !Soundboard.IsValid() || PreferredBoardDeviceId is null || PreferredBoardDeviceId.Length > 512 || Version != 1 || LayoutColumns is not (3 or 4) || Profiles is null || Profiles.Count == 0 ||
             Profiles.Any(p => p is null || string.IsNullOrWhiteSpace(p.Name) || p.Id == Guid.Empty ||
                 p.Buttons is null || p.Buttons.Count != 12 || p.Buttons.Any(b => b is null ||
                     !b.IsValid())) ||
