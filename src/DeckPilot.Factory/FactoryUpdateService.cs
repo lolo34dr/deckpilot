@@ -38,14 +38,15 @@ public sealed class FactoryUpdateService : IDisposable
     public async Task<FactoryUpdate?> CheckAsync(Version currentFirmware, CancellationToken cancellation)
     {
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellation); timeout.CancelAfter(TimeSpan.FromSeconds(30));
-        using var response = await GetAsync(new Uri($"https://api.github.com/repos/{Repository}/releases/latest"), timeout.Token);
+        using var response = await GetAsync(new Uri($"https://api.github.com/repos/{Repository}/releases?per_page=100"), timeout.Token);
         if (response.StatusCode == HttpStatusCode.NotFound) return null;
         response.EnsureSuccessStatusCode();
-        string body = await ReadTextAsync(response, 1024 * 1024, timeout.Token);
-        using var document = JsonDocument.Parse(body); var root = document.RootElement;
-        if (root.GetProperty("draft").GetBoolean() || root.GetProperty("prerelease").GetBoolean()) return null;
+        string body = await ReadTextAsync(response, 4 * 1024 * 1024, timeout.Token);
+        string? latestJson = ReleaseChannels.LatestStableReleaseJson(body, "atelier-v");
+        if (latestJson == null) return null;
+        using var document = JsonDocument.Parse(latestJson); var root = document.RootElement;
         string tag = root.GetProperty("tag_name").GetString() ?? "";
-        if (!Regex.IsMatch(tag, @"^v[0-9]+\.[0-9]+\.[0-9]+$", RegexOptions.CultureInvariant)) return null;
+        if (!Version.TryParse(tag[9..], out var taggedVersion)) throw new InvalidDataException("Version Atelier tag invalide.");
         var assets = root.GetProperty("assets").EnumerateArray().ToArray();
         Uri Asset(string name)
         {
@@ -62,7 +63,7 @@ public sealed class FactoryUpdateService : IDisposable
         using var metadataDoc = JsonDocument.Parse((await ReadTextAsync(metadataResponse, 4096, timeout.Token)).TrimStart('\uFEFF'));
         if (!Version.TryParse(metadataDoc.RootElement.GetProperty("factoryVersion").GetString(), out var appVersion) ||
             !Version.TryParse(metadataDoc.RootElement.GetProperty("firmwareVersion").GetString(), out var firmwareVersion) ||
-            appVersion.Build < 0 || firmwareVersion.Build < 0) throw new InvalidDataException("Les versions Atelier ou firmware sont invalides.");
+            appVersion.Build < 0 || firmwareVersion.Build < 0 || appVersion != taggedVersion) throw new InvalidDataException("Les versions Atelier ou firmware sont invalides ou ne correspondent pas au tag.");
         if (appVersion <= CurrentVersion && firmwareVersion <= currentFirmware) return null;
         if (appVersion < CurrentVersion || firmwareVersion < currentFirmware) throw new InvalidDataException("La version GitHub est plus ancienne que celle installée. Aucune mise à jour ne sera lancée.");
         return new(appVersion, firmwareVersion, installer, sums, size);

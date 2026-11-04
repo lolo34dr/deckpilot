@@ -23,7 +23,7 @@
 <p align="center">
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&color=78b7a0" alt="Última publicación"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&logo=windows" alt="Descargar para Windows x64"></a>
-  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe"><img src="https://img.shields.io/badge/Download-DeckPilot_Atelier-16856A?style=flat-square&logo=windows" alt="Descargar DeckPilot Atelier"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases?q=atelier"><img src="https://img.shields.io/badge/Download-DeckPilot_Atelier-16856A?style=flat-square&logo=windows" alt="Descargar DeckPilot Atelier"></a>
   <a href="https://github.com/lolo34dr/deckpilot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/lolo34dr/deckpilot?style=flat-square" alt="Licencia MIT"></a>
   <a href="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml"><img src="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml/badge.svg?branch=main" alt="estado de construcción de Windows"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&color=70a7e8" alt="Descarga de descargas de GitHub"></a>
@@ -283,7 +283,7 @@ Crédito sugerido:
 <a id="macropad-firmware-updates"></a>
 ## Actualizaciones de firmware de Macropad
 
-Para la preparación del dispositivo y los controles de calidad del taller, instalar el separado [DeckPilot Atelier](docs/FACTORY.md) herramienta. Su instalador se publica como **[DeckPilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** junto a la aplicación principal. Puede flashear el firmware incluido a una tabla Leonardo/Caterina, a continuación, comprobar corto y largo prensado en todos 12 claves físicas y exportar un informe.
+Para la preparación del dispositivo y los controles de calidad del taller, instalar el separado [DeckPilot Atelier](docs/FACTORY.md) herramienta. Su instalador se publica como **[DeckPilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases?q=atelier)** junto a la aplicación principal. Puede flashear el firmware incluido a una tabla Leonardo/Caterina, a continuación, comprobar corto y largo prensado en todos 12 claves físicas y exportar un informe.
 
 DeckPilot 1.1.0 incluye un **Firmware du macropad…** diálogo y firmware 1.0.0 Pro Micro ATmega32U4 **5 V / 16 MHz**, utilizando la configuración Leonardo/Caterina confirmada por el registro de carga del propietario. La herramienta de parpadeo de Windows agrupada no requiere Arduino IDE. La selección y confirmación de dispositivos son obligatorios; actualizaciones de aplicaciones nunca destellan silenciosamente el tablero.
 

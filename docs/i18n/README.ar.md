@@ -23,7 +23,7 @@
 <p align="center">
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&color=78b7a0" alt="آخر إطلاق"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&logo=windows" alt="حمولة من النوافذ x64"></a>
-  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe"><img src="https://img.shields.io/badge/Download-DeckPilot_Atelier-16856A?style=flat-square&logo=windows" alt="حمولة من طراز DeckPilot Atelier"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases?q=atelier"><img src="https://img.shields.io/badge/Download-DeckPilot_Atelier-16856A?style=flat-square&logo=windows" alt="حمولة من طراز DeckPilot Atelier"></a>
   <a href="https://github.com/lolo34dr/deckpilot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/lolo34dr/deckpilot?style=flat-square" alt="MIT license"></a>
   <a href="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml"><img src="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml/badge.svg?branch=main" alt="Windows build status"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&color=70a7e8" alt="شحنات إطلاق سراح جيت هوب"></a>
@@ -283,7 +283,7 @@ DeckPilot يُطلق سراحه بموجب القانون **[MIT License](../../
 <a id="macropad-firmware-updates"></a>
 ## Macropad firmware updates
 
-من أجل إعداد الأجهزة والتحقق من جودة الورش، وتركيب المقسم [DeckPilot Atelier](docs/FACTORY.md) أداة، تُنشَر مُسلّمتها كما يلي: **[DeckPilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** جنباً إلى جنب مع الطلب الرئيسي، يمكن أن يوقظ البرمجيات المتضمنة إلى لوح ليوناردو/كاترينا، ثم تفقد الصحافة القصيرة والطويلة على جميع 12 مفاتيح مادية وتصدر تقريراً
+من أجل إعداد الأجهزة والتحقق من جودة الورش، وتركيب المقسم [DeckPilot Atelier](docs/FACTORY.md) أداة، تُنشَر مُسلّمتها كما يلي: **[DeckPilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases?q=atelier)** جنباً إلى جنب مع الطلب الرئيسي، يمكن أن يوقظ البرمجيات المتضمنة إلى لوح ليوناردو/كاترينا، ثم تفقد الصحافة القصيرة والطويلة على جميع 12 مفاتيح مادية وتصدر تقريراً
 
 DeckPilot 1.1.0 (أ) **Firmware du macropad…** رقم الهاتف والبرمجيات الثابتة 1.0.0 من أجل شركة Pro Micro ATmega32U4 **5 // 16 MHz**استخدام تشكيلة (ليوناردو كاترينا) التي أكدها سجل تحميل المالك، أداة (ويندوز) المزخرفة لا تتطلّب فكرة (أردينو آي دي) واختيار الأجهزة وإقرارها إلزاميّة، تحديثات التأشيرات لم تُضفي صمتاً على اللوحة، ولا تزال الخرائط والملامح والمعايرة الموجودة من طراز F13 إلى F24 متوافقة.
 

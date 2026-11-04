@@ -23,7 +23,7 @@
 <p align="center">
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&color=78b7a0" alt="最近发布"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&logo=windows" alt="为 Windows x64 下载"></a>
-  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe"><img src="https://img.shields.io/badge/Download-DeckPilot_Atelier-16856A?style=flat-square&logo=windows" alt="下载 DeckPilot Atelier 数据"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/releases?q=atelier"><img src="https://img.shields.io/badge/Download-DeckPilot_Atelier-16856A?style=flat-square&logo=windows" alt="下载 DeckPilot Atelier 数据"></a>
   <a href="https://github.com/lolo34dr/deckpilot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/lolo34dr/deckpilot?style=flat-square" alt="麻省理工学院许可证"></a>
   <a href="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml"><img src="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml/badge.svg?branch=main" alt="窗口构建状态"></a>
   <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&color=70a7e8" alt="GitHub 发布下载"></a>
@@ -283,7 +283,7 @@ DeckPilot 将在 **[MIT 许可证](../../LICENSE)**。您可以使用、复制�
 <a id="macropad-firmware-updates"></a>
 ## Macropad 固件更新
 
-设备准备和车间质量检查,安装单独的 [DeckPilot Atenlier 数据存储器](docs/FACTORY.md) 工具。它的安装器作为 **[DeckPilot-Atelier-Setup.exe (英语). 維基共享資源中相关的原始文献: 維基物種中相关的原始文献: 維基物種中相关的數據](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** 它可以将包含的固件闪到Leonardo/Caterina 板上,然后检查所有的短和长按 12 物理密钥并导出报表。
+设备准备和车间质量检查,安装单独的 [DeckPilot Atenlier 数据存储器](docs/FACTORY.md) 工具。它的安装器作为 **[DeckPilot-Atelier-Setup.exe (英语). 維基共享資源中相关的原始文献: 維基物種中相关的原始文献: 維基物種中相关的數據](https://github.com/lolo34dr/deckpilot/releases?q=atelier)** 它可以将包含的固件闪到Leonardo/Caterina 板上,然后检查所有的短和长按 12 物理密钥并导出报表。
 
 DeckPilot 1.1.0 包括a **Firmware du macropad…** 对话框和固件 1.0.0 支持微型ATmega32U4 **5 第 五 条 国 家 16 兆赫( MHz)**,使用所有者上传日志确认的Leonardo/Caterina配置。捆绑的Windows闪存工具不需要Arduino IDE。设备选择和确认是强制性的;应用程序更新从未默默地闪烁过棋盘。现有的F13-F24映射、配置和校准仍然兼容。
 

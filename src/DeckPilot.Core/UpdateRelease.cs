@@ -10,6 +10,12 @@ public sealed record UpdateRelease(string Tag, Version Version, Uri Executable, 
     public long InstallerSize { get; init; }
     public const string Repository = "lolo34dr/deckpilot";
     public const string LegacyRepository = "lolo34dr/streamdeck-diy";
+    public static UpdateRelease? ParseLatest(string json, Version current)
+    {
+        string? latest = ReleaseChannels.LatestStableReleaseJson(json, "v");
+        return latest == null ? null : Parse(latest, current);
+    }
+
     public static UpdateRelease? Parse(string json, Version current)
     {
         using var document = JsonDocument.Parse(json);
