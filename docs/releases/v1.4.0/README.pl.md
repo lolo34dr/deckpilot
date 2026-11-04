@@ -4,7 +4,7 @@ DeckPilot 1.4.0 Odświeża interfejs klawiatury wokół fizycznych makro czapek 
 
 - Większy 3 × 4 klawisze w ciemnej obudowie, z 36 ikona px, krótka etykieta, podpis F13- F24 i mała ikona typu action- type. Pełne etykiety pozostają dostępne w podpowiedzi.
 - Niezależne informacje zwrotne dla prasy fizycznej, działania w toku, udane wysyłanie i błędy. Subtelne animacje respektują ustawienia animacji systemu Windows; błędy zawierają wyjaśnienie w edytorze.
-- A **Tester l’action** przycisk zapisuje i uruchamia wybrane działanie na komputerze, w tym bez podłączonej płyty. Wskaźnik sukcesu oznacza, że akcja została wysłana, nie to, że uruchomiona aplikacja zakończyła swoją pracę.
+- A **Tester l’action** przycisk zapisuje i uruchamia wybrane działanie na komputerze, w tym bez podłączonej tablicy. Wskaźnik sukcesu oznacza, że akcja została wysłana, nie to, że uruchomiona aplikacja zakończyła swoją pracę.
 - Ręczne ścieżki i argumenty aplikacji są zgrupowane pod zawalonymi zaawansowanymi opcjami. Foldery i strony internetowe pozostają rozszerzone. Preferencje aplikacji są również zawalane domyślnie.
 - Klawiatura wyraźnie pokazuje stan połączenia i wyjaśnia, że profile pozostają edytowalne i akcje testable offline. Odtwarzanie przycisków regeneruje informacje zwrotne na żywo bez zmiany konfiguracji.
 

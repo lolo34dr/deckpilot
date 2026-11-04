@@ -10,6 +10,6 @@ Applications installées, interface affinée et mises à jour automatiques.
 
 **Depuis 0.1' ١٠ ' الاستقالة من النسخة " 2 " " " " من النص الإنكليزي " " " " و " منافذ " " " " .** Les mises à jour suivantes seront proposées automatiquement. Utilisez un dossier personnel modifiable pour permettre le remplacement.
 
-Téléchargez **DeckPilot-هناك .** pour la version autonome, ou **DeckPilot-W-X64.zip** (ويندوز) 10/11 X64 ; aucun runtime.NET à installer.
+Téléchargez **DeckPilot.....** pour la version autonome, ou **DeckPilot-W-X64.zip** (ويندوز) 10/11 X64 ; aucun runtime.NET à installer.
 
 Avant publication : compilation, tests de logique et de téléchargement, contrôle du verrouillage Windows et test natif de remplacement/redémarrage avec sélection d’une application. Le Leonardo et les jeux restent à valider sur votre PC. Les exécutables ne sont pas signés.

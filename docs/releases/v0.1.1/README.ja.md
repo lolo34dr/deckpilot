@@ -1,6 +1,6 @@
 > 完全リリースノートの自動翻訳です。英語オリジナルは参考です。
 
-インターフェイス プラスの sobre は注がります DeckPilot、inspirée de la disposition Stream Deck。
+インターフェイス プラスの sobre の注ぐこと DeckPilot、inspirée de la disposition Stream Deck。
 
 - パレットanthracite et gris、タイポグラキープラスコンプレッションデュグランドテキストd’accueil。
 - グリルデ 4 × 3 avec pictogrammes et bordure de sélection discrète に触れます。

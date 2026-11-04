@@ -60,7 +60,7 @@ DeckPilot konfiguruje Arduino Leonardo- kompatybilne makropadki, które już wys
 - **Wolne klawisze:** zachować F13- F24 dostępne dla skrótów skonfigurowanych bezpośrednio w grze lub innej aplikacji.
 - **Profile lokalne:** tworzy, duplikuje, zmienia nazwę, usuwa i wybiera profile. Kalibracja jest dzielona między profile.
 - **Profile wykonane z papieru:** zacząć od szablonów Music, Productivity lub Creation, a następnie dostosować je. Przełącz na konkretny, następny lub poprzedni profil z klucza fizycznego.
-- **Szybsza edycja:** kopiowanie / wycinanie / wklejanie / resetowanie kompletnych kluczy, nagrywanie skrótów klawiszowych, wybieranie kolorów akcentów klawiszy i cofanie zmian.
+- **Szybsza edycja:** kopiowanie / wycinanie / wklejanie / resetowanie kompletnych kluczy, nagrywanie skrótów klawiszowych, wybieranie kolorów akcentów i cofanie zmian.
 - **Narzędzia Windows:** otwarty dźwięk, wyświetlacz, ustawienia Bluetooth i sieci, Task Manager, lub zablokować sesję.
 - **Kompaktowy interfejs ciemny:** ikony wektorowe, ikony aplikacji tam, gdzie są dostępne, i subtelne animacje, które respektują preferencje animacji Windows.
 - **Operacja w tle:** zachować DeckPilot w obszarze powiadomienia, z uruchomieniem w systemie Windows sign- in domyślnie włączone (może być wyłączone).
@@ -73,7 +73,7 @@ DeckPilot konfiguruje Arduino Leonardo- kompatybilne makropadki, które już wys
 ### Wymagania
 
 - Okna 10 lub Windows 11, **x64**.
-- Arduino Leonardo- kompatybilny makropad wysyłający 12 różne klawisze z **F13 do F24**.
+- Arduino Leonardo- kompatybilny makropad wysyłanie 12 różne klawisze z **F13 do F24**.
 - Połączenie danych USB.
 
 Publikowane pliki do pobrania zawierają runtime .NET. **Nie trzeba instalować .NET do użycia DeckPilot.**
@@ -92,7 +92,7 @@ Przenośny [DeckPilot.exe](https://github.com/lolo34dr/deckpilot/releases/latest
 
 Odinstaluj z systemu Windows **Instalowane aplikacje**. Deinstalacja usuwa program i jego skróty, zachowując profile osobiste, aby później można je ponownie zainstalować.
 
-Pojedynczy plik wykonywalny pobiera swoje powiązane zależności do pamięci podręcznej .NET użytkownika przy pierwszym uruchomieniu, co może potrwać nieco dłużej. Opublikowane pliki wykonywalne są obecnie niepodpisane, więc Windows może wyświetlić ostrzeżenie SmartScreen.
+Pojedynczy plik wykonywalny pobiera swoje powiązane zależności do pamięci podręcznej .NET użytkownika przy pierwszym uruchomieniu, co może potrwać trochę dłużej. Opublikowane pliki wykonywalne są obecnie niepodpisane, więc Windows może wyświetlić ostrzeżenie SmartScreen.
 
 <a id="configure-a-key"></a>
 ### Konfiguracja klucza
@@ -117,7 +117,7 @@ Trzymanie przycisku uruchamia skonfigurowaną akcję tylko raz do czasu wydania.
 <a id="manage-profiles"></a>
 ### Zarządzanie profilami
 
-Otwórz sekcję zarządzania profilem w prawym pasku bocznym, aby utworzyć, skopiować, zmienić nazwę lub usunąć profil. Użyj selektora powyżej siatki klawiszy, aby wybrać aktywny profil.
+Otwórz sekcję zarządzania profilem na prawym pasku bocznym, aby utworzyć, skopiować, zmienić nazwę lub usunąć profil. Użyj selektora powyżej siatki klawiszy, aby wybrać aktywny profil.
 
 Kalibracja ma zastosowanie do wszystkich profili i może być powtórzona z paska bocznego.
 
@@ -140,13 +140,13 @@ Windows uruchamia wybrane skróty. `shell:AppsFolder`. Opcjonalne argumenty odno
 <a id="automatic-updates"></a>
 ## Automatyczne aktualizacje
 
-Dostępne od **0.2.0**, automatyczne kontrole aktualizacji uruchomić przy starcie po kalibracji, następnie co sześć godzin. Mogą być wyłączone w pasku bocznym. Kontrola manualna pozostaje dostępna.
+Dostępne od **0.2.0**, automatyczne kontrole aktualizacji uruchomić przy starcie po kalibracji, następnie co sześć godzin. Mogą one być wyłączone w pasku bocznym. Kontrola manualna pozostaje dostępna.
 
-Kiedy zostanie znaleziona nowsza stabilna wersja GitHub, DeckPilot Pyta, czy uaktualnić. **Zainstalowane kopie** pobierz i SHA-256 weryfikuj `DeckPilot-Setup.exe`, następnie uruchom instalatora. Windows prosi o zgodę administratora na aktualizację plików programu. Instalator zamyka DeckPilot Z wdzięcznością, gdy jest gotowy, zachowuje profile i preferencje startowe, instaluje nową wersję i ponownie uruchamia aplikację. Anulowanie polecenia zezwolenia dla systemu Windows pozostawia aplikację otwartą. Setup odmawia przerwania otwartej sesji oprogramowania firmowego.
+Kiedy zostanie znaleziona nowsza stabilna wersja GitHub, DeckPilot Pyta, czy uaktualnić. **Zainstalowane kopie** pobierz i SHA-256 weryfikuj `DeckPilot-Setup.exe`, następnie uruchomić instalatora. Windows prosi o zgodę administratora na aktualizację plików programu. Instalator zamyka DeckPilot Z wdzięcznością, gdy jest gotowy, zachowuje profile i preferencje startowe, instaluje nową wersję i ponownie uruchamia aplikację. Anulowanie polecenia zezwolenia dla systemu Windows pozostawia aplikację otwartą. Setup odmawia przerwania otwartej sesji oprogramowania firmowego.
 
 **Kopie przenośne** zachowuje istniejący mechanizm aktualizacji. Po potwierdzeniu:
 
-1. Pobieranie pliku wykonywalnego z obsługą raportowania postępów i anulowania.
+1. Pobiera wykonywalny z obsługą raportowania postępu i anulowania.
 2. Weryfikuje jego SHA-256 hash again `SHA256SUMS.txt` z tego samego wydania GitHub.
 3. Oszczędza ustawienia i przygotowuje pomocnika aktualizacji.
 4. Wychodzi, zastępuje wykonywalny i ponownie uruchamia.
@@ -205,11 +205,11 @@ Konsola sprawdza wyjście z niezerowym statusem przy pierwszym nieudanym stwierd
 - Walidacja ustawień, trwałość i migracja ze starszych konfiguracji.
 - Wyszukiwarka aplikacji i obsługa celów.
 - Wydanie wyboru, sumy kontrolne, okrojone lub uszkodzone pliki do pobrania, przekierowanie i anulowanie.
-- Wykonalne zastępstwo, zapasowe zabezpieczenie i zwroty.
+- Wykonawcze zastępstwo, zapasowe zabezpieczenie i zwroty.
 
 Sprawdzanie blokady plików odbywa się tylko w systemie Windows.
 
-GitHub Akcje również działa `tests/windows-update-smoke.ps1` w stosunku do pliku wykonywalnego standalone. Otwiera on helper aktualizacji, wycofuje oryginalny proces, weryfikuje potwierdzenie wymiany i uruchamiania, sprawdza zachowanie ustawień, a następnie otwiera zainstalowany picker aplikacji poprzez UI Automation i zapisuje wybór. Wykonuje również zmiany nazwy plików wykonywalnych i ścieżek zawierających spacje. Skrypt ten jest zarezerwowany dla jednorazowego konta testowego GitHub Actions. `tests/windows-installer-smoke.ps1`: prawdziwa instalacja plików programu, skróty w menu pulpitu / Start, domyślne startup, upgrade z otwartymi aplikacjami, disabled- startup konserwacja i odinstalowanie bez usuwania profili.
+GitHub Akcje również działa `tests/windows-update-smoke.ps1` w stosunku do pliku wykonywalnego standalone. Otwiera on helper aktualizacji, wycofuje oryginalny proces, weryfikuje potwierdzenie wymiany i uruchamiania, sprawdza zachowanie ustawień, a następnie otwiera zainstalowany picker aplikacji poprzez Automatyzację UI i zapisuje wybór. Wykonuje również zmiany nazwy plików wykonywalnych i ścieżek zawierających spacje. Skrypt ten jest zarezerwowany dla jednorazowego konta testowego GitHub Actions. `tests/windows-installer-smoke.ps1`: prawdziwa instalacja plików programu, skróty w menu pulpitu / Start, domyślne startup, upgrade z otwartą aplikacją, dezabled- startup conservation i odinstaluj bez usuwania profili.
 
 <a id="publish-a-standalone-windows-folder"></a>
 ### Opublikuj samodzielny folder Windows
@@ -246,12 +246,12 @@ Z podłączonym Leonardo:
 - Wyślij F13- F24 za pomocą skrótu i potwierdzić, że nie ma pętli DeckPilot działania.
 - Tworzenie dwóch profili z różnych działań, przełączanie między nimi, zakończenie i wznowienie. Profile i kalibracja powinny trwać.
 - Zamknij okno, uruchom akcję, a następnie ponownie otwórz i zakończ pracę przez ikonę obszaru zgłoszenia. DeckPilot Wyjścia, wszystkie klucze powinny przejść normalnie.
-- Włącz uruchamianie i testowanie systemu Windows po zalogowaniu się ponownie; wyłączyć go później, jeśli jest niechciany.
+- Włącz uruchamianie i testowanie systemu Windows po zalogowaniu się ponownie; wyłączyć go po niechcianym uruchomieniu.
 
 <a id="current-limitations"></a>
 ## Bieżące ograniczenia
 
-- Klucz do słuchania jest globalny dla sesji Windows. Fizyczne klawisze F13- F24 z innej klawiatury podążają za tą samą konfiguracją. Zdarzenia klawiatury z użyciem Software są ignorowane, aby zapobiec pętlom akcji.
+- Klucz odsłuchowy jest globalny dla sesji Windows. Fizyczne klawisze F13- F24 z innej klawiatury postępują zgodnie z tą samą konfiguracją. Zdarzenia klawiszowe wstrzyknięte przez Software są ignorowane, aby zapobiec pętlom akcji.
 - Niektóre gry, systemy antyoszustw lub programy za pomocą bezpośredniego wejścia urządzenia mogą nadal otrzymywać przechwycone klucze. Tryb Free- key pozostaje dostępny. Sygnał w ekranie, bezpieczny pulpit i inne sesje są poza kontrolą aplikacji.
 - Windows może blokować skróty wysyłane do programów uruchomionych z uprawnieniami administratora. DeckPilot działa bez praw administratora i nie omija tego ograniczenia.
 - Wydanie Ctrl, Alt, Shift i Windows przed uruchomieniem działania skrótu. Kombinacje takie jak Alt + Tab pozostają przedmiotem zachowania systemu Windows.
@@ -274,7 +274,7 @@ Z podłączonym Leonardo:
 
 DeckPilot jest zwolniony na podstawie **[Licencja MIT](../../LICENSE)**. Możesz używać, kopiować, modyfikować i redystrybuować go, w tym komercyjnie, tak długo jak zachowasz prawa autorskie i licencje wymagane przez licencję.
 
-Jeśli się na tym opierasz DeckPilotDoceniany byłby niewielki, widoczny kredyt oraz link do tego repozytorium. Ten dodatkowy kredyt jest nieobowiązkowy; utrzymanie ogłoszeń MIT jest nadal wymagane.
+If you build on DeckPilotDoceniany byłby niewielki, widoczny kredyt oraz link do tego repozytorium. Ten dodatkowy kredyt jest nieobowiązkowy; utrzymanie ogłoszeń MIT jest nadal wymagane.
 
 Proponowany kredyt:
 
@@ -285,9 +285,9 @@ Proponowany kredyt:
 
 Dla przygotowania urządzenia i kontroli jakości warsztatu, zainstalować oddzielny [Atelier DeckPilot](docs/FACTORY.md) narzędzie. Jego instalator jest opublikowany jako **[DeckPilot- Atelier- Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** obok aplikacji głównej. Może wyświetlić dołączone oprogramowanie firmowe na desce Leonardo / Caterina, a następnie sprawdzić krótkie i długie prasy na wszystkich 12 klawisze fizyczne i eksportować raport.
 
-DeckPilot 1.1.0 zawiera **Firmware du macropad…** okno dialogowe i oprogramowanie firmowe 1.0.0 dla Pro Micro ATmega32U4 **5 V / 16 MHz**, przy użyciu konfiguracji Leonardo / Caterina potwierdzonej przez właściciela dziennika wysyłania. Złączone narzędzie do migania systemu Windows nie wymaga Arduino IDE. Wybór urządzenia i potwierdzenie są obowiązkowe; aktualizacje aplikacji nigdy po cichu nie świecą planszą. Istniejące mappingi, profile i kalibracja F13- F24 pozostają kompatybilne.
+DeckPilot 1.1.0 zawiera **Firmware du macropad…** okno dialogowe i oprogramowanie firmowe 1.0.0 dla Pro Micro ATmega32U4 **5 V / 16 MHz**, przy użyciu konfiguracji Leonardo / Caterina potwierdzonej przez właściciela dziennika wysyłania. Złączone narzędzie do migania systemu Windows nie wymaga Arduino IDE. Wybór urządzenia i potwierdzenie są obowiązkowe; aktualizacje aplikacji nigdy po cichu nie świecą planszą. Istniejące mappingi F13- F24, profile i kalibracja pozostają kompatybilne.
 
-**Właściciel potwierdził udaną migawkę w aplikacji, firmware 1.0.0 identyfikacja i wszystkie 12 przyciski na tablicy odniesienia.** Przechowywać oryginalny szkic i dostęp do RST / GND do odzysku. Mignięcie firmware nie może być zwinięte automatycznie. Zobacz [dokumentacja oprogramowania firmowego](FIRMWARE.pl.md) dla kompatybilności, walidacji, odzyskiwania, budowania kroków i licencji stron trzecich. Przycisk Per- tryby USB i natywnych kontroli mediów nie są częścią tej wersji oprogramowania firmowego.
+**Właściciel potwierdził udaną migawkę w aplikacji, firmware 1.0.0 identyfikacja i wszystkie 12 przyciski na tablicy odniesienia.** Przechowywać oryginalny szkic i dostęp do RST / GND do odzysku. Mignięcie firmware nie może być toczone automatycznie. Zobacz [dokumentacja oprogramowania firmowego](FIRMWARE.pl.md) dla kompatybilności, walidacji, odzyskiwania, budowania kroków i licencji stron trzecich. Przycisk Per- tryby USB i natywnych kontroli mediów nie są częścią tej wersji oprogramowania firmowego.
 
 <a id="building-the-windows-installer"></a>
 ### Budowa instalatora systemu Windows
@@ -297,11 +297,11 @@ Po produkcji `artifacts/standalone/DeckPilot.exe` z wbudowanym pakietem oprogram
 <a id="connection-dashboard-and-firmware-checks-130"></a>
 ## Kontrola podłączenia deski rozdzielczej i oprogramowania firmowego (1.3.0)
 
-W przypadku **Votre macropad** karta pokazuje stan połączenia, wykryte oprogramowanie firmowe i wszelkie dostępne pakiety aktualizacji. **Connexion et diagnostic** Eksponuje wybór planszy po podłączeniu kilku Leonardos, stan łącza USB na żywo, fizyczne liczenie przycisków, preferencje powiadomień firmware- i naśladowalne podsumowanie diagnostyczne. Diagnostyka nie kopiuje akcji profilu lub seryjnych identyfikatorów USB. Monitor ponownie łączy się po odłączeniu i daje swój port szeregowy automatycznie, podczas gdy menedżer oprogramowania firmowego jest otwarty. 1.0.0 i bez ogniwa diagnostycznego.
+W przypadku **Votre macropad** karta pokazuje stan połączenia, wykryte oprogramowanie firmowe i wszelkie dostępne pakiety aktualizacji. **Connexion et diagnostic** Eksponuje wybór planszy po podłączeniu kilku Leonardos, stan łącza USB na żywo, fizyczne liczenie przycisków, preferencje powiadomień firmware- i naśladowalne podsumowanie diagnostyczne. Diagnostyka nie kopiuje akcji profilu lub seryjnych identyfikatorów USB. Monitor ponownie łączy się po odłączeniu i oddaje automatycznie port szeregowy, podczas gdy menedżer oprogramowania firmowego jest otwarty. Działania klawiatury F13- F24 nadal działają z firmware 1.0.0 i bez ogniwa diagnostycznego.
 
-Sprawdzanie oprogramowania firmowego w startupie jest domyślnie włączone. Po tym, jak sprawdzanie aktualizacji i kalibracja aplikacji są wyłączone, starsze zidentyfikowane oprogramowanie firmowe może skłaniać do otwarcia instalacji; opóźnianie przypomnienia o opóźnieniach 24 godziny. Nieznane deski i wielu niewybranych kandydatów nie błyszczą automatycznie. Wydawnictwa firmware są połączone z aktualizacjami aplikacji z GitHub, a nie pobierane z niezależnego kanału firmware.
+Sprawdzanie oprogramowania firmowego w startupie jest domyślnie włączone. Po tym, jak sprawdzanie aktualizacji i kalibracja aplikacji są wyłączone, starsze zidentyfikowane oprogramowanie firmowe może skłaniać do otwarcia instalacji; opóźnianie przypomnienia o opóźnieniach 24 godziny. Nieznane tablice i wielu niewybranych kandydatów nie są automatycznie wyświetlane. Wydawnictwa firmware są połączone z aktualizacjami aplikacji z GitHub, a nie pobierane z niezależnego kanału firmware.
 
-Oprogramowanie firmowe **1.1.1** dodaje identyfikację sesji, skorelowane odpowiedzi na bicie serca, ograniczone komunikaty i fizyczne zdarzenia stanu klucza. Zdarzenia te animują mapowane przyciski i aktualizują diagnostykę; nigdy nie powołują się na działania po raz drugi. Jego pierwsza walidacja płyt fizycznych jest nadal wymagana, chociaż wcześniejsze oprogramowanie firmowe 1.0.0 i flash procedury zostały potwierdzone przez właściciela. Zobacz [dokumentacja protokołu i zgodności](FIRMWARE.pl.md).
+Oprogramowanie firmowe **1.1.1** dodaje identyfikację sesji, skorelowane odpowiedzi na bicie serca, ograniczone komunikaty i fizyczne zdarzenia stanu key-. Zdarzenia te animują mapowane przyciski i aktualizują diagnostykę; nigdy nie powołują się na działania po raz drugi. Jego pierwsza walidacja płyt fizycznych jest nadal wymagana, chociaż wcześniejsze oprogramowanie firmowe 1.0.0 i flash procedury zostały potwierdzone przez właściciela. Zobacz [dokumentacja dotycząca protokołu i zgodności](FIRMWARE.pl.md).
 
 <a id="keypad-interface-140"></a>
 ## Interfejs klawiatury (1.4.0)
@@ -310,9 +310,9 @@ Im większy 3 × 4 klawiatura śledzi fizyczną obudowę i czarne nasadki klawis
 
 Wybierz klucz do edycji. **Options avancées · fichier et arguments** utrzymuje ręczne ścieżki aplikacji i argumenty startowe zawalone domyślnie, podczas gdy podstawowe foldery i cele strony internetowej pozostają rozszerzone. **Tester l’action** zapisuje i wysyła wybrane działanie na bieżącym komputerze PC; wskaźnik sukcesu potwierdza wysyłkę, a nie ukończenie wewnątrz innej aplikacji. Skróty klawiszowe mają na celu aktywne okno. Wolne klawisze F13- F24 nie mają działania testowego.
 
-Kiedy makropad jest odłączony, **Hors ligne** i towarzysząca podpowiedź wyjaśnia, że profile mogą być nadal edytowane i testowane. Konfiguracja jest przechowywana na komputerze PC i pozostaje dostępna przez cały czas rozłączania i ponownego łączenia. Te usprawnienia interfejsu działają z istniejącym oprogramowaniem firmowym i nie wymagają dodatkowego błysku.
+Kiedy makropad jest odłączony, **Hors ligne** i towarzysząca podpowiedź wyjaśnia, że profile mogą być nadal edytowane i testowane. Konfiguracja jest przechowywana na komputerze PC i pozostaje dostępna w trakcie rozłączania i ponownego łączenia. Te usprawnienia interfejsu działają z istniejącym oprogramowaniem firmowym i nie wymagają dodatkowego błysku.
 
-Menu obszaru zgłoszeniowego włącza teraz bezpośrednio profile. **Ctrl + S** Zapisuje bieżącą konfigurację przycisku. Nieprawidłowe pliki konfiguracyjne są kopiowane zanim zostanie użyta świeża konfiguracja. Instalacja aplikacji, ikony menu desktop / Start, preferencje startowe i istniejący automatyczny updater zostają zachowane.
+Menu obszaru zgłoszeniowego włącza teraz bezpośrednio profile. **Ctrl + S** Zapisuje bieżącą konfigurację przycisku. Nieprawidłowe pliki konfiguracyjne są kopiowane zanim zostanie użyta świeża konfiguracja. Instalacja aplikacji, ikony menu desktop / Start, preferencje startowe i istniejący automatyczny updater są zatrzymywane.
 
 Do ręcznego przesyłania danych IDE Arduino, **zrezygnować DeckPilot z menu tacki** aby uwolnić port szeregowy. Zamknięcie głównego okna utrzymuje go w tle.
 
@@ -321,11 +321,11 @@ Do ręcznego przesyłania danych IDE Arduino, **zrezygnować DeckPilot z menu ta
 
 **Spotify** jest oddzielony od **Multimédia**. Jego odtwarzanie / pauza, następne i poprzednie polecenia adresują sesję mediów Windows w aplikacji Spotify, nawet gdy przeglądarka gra na YouTube. Spotify musi być otwarta i mieć dostępną sesję odtwarzania; uruchom raz utwór w razie potrzeby. Spotify w przeglądarce nie jest obsługiwane. Brakujące lub odrzucające sesje Spotify wywołują błąd, bez błędów w globalnych klawiszach medialnych lub innym odtwarzaczu. Brak autoryzacji konta Spotify, subskrypcja Premium lub zapisany token jest potrzebny przez DeckPilotOkna 10 wersja 2004 lub później, lub Windows 11, jest wymagane przez tę budowę.
 
-Stosowanie **Rechercher une action ou une application** w przypadku zapytań takich jak: `volume`, `skip`, `Spotify` lub nazwę zainstalowanej aplikacji. Wskaźnik instalacji aplikacji ładuje się przy pierwszym wyszukiwaniu i jest buforowany przez pięć minut; manualny wybór plików pozostaje dostępny. Kliknij wynik, aby skonfigurować wybrany klucz lub przeciągnąć go na inny klucz.
+Stosowanie **Rechercher une action ou une application** w przypadku zapytań takich jak: `volume`, `skip`, `Spotify` lub nazwę zainstalowanej aplikacji. Wskaźnik instalacji aplikacji ładuje się przy pierwszym wyszukiwaniu i jest buforowany przez pięć minut; ręczne wybieranie plików pozostaje dostępne. Kliknij wynik, aby skonfigurować wybrany klucz lub przeciągnąć go na inny klucz.
 
-Przeciągnij akcję z katalogu lub wyniki wyszukiwania na klucz, aby ją przypisać. Przeciągnij jeden skonfigurowany klucz na inny **wymieniają się swoimi działaniami**; kalibracja fizyczna pozostaje bez zmian. Możesz również upuścić jedną `.exe`, `.lnk`, `.appref-ms`, folder lub HTTP (S) URL na klucz. Upuszczanie tylko konfiguruje klucz i nigdy nie wykonuje działania. Ukończ brakujące ustawienia w edytorze.
+Przeciągnij akcję z katalogu lub wyniki wyszukiwania na klucz, aby ją przypisać. Przeciągnij jeden skonfigurowany klucz na inny **wymieniają się swoimi działaniami**; fizyczna kalibracja pozostaje niezmieniona. Możesz również upuścić jedną `.exe`, `.lnk`, `.appref-ms`, folder lub HTTP (S) URL na klucz. Upuszczanie tylko konfiguruje klucz i nigdy nie wykonuje działania. Ukończ brakujące ustawienia w edytorze.
 
-Uruchomienie systemu Windows utrzymuje teraz wyraźną preferencję dla użytkownika, naprawia nieświeży lub brakujący wpis Run, a także informuje o znanych flagach uruchamiania systemu Windows. Normalne uruchamia z poszanowaniem wyłączenia systemu Windows; wyraźnie umożliwia **Lancer avec Windows** oczyszcza znane DeckPilot dezaktywować flagę dla bieżącego użytkownika. Wyrzutnie tła pozostają ukryte nawet przed kalibracją, a duplikaty wychodzące po cichu. Po aktualizacji, otwórz **Préférences de l’application**, sprawdzić status startowy i ponownie aktywować opcję jeśli Windows zablokował go. Prawdziwe sign- out / sign- in na komputerze użytkownika pozostaje ostateczna kontrola dla polityki Windows lub ograniczeń specyficznych dla maszyn.
+Uruchomienie systemu Windows utrzymuje teraz wyraźną preferencję dla użytkownika, naprawia nieświeży lub brakujący wpis Run i informuje o znanych flagach startowych systemu Windows. Normalne uruchamia z poszanowaniem wyłączenia systemu Windows; wyraźnie umożliwia **Lancer avec Windows** oczyszcza znane DeckPilot dezaktywować flagę dla bieżącego użytkownika. Wyrzutnie tła pozostają ukryte nawet przed kalibracją, a duplikaty wychodzące po cichu. Po aktualizacji, otwórz **Préférences de l’application**, sprawdzić status startowy i ponownie aktywować opcję jeśli Windows zablokował go. Prawdziwe sign- out / sign- in na komputerze użytkownika pozostaje ostateczna kontrola dla polityki Windows lub ograniczeń specyficznych dla maszyn.
 
 <a id="sharp-keypad-rendering-profile-recovery-and-audio-controls-161"></a>
 ## Ostre renderowanie klawiatury, odzyskiwanie profilu i sterowanie dźwiękiem (1.6.1)
@@ -334,30 +334,30 @@ Klawiatura staje się teraz w rodzimych rozmiarach WPF zamiast skalowania tekstu
 
 **Annuler / Rétablir** przywraca edycje profili, w tym swapy drag- and- drop, ustawienia akcji, import i tworzenie / usuwanie profilu. Historia utrzymuje 50 edytuje podczas sesji aplikacji. Ctrl + Z / Ctrl + Y działają na profilach poza polami tekstowymi; pola tekstowe zachowują swoje własne cofnięcie / redo. Kalibracja, preferencje uruchamiania i wykonywane działania nie są cofane.
 
-Pod **Gérer les profils**, eksportować obecny profil lub wszystkie profile jako `.deckpilot.json`, importować profile jako nowe kopie, lub przywrócić kopię zapasową wszystkich profili. Import nigdy nie wykonuje działań i nigdy nie zastępuje kalibracji komputera PC. Profile zawierają ścieżki działania, argumenty i identyfikatory punktów końcowych audio, które mogą wymagać dostosowania na innym komputerze PC. Nieznane formaty, przerośnięte pliki i nieprawidłowo ukształtowane konfiguracje gestów są odrzucane.
+Pod **Gérer les profils**, eksportować obecny profil lub wszystkie profile jako `.deckpilot.json`, importować profile jako nowe kopie, lub przywrócić kopię zapasową wszystkich profili. Import nigdy nie wykonuje działań i nigdy nie zastępuje kalibracji komputera PC. Profile zawierają ścieżki działania, argumenty i identyfikatory audio punktów końcowych, które mogą wymagać dostosowania na innym komputerze PC. Nieznane formaty, przerośnięte pliki i nieprawidłowo ukształtowane konfiguracje gestów są odrzucane.
 
 Przed zapisaniem zmienionych profili, DeckPilot utrzymuje poprzednie profile w `%APPDATA%\DeckPilot\Backups` (20 Wersja, content- deduplicated). Tylko preference- rates nie tworzy kopii zapasowych profilu. Błąd kopii zapasowej zapobiega nadpisywaniu aktualnych ustawień. Przywracanie zastępuje profile po potwierdzeniu i może zostać cofnięte; kalibracja pozostaje niezmieniona.
 
-**Microphone Windows** Włącza wyciszenie wszystkich obecnie aktywnych punktów końcowych przechwytywania systemu Windows. Utrzymujący się pasek stanu i karta Audio Windows pokazują aktywny / zmiksowany / mieszany / niedostępny stan, odświeża się co dwie sekundy i po poleceniach aplikacji. Nieudane próby aktualizacji wielopunktowej w celu przywrócenia poprzednich stanów niemych. Wskaźniki te opisują stan końcowy systemu Windows, a nie przełącznik sprzętowy lub własny przycisk niemowy aplikacji.
+**Microphone Windows** Włącza wyciszenie wszystkich obecnie aktywnych punktów końcowych przechwytywania systemu Windows. Utrzymujący się pasek stanu i karta Audio Windows pokazują aktywny / zmiksowany / mieszany / niedostępny stan, odświeża się co dwie sekundy i po komendach aplikacji. Nieudane wielopunktowe próby aktualizacji w celu przywrócenia poprzednich stanów niemych. Wskaźniki te opisują stan końcowy systemu Windows, a nie przełącznik sprzętowy lub własny przycisk niemowy aplikacji.
 
-**Changer de sortie audio** Zastępuje dwa wybrane, połączone urządzenia wyjściowe, dla konsoli Windows, multimediów i komunikacji domyślne. Brak celu daje błąd bez wyboru innego urządzenia. Aplikacje z ich własnym wyjściem stacjonarnym nie mogą być zgodne z domyślnym Windows. Importowane identyfikatory punktów końcowych są wyświetlane jako niedostępne do czasu dostosowania do obecnego komputera PC. Nie powiodła się próba zmiany trasy przywracania poprzednich domyślnych.
+**Changer de sortie audio** Zastępuje dwa wybrane, połączone urządzenia wyjściowe, dla konsoli Windows, multimediów i komunikacji domyślne. Brak celu daje błąd bez wyboru innego urządzenia. Aplikacje z ich własnym wyjściem stacjonarnym mogą nie być zgodne z domyślnym Windows. Importowane identyfikatory punktów końcowych są wyświetlane jako niedostępne do czasu dostosowania do obecnego komputera PC. Nie powiodła się próba zmiany trasy przywracania poprzednich domyślnych.
 
-Konfigurowanie **appui court / appui long**, najpierw wybierz skonfigurowane działanie, włącz opcję two-action, wybierz gest do edycji i ustawić próg od 200 do 3000 MS. Bez tego trybu działania zachowują natychmiastowe zachowanie klawisza. Z nim krótkie akcje przebiegają po zwolnieniu przed progiem; długie akcje przebiegają raz na progu (lub po zwolnieniu, jeśli zegar jeszcze nie działa). Długa akcja nigdy nie działa również na krótki. Wolne klawisze F13- F24 nie mogą używać trybu dual- action. Oczekiwane gesty są anulowane na zmiany profilu / konfiguracji, kalibracji, operacji firmware, zmiany sesji i zawieszenia. Nie jest potrzebne oprogramowanie firmware flash; istniejący key- down / key- up raporty klawiatury dostarczają gesty.
+Konfigurowanie **appui court / appui long**, najpierw wybierz skonfigurowane działanie, włącz opcję two-action, wybierz gest do edycji i ustawić próg od 200 do 3000 ms. Bez tego trybu działania zachowują natychmiastowe zachowanie klawisza. Z nim krótkie akcje przebiegają po zwolnieniu przed progiem; długie akcje przebiegają raz na progu (lub po zwolnieniu, jeśli zegar jeszcze nie działa). Długa akcja nigdy nie działa również na krótki. Wolne klawisze F13- F24 nie mogą używać trybu dual- action. Oczekiwane gesty są anulowane na zmiany profilu / konfiguracji, kalibracji, operacji firmware, zmian sesji i zawieszenia. Nie jest potrzebne oprogramowanie firmware flash; istniejące raporty klawiatury key- down / key- up dostarczają gestów.
 
-Kontrole podstawowe obejmują granice powtarzania / uwalniania, jednoczesne przytrzymywanie, anulowanie, historię profilu / wymiana / kopie zapasowe i wrzuty audio przy użyciu fałszywych punktów końcowych. Sprawdzanie UI systemu Windows wykonuje rzeczywiste przeciążenie undo / redo, konfigurując długie działanie i próg, native keypad wymiary po zmianie rozmiaru i wskaźnik mikrofonu. Rzeczywiste sterowniki mikrofonu, headset / głośnik przełącznik i fizyczne uchwyty nadal wymagają zatwierdzenia na komputerze właściciela.
+Kontrole podstawowe obejmują granice powtarzania / uwalniania, jednoczesne przytrzymywanie, anulowanie, historię profilu / wymiana / kopie zapasowe i wrzuty audio przy użyciu fałszywych punktów końcowych. Sprawdzanie UI systemu Windows wykonuje rzeczywiste przeciążenie undo / redo, konfigurując długie działanie i próg, native keypad wymiary po zmianie rozmiaru i wskaźnik mikrofonu. Rzeczywiste sterowniki mikrofonu, headset / głośnik przełącznik i fizyczne uchwyty nadal wymagają walidacji na komputerze właściciela.
 
 <a id="search-and-ci-reliability-fixes-164"></a>
 ## Wyszukiwarka i niezawodność CI (1.6.4)
 
 Równoważne wyniki wyszukiwania zachowują swoje istniejące przyciski WPF. Katalog instalacji aplikacji i debuunce timer odracza wymianę wyników, podczas gdy przycisk wyszukiwania jest przechwytywany lub przeciąganie jest w toku. To zapobiega usuwaniu przycisku źródłowego podczas interakcji.
 
-Kontrola dymu w systemie Windows nadal wykonuje natywne przeciągnięcia myszy i sprawdza zapisane zadania, swapy, cofnij / redo i oba gesty prasowe. Klient testowy używa fizycznych współrzędnych kursora, aby dopasować się do granic Automatyzacji UI niezależnie od DPI, koncentruje się przed pomiarem i skanuje wszystkie wartości procentowe przewijania. Sprawdzenie regresji sprawdza również, czy równoważne przeszukiwania zachowują ten sam dostępny przycisk. Wtyczki startowe czekają na ładowarkę WPF i wymagają pięciu kolejnych obserwacji hidden- okiennych, podczas gdy aplikacja pozostaje żywa.
+Kontrola dymu w systemie Windows nadal wykonuje natywne przeciągnięcia myszy i sprawdza zapisane zadania, swapy, cofnij / redo i oba gesty prasowe. Klient testowy używa fizycznych współrzędnych kursora, aby dopasować się do granic Automatyzacji UI niezależnie od DPI, koncentruje się przed pomiarem i skanuje wszystkie wartości procentowe przewijania. Sprawdzenie regresji sprawdza również, czy równoważne wyszukiwanie zachowuje ten sam dostępny przycisk. Aseria startowe Background- startup czekają na ładowarkę WPF i wymagają pięciu kolejnych obserwacji hidden- okiennych, podczas gdy aplikacja pozostaje przy życiu.
 
 Budowanie i zwalnianie przepływów roboczych za pomocą Node.js 24 działania. Kompilator Arduino pozostaje w CLI 1.2.2; CI pobiera swoje archiwum Windows z przypiętym Sha-256 suma kontrolna. Oprogramowanie firmowe i jego wersje łańcucha narzędzi nie ulegają zmianie.
 
-Ustawienia odczytywane w testach Windows wyraźnie pozwalają odczytywać / zapisywać / usuwać udostępnianie i parse UTF-8 Po zamknięciu czytnika. To zapobiega temu, że test sam w sobie zaprzecza zastąpieniu pliku atomowego aplikacji. Test historyczny utrzymuje stare zdjęcie otwarte w trzech cyklach cofania / ponownego wykonania i sprawdza, czy pozostaje nienaruszony podczas zmiany ustawień na żywo.
+Ustawienia odczytywane w testach Windows wyraźnie pozwalają odczytywać / zapisywać / usuwać udostępnianie i parse UTF-8 Po zamknięciu czytnika. To zapobiega temu, że test sam w sobie odmawia wymiany plików atomowych aplikacji. Test historyczny utrzymuje stare zdjęcie otwarte przez trzy cykle cofania / ponownego wykonania i sprawdza, czy pozostaje nienaruszony podczas zmiany ustawień na żywo.
 
-W systemie Windows istniejące pliki konfiguracyjne są oddane z `File.Replace` zamiast trybu nadpisarskiego `File.Move`To obsługuje czytniki, które pozwalają usunąć przy zachowaniu kompletnego starego migawki. Podstawowy apartament testuje trzy zamiany z czytnikiem utrzymywane otwarte; Kontrola rdzeń systemu Windows uruchomić przed firmware kompilacji i publikowania tak trwałe błędy są wykrywane wcześnie.
+W systemie Windows istniejące pliki konfiguracyjne są oddane z `File.Replace` zamiast trybu nadpisarskiego `File.Move`To obsługuje czytniki, które pozwalają usunąć przy zachowaniu kompletnego starego migawki. Podstawowy apartament testuje trzy zamiany z czytnikiem utrzymywane otwarte; Kontrola rdzeń systemu Windows uruchomić przed firmware kompilacji i publikacji tak uporczywe błędy są wykrywane wcześnie.
 
 Czytnik migawek testowych może czekać aż 500 ms dla Windows udostępniania / naruszenia blokady podczas `ReplaceFile` commits. Poczekanie dotyczy tylko otwarcia migawki, nigdy nie wykonywania lub ponownego wykonania działania aplikacji. Inne błędy, źle ukształtowany JSON i trwałe zamki pozostają niepowodzeniem.
 
@@ -366,7 +366,7 @@ Czytnik migawek testowych może czekać aż 500 ms dla Windows udostępniania / 
 
 Zapisywanie identycznych ustawień sprawdza bieżący plik, ale pomija pracę zamiany i tworzenia kopii zapasowych. Zewnętrzne edycje / usuwanie i nieudany zapis są nadal wykrywane. `ButtonAction` ma równość wartości (w tym długie działanie); edytor brudnych czeków uniknąć serializacji JSON. Historia utrzymuje oddzielone migawki modelu, waliduje nowe stany, i unika JSON parsing podczas cofnięcia / redo. 50-edit limit i 20 Pozostają kopie zapasowe profilu.
 
-Search and picker udostępniają niezmienny katalog instalacji-aplikacji na pięć minut (15 seconds for a partial result). Współbieżni konsumenci dzielą się jednym skanowaniem; zamknięcie jednego pickera nie anuluje innego konsumenta. Odśwież obejście bufora, a każdy picker ma swój własny filtr / widok. Skanowanie i katalog parsowanie uruchomić z gwintu UI; picker filtrowanie jest obciążone przez 120 ms. Wyszukiwarka akcji ponownie sprawdza tę pamięć podręczną po jej odrzuceniu i po powrocie z pickera, więc odświeżony katalog jest tam dostępny.
+Search and picker udostępniają niezmienny katalog instalacji-aplikacji na pięć minut (15 seconds for a partial result). Współbieżni konsumenci dzielą jeden skan; zamknięcie jednego picker nie anuluje innego konsumenta. Odśwież pomija bufora, a każdy picker ma swój własny filtr / widok. Skanowanie i katalogowanie parsowanie uruchomić z wątek UI; picker filtrowanie jest oblężone przez 120 ms. Wyszukiwarka akcji ponownie sprawdza tę pamięć podręczną po jej odrzuceniu i po powrocie z pickera, więc odświeżony katalog jest tam dostępny.
 
 Aktualizacje UI planszy teraz śledzić powiadomienia o połączeniach zamiast budzenia każdego 100 MS. Zamówione powiadomienia o odłączeniu nadal anulują oczekujące uchwyty. Haki Keyboard kolejki wizualne pracy, podczas supresji i gestu czasu pozostają synchroniczne. Ukryte / zminimalizowane okna zatrzymać animacje sprzężenia zwrotnego i używać dziesięciosekundowy interwał sondowania audio zamiast dwóch sekund; ponowne otwarcie lub wydanie komendy audio żąda świeży stan. W oczekiwaniu audio odświeża udostępniać pętlę i zawierać prośby przychodzące podczas istniejącego czytania. Niezmienione migawki audio i zamrożone szczotki uniknąć wielokrotnych przydziałów UI. Process wrapers zwracany przez uruchomienie aplikacji są usuwane bez zamykania uruchomionego programu.
 
@@ -375,16 +375,16 @@ Zmiany te zmniejszają określoną pracę; nie tworzą niezależnego od maszyn p
 <a id="workspace-tools-and-refreshed-interface-180"></a>
 ## Narzędzia do pracy i odświeżony interfejs (1.8.0)
 
-Interfejs węgla drzewnego stawia bibliotekę działania na pierwszym miejscu, oddziela kontrolę profilu od Crisp native- size 3 × 4 klawiatura i grupy ustawień akcji w karcie. Kluczowe akcenty wyróżniają własne kategorie; wybór, ostrość klawiatury i informacje zwrotne akcji pozostają osobne. **Réduire les animations** w preferencjach uzupełnia ustawienie animacji systemu Windows. Mniejsze okna zachowują dostęp do przewijania zamiast kurczenia się tekstu klucza.
+Interfejs węgla drzewnego stawia bibliotekę działania na pierwszym miejscu, oddziela kontrolę profilu od Crisp native- size 3 × 4 klawiatura i grupy ustawień akcji w karcie. Kluczowe akcenty wyróżniają własne kategorie; wybór, ostrość klawiatury i informacje zwrotne akcji pozostają osobne. **Réduire les animations** w preferencjach uzupełnia ustawienia animacji Windows. Mniejsze okna zachowują dostęp do przewijania zamiast kurczenia się tekstu klucza.
 
 - **Szablony profilu:** poniżej **Gérer les profils**, Dodaj muzykę i dźwięk, pulpit i wydajność, lub Tworzenie. Każdy szablon tworzy osobny edytowalny profil i nigdy nie wykonuje swoich działań. Istniejące profile i kalibracja fizyczna są zachowane. Skróty klawiszowe używają aktywnej aplikacji, której wiązania mogą się różnić.
 - **Klucze profilu:** przypisywanie **Changer de profil**, następnie wybierz nazwany profil lub cykl do przodu / do tyłu. Referencje między profilami są remapowane podczas importowania zestawu lub powielania profilu samoodsyłającego. Brak miejsca docelowego zgłasza błąd i może być zastąpiony w edytorze.
 - **Polecenia Windows:** do stosowania **Commandes Windows** aby otworzyć wspólne ustawienia lub Task Manager, lub wyraźnie zablokować komputer PC. Polecenia pochodzą ze stałej listy, bez skryptu do wprowadzenia. Akcja blokady wymaga podpisanie z powrotem do systemu Windows.
-- **Komplete- klucz schowka:** ctrl + C / X / V i Delete pracy, podczas gdy klawisz pokładowy ma ostrość klawiatury; zwykłe pola tekstowe utrzymują swoje skróty edycji. Klawisz schowka pozostaje wewnątrz DeckPilot i jest oczyszczony przy wyjściu. Te edytuje wsparcie cofnij / redo.
+- **Komplete- klucz schowka:** ctrl + C / X / V i Delete pracy, podczas gdy klawisz pokładowy ma ostrość klawiatury; zwykłe pola tekstowe utrzymują swoje skróty edycji. Klawisz schowka pozostaje wewnątrz DeckPilot i jest oczyszczony przy wyjściu. Te edytuje wsparcie cofnij / ponownie.
 - **Rejestrator skrótów:** wybrać akcję klawiatury i kliknąć **Enregistrer un raccourci**. Naciśnij wspieraną kombinację, a następnie zapisać go. Anulowanie ucieczki; F13- F24 jest zarezerwowany dla makro pad podczas nagrywania.
 - **Szybki dostęp:** Ctrl + K lub przycisk Biblioteka koncentruje wyszukiwanie akcji. **Activité récente** utrzymuje ostatni 30 wysłanie / nieudana akcja w pamięci dla tej sesji, bez zapisywania argumentów programu lub ścieżki docelowe. Można ją w każdej chwili wyczyścić. Udane wysłanie nie gwarantuje zakończenia w aplikacji docelowej.
 
-Pozostaje oprogramowanie firmowe **1.1.1**. Akceptowanie automatycznej oferty oprogramowania firmowego teraz poprawnie otwiera menedżera oprogramowania firmowego; poprzednia ochrona modalna uniemożliwiła przekazanie go. Istniejąca tożsamość oprogramowania firmowego, bicie serca, ponowne podłączenie i kontrola flash pozostają na miejscu. Nowe funkcje przestrzeni roboczej nie potrzebują błysku firmware.
+Pozostaje oprogramowanie firmowe **1.1.1**. Akceptowanie automatycznej oferty oprogramowania firmowego teraz poprawnie otwiera menedżera oprogramowania firmowego; poprzednia ochrona modalna uniemożliwiła przekazanie go. Istniejąca tożsamość oprogramowania firmowego, bicie serca, ponowne podłączenie i kontrola flash pozostają na miejscu. Nowe funkcje przestrzeni roboczej nie wymagają błysku firmware.
 
 <a id="deckpilot-atelier-190"></a>
 ## DeckPilot Atelier (1.9.0)
@@ -393,7 +393,9 @@ Oddzielny **DeckPilot Atelier** Instalator systemu Windows przygotowuje nowe mak
 
 DeckPilot Atelier sprawdza GitHub dla aktualizacji aplikacji i bundled- firmware na startup i na żądanie. Aktualizacje wymagają potwierdzenia i używać wydania SHA-256 manifest. Firmware nigdy nie jest wyświetlany automatycznie przez aktualizację; po aktualizacjach Atelier, wybierz działanie firmware, gdy jesteś gotowy do zaprogramowania podłączonej płyty.
 
-Wersja 1.9.1 naprawia uruchomienie Atelier po instalacji przez uruchomienie go w sesji signed- w systemie Windows. Jego updater może zainstalować nowszy pakiet Atelier lub pakiet oprogramowania firmowego, a następnie ponownie uruchomić aplikację.
+Atelier 1.0.7 dodaje potwierdzone **Program Effacer le DeckPilot** działania. To oczyszcza 28 Obszar aplikacji KiB z zweryfikowaną instrukcją bezpiecznego zatrzymywania, więc płyta przestaje działać jako klawiatura, zachowując Caterina do odzyskiwania i przyszłego migania. Pozostawia bootloader, EEPROM i Windows profile nietknięte.
+
+Wersja 1.9.1 naprawia uruchomienie Atelier po instalacji poprzez uruchomienie go w sesji signed- in Windows. Jego updater może zainstalować nowszy pakiet Atelier lub pakiet oprogramowania firmowego, a następnie ponownie uruchomić aplikację.
 
 Wersja 1.9.2 Poprawia etap pakowania Atelier Windows i informuje o dokładnej lokalizacji awarii w CI.
 
@@ -404,5 +406,7 @@ Sprawdzenie wydania Atelier zgłasza diagnostykę uruchamiania, jeśli system Wi
 DeckPilot 1.9.6 naprawia manifest DPI systemu Atelier, dzięki czemu zainstalowana aplikacja uruchamia się poprawnie w systemie Windows 10 oraz 11.
 
 DeckPilot 1.9.7 w czasie jego pracy usuwa Atelier. Test wydania systemu Windows weryfikuje również uruchomienie, wprowadzenie aktualizacji i odblokowanie.
+
+DeckPilot 1.9.8 dodaje jednoznaczny, potwierdzony reset Atelier, który zastępuje program użytkownika planszy zweryfikowanym pustym szkicem i zachowuje bootloader Caterina.
 
 Walidacja obejmuje dotychczasowe ustawienia, walidację akcentu, nawigację profilu i remapowanie odniesienia, przenośne szablony, natywny szablon Windows / cofnij / redo i przełączanie profilu, nagrywanie skrótów, kopiowanie / wklej / reset, utrzymywanie ustawień, instalację / aktualizację, zmianę układu graficznego i rzeczywiste przechwytywanie UI. Hardware- specyficzne zachowanie nadal wymaga makro-pad i urządzeń audio na komputerze Windows.
