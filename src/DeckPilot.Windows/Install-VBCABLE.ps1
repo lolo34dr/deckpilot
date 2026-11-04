@@ -36,8 +36,12 @@ try {
     if ($signature.Status -ne [System.Management.Automation.SignatureStatus]::Valid) {
         throw 'La signature Authenticode de l''installateur VB-Audio est invalide ou absente. Rien n''a été exécuté.'
     }
-    if ($signature.SignerCertificate.Subject -notmatch 'VB-Audio') {
-        throw ('L''éditeur signé ne correspond pas à VB-Audio (' + $signature.SignerCertificate.Subject + '). Rien n''a été exécuté.')
+    $signerSubject = $signature.SignerCertificate.Subject
+    # VB-Audio currently signs this installer with its proprietor's legal publisher name.
+    $recognizedPublisher = $signerSubject -match '^CN=VB-Audio(?:[^,]*)' -or
+        $signerSubject -match '^CN=BUREL VINCENT Entrepreneur individuel(?:,|$)'
+    if (!$recognizedPublisher) {
+        throw ('L''éditeur signé VB-Audio n''est pas reconnu (' + $signerSubject + '). Rien n''a été exécuté.')
     }
 
     $catalogs = @(Get-ChildItem -Path (Join-Path $work 'package') -Filter '*.cat' -File -Recurse)
