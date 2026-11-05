@@ -1,3 +1,14 @@
+DeckPilot 2.1.1 improves installation and updates:
+
+- Automatically check for VB-CABLE during first installation and upgrades, and download and launch the official signed installer when the driver is missing.
+- Show Windows startup, automatic update checks and reduced-motion preferences during setup and updates, with existing choices preselected and preserved.
+- Keep the selected physical microphone and request microphone setup only when needed.
+- Fix installer initialization and detection of existing installations.
+
+Download **DeckPilot-Setup.exe** or accept the update in DeckPilot. Windows administrator approval is required. Existing profiles and calibration are preserved. DeckPilot Atelier remains at 1.0.10 and firmware remains at 1.1.1; both are included in the shared release.
+
+Validation: core checks and Windows build, installer upgrade/uninstall and native application tests run before release publication. Audio hardware behavior still requires testing on the user's PC.
+
 DeckPilot 2.1.0 keeps the deep black interface and customizable colors, and routes the soundboard through VB-Audio VB-CABLE automatically. Users select only their physical microphone; the virtual playback endpoint is fixed so voice and MP3/WAV clips cannot accidentally be sent to speakers. The DeckPilot installer can download the official VB-CABLE package, verify its Authenticode publisher, and launch the vendor's driver setup; the package is not redistributed. In Discord or a game, select CABLE Output as the microphone. Atelier remains at version 1.0.10.
 
 DeckPilot 1.9.11 and DeckPilot Atelier 1.0.10 add pre-flash hardware and firmware diagnostics, a firmware version comparison, a guided recovery action after interrupted writes, sequential multi-board flashing with a batch report, and a physical-position-to-F13–F24 layout check in every key-control report.
