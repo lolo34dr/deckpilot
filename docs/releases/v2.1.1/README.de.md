@@ -1,8 +1,8 @@
 > Dies ist eine automatische Übersetzung der vollständigen Release Notes. Das englische Original ist die Referenz.
 
-DeckPilot 2.1.1 Verbessert Installation und Updates:
+DeckPilot 2.1.1 verbessert die Installation und Updates:
 
-- Überprüfen Sie automatisch während der ersten Installation und Upgrades nach VB-CABLE und laden Sie das offiziell signierte Installationsprogramm herunter und starten Sie es, wenn der Treiber fehlt.
+- Automatische Überprüfung für VB-CABLE bei der ersten Installation und Upgrades, und laden Sie den offiziell signierten Installateur herunter und starten Sie ihn, wenn der Fahrer fehlt.
 - Windows-Start, automatische Update-Checks und reduzierte Bewegungseinstellungen während der Einrichtung und Updates anzeigen, wobei vorhandene Optionen vorgewählt und beibehalten werden.
 - Behalten Sie das ausgewählte physische Mikrofon und fordern Sie die Mikrofoneinrichtung nur bei Bedarf an.
 - Fix Installer Initialisierung und Erkennung von vorhandenen Installationen.
@@ -11,7 +11,7 @@ Download **DeckPilotSetup.exe** oder akzeptieren Sie das Update in DeckPilot. Wi
 
 Validierung: Kernüberprüfungen und Windows Build, Installer-Upgrade/Deinstallierung und native Anwendungstests laufen vor der Veröffentlichung. Das Verhalten der Audio-Hardware erfordert weiterhin Tests auf dem PC des Benutzers.
 
-DeckPilot 2.1.0 Die Benutzer wählen nur ihr physisches Mikrofon; der virtuelle Wiedergabe-Endpunkt ist fixiert, so dass Sprach- und MP3/WAV-Clips nicht versehentlich an Lautsprecher gesendet werden können. DeckPilot Installateur kann das offizielle VB-CABLE-Paket herunterladen, seinen Authenticode-Publisher verifizieren und das Treiber-Setup des Anbieters starten; das Paket wird nicht neu verteilt. 1.0.10.
+DeckPilot 2.1.0 behält das tiefschwarze Interface und die anpassbaren Farben bei und leitet den Resonanzboden durch VB-Audio VB-CABLE Benutzer wählen nur ihr physisches mikrofon aus; der virtuelle wiedergabe-endpunkt ist behoben, so dass sprach- und mp3/wav-clips nicht versehentlich an lautsprecher gesendet werden können. DeckPilot Installateur kann das offizielle herunterladen VB-CABLE Paket, überprüfen Sie den Authenticode-Publisher und starten Sie das Treiber-Setup des Anbieters; das Paket wird nicht neu verteilt. CABLE Output Atelier bleibt in der Version 1.0.10.
 
 DeckPilot 1.9.11 und DeckPilot Atelier 1.0.10 Hinzufügen von Pre-Flash-Hardware- und Firmware-Diagnose, eines Firmware-Versionsvergleichs, einer geführten Wiederherstellungsaktion nach unterbrochenem Schreiben, sequentiellen Multi-Board-Flashing mit einem Batch-Bericht und einer physikalischen Position-zu-F13-F24-Layout-Check in jedem Key-Control-Bericht.
 
