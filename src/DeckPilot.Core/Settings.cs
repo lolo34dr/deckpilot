@@ -67,6 +67,7 @@ public sealed class SoundboardClip
 }
 public sealed class SoundboardSettings
 {
+    public bool AutoStart { get; set; } = true;
     public string MicrophoneId { get; set; } = "";
     public string VirtualOutputId { get; set; } = "";
     public List<SoundboardClip> Clips { get; set; } = [];

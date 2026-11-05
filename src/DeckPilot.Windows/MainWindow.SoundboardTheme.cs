@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 using DeckPilot.Core;
 using Microsoft.Win32;
 
@@ -36,6 +37,7 @@ public partial class MainWindow
             return soundboard;
         }
     }
+    private readonly DispatcherTimer soundboardRetry = new() { Interval = TimeSpan.FromSeconds(5) };
     private bool soundboardRefreshing;
     private AudioEndpoint? virtualCableInput;
     private void InitializeThemeAndSoundboard()
@@ -44,6 +46,10 @@ public partial class MainWindow
         ThemePanelInput.Text = settings.Theme.Panel;
         ThemeAccentInput.Text = settings.Theme.Accent;
         ApplyTheme();
+        SoundboardAutoStartCheck.IsChecked = settings.Soundboard.AutoStart;
+        soundboardRetry.Tick += (_, _) => TryAutoStartSoundboard();
+        Loaded += (_, _) => { if (!IsOperational) return; soundboardRetry.Start(); TryAutoStartSoundboard(); };
+        Closed += (_, _) => soundboardRetry.Stop();
         RefreshSoundboardDevices();
         RefreshSoundboardClips();
     }
@@ -72,7 +78,7 @@ public partial class MainWindow
         ApplyTheme(); SaveSoundboardSettings();
         StatusText.Text = "Thème enregistré et appliqué.";
     }
-    private void RefreshSoundboardDevicesClick(object sender, RoutedEventArgs e) => RefreshSoundboardDevices();
+    private void RefreshSoundboardDevicesClick(object sender, RoutedEventArgs e) { RefreshSoundboardDevices(); TryAutoStartSoundboard(); }
     private void RefreshSoundboardDevices()
     {
         virtualCableInput = null;
@@ -111,6 +117,7 @@ public partial class MainWindow
         SoundboardStatus.Text = virtualCableInput == null
             ? "VB-CABLE n’est pas détecté. Installe le pilote depuis le site officiel, puis actualise les périphériques."
             : "Microphone sélectionné. Active le micro virtuel pour envoyer la voix et les sons.";
+        TryAutoStartSoundboard();
     }
     private void InstallVirtualCableClick(object sender, RoutedEventArgs e)
     {
@@ -136,25 +143,39 @@ public partial class MainWindow
         }
         catch (Exception ex) { SoundboardStatus.Text = "Installation de VB-CABLE annulée ou impossible : " + ex.Message; }
     }
-    private void ToggleSoundboardClick(object sender, RoutedEventArgs e)
+    private void TryAutoStartSoundboard()
     {
+        if (loading || !IsOperational || lifetime.IsCancellationRequested || !settings.Soundboard.AutoStart || string.IsNullOrWhiteSpace(settings.Soundboard.MicrophoneId) || soundboard?.IsRunning == true) return;
+        // Probe again while stopped: Windows may expose USB/Bluetooth microphones
+        // and VB-CABLE only after DeckPilot's background startup has completed.
+        RefreshSoundboardDevices();
+        if (virtualCableInput == null || SoundboardMicrophonePicker.SelectedItem is not AudioEndpoint microphone) return;
         try
         {
-            if (soundboard?.IsRunning == true)
-            {
-                soundboard.Stop(); SoundboardStartButton.Content = "Activer le micro virtuel";
-                SoundboardStatus.Text = "Micro virtuel arrêté.";
-            }
-            else
-            {
-                if (virtualCableInput == null) { RefreshSoundboardDevices(); if (virtualCableInput == null) return; }
-                Audio.Start(settings.Soundboard.MicrophoneId, virtualCableInput.Id);
-                SoundboardStartButton.Content = "Arrêter le micro virtuel";
-                SoundboardStatus.Text = "Voix et sons envoyés vers VB-CABLE. Dans Discord ou le jeu, choisis CABLE Output comme microphone.";
-            }
+            Audio.Start(microphone.Id, virtualCableInput.Id);
+            SoundboardStartButton.Content = "Arrêter le micro virtuel";
+            SoundboardStatus.Text = "Micro virtuel actif automatiquement · Voix et sons envoyés vers VB-CABLE.";
+        }
+        catch (Exception ex) { SoundboardStatus.Text = "Micro virtuel en attente · Nouvel essai automatique : " + ex.Message; }
+    }
+    private void SoundboardAutoStartChanged(object sender, RoutedEventArgs e)
+    {
+        if (loading) return;
+        settings.Soundboard.AutoStart = SoundboardAutoStartCheck.IsChecked == true;
+        if (settings.Soundboard.AutoStart) TryAutoStartSoundboard();
+        else
+        {
+            soundboard?.Stop(); SoundboardStartButton.Content = "Activer le micro virtuel";
+            SoundboardStatus.Text = "Micro virtuel arrêté · Démarrage automatique désactivé.";
             RefreshSoundboardClips();
         }
-        catch (Exception ex) { SoundboardStatus.Text = "Impossible de démarrer le mixage : " + ex.Message; }
+        SaveSoundboardSettings();
+    }
+    private void ToggleSoundboardClick(object sender, RoutedEventArgs e)
+    {
+        bool enable = soundboard?.IsRunning != true;
+        if (SoundboardAutoStartCheck.IsChecked != enable) SoundboardAutoStartCheck.IsChecked = enable;
+        else TryAutoStartSoundboard();
     }
     private void AddSoundClipClick(object sender, RoutedEventArgs e)
     {

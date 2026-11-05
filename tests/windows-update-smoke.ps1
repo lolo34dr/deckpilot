@@ -225,6 +225,16 @@ try {
     if ((Find-Control $root 'DeckAvailabilityStatus').Current.Name -ne 'Hors ligne') { throw 'The keypad must clearly show its offline state' }
     if ((Find-Control $root 'DeckAvailabilityHint').Current.Name -notlike '*Modifiez et testez*') { throw 'Offline configuration guidance is missing' }
     if (@($deckButtons | Where-Object { !$_.Current.IsEnabled -or $_.Current.BoundingRectangle.Width -lt 56 -or $_.Current.BoundingRectangle.Height -lt 50 }).Count -gt 0) { throw 'Keys must stay editable offline and remain usable when the keypad scales to the desktop' }
+    $script:phase = 'automatic virtual microphone startup preference'
+    $soundSection = (Find-Control $root 'SoundboardExpander').GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern)
+    $soundSection.Expand()
+    $autoSound = (Find-Control $root 'SoundboardAutoStartCheck').GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern)
+    if ($autoSound.Current.ToggleState -ne [System.Windows.Automation.ToggleState]::On) { throw 'Automatic virtual microphone startup should default to enabled' }
+    $autoSound.Toggle()
+    Wait-Until { (Read-SharedJson $settingsPath).Soundboard.AutoStart -eq $false }
+    $autoSound.Toggle()
+    Wait-Until { (Read-SharedJson $settingsPath).Soundboard.AutoStart -eq $true }
+    $soundSection.Collapse()
     $script:phase = 'test collapsed advanced settings and offline action feedback'
     # Windows PowerShell 5.1 does not assume UTF-8 for scripts without a BOM.
     $sentStatus = "Action envoy$([char]0xE9)e"
