@@ -8,7 +8,7 @@ Alleen voor de geteste hardwareconfiguratie: **Pro Micro ATmega32U4, 5 V / 16 MH
 <a id="wiring-and-behavior"></a>
 ## Bedrading en gedrag
 
-Elke schakelaar verbindt één speld met GND. Interne pull-ups zijn ingeschakeld. **2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15, 16** verzenden **F13 tot en met F24** Een stal in die volgorde. 30 ms debounce handvatten drukken en vrijgeven onafhankelijk van elkaar. Toetsenbordgedrag, Windows-side profielen en kalibratie blijven compatibel; USB-toetsenbordroller blijft beperkt door de toetsenbordbibliotheek van Arduino. De firmware introduceert nog geen USB-modi per knop of native media controls.
+Elke schakelaar verbindt één pin met GND. Interne pull-ups zijn ingeschakeld. Pins **2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15, 16** verzenden **F13 tot en met F24** Een stal in die volgorde. 30 ms debounce handvatten drukken en vrijgeven onafhankelijk van elkaar. Toetsenbordgedrag, Windows-side profielen en kalibratie blijven compatibel; USB-toetsenbordroller blijft beperkt door de toetsenbordbibliotheek van Arduino. De firmware introduceert nog geen USB-modi per knop of native media controls.
 
 Pin **1** wordt vastgehouden aan GND bij het opstarten schakelt de toetsenbordbewerking uit, waarbij de originele failsafe behouden blijft. De USB-kern kan nog steeds bootloader-invoer ondersteunen. Verbind VNC niet met GND.
 
@@ -34,7 +34,7 @@ DeckPilot Atelier biedt ook **Programma Effacer le DeckPilot**. Na een afzonderl
 
 DeckPilot controleert SHA-256, Intel HEX registreren controlesums, reset-vector aanwezigheid, overlappingen en de **28672-byte** toepassingsgrens voor de reset. Het komt overeen met de fysieke USB-locatie over de runtime en bootloader poorten, gebruikt AVR109 op 57600 baud, vereist AVRDUDE's schrijfverificatie, controleert dan de identiteit en versie van de draaiende firmware. Het schrijft geen zekeringen, EEPROM of de bootloader. Alleen Leonardo ID's `2341:8036` / `2A03:8036` en Caterina `2341:0036` / `2A03:0036` worden geaccepteerd. Als Windows geen passende fysieke verbinding kan bieden, wordt knipperen eerder geblokkeerd dan raden van een poort.
 
-Flitsen is niet atomair: een kabel loskoppelen of stroomverlies kan de toepassing firmware incompleet laten. Er is geen automatische firmware back-up of rollback. Indien nodig, opnieuw uploaden van de originele schets met Arduino IDE ingesteld op **Arduino Leonardo**. Afhankelijk van de bootloader van het bord, kan kort aansluiten van RST op GND tweemaal een tijdelijke bootloader poort ontmaskeren; uploaden terwijl die poort beschikbaar is. Een beschadigde bootloader vereist ISP hardware en kan niet worden gerepareerd door deze USB update. Schrijf geen andere board of klokvariant.
+Flitsen is niet atomair: een kabel loskoppelen of stroomverlies kan de toepassing firmware incompleet laten. Er is geen automatische firmware back-up of rollback. Indien nodig, opnieuw uploaden van de originele schets met Arduino IDE ingesteld op **Arduino Leonardo**. Afhankelijk van de bootloader van het bord, kan kort aansluiten van RST op GND tweemaal een tijdelijke bootloader poort blootleggen; uploaden terwijl die poort beschikbaar is. Een beschadigde bootloader vereist ISP hardware en kan niet worden gerepareerd door deze USB-updater. Schrijf geen ander bord of klokvariant.
 
 Het laatst voltooide AVRDUDE-logboek van de belangrijkste app wordt opgeslagen op `%LOCALAPPDATA%\DeckPilot\Firmware\last-flash.log`. Atelier houdt logs installeren en resetten in `%LOCALAPPDATA%\DeckPilotFactory\last-flash.log` en `last-reset.log`.
 

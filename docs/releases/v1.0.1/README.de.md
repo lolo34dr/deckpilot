@@ -2,7 +2,7 @@
 
 Repository Umbenennung Vorbereitung: `streamdeck-diy` → `deckpilot`.
 
-- Update-Checks unterstützen beide Repository-Namen vor und nach dem Umbenennen.
+- Update-Checks unterstützen beide Repository-Namen vor und nach dem Umnamen.
 - Die Download-Validierung akzeptiert nur die genauen Release-Asset-Pfade, die zu diesen beiden Repositories gehören.
 - Profile, Kalibrierung und Anwendungsaktionen sind unverändert.
 

@@ -62,7 +62,7 @@ DeckPilot configura Arduino Leonardo-compatible macropads que ya envía **F13-F2
 - **Perfiles listos:** empezar con plantillas de música, productividad o creación, a continuación, personalizarlas. Cambiar a un perfil específico, próximo o anterior de una clave física.
 - **Edición más rápida:** copy/cut/paste/reset teclas completas, atajos de teclado para grabar, elegir colores de acento clave, y deshacer cambios.
 - **Herramientas de Windows:** abrir sonido, visualización, Bluetooth y configuración de red, Administrador de tareas, o bloquear la sesión.
-- **Interfaz oscura compacta:** iconos vectoriales, iconos de aplicación donde esté disponible, y animaciones sutiles que respetan las preferencias de animación de Windows.
+- **Interfaz oscura compacta:** iconos vectoriales, iconos de aplicación donde está disponible, y animaciones sutiles que respetan las preferencias de animación de Windows.
 - **Operación de antecedentes:** Manténganse. DeckPilot en el área de notificación, con inicio en el registro de Windows habilitado por defecto (puede ser deshabilitado).
 - **Actualizaciones automáticas:** aprobar una nueva versión, entonces dejar DeckPilot descargar, verificar, reemplazar y reiniciar en sí mismo.
 
@@ -73,7 +73,7 @@ DeckPilot configura Arduino Leonardo-compatible macropads que ya envía **F13-F2
 ### Necesidades
 
 - Windows 10 o Windows 11, **x64**.
-- Un macropado compatible con Arduino Leonardo 12 teclas distintas **F13 a F24**.
+- Un macropado compatible con Arduino Leonardo enviando 12 teclas distintas **F13 a F24**.
 - Una conexión de datos USB.
 
 Las descargas publicadas incluyen el tiempo de ejecución .NET. **Usted no necesita instalar .NET para utilizar DeckPilot.**
@@ -93,7 +93,7 @@ Un portátil [DeckPilot.exe](https://github.com/lolo34dr/deckpilot/releases/late
 
 Desinstalación de Windows **Aplicaciones instaladas**. La desinstalación elimina el programa y sus atajos, al tiempo que conserva los perfiles personales para que una reinstalación posterior pueda reutilizarlos.
 
-El ejecutable de un solo fichero extrae sus dependencias agrupadas en el caché .NET del usuario en el primer lanzamiento, que puede tardar un poco más. Los ejecutables publicados están actualmente sin firmar, por lo que Windows puede mostrar una advertencia SmartScreen.
+El ejecutable de un solo fichero extrae sus dependencias agrupadas en la caché .NET del usuario en el primer lanzamiento, que puede tardar un poco más. Los ejecutables publicados están actualmente sin firmar, por lo que Windows puede mostrar una advertencia SmartScreen.
 
 <a id="configure-a-key"></a>
 ### Configurar una clave
@@ -134,7 +134,7 @@ El inicio de Windows está habilitado por defecto para el usuario actual. Puede 
 
 El selector lee atajos de los menús de inicio del usuario actual y de todo el sistema, luego los complementa con `Get-StartApps` resultados del catálogo de aplicaciones de Windows.
 
-Buscar ignora el caso y los acentos. Los nombres duplicados se agrupan, con las entradas de menú Inicio tomando prioridad. Aplicaciones portátiles y programas sin atajos registrados todavía se pueden seleccionar manualmente. Si el catálogo de Windows no está disponible, legible Atajos de menú Inicio siguen siendo utilizables.
+Buscar ignora el caso y los acentos. Los nombres duplicados se agrupan, con las entradas del menú Inicio tomando prioridad. Aplicaciones y programas portátiles sin accesos directos registrados todavía se pueden seleccionar manualmente. Si el catálogo de Windows no está disponible, legible Atajos del menú Inicio siguen siendo utilizables.
 
 Windows lanza los atajos seleccionados. `shell:AppsFolder`. Los argumentos opcionales se aplican a los programas basados en archivos y atajos; están ocultos para las entradas de AppsFolder.
 
@@ -286,7 +286,7 @@ Crédito sugerido:
 
 Para la preparación del dispositivo y los controles de calidad del taller, instalar el separado [DeckPilot Atelier](../../docs/FACTORY.md) herramienta. Su instalador se publica como **[DeckPilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** junto a la aplicación principal. Puede destellar el firmware incluido a un tablero Leonardo/Caterina, a continuación, comprobar prensas cortas y largas en todos 12 claves físicas y exportar un informe.
 
-DeckPilot 1.1.0 incluye un **Firmware du macropad…** diálogo y firmware 1.0.0 Pro Micro ATmega32U4 **5 V / 16 MHz**, utilizando la configuración Leonardo/Caterina confirmada por el registro de carga del propietario. La herramienta de parpadeo de Windows agrupada no requiere Arduino IDE. La selección y confirmación de dispositivos son obligatorios; actualizaciones de aplicaciones nunca destellan silenciosamente el tablero. Existiendo mapas, perfiles y calibración F13–F24 siguen siendo compatibles.
+DeckPilot 1.1.0 incluye un **Firmware du macropad…** diálogo y firmware 1.0.0 Pro Micro ATmega32U4 **5 V / 16 MHz**, utilizando la configuración Leonardo/Caterina confirmada por el registro de carga del propietario. La herramienta de parpadeo de Windows agrupada no requiere Arduino IDE. La selección y confirmación de dispositivos son obligatorios; actualizaciones de aplicaciones nunca flashear silenciosamente el tablero. Existing F13–F24 cartografías, perfiles y calibración siguen siendo compatibles.
 
 **El propietario ha confirmado éxito en la aplicación flashing, firmware 1.0.0 identificación y todo 12 botones en la tabla de referencia.** Mantenga el boceto original y el acceso a RST/GND para la recuperación. [documentación de firmware](FIRMWARE.es.md) para compatibilidad, validación, recuperación, pasos de construcción y licencias de terceros. Los modos USB per-button y los controles de medios nativos no son parte de esta versión de firmware.
 
@@ -300,14 +300,14 @@ Después de producir `artifacts/standalone/DeckPilot.exe` con el paquete de firm
 
 El **Votre macropad** tarjeta muestra estado de conexión, el firmware detectado y cualquier actualización de paquetes disponibles. **Connexion et diagnostic** expone la selección de tableros cuando varios Leonardos están conectados, el estado de enlace USB en vivo, cuenta de botones físicos, preferencias de notificación de firmware y un resumen de diagnóstico copiable. Los diagnósticos no copian las acciones de perfil o identificadores de serie USB. El monitor vuelve a conectarse después de desconectar y deja su puerto serie automáticamente mientras el administrador de firmware está abierto. 1.0.0 y sin el vínculo de diagnóstico.
 
-Los cheques de firmware de inicio están habilitados por defecto. Después de la actualización de la aplicación, el cheque y la calibración están fuera del camino, un firmware identificado más antiguo puede impulsar la instalación; enviar recordatorios de demoras para 24 horas. Los tableros desconocidos y múltiples candidatos no seleccionados no se destellan automáticamente. Los lanzamientos de firmware se agrupan con actualizaciones de aplicaciones de GitHub, en lugar de obtener de una alimentación independiente de firmware.
+Las comprobaciones de firmware de inicio están activadas por defecto. Después de la actualización de la aplicación, el cheque y la calibración están fuera del camino, un firmware identificado más antiguo puede impulsar la instalación; enviar recordatorios de demoras para 24 horas. Los tableros desconocidos y múltiples candidatos no seleccionados no se destellan automáticamente. Los lanzamientos de firmware se agrupan con actualizaciones de aplicaciones de GitHub, en lugar de obtener de una alimentación independiente de firmware.
 
 Firmware **1.1.1** añade identificación de sesión, respuestas de latidos cardíacos correlativos, mensajes encuadernados y eventos físicos de estado clave. Estos eventos animan los botones mapeados y actualizan el diagnóstico; nunca invocan acciones por segunda vez. Su primera validación de tablero físico todavía es necesaria, aunque el firmware anterior 1.0.0 y el procedimiento flash han sido confirmados por el propietario. [protocolo y documentación de compatibilidad](FIRMWARE.es.md).
 
 <a id="keypad-interface-140"></a>
 ## Interfaz de teclado (interfaz de teclado)1.4.0)
 
-El más grande 3 × 4 keypad sigue el recinto físico y las teclas negras. Cada clave muestra su icono principal, etiqueta, cartografía F13–F24 y un pequeño icono de tipo de acción; las puntas de las herramientas conservan la etiqueta completa y la posición. Presione retroalimentación, acciones de ejecución, envío exitoso y errores tienen apariencias distintas, incluyendo símbolos en lugar de color solo.
+El más grande 3 × 4 keypad sigue el recinto físico y las teclas negras. Cada clave muestra su icono principal, etiqueta, cartografía F13–F24 y un pequeño icono de tipo de acción; las puntas de las herramientas conservan la etiqueta completa y la posición. Pulse la retroalimentación, las acciones de ejecución, el envío exitoso y los errores tienen apariencias distintas, incluyendo símbolos en lugar de color solo.
 
 Elija una clave para editarla. **Options avancées · fichier et arguments** mantiene las trayectorias manuales de aplicación y los argumentos de lanzamiento colapsados por defecto, mientras que los destinos esenciales de carpetas y sitios web se siguen expandiendo. **Tester l’action** guarda y envía la acción seleccionada en el PC actual; un indicador de éxito confirma el envío, no la terminación dentro de otra aplicación. Atajos de teclado apuntan a la ventana activa. Las teclas F13-F24 libres no tienen ninguna acción de prueba.
 
@@ -339,9 +339,9 @@ Under **Gérer les profils**, exportar el perfil actual o todos los perfiles com
 
 Antes de guardar perfiles cambiados, DeckPilot mantiene los perfiles anteriores en `%APPDATA%\DeckPilot\Backups` (20 Versiones, deduplicadas por contenido).Los ahorros de preferencia no crean copias de seguridad de perfil. Un fallo de copia de seguridad evita la sobreescritura de la configuración actual. Restaurar reemplaza los perfiles después de la confirmación y se puede deshacer; la calibración permanece inalterada.
 
-**Microphone Windows** toggles mute on all currently active Windows capture endpoints. La barra de estado persistente y la tarjeta Audio Windows muestran el estado activo/muted/mixed/unavailable, refrescado cada dos segundos y después de los comandos de la aplicación. Una actualización multi-endpoint fallido intenta restaurar estados mudos anteriores. Estos indicadores describen el estado de Windows endpoint, no un interruptor de hardware o un botón mute de la aplicación.
+**Microphone Windows** toggles mute on all currently active Windows capture endpoints. La barra de estado persistente y la tarjeta Audio Windows muestran estado activo/muted/mixed/unavailable, refrescado cada dos segundos y después de los comandos de la aplicación. Una actualización multi-endpoint fallido intenta restaurar estados mudos anteriores. Estos indicadores describen el estado de Windows endpoint, no un interruptor de hardware o un botón mute de la aplicación.
 
-**Changer de sortie audio** alterna entre dos dispositivos de salida seleccionados conectados, para la consola de Windows, multimedia y predeterminados de comunicaciones. Un objetivo perdido da un error sin elegir otro dispositivo. Las aplicaciones con su propia salida fija pueden no seguir el predeterminado de Windows. Los IDs de endpoint importados se muestran como indisponibles hasta que se adaptan al PC actual.
+**Changer de sortie audio** alterna entre dos dispositivos de salida seleccionados, conectados, para la consola de Windows, multimedia y predeterminados de comunicaciones. Un objetivo perdido da un error sin elegir otro dispositivo. Las aplicaciones con su propia salida fija pueden no seguir el predeterminado de Windows. Los IDs de endpoint importados se muestran como indisponibles hasta que se adaptan al PC actual.
 
 Para configurar **appui court / appui long**, primero elegir una acción configurada, habilitar la opción de dos acciones, seleccionar el gesto para editar y establecer un umbral desde 200 a 3000 ms. Sin este modo, las acciones conservan el comportamiento inmediato de arriba abajo. Con él, las acciones cortas se ejecutan en la liberación antes del umbral; las acciones largas se ejecutan una vez en el umbral (o en la liberación si el temporizador todavía no ha funcionado). Una acción larga nunca también corre el corto. Las teclas de paso F13–F24 no pueden usar el modo de doble acción.
 
@@ -425,6 +425,11 @@ La validación cubre los ajustes heredados, validación de acento, navegación d
 <a id="profile-sound-files-and-workshop-safety"></a>
 ### Perfil de archivos de sonido y seguridad del taller
 
-Las exportaciones de perfiles incluyen los clips MP3/WAV referenciados (hasta 32 MiB de audio por paquete). Importaciones copiar audio incrustado en DeckPilot’s managed Sounds folder and remap identifiers without replace existing clips. Las copias de seguridad de perfil automático utilizan el mismo formato; el audio no disponible se registra como desaparecido en lugar de reemplazar silenciosamente. Mantenga los archivos fuente si excede el límite de exportación. Los archivos de perfil de Legacy siguen soportados. Se bloquea la eliminación de un clip que todavía se asigna a una acción corta o larga.
+Las exportaciones de perfiles incluyen los clips MP3/WAV referenciados (hasta 32 MiB de audio por paquete). Importaciones copiar audio incrustado en DeckPilot’s managed Sounds folder and remap identifiers without replace existing clips. Las copias de seguridad del perfil automático utilizan el mismo formato; el audio no disponible se registra como desaparecido en lugar de reemplazar silenciosamente. Mantenga los archivos fuente si supera el límite de exportación. Los archivos de perfil de Legacy siguen soportados. Se bloquea la eliminación de un clip que todavía se asigna a una acción corta o larga.
 
 Atelier acepta tablas que aún no responden DeckPilot protocolo, mientras que todavía se registra la ubicación USB, Caterina bootloader y ATmega32U4 firma antes de la programación. Cada sesión de prueba comienza con resultados vacíos, y su informe se mantiene asociado con la tabla probada. Cerrar la aplicación durante un flash o reset se bloquea hasta el final de la escritura y verificación.
+
+<a id="live-microphone-latency"></a>
+### Latencia del micrófono en vivo
+
+DeckPilot 2.1.3 procesos de audio en vivo en bloques pequeños, impulsados por la salida. 20 ms captura y captura de micrófono impulsado por eventos 40 ms buffers de reproducción. La cola del micrófono está ligada a 100 ms y descartes marcos completos antiguos si la reproducción se bloquea; esto evita construir segundos de retraso del habla. Estos son ajustes de amortiguación de software, no una garantía de latencia de extremo a extremo medido. Windows, el micrófono, VB-CABLE y la aplicación receptora también contribuyen a retrasar. Los ajustes de aislamiento de voz de disco no cambian y pueden suprimir clips de tablero de sonido porque recibe la señal mixta.

@@ -8,6 +8,6 @@ DeckPilot 1.3.0 melhora a conexão USB e verifica firmware macropad na inicializ
 - O gerenciador de Firmware libera automaticamente a porta serial do monitor antes da identificação/flashing e reconecta depois. 1.0.0 e as consultas de identidade legadas permanecem suportadas.
 - Os perfis podem ser selecionados no menu da bandeja; Ctrl+S salva alterações; os diagnósticos de conexão podem ser copiados para suporte.
 
-As atualizações do Firmware são entregues em versões de aplicativos; as verificações de inicialização comparam a versão detectada com o pacote incluído. Nenhum hardware é flashado silenciosamente. **Firmware 1.1.0 Ainda necessita de um primeiro teste físico:** firmware 1.0.0 e o procedimento flash anterior foi validado pelo proprietário, enquanto este novo protocolo é coberto por testes host e compilação AVR.
+As atualizações do Firmware são entregues em versões de aplicativos; as verificações de inicialização comparam a versão detectada com o pacote incluído. Nenhum hardware é flashado silenciosamente. **Firmware 1.1.0 Ainda necessita de um primeiro teste físico:** firmware 1.0.0 e o procedimento flash anterior foi validado pelo proprietário, enquanto este novo protocolo é coberto por testes de host e compilação AVR.
 
 Transferir **DeckPilot- Setup.exe** ou atualização a partir do aplicativo. Perfis, calibração e preferências de inicialização são mantidos. DeckPilot antes de usar o Arduino IDE ou outro monitor serial; abrir o gerenciador de firmware no aplicativo libera a conexão automaticamente.

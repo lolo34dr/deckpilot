@@ -12,7 +12,7 @@ Cada interruptor conecta um pino ao GND. As pull-ups internas estão habilitadas
 
 Pino **1** Mantido em GND na inicialização desativa a operação do teclado, preservando o sistema de segurança original. O núcleo USB ainda pode suportar a entrada do carregador de inicialização. Não conecte VCC ao GND.
 
-A interface serial USB CDC atual responde `DECKPILOT?\n` em 115200 baud com:
+A atual interface serial USB CDC responde `DECKPILOT?\n` em 115200 baud com:
 
 ```
 DECKPILOT|1|promicro-32u4-16mhz|1.1.1
@@ -34,7 +34,7 @@ DeckPilot Atelier também oferece **Programa Effacer le DeckPilot**. Depois de u
 
 DeckPilot Verifica o SHA-256, Checksums de registro Intel HEX, presença do vetor de reset, sobreposições e o **28672-Adeus.** o limite da aplicação antes da redefinição. Corresponde à localização física USB através das portas 'runtime' e 'bootloader', usa o AVR109 em 57600 baud, requer verificação de escrita do AVRDUDE, em seguida, verifica a identidade e versão do firmware em execução. Ele não escreve fusíveis, EEPROM ou o carregador de boot. Apenas IDs Leonardo `2341:8036` / `2A03:8036` e Caterina `2341:0036` / `2A03:0036` são aceitos. Se o Windows não pode fornecer uma conexão física correspondente, piscando é bloqueado em vez de adivinhar uma porta.
 
-Flashing não é atômico: uma desconexão de cabo ou perda de energia pode deixar o firmware do aplicativo incompleto. Não há backup ou rollback de firmware automático. Se necessário, re-upload o esboço original com o Arduino IDE configurado para **Arduino Leonardo**. Dependendo do carregador de boot da placa, conectar brevemente RST ao GND duas vezes pode expor uma porta de bootloader temporária; upload enquanto essa porta está disponível. Um carregador de boot danificado requer hardware ISP e não pode ser reparado por este atualizador USB. Não escreva uma diferente placa ou variante do relógio.
+Flashing não é atômico: uma desconexão de cabo ou perda de energia pode deixar o firmware do aplicativo incompleto. Não há backup ou rollback de firmware automático. Se necessário, re-upload o esboço original com o Arduino IDE configurado para **Arduino Leonardo**. Dependendo do carregador de boot da placa, conectando brevemente RST ao GND duas vezes pode expor uma porta de bootloader temporária; upload enquanto essa porta está disponível. Um carregador de boot danificado requer hardware ISP e não pode ser reparado por este atualizador USB. Não escreva uma diferente placa ou variante do relógio.
 
 O último registo AVRDUDE da aplicação principal está armazenado em `%LOCALAPPDATA%\DeckPilot\Firmware\last-flash.log`. Atelier mantém instalar e redefinir logs em `%LOCALAPPDATA%\DeckPilotFactory\last-flash.log` e `last-reset.log`.
 

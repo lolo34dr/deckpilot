@@ -1,6 +1,6 @@
 > Esta es una traducción automática de las notas de liberación completas. El original inglés es la referencia.
 
-DeckPilot 2.0.0 introduce una profunda interfaz negra con colores de fondo guardado, panel y acento. La nueva tabla de sonido acepta clips MP3/WAV, permite a los usuarios elegir un micrófono físico y una salida de cable virtual, y mezcla la voz con clips para su uso como un micrófono en juegos o llamadas. Los clips se pueden iniciar desde la aplicación o se asigna a una tecla macropad. Un cable de audio virtual como VB-CABLE debe instalarse por separado en Windows; Atelier permanece en versión 1.0.10.
+DeckPilot 2.0.0 introduce una profunda interfaz negra con fondo guardado, panel y colores de acento. La nueva tabla de sonido acepta clips MP3/WAV, permite a los usuarios elegir un micrófono físico y una salida de cable virtual, y mezcla la voz con clips para su uso como un micrófono en juegos o llamadas. Los clips se pueden iniciar desde la aplicación o se asigna a una tecla macropad. Un cable de audio virtual como VB-CABLE debe instalarse por separado en Windows; Atelier permanece en versión 1.0.10.
 
 DeckPilot 1.9.11 y DeckPilot Atelier 1.0.10 Agregue el hardware y el diagnóstico de firmware previos al combate, una comparación de versiones de firmware, una acción de recuperación guiada después de los escritos interrumpidos, el flash secuencial multi-board con un informe de lotes, y un cheque de diseño físico-posición-a-F13–F24 en cada informe de control clave.
 
@@ -45,10 +45,10 @@ DeckPilot 1.8.0 añade un espacio de trabajo refrescado y formas más rápidas d
 - Acciones de perfil: cambiar a un perfil nombrado, el siguiente o el perfil anterior de una clave. Los conjuntos de perfil importado mantienen sus enlaces internos.
 - Acciones de Windows: abrir ajustes comunes o Administrador de tareas, o bloquear explícitamente el PC.
 - Copiar/cortar/paste/reestablecer teclas completas, incluyendo largas prensas y colores, con deshacer/redo y un portapapeles plano.
-- Capturar un atajo de teclado directamente; Escapar cancela y las teclas macropadas permanecen reservadas durante la captura.
+- Capturar un acceso directo al teclado; Escapar cancela y las teclas macropadas permanecen reservadas durante la captura.
 - Ctrl+K búsqueda de acción y una historia clara y sencilla de la última sesión 30 acciones.
 - Arregla el impulso automático de firmware para aceptarlo abre el gestor de firmware. Los gestos pendientes se cancelan a través de los cambios de perfil.
 
 Descargar **DeckPilot-Setup.exe** o actualización de la aplicación. Se conservan los perfiles existentes, las preferencias de calibración y puesta en marcha. **1.1.1**; no se requiere flash para estas características.
 
-La validación incluye compatibilidad de núcleos/navigation/import/template checks e instalación nativa de Windows, actualización, picker, drag-and-drop, undo/redo, creación de plantillas, acciones de perfil, captura atajo, edición de portapapeles, diseño y minimizar/restore checks. El comportamiento de macropado físico y audio-dispositivo todavía depende del hardware Windows del propietario.
+La validación incluye compatibilidad de núcleos/navigation/import/template checks e instalación nativa de Windows, actualización, picker, drag-and-drop, undo/redo, creación de plantillas, acciones de perfil, captura atajo, edición de portapapeles, diseño y minimizar/restore checks. El comportamiento de macropado físico y audio-dispositivo todavía depende del hardware de Windows del propietario.

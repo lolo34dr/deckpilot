@@ -55,7 +55,7 @@ DeckPilot konfiguriert Arduino Leonardo-kompatible Makropads, die bereits senden
 ## Merkmale
 
 - **Geführte Kalibrierung:** Kennzeichnen Sie alle 12 physische Tasten, ohne Ihr Makropad neu zu verkabeln.
-- **Installierter Application Picker:** Suchen Sie nach Startmenükürzeln und dem Windows-Anwendungskatalog, einschließlich Microsoft Store-Einträgen. Die manuelle Dateiauswahl bleibt verfügbar.
+- **Installierter Application Picker:** Suche Startmenükürzel und den Windows-Anwendungskatalog, einschließlich Microsoft Store-Einträge. Manuelle Dateiauswahl bleibt verfügbar.
 - **Zollverfahren:** Anwendungen starten, Ordner oder Websites öffnen, Verknüpfungen senden und Medien steuern.
 - **Freie Tasten:** Halten Sie F13-F24 für Verknüpfungen verfügbar, die direkt in einem Spiel oder einer anderen Anwendung konfiguriert sind.
 - **Lokale Profile:** Profile erstellen, duplizieren, umbenennen, löschen und auswählen.
@@ -82,10 +82,10 @@ Die veröffentlichten Downloads beinhalten die .NET Runtime. **Sie müssen .NET 
 ### Installation und Start
 
 1. Download **[DeckPilotSetup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** und führen Sie das Installationsprogramm aus. Windows bittet um Administratorberechtigung für die Installation in **Program Files\DeckPilot**.
-2. Mit dem Installer können Sie wählen, ob DeckPilot Sie beginnt mit Windows, sucht automatisch nach App-Updates und reduziert Animationen. Start- und Update-Checks sind standardmäßig aktiviert; reduzierte Animationen sind ausgeschaltet. VB-CABLE vom Fahrer geforderte Soundboard und installiert sie automatisch, falls sie fehlt.
+2. Der Installateur lässt Sie wählen, ob DeckPilot Sie beginnt mit Windows, sucht automatisch nach App-Updates und reduziert Animationen. Start- und Update-Checks sind standardmäßig aktiviert; reduzierte Animationen sind ausgeschaltet. VB-CABLE vom Fahrer geforderte Soundboard und installiert sie automatisch, falls sie fehlt.
 3. Der Installateur fügt hinzu DeckPilot für Windows **Installierte Apps** und erstellt eine Startmenü-Verknüpfung. Eine Desktop-Verknüpfung wird standardmäßig ausgewählt.
 4. Verbinden Sie Ihr Makropad und öffnen DeckPilot Aus seiner Abkürzung.
-5. Folgen Sie der Kalibrierung von links nach rechts quer **vier Spalten**dann die nächste Reihe, für **drei Reihen**Jede Taste muss eine andere F13-F24-Taste senden.
+5. Folgen Sie der Kalibrierung von links nach rechts quer **vier Spalten**, dann die nächste Reihe, für **drei Reihen**Jede Taste muss eine andere F13-F24-Taste senden.
 
 Beim Upgrade von der ehemaligen 4-Zeilenlayout, DeckPilot bewahrt Profile/Aktionen und fordert eine neue Kalibrierung für die korrigierten Positionen an. `%APPDATA%\DeckPilot`Beenden Sie die alte Kopie, wenn das Setup Sie auffordert.
 
@@ -155,7 +155,7 @@ Wenn eine neuere stabile GitHub-Version gefunden wird, DeckPilot fragt, ob aktua
 
 Die Entscheidung, später zu aktualisieren, verschiebt automatische Aufforderungen für 24 Stunden. Manuelle Kontrollen umgehen diese Verschiebung.
 
-Downloads verwenden HTTPS, wobei die Weiterleitungen auf die erwarteten GitHub-Hosts beschränkt sind. Temporäre Dateien werden in `%LOCALAPPDATA%\DeckPilot\Updates`; Downloads, die älter als sieben Tage sind, werden bereinigt. Der Windows-Starteintrag verwendet nach einem Update weiterhin den gleichen ausführbaren Pfad.
+Downloads verwenden HTTPS, wobei die Weiterleitungen auf die erwarteten GitHub-Hosts beschränkt sind. Temporäre Dateien werden in `%LOCALAPPDATA%\DeckPilot\Updates`; Downloads, die älter als sieben Tage sind, werden bereinigt. Der Windows-Starteintrag verwendet nach einem Update weiterhin denselben ausführbaren Pfad.
 
 Portable Kopien erfordern einen beschreibbaren persönlichen Ordner. Installierte Kopien verwenden den Installer für geschützte Verzeichnisse; die DeckPilot Die App selbst läuft weiterhin ohne Administratorrechte.
 
@@ -244,9 +244,9 @@ Mit dem Leonardo verbunden:
 - Weisen Sie einen freien Schlüssel in einem Spiel zu und überprüfen Sie, ob das Spiel ihn normalerweise erhält.
 - Starten Sie ein konfiguriertes Programm und halten Sie dann die Schaltfläche gedrückt: Es sollte einmal bis zum Release gestartet werden.
 - Testen Sie einen Ordner, eine Website, eine Verknüpfung in einer gewöhnlichen Anwendung und Mediensteuerungen.
-- Senden Sie F13-F24 durch eine Verknüpfungsaktion und bestätigen Sie, dass es keine Schleife von DeckPilot Aktionen.
+- Senden Sie F13-F24 durch eine Shortcut-Aktion und bestätigen Sie, dass es keine Schleife von DeckPilot Aktionen.
 - Erstellen Sie zwei Profile mit unterschiedlichen Aktionen, wechseln Sie zwischen ihnen, beenden Sie und starten Sie neu. Profile und Kalibrierung sollten bestehen bleiben.
-- Schließen Sie das Fenster, lösen Sie eine Aktion aus, öffnen Sie sie erneut und beenden Sie sie durch das Symbol für den Benachrichtigungsbereich. Einmal DeckPilot Ausgänge, sollten alle Schlüssel normal durchlaufen.
+- Schließen Sie das Fenster, lösen Sie eine Aktion aus, öffnen Sie sie erneut und beenden Sie sie durch das Symbol für den Benachrichtigungsbereich. DeckPilot Ausgänge, sollten alle Schlüssel normal durchlaufen.
 - Aktivieren Sie Windows-Start und Test nach erneuter Anmeldung; Deaktivieren Sie es anschließend, wenn dies nicht gewünscht ist.
 
 <a id="current-limitations"></a>
@@ -284,11 +284,11 @@ Empfohlener Kredit:
 <a id="macropad-firmware-updates"></a>
 ## Macropad Firmware Updates
 
-Für Gerätevorbereitung und Werkstattqualitätsprüfungen installieren Sie die separate [DeckPilot Atelier](../../docs/FACTORY.md) Sein Installationsprogramm wird veröffentlicht als **[DeckPilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** Es kann die mitgelieferte Firmware auf ein Leonardo/Caterina-Board blinken und dann kurze und lange Drücke auf allen Seiten prüfen. 12 physische Schlüssel und einen Bericht exportieren.
+Für Gerätevorbereitung und Werkstattqualitätsprüfungen installieren Sie die separate [DeckPilot Atelier](../../docs/FACTORY.md) Sein Installationsprogramm wird veröffentlicht als **[DeckPilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** Es kann die mitgelieferte Firmware auf einer Leonardo/Caterina-Platine blinken und dann kurze und lange Drücke auf allen Seiten überprüfen. 12 physische Schlüssel und einen Bericht exportieren.
 
 DeckPilot 1.1.0 enthält eine **Firmware du macropad…** Dialog und Firmware 1.0.0 für den Pro Micro ATmega32U4 **5 V / 16 MHz**, mit der Leonardo/Caterina-Konfiguration, die durch das Upload-Log des Besitzers bestätigt wird. Das gebündelte Windows-Flashing-Tool erfordert keine Arduino-IDE. Geräteauswahl und -bestätigung sind obligatorisch; App-Updates blinken niemals stillschweigend das Board. Bestehende F13-F24-Mappings, Profile und Kalibrierungen bleiben kompatibel.
 
-**Der Besitzer hat erfolgreiches In-App-Flashing, Firmware bestätigt 1.0.0 Identifikation und alle 12 Knöpfe auf der Referenztafel.** Behalten Sie die Originalskizze und den Zugriff auf RST/GND für die Wiederherstellung bei. Firmware-Blinken kann nicht automatisch zurückgerollt werden. [Firmware-Dokumentation](FIRMWARE.de.md) Kompatibilität, Validierung, Wiederherstellung, Build-Schritte und Lizenzen von Drittanbietern. USB-Modi pro Taste und native Mediensteuerung sind nicht Teil dieser Firmware-Version.
+**Der Besitzer hat erfolgreiches In-App-Flashing, Firmware bestätigt 1.0.0 Identifikation und alle 12 Knöpfe auf der Referenztafel.** Behalten Sie die Originalskizze und den Zugriff auf RST/GND zur Wiederherstellung bei. Firmware-Blinken kann nicht automatisch zurückgerollt werden. [Firmware-Dokumentation](FIRMWARE.de.md) Kompatibilität, Validierung, Wiederherstellung, Build-Schritte und Lizenzen von Drittanbietern. USB-Modi pro Taste und native Mediensteuerung sind nicht Teil dieser Firmware-Version.
 
 <a id="building-the-windows-installer"></a>
 ### Erstellen des Windows Installers
@@ -326,12 +326,12 @@ Verwendung **Rechercher une action ou une application** für Abfragen wie z.B. `
 
 Ziehen Sie eine Aktion aus dem Katalog oder den Suchergebnissen auf einen Schlüssel, um sie zuzuweisen. Ziehen Sie einen konfigurierten Schlüssel auf einen anderen, um **tauschen ihre Aktionen aus**; die physikalische Kalibrierung bleibt unverändert. `.exe`, `.lnk`, `.appref-ms`, Ordner oder HTTP(S) URL auf einen Schlüssel. Dropping konfiguriert nur den Schlüssel und führt die Aktion niemals aus. Vervollständigen Sie alle fehlenden Einstellungen im Editor.
 
-Windows-Startup behält nun eine explizite Präferenz pro Benutzer, repariert einen veralteten oder fehlenden Run-Eintrag und meldet bekannte Windows-Start-Deaktivierungs-Flags. Normale Starts respektieren Windows-Deaktivierung; ausdrücklich aktivieren **Lancer avec Windows** Räumt das Bekannte DeckPilot Deaktivieren Sie das Flag für den aktuellen Benutzer. Hintergrundstarts bleiben noch vor der Kalibrierung verborgen, und doppelte Hintergrundstarts verlassen leise. Nach der Aktualisierung öffnen **Préférences de l’application**, überprüfen Sie den Startstatus und reaktivieren Sie die Option, wenn Windows sie blockiert hat. Eine echte Anmeldung / Anmeldung auf dem PC des Benutzers bleibt die letzte Prüfung für Windows-Richtlinien oder maschinenspezifische Einschränkungen.
+Windows-Startup behält nun eine explizite Präferenz pro Benutzer, repariert einen veralteten oder fehlenden Run-Eintrag und meldet bekannte Windows-Start-Deaktivierungs-Flags. Normale Starts respektieren Windows-Deaktivierung; ausdrücklich aktivieren **Lancer avec Windows** Räumt das Bekannte DeckPilot Deaktivieren Sie das Flag für den aktuellen Benutzer. Hintergrundstarts bleiben noch vor der Kalibrierung verborgen, und doppelte Hintergrundstarts verlassen leise. Nach der Aktualisierung öffnen **Préférences de l’application**, überprüfen Sie den Startstatus und reaktivieren Sie die Option, wenn Windows sie blockiert hat. Eine echte Anmeldung/Anmeldung auf dem PC des Benutzers bleibt die letzte Prüfung für Windows-Richtlinien oder maschinenspezifische Einschränkungen.
 
 <a id="sharp-keypad-rendering-profile-recovery-and-audio-controls-161"></a>
 ## Sharp Keypad Rendering, Profilwiederherstellung und Audiosteuerung ()1.6.1)
 
-Die Tastatur wird nun in nativen WPF-Größen dargestellt, anstatt Text durch eine Viewbox zu skalieren. Parent/key Shadow-Effekte und textskalierte Animationen wurden entfernt; kleinere Fenster scrollen, anstatt die Tastatur zu verkleinern. Die App deklariert die DPI-Awareness pro Monitor und verwendet größere Windows-Shell-Symbole für Desktop-Anwendungen.
+Die Tastatur wird nun in nativen WPF-Größen dargestellt, anstatt Text durch eine Viewbox zu skalieren. Eltern-/Tastenschatteneffekte und Textskalierungsanimationen wurden entfernt; kleinere Fenster scrollen, anstatt die Tastatur zu verkleinern. Die App deklariert die DPI-Awareness pro Monitor und verwendet größere Windows-Shell-Symbole für Desktop-Anwendungen.
 
 **Annuler / Rétablir** Wiederherstellung von Profilbearbeitungen, einschließlich Drag-and-Drop-Swaps, Aktionseinstellungen, Importen und Profilerstellung/-löschung. 50 Bearbeitungen während der App-Sitzung. Ctrl+Z/Ctrl+Y arbeiten auf Profilen außerhalb von Textfeldern; Textfelder behalten ihre eigene Rückgängigmachung/Wiederholung bei. Kalibrierung, Starteinstellungen und ausgeführte Aktionen werden nicht rückgängig gemacht.
 
@@ -339,7 +339,7 @@ Unter **Gérer les profils**Exportieren Sie das aktuelle Profil oder alle Profil
 
 Vor dem Speichern geänderter Profile, DeckPilot hält die vorherigen Profile in `%APPDATA%\DeckPilot\Backups` (20 Versionen, Content-dedupliziert). Preference-only speichert keine Profil-Backups. Ein Backup-Fehler verhindert das Überschreiben der aktuellen Einstellungen. Restore ersetzt Profile nach Bestätigung und kann selbst rückgängig gemacht werden; die Kalibrierung bleibt unverändert.
 
-**Microphone Windows** Die persistente Statusleiste und die Audio-Windows-Karte zeigen den Status active/muted/mixed/unavailable an, der alle zwei Sekunden und nach App-Befehlen aktualisiert wird. Ein fehlgeschlagenes Multi-Endpoint-Update versucht, frühere Mute-Zustände wiederherzustellen. Diese Indikatoren beschreiben den Windows-Endpunktzustand, nicht einen Hardware-Switch oder eine anwendungseigene Mute-Taste.
+**Microphone Windows** Die permanente Statusleiste und die Audio-Windows-Karte zeigen den Status active/muted/mixed/unavailable an, der alle zwei Sekunden und nach App-Befehlen aktualisiert wird. Ein fehlgeschlagenes Multi-Endpoint-Update versucht, frühere Mute-Zustände wiederherzustellen. Diese Indikatoren beschreiben den Windows-Endpunktzustand, nicht einen Hardware-Switch oder eine anwendungseigene Mute-Taste.
 
 **Changer de sortie audio** Wechsel zwischen zwei ausgewählten, angeschlossenen Ausgabegeräten für Windows-Konsole, Multimedia und Kommunikationsstandards. Ein fehlendes Ziel gibt einen Fehler, ohne ein anderes Gerät auszuwählen. Anwendungen mit eigenem festen Ausgang folgen möglicherweise nicht dem Windows-Standard. Importierte Endpunkt-IDs werden als nicht verfügbar angezeigt, bis sie an den aktuellen PC angepasst sind. Durch fehlgeschlagene Routing-Änderungen wird versucht, die vorherigen Standardwerte wiederherzustellen.
 
@@ -365,9 +365,9 @@ Ein Test-Snapshot-Reader kann bis zu 500 ms für Windows-Sharing/Lock-Verstöße
 <a id="runtime-and-editing-optimizations-170"></a>
 ## Laufzeit- und Bearbeitungsoptimierungen ()1.7.0)
 
-Das Speichern identischer Einstellungen überprüft die aktuelle Datei, überspringt jedoch Ersatz- und Sicherungsarbeiten. Externe Bearbeitungen/Löschungen und fehlgeschlagene Schreibvorgänge werden immer noch erkannt. `ButtonAction` Die Geschichte hält losgelöste Modell-Snapshots, validiert neue Zustände und vermeidet JSON-Parsing während Rückgängigmachen/Wiederholen. 50-Editing Limit und 20 Profil-Backups bleiben bestehen.
+Das Speichern identischer Einstellungen überprüft die aktuelle Datei, überspringt jedoch Ersatz- und Sicherungsarbeiten. Externe Bearbeitungen/Löschungen und fehlgeschlagene Schreibvorgänge werden immer noch erkannt. `ButtonAction` Die Geschichte hält losgelöste Modell-Schnappschüsse, validiert neue Zustände und vermeidet JSON-Parsing während Rückgängigmachen/Wiederholen. 50-Editing Limit und 20 Profil-Backups bleiben bestehen.
 
-Search und Picker teilen sich einen unveränderlichen Installed-App-Katalog für fünf Minuten15 Sekunden für ein Teilergebnis). Gleichzeitige Verbraucher teilen sich einen Scan; das Schließen eines Pickers löscht keinen anderen Verbraucher. Refresh umgeht den Cache, und jeder Picker hat seinen eigenen Filter/Ansicht. Scannen und Katalog-Parsing läuft vom UI-Thread ab; Picker-Filterung wird entlarvt durch 120 ms. Die Aktionssuche überprüft diesen Cache nach dem Debounce und bei der Rückkehr vom Picker erneut, sodass auch dort ein aktualisierter Katalog verfügbar ist.
+Search und Picker teilen sich einen unveränderlichen Installed-App-Katalog für fünf Minuten15 Sekunden für ein Teilergebnis). Gleichzeitige Verbraucher teilen sich einen Scan; das Schließen eines Pickers löscht keinen anderen Verbraucher. Refresh umgeht den Cache und jeder Picker hat seinen eigenen Filter/Ansicht. Scannen und Katalog-Parsing läuft vom UI-Thread ab; Picker-Filterung wird entlarvt durch 120 ms. Die Aktionssuche überprüft diesen Cache nach dem Debounce und bei der Rückkehr vom Picker erneut, sodass auch dort ein aktualisierter Katalog verfügbar ist.
 
 Board-UI-Updates folgen jetzt Verbindungsbenachrichtigungen, anstatt alle zu wecken 100 Ausgeblendete/minimierte Fenster stoppen Feedback-Animationen und verwenden ein zehnsekündiges Audio-Abfrageintervall anstelle von zwei Sekunden; Wiedereröffnen oder Ausgeben eines Audio-Befehls sofort frischer Zustand. Ausstehende Audio-Aktualisierungen teilen sich eine Schleife und schließen Anfragen ein, die während eines vorhandenen Lesens ankommen. Unveränderte Audio-Schnappschüsse und eingefrorene Pinsel vermeiden wiederholte UI-Zuordnungen. Prozess-Wrapper, die durch das Starten einer App zurückgegeben werden, werden ohne Schließen des gestarteten Programms angeordnet.
 
@@ -385,7 +385,7 @@ Die Holzkohle-Schnittstelle stellt die Aktionsbibliothek an die erste Stelle, tr
 - **Kurzschreiber:** Wählen Sie eine Tastaturaktion und klicken Sie **Enregistrer un raccourci**. Drücken Sie eine unterstützte Kombination und speichern Sie sie dann. Escape bricht ab; F13-F24 ist während der Aufzeichnung für das Makropad reserviert. Windows-reservierte Kombinationen können immer noch die manuelle Steuerung erfordern.
 - **Schnellzugriff:** Ctrl+K oder die Library-Schaltfläche fokussiert die Aktionssuche. **Activité récente** hält den letzten 30 Dispatched/Failed-Aktionen im Speicher für diese Sitzung, ohne Programmargumente oder Zielpfade zu speichern. Sie können jederzeit gelöscht werden. Ein erfolgreicher Versand garantiert keinen Abschluss in der Ziel-App.
 
-Die Firmware bleibt **1.1.1**. Die Annahme eines automatischen Firmware-Angebots öffnet nun den Firmware-Manager korrekt; der vorherige Modal Guard verhinderte die Übergabe. Bestehende Firmware-Identität, Herzschlag, Wiederverbindung und Flash-Checks bleiben bestehen. Neue Workspace-Funktionen benötigen keinen Firmware-Flash.
+Die Firmware bleibt **1.1.1**. Die Annahme eines automatischen Firmware-Angebots öffnet nun den Firmware-Manager korrekt; der vorherige Modal Guard verhinderte die Übergabe. Bestehende Firmware-Identität, Heartbeat, Reconnect und Flash-Checks bleiben bestehen. Neue Workspace-Funktionen benötigen keinen Firmware-Flash.
 
 <a id="deckpilot-210-fixed-signed-virtual-microphone-routing"></a>
 ## DeckPilot 2.1.0fest signiertes virtuelles Mikrofon-Routing
@@ -428,3 +428,8 @@ Die Validierung umfasst Legacy-Einstellungen, Akzentvalidierung, Profilnavigatio
 Profilexporte umfassen die referenzierten MP3/WAV-Clips (bis zu) 32 MiB von Audio pro Paket. Importiert eingebettetes Audio in DeckPilot’s verwaltete Sounds-Ordner und Remap-Identifikatoren, ohne vorhandene Clips zu ersetzen. Automatische Profil-Backups verwenden das gleiche Format; nicht verfügbares Audio wird als fehlend und nicht stillschweigend ersetzt aufgezeichnet. Bewahren Sie die Quelldateien auf, wenn Sie das Exportlimit überschreiten. Legacy-Profildateien bleiben unterstützt. Entfernen eines Clips, der noch einer kurzen oder langen Aktion zugeordnet ist, wird blockiert.
 
 Atelier akzeptiert Boards, die noch nicht antworten DeckPilot Jede Testsitzung beginnt mit leeren Ergebnissen, und ihr Bericht bleibt mit der getesteten Platine verknüpft. Das Schließen der Anwendung während eines Flashs oder Zurücksetzens wird bis zum Abschluss des Schreibens und der Überprüfung blockiert.
+
+<a id="live-microphone-latency"></a>
+### Live-Mikrofonlatenz
+
+DeckPilot 2.1.3 Prozesse Live-Audio in kleinen, Output-gesteuerten Blöcken. 20 ms ereignisgesteuerte Mikrofonerfassung und 40 ms-Wiedergabepuffer. Die Mikrofonwarteschlange ist begrenzt auf 100 ms und verwirft ältere vollständige Frames, wenn die Wiedergabe abwürgt; dadurch werden Sekunden mit verzögerter Sprache vermieden; dies sind Softwarepuffereinstellungen, keine gemessene End-to-End-Latenzgarantie. VB-CABLE Die Discord-Sprachisolationseinstellungen sind unverändert und können Resonanzplattenclips unterdrücken, da sie das gemischte Signal empfangen.

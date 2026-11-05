@@ -23,7 +23,7 @@ DECKPILOT|1|promicro-32u4-16mhz|1.1.1
 <a id="install-from-deckpilot"></a>
 ## 설치하기 DeckPilot
 
-1. 공급된 회복 sketch 유지 (`firmware/Original/Original.ino`) 및 작업 Arduino 업로드 설정 복구 옵션으로. RST 및 GND 물리적으로 액세스 유지.
+1. 공급된 회복 sketch 유지 (`firmware/Original/Original.ino`) 및 복구 옵션으로 작업 Arduino 업로드 설정. RST 및 GND 물리적으로 액세스 유지.
 2. Arduino IDE, 시리얼 모니터 및 기타 직렬 도구. 다른 레오나르도 보드를 분리합니다.
 3. ᄋᄋᄋ **Firmware du macropad…**, 정확한 장치를 선택하고 널과 배선을 확인합니다. unidentified 본래 sketch는 명시한 확인 후에만 설치될 수 있습니다.
 4. 설치를 확인하고 완료 될 때까지 연결된 USB 케이블을 남깁니다. 키보드 작업이 중단됩니다. DeckPilot 펌웨어 대화상자가 열리면서 일반 F13–F24 이벤트는 여전히 Windows에 도달합니다.
@@ -34,7 +34,7 @@ DeckPilot Atelier는 또한 제공합니다 **Effacer le 프로그램 DeckPilot*
 
 DeckPilot 체크 SHA-256, 인텔 HEX 기록 체크섬, 재시동력 존재, 오버랩 및 **28672-바이트** 응용 프로그램을 재설정하기 전에 경계. 그것은 런타임과 bootloader 포트에 걸쳐 물리적 USB 위치를 일치, 사용 AVR109 에 57600 baud는, AVRDUDE의 쓰기 검증을 요구하고, 그 후에 실행 펌웨어의 정체성과 버전을 검사합니다. 그것은 신관, EEPROM 또는 부트 로더를 쓰지 않습니다. 레오나르도 IDs만 `2341:8036` / `2A03:8036` 그리고 Caterina `2341:0036` / `2A03:0036` 허용됩니다. Windows가 일치하는 물리적 연결을 제공 할 수 없다면, 깜박임은 포트를 추측하는 것보다 오히려 차단됩니다.
 
-번쩍이는 것은 원자가 아닙니다: 케이블 단선 또는 힘 손실은 신청 굳힌모를 남겨둘 수 있습니다. 자동적인 굳힌모 백업 또는 rollback가 없습니다. 필요한 경우에, Arduino IDE 세트를 가진 본래 sketch를 다시 로드하십시오 **Arduino, 이탈리아**. 널의 bootloader에 따라서, 간접적으로 연결 RST에 GND 두번 임시 bootloader 항구를 노출할지도 모릅니다; 그 항구가 유효하다 동안 올려주기하십시오. 손상된 bootloader는 ISP 기계설비를 요구하고 이 USB updater에 의해 고쳐질 수 없습니다. 다른 널 또는 시계 변종을 쓰지 마십시오.
+번쩍이는 것은 원자가 아닙니다: 케이블 단선 또는 힘 손실은 신청 굳힌모를 남겨둘 수 있습니다. 자동적인 굳힌모 백업 또는 rollback가 없습니다. 필요한 경우에, Arduino IDE 세트를 가진 본래 sketch를 다시 로드하십시오 **Arduino, 이탈리아**. 널의 bootloader에 따라서, 간접적으로 연결 RST에 GND 두번 임시 bootloader 항구를 드러낼지도 모릅니다; 그 항구가 유효하다 동안 올려주기하십시오. 손상된 bootloader는 ISP 기계설비를 요구하고 이 USB updater에 의해 고쳐질 수 없습니다. 다른 널 또는 시계 변종을 쓰지 마십시오.
 
 메인 앱의 마지막 완료 AVRDUDE 로그에 저장됩니다 `%LOCALAPPDATA%\DeckPilot\Firmware\last-flash.log`. Atelier는 설치 및 리셋 로그를 유지 `%LOCALAPPDATA%\DeckPilotFactory\last-flash.log` · `last-reset.log`.
 
@@ -51,7 +51,7 @@ dotnet run --project tests/DeckPilot.Checks -c Release --no-build
 
 스크립트 핀 Arduino AVR 코어 **1.8.6**, 키보드 **1.0.6**, 및 상류 AVRDUDE **8.0**. CLI 관리 패키지 사용 Arduino의 패키지 체크섬 검증; AVRDUDE 바이너리 / 소스 아카이브는 SHA-를 명시256 스크립트에 핀. `artifacts/firmware/DeckPilot-firmware.zip` 다음을 포함합니다. DeckPilot HEX, 생성 된 응용 프로그램-area 리셋 HEX 및 그 발전기, 체크섬, Windows 도구, 라이센스 및 해당 업스트림 AVRDUDE 소스 아카이브. 출판 CI는 번들 필요; 응용 프로그램을 실행할 수 없는 일반 개발자 빌드는 플래시 또는 보드를 재설정 할 수 없습니다.
 
-이름 * 12- 버튼 스케치는 데이비드 매디슨 (David Madison)의 적응되었습니다. **Stream 저렴한** 프로젝트, 저작권 2018, MIT. 그것의 통보는 안으로 남아 있습니다 `DeckPilot.ino`. DeckPilot 저장소 MIT 라이선스를 사용할 수 있습니다. **AVRDUDE는 GPL-의 밑에 분리되는 소프트웨어입니다2.0-또는-later**, 그것의 공지/라이센스 및 소스 번들; 저장소 MIT 라이센스는 그 라이센스를 대체하지 않습니다. 참조 https://github.com/avrdudes/avrdude/tree/v8.0 업스트림 빌드 지침 및 의존성 통지.
+이름 * 12-button 스케치는 David Madison 's에서 적용되었습니다. **Stream 저렴한** 프로젝트, 저작권 2018, MIT. 그것의 통보는 안으로 남아 있습니다 `DeckPilot.ino`. DeckPilot 저장소 MIT 라이선스를 사용할 수 있습니다. **AVRDUDE는 GPL-의 밑에 분리되는 소프트웨어입니다2.0-또는-later**, 그것의 공지/라이센스 및 소스 번들; 저장소 MIT 라이센스는 그 라이센스를 대체하지 않습니다. 참조 https://github.com/avrdudes/avrdude/tree/v8.0 업스트림 빌드 지침 및 의존성 통지.
 
 <a id="firmware-111-and-usb-protocol-2"></a>
 ## 회사 소개 1.1.1 및 USB 프로토콜 2
@@ -60,7 +60,7 @@ dotnet run --project tests/DeckPilot.Checks -c Release --no-build
 
 새로운 앱은 연결된 카드를 식별하고, 직렬 포트가 열리고, 플러그를 해제 한 후 다시 연결하고, 펌웨어 버전이 시작 후 다시 연결됩니다. 펌웨어 업데이트는 앱 출시로 전달됩니다. 시작 체크는 설치된 앱에 포함 된 검증 된 번들과 연결 펌웨어를 비교합니다. 앱 업데이트는 GitHub에서 더 새로운 릴리스를 얻을 수 있습니다. 별도의 펌웨어 전용 다운로드 채널이 없습니다.
 
-앱 세션 당 한 번 펌웨어 프롬프트를 감지했습니다. 24-일시 알림 지연. 알림은 아래에서 비활성화 될 수 있습니다. **Connexion et diagnostic**. 알려진 Arduino sketches, 분리 장치 및 주변 다중 카드 선택은 자동 깜박임 또는 업데이트 프롬프트를 트리거하지 않습니다. 펌웨어 설치는 항상 확인을 요구합니다. 펌웨어 관리자를 열고 시리얼 포트에 대한 모니터와 대기를 중단합니다. 대화 상자가 닫힌 후 다시 모니터링합니다.
+앱 세션 당 한 번 펌웨어 프롬프트를 감지했습니다. 24-일시 알림 지연. 알림은 아래에서 비활성화 될 수 있습니다. **Connexion et diagnostic**. 알려진 Arduino sketches, 분리 장치 및 주변 다중 카드 선택은 자동 깜박임 또는 업데이트 프롬프트를 트리거하지 않습니다. 펌웨어 설치는 항상 확인이 필요합니다. 펌웨어 관리자는 모니터를 중단하고 직렬 포트에 대한 대기를 풀어 놓습니다. 대화 상자가 닫힌 후 다시 모니터링합니다.
 
 **Arduino IDE의 매뉴얼 업로드를 위해, 종료 DeckPilot 첫 번째 트레이 아이콘에서.** 메인 창을 닫는 것은 숨기므로 연속 연결이 계속됩니다. DeckPilot 또 다른 시리얼 모니터는 동시에 동일한 포트를 사용할 수 없습니다. 또 다른 도구가 이미 포트를 소유하면, 응용 프로그램은 일반 키보드 키에 영향을 미치지 않고 문제와 retries를보고합니다.
 

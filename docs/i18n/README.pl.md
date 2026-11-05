@@ -91,7 +91,7 @@ Podczas modernizacji od pierwszego 4- układ wiersza, DeckPilot zachowuje profil
 
 Przenośny [DeckPilot.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot.exe) oraz [ZIP](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-win-x64.zip) pozostają dostępne dla kompatybilności. Do użytku przenośnego, przechowywać wykonywalny w osobnym folderze do zapisu.
 
-Odinstaluj z systemu Windows **Instalowane aplikacje**. Deinstalacja usuwa program i jego skróty, zachowując profile osobiste tak, aby później można je ponownie zainstalować.
+Odinstaluj z systemu Windows **Instalowane aplikacje**. Deinstalacja usuwa program i jego skróty, zachowując profile osobiste, aby później można je ponownie zainstalować.
 
 Pojedynczy plik wykonywalny pobiera swoje powiązane zależności do pamięci podręcznej .NET użytkownika przy pierwszym uruchomieniu, co może potrwać nieco dłużej. Opublikowane pliki wykonywalne są obecnie niepodpisane, więc Windows może wyświetlić ostrzeżenie SmartScreen.
 
@@ -157,7 +157,7 @@ Wybór do aktualizacji późniejsze pocztówki automatyczne prompts dla 24 Kontr
 
 Pliki do pobrania używają HTTPS, z przekierowaniem ograniczonym do oczekiwanych hostów GitHub. Pliki tymczasowe są przechowywane w `%LOCALAPPDATA%\DeckPilot\Updates`; pliki do pobrania starsze niż siedem dni są czyszczone. Wpis startowy systemu Windows nadal używa tej samej ścieżki wykonywalnej po aktualizacji.
 
-Kopie przenośne wymagają zapisu osobistego folderu. Zainstalowane kopie używają instalatora dla chronionych katalogów; DeckPilot sama aplikacja nadal działa bez praw administratora.
+Kopie przenośne wymagają zapisanego folderu osobistego. Zainstalowane kopie używają instalatora dla chronionych katalogów; DeckPilot sama aplikacja nadal działa bez praw administratora.
 
 **Aktualizacja z 0.1.x?** Zakończ starą wersję z obszaru powiadomienia i ręcznie zastąp wykonywalny najnowszym wydaniem raz. Te starsze wersje nie zawierają updater. Późniejsze aktualizacje mogą być zainstalowane z wewnątrz DeckPilot.
 
@@ -246,7 +246,7 @@ Z podłączonym Leonardo:
 - Przetestuj folder, stronę internetową, skrót w zwykłej aplikacji i sterowanie mediami.
 - Wyślij F13- F24 za pomocą skrótu i potwierdź, że nie ma pętli DeckPilot działania.
 - Tworzenie dwóch profili z różnych działań, przełączanie między nimi, zakończenie i wznowienie. Profile i kalibracja powinny trwać.
-- Zamknij okno, uruchom akcję, a następnie ponownie otwórz i zakończ pracę przez ikonę obszaru zgłoszenia. DeckPilot Wyjścia, wszystkie klucze powinny przejść normalnie.
+- Zamknąć okno, uruchomić akcję, a następnie ponownie otworzyć i zakończyć przez ikonę obszaru zgłoszenia. DeckPilot Wyjścia, wszystkie klucze powinny przejść normalnie.
 - Włącz uruchamianie i testowanie systemu Windows po zalogowaniu się ponownie; wyłączyć go później, jeśli jest niechciany.
 
 <a id="current-limitations"></a>
@@ -331,7 +331,7 @@ Uruchomienie systemu Windows utrzymuje teraz wyraźną preferencję dla użytkow
 <a id="sharp-keypad-rendering-profile-recovery-and-audio-controls-161"></a>
 ## Redukcja klawiatury Sharp, odzysk profilu i sterowanie dźwiękiem (1.6.1)
 
-Klawiatura renderuje teraz na natywnych rozmiarach WPF zamiast skalowania tekstu przez Viewbox. Efekty cieni rodzicielskiej / kluczowej oraz animacje skali tekstu zostały usunięte; mniejsze okna przewijają się raczej niż kurczą klawiaturę. Aplikacja deklaruje świadomość DPI monitora i wykorzystuje większe ikony powłoki systemu Windows do aplikacji na pulpicie.
+Klawiatura renderuje teraz na natywnych rozmiarach WPF zamiast skalowania tekstu przez Viewbox. Efekty cieni rodzicielskiej / kluczowej oraz animacje skali tekstu zostały usunięte; mniejsze okna przewijają się raczej niż kurczą klawiaturę. Aplikacja deklaruje świadomość DPI monitora i używa większych ikon powłoki systemu Windows do aplikacji na pulpicie.
 
 **Annuler / Rétablir** Przywraca edycje profili, w tym swapy drag- and- drop, ustawienia akcji, import i tworzenie / usuwanie profilu. Historia utrzymuje 50 edytuje podczas sesji aplikacji. Ctrl + Z / Ctrl + Y działa na profilach poza polami tekstowymi; pola tekstowe zachowują swoje własne cofnięcie / redo. Kalibracja, preferencje startowe i wykonywane działania nie są cofane.
 
@@ -379,7 +379,7 @@ Zmiany te zmniejszają określoną pracę; nie tworzą niezależnej od maszyn wa
 Interfejs węglowy stawia bibliotekę działania na pierwszym miejscu, oddziela kontrolę profilu od chrupiącej native- size 3 × 4 klawiatura i grupy ustawień akcji w karcie. Kluczowe akcenty wyróżniają własne kategorie; wybór, ostrość klawiatury i informacje zwrotne akcji pozostają oddzielone. **Réduire les animations** w preferencjach uzupełnia ustawienia animacji systemu Windows. Mniejsze okna zachowują dostęp do przewijania zamiast kurczenia się tekstu klucza.
 
 - **Szablony profilu:** poniżej **Gérer les profils**, Dodaj muzykę i dźwięk, pulpit i wydajność, lub Tworzenie. Każdy szablon tworzy osobny edytowalny profil i nigdy nie wykonuje swoich działań. Istniejące profile i kalibracja fizyczna są zachowane. Skróty klawiszowe używają aktywnej aplikacji, której wiązania mogą się różnić.
-- **Klucze profilu:** przypisz **Changer de profil**, następnie wybierz nazwany profil lub cykl do przodu / do tyłu. Referencje pomiędzy profilami są remapped podczas importowania zestawu lub powielanie profilu samoodsyłającego. Brak miejsca docelowego zgłasza błąd i może być zastąpiony w edytorze.
+- **Klucze profilu:** przypisywanie **Changer de profil**, następnie wybierz nazwany profil lub cykl do przodu / do tyłu. Referencje pomiędzy profilami są remapped podczas importowania zestawu lub powielanie profilu samoodsyłającego. Brak miejsca docelowego zgłasza błąd i może być zastąpiony w edytorze.
 - **Polecenia Windows:** do stosowania **Commandes Windows** aby otworzyć wspólne ustawienia lub Task Manager, lub wyraźnie zablokować komputer PC. Polecenia pochodzą ze stałej listy, bez skryptu do wprowadzenia. Akcja blokady wymaga podpisanie z powrotem do systemu Windows.
 - **Komplete- klucz schowka:** ctrl + C / X / V i Delete pracy, podczas gdy klawisz pokładowy ma ostrość klawiatury; zwykłe pola tekstowe utrzymują swoje skróty edycji. Klawisz schowka pozostaje wewnątrz DeckPilot i jest oczyszczony przy wyjściu. Te edytuje wsparcie cofnij / redo.
 - **Rejestrator skrótów:** wybierz akcję klawiatury i kliknij **Enregistrer un raccourci**. Naciśnij wspieraną kombinację, a następnie zapisać go. Anulowanie ucieczki; F13- F24 jest zarezerwowany dla makro pad podczas nagrywania.
@@ -428,3 +428,8 @@ Walidacja obejmuje istniejące ustawienia, walidację akcentu, nawigację profil
 Eksport profili obejmuje wymienione klipy MP3 / WAV (do 32 MiB audio na pakiet). Import kopii wbudowany audio do DeckPilotjest zarządzany folder Sounds i identyfikatory remap bez wymiany istniejących klipów. Automatyczne kopie zapasowe profilu używają tego samego formatu; niedostępny dźwięk jest rejestrowany jako brakuje, a nie po cichu zastąpiony. Zachowaj pliki źródłowe, jeśli przekroczysz limit eksportu. Pliki profilu Legacy pozostają obsługiwane. Usuwanie klipu, który jest nadal przypisany do krótkiej lub długiej akcji jest zablokowane.
 
 Atelier akceptuje deski, które nie odpowiadają jeszcze na DeckPilot protokół, podczas sprawdzania lokalizacji USB, Caterina bootloader i ATmega32U4 podpis przed programowaniem. Każda sesja testowa zaczyna się od pustych wyników, a jej raport pozostaje związany z testowaną planszą. Zamknięcie aplikacji podczas flash lub reset jest zablokowane aż do zakończenia pisania i weryfikacji.
+
+<a id="live-microphone-latency"></a>
+### Opóźnienie mikrofonu na żywo
+
+DeckPilot 2.1.3 procesy na żywo audio w małych blokach, napędzanych wyrzutniami. 20 ms event- driven wychwytywanie mikrofonu i 40 ms bufory odtwarzania. Kolejka mikrofonu jest ograniczona do 100 ms i odrzuca starsze kompletne ramki, jeśli odtwarzanie stalls; to pozwala uniknąć budowania sekund opóźnionej mowy. Są to ustawienia bufora oprogramowania, a nie mierzonej gwarancji latencji end-to@-@ end. Windows, mikrofon, VB-CABLE a aplikacja odbierająca przyczynia się również do opóźnienia. Ustawienia izolacji głosowej nie ulegają zmianie i mogą tłumić klipy płyt dźwiękowych, ponieważ otrzymują mieszany sygnał.

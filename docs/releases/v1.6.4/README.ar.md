@@ -6,8 +6,8 @@ DeckPilot 1.6.4 ويصلح استبدال نتائج البحث خلال عمل�
 - يُستعاض عن الباحثين عن الباحثين في حين يجري تفاعل الفأر أو جر الـ(أولي)
 - ويستخدم الشيكات من طراز Windows UI الإحداثيات البرمجية الفيزيائية، وضوابط التركيز قبل قياسها، ومسح النطاق الكامل بدلاً من افتراض عدد ثابت من العتبات، ولا تزال هناك حاجة إلى سحب الفأر الأصلي؛ ولا تُسترجع المهام الفاشلة للحصول على تصريح.
 - ويدخر نظام " ويندوز " في استخدام الاستبدال الذري المكرس لذلك يمكن للقارئ الحالي أن يحتفظ بصورته القديمة دون أن يحجب الخزنة التالية، ويتحقق التراجع الأساسي من ثلاثة بدائل متتالية مع وجود قارئ مشترك مفتوح.
-- القراء في اختبارات (ويندوز) يستعملون الـ (يو إف تي)8 و نسمح باستبدال الملفات الذريّة. 500 ms only for Windows sharing/lock violations during replacement; other read errors and persistent locks fail the test. Three undo/redo cycles also keep an old snapshot open to verify that saves succeeded without modifying existing readers.
+- القراء في اختبارات (ويندوز) يستعملون8 و نسمح باستبدال الملفات الذريّة. 500 ms only for Windows sharing/lock violations during replacement; other read errors and persistent locks fail the test. Three undo/redo cycles also keep an old snapshot open to verify that saves succeeded without modifying existing readers.
 - وتنتظر عمليات التحقق من البدء من المعلومات الأساسية أن تنهي قوات السلام التابعة للجبهة مخبأة نافذتها، ثم تتطلب من العملية أن تظل شغالة بدون نافذة رئيسية مرئية.
 - ترقية أعمال جيت هوب إلى Node.js 24 نسخ وتركيب نفس الـ(أردينو كلي) 1.2.2 مِنْ محفوظاتِه المُشفّرةِ فوق المجرى.
 
-الحمولة **DeckPilot-الغطس** أو تحديث من التطبيق - تُحفظ الملامح والمعايرة، ولا توجد حاجة إلى كشافة من البرمجيات.
+الحمولة **DeckPilot-الغطس** أو تحديث من تطبيقه، يتم الحفاظ على الملامح والمعايرة، ولا توجد حاجة إلى أي مضيء ثابت.

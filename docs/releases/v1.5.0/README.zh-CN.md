@@ -9,4 +9,4 @@ DeckPilot 1.5.0 添加Spotify特定控制,动作搜索和拖放,并修复Windows
 
 构建需要窗口 10 版本 2004 或稍后,或 Windows 11下载 **DeckPilot-Setup.exe(英语:Setup.** 或从 DeckPilot。配置图和校正保存;不需要固件闪存。要修复一个先前被屏蔽的启动,请检查它的状态 **Préférences de l’application** 并启用 **Lancer avec Windows** 再来一次。
 
-验证包括模拟Spotify/浏览器隔离,搜索和设置检查,Windows安装者/启动修复测试,真正的鼠标拖放和本地更新/UI检查. Spotify回放与YouTube并列,以及一个真正的Windows的登录在用户的PC上仍然需要确认.
+校验包括模拟Spotify/浏览器隔离,搜索和设置检查,Windows安装器/启动修复测试,真正的鼠标拖放和本地更新/UI检查. Spotify回放与YouTube并列,以及一个真正的Windows的登录在用户的PC上仍然需要确认.

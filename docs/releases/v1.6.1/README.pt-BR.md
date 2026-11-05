@@ -11,4 +11,4 @@ DeckPilot 1.6.1 corrige renderização de teclado macio e adiciona recuperação
 
 Transferir **DeckPilot- Setup.exe** ou atualização do aplicativo. Perfis e calibração são preservados. As escolhas de endpoint de áudio podem precisar de ajuste após a importação de perfis em outro PC. O estado de endpoint do Windows difere do próprio mudo de um aplicativo ou de um switch de hardware mudo; aplicativos de saída fixa podem não seguir as alterações de saída padrão.
 
-Validação: principais testes de perfil/gestura/áudio (endpoints de áudio simulados), instalador/atualização do Windows/UI testes, arrastar nativo do mouse desfaça/redo e edição de longa ação. Suportes de teclas físicas, drivers de microfone reais e headset/alto-falante ainda precisam de confirmação no hardware do proprietário.
+Validação: principais testes de perfil/gestura/áudio (endpoints de áudio simulados), instalador/atualização do Windows/UI testes, arrastar o mouse nativo desfazer/refazer e edição de longa ação. Suportes de teclas físicas, drivers de microfone reais e headset/alto-falante ainda precisam de confirmação no hardware do proprietário.
