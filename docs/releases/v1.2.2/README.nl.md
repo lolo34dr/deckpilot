@@ -1,6 +1,6 @@
 > Dit is een automatische vertaling van de volledige release notes. Het Engelse origineel is de referentie.
 
-DeckPilot nu toont zijn eigen logo in Windows in plaats van de algemene toepassing pictogram.
+DeckPilot nu toont zijn eigen logo in Windows in plaats van het generieke toepassing pictogram.
 
 - Het programma uitvoerbaar insluit een multi-resolutie Windows-pictogram (16–256 px).
 - Het installatiesysteem en Windows verwijderen ingang gebruik het projectlogo.
