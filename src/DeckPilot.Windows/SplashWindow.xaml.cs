@@ -1,8 +1,10 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 
 namespace DeckPilot.Windows;
 
@@ -15,6 +17,8 @@ public partial class SplashWindow : Window
     public SplashWindow()
     {
         InitializeComponent();
+        if (SplashBanner.Source is not BitmapSource bitmap || bitmap.PixelWidth <= 0 || bitmap.PixelHeight <= 0)
+            throw new InvalidDataException("The DeckPilot splash banner resource could not be loaded.");
         VersionText.Text = "v" + UpdateService.DisplayVersion;
     }
 

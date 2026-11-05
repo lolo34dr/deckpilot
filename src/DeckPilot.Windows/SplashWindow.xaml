@@ -6,7 +6,8 @@
         WindowStartupLocation="CenterScreen" Background="Transparent"
         AllowsTransparency="True" Topmost="True" ShowActivated="False"
         UseLayoutRounding="True" SnapsToDevicePixels="True"
-        AutomationProperties.AutomationId="DeckPilotSplash">
+        AutomationProperties.AutomationId="DeckPilotSplash"
+        AutomationProperties.Name="DeckPilot startup splash">
  <Border Margin="16" CornerRadius="20" Background="#0D0F14"
          BorderBrush="#393B46" BorderThickness="1">
   <Border.Effect>
