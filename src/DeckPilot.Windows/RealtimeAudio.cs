@@ -95,6 +95,16 @@ internal static class RealtimeAudio
             int needed = checked(frames * source.WaveFormat.Channels);
             if (input.Length < needed) input = new float[needed];
             int received = source.Read(input, 0, needed) / source.WaveFormat.Channels;
+            if (source.WaveFormat.Channels == 1)
+            {
+                for (int frame = 0; frame < received; frame++)
+                {
+                    float sample = input[frame];
+                    int target = offset + frame * WaveFormat.Channels;
+                    for (int channel = 0; channel < WaveFormat.Channels; channel++) buffer[target + channel] = sample;
+                }
+                return received * WaveFormat.Channels;
+            }
             for (int frame = 0; frame < received; frame++)
             {
                 float mono = 0;

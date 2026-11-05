@@ -13,7 +13,7 @@ public partial class MainWindow
 {
     private readonly PressGestures gestures = new();
     private readonly DispatcherTimer gestureTimer = new() { Interval = TimeSpan.FromMilliseconds(20) };
-    private readonly DispatcherTimer audioTimer = new() { Interval = TimeSpan.FromSeconds(2) };
+    private readonly DispatcherTimer audioTimer = new() { Interval = TimeSpan.FromSeconds(5) };
     private AudioSnapshot audioState = new([], "", MicrophoneState.Unavailable);
     private bool readingAudio, audioRefreshRequested, audioRendered, togglingMicrophone;
     private Task audioRefreshTask = Task.CompletedTask;
@@ -30,7 +30,7 @@ public partial class MainWindow
         Loaded += async (_, _) =>
         {
             if (!IsOperational) return;
-            audioTimer.Interval = IsInterfaceActive ? TimeSpan.FromSeconds(2) : TimeSpan.FromSeconds(10);
+            audioTimer.Interval = IsInterfaceActive ? TimeSpan.FromSeconds(5) : TimeSpan.FromSeconds(15);
             audioTimer.Start();
             if (!audioRendered && !readingAudio) await RefreshAudioAsync();
         };
@@ -63,7 +63,7 @@ public partial class MainWindow
     private async Task InterfaceActivityChangedAsync()
     {
         if (!IsOperational || lifetime.IsCancellationRequested) return;
-        audioTimer.Interval = IsInterfaceActive ? TimeSpan.FromSeconds(2) : TimeSpan.FromSeconds(10);
+        audioTimer.Interval = IsInterfaceActive ? TimeSpan.FromSeconds(5) : TimeSpan.FromSeconds(15);
         RefreshFeedback();
         if (IsInterfaceActive) await RefreshAudioAsync();
     }
@@ -115,7 +115,7 @@ public partial class MainWindow
         HeaderMicrophoneStatus.Text = snapshot.Microphones switch { MicrophoneState.Muted => "● Micro coupé", MicrophoneState.Active => "● Micro actif", MicrophoneState.Mixed => "● Micro partiel", MicrophoneState.None => "Micro : aucun", _ => "Micro : indisponible" };
         MicrophoneStatus.Foreground = Brush(snapshot.Microphones == MicrophoneState.Muted ? "#F1AFA5" : snapshot.Microphones == MicrophoneState.Mixed ? "#E1C294" : "#C2B9D5");
         HeaderMicrophoneStatus.Foreground = MicrophoneStatus.Foreground;
-        MicrophoneStatus.ToolTip = snapshot.Error.Length > 0 ? snapshot.Error : "État des périphériques de capture Windows actifs ; actualisation toutes les 2 secondes au premier plan, 10 secondes en arrière-plan.";
+        MicrophoneStatus.ToolTip = snapshot.Error.Length > 0 ? snapshot.Error : "État des périphériques de capture Windows actifs ; actualisation toutes les 5 secondes au premier plan, 15 secondes en arrière-plan.";
         MicrophoneToggleButton.Content = snapshot.Microphones == MicrophoneState.Muted ? "Réactiver les micros" : "Couper les micros";
         string current = snapshot.Outputs.FirstOrDefault(d => d.Id == snapshot.DefaultOutput)?.Name ?? "Aucune sortie active";
         CurrentAudioOutput.Text = "Sortie : " + current;

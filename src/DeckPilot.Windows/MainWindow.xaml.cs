@@ -57,6 +57,7 @@ public partial class MainWindow : Window
     private readonly DispatcherTimer feedbackTimer = new() { Interval = TimeSpan.FromMilliseconds(60) };
     private record Choice(string Name, int Key) { public override string ToString() => Name; }
     private static readonly string[] ActionNames = ActionSearch.KindNames;
+    internal bool ReducedMotion => settings.ReduceMotion;
 
     public MainWindow(bool startInBackground = false)
     {

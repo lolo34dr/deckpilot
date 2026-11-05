@@ -1,5 +1,5 @@
 <Window x:Class="DeckPilot.Windows.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
- Icon="/Assets/DeckPilot.png" Title="DeckPilot" Width="1180" Height="900" MinWidth="960" MinHeight="720" Background="{DynamicResource AppBackgroundBrush}" FontFamily="Segoe UI" FontSize="13" UseLayoutRounding="True" SnapsToDevicePixels="True" TextOptions.TextFormattingMode="Display" WindowStartupLocation="CenterScreen">
+ Icon="/Assets/DeckPilot.png" Title="DeckPilot" AutomationProperties.AutomationId="DeckPilotMainWindow" Width="1180" Height="900" MinWidth="960" MinHeight="720" Background="{DynamicResource AppBackgroundBrush}" FontFamily="Segoe UI" FontSize="13" UseLayoutRounding="True" SnapsToDevicePixels="True" TextOptions.TextFormattingMode="Display" WindowStartupLocation="CenterScreen">
  <Grid x:Name="WindowContent">
   <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="32"/></Grid.RowDefinitions>
   <Grid>
@@ -213,7 +213,7 @@
        <StackPanel Margin="0,8,0,0">
         <TextBlock Text="Choisis ton micro physique. DeckPilot envoie la voix et les sons vers VB-CABLE. Dans Discord ou le jeu, choisis CABLE Output comme microphone." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,0,0,8"/>
         <TextBlock Text="Microphone physique"/><ComboBox x:Name="SoundboardMicrophonePicker" DisplayMemberPath="Name" SelectionChanged="SoundboardDevicesChanged"/>
-        <Button Content="Actualiser les périphériques" Click="RefreshSoundboardDevicesClick" HorizontalAlignment="Left"/>
+        <Button x:Name="SoundboardDeviceRefreshButton" Content="Actualiser les périphériques" Click="RefreshSoundboardDevicesClick" HorizontalAlignment="Left"/>
         <Button Content="Installer le pilote audio virtuel…" Click="InstallVirtualCableClick" HorizontalAlignment="Left"/>
         <CheckBox x:Name="SoundboardAutoStartCheck" Content="Activer automatiquement avec DeckPilot" Checked="SoundboardAutoStartChanged" Unchecked="SoundboardAutoStartChanged"/>
         <Button x:Name="SoundboardStartButton" Content="Activer le micro virtuel" Click="ToggleSoundboardClick" HorizontalAlignment="Left"/>

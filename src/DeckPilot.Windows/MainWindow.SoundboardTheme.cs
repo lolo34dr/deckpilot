@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -38,6 +39,8 @@ public partial class MainWindow
         }
     }
     private readonly DispatcherTimer soundboardRetry = new() { Interval = TimeSpan.FromSeconds(5) };
+    private readonly AsyncSnapshotCache<SoundboardEndpointSnapshot> soundboardDeviceCache =
+        new(() => Task.Run(SoundboardEngine.DiscoverEndpoints), TimeSpan.FromSeconds(15));
     private bool soundboardRefreshing;
     private AudioEndpoint? virtualCableInput;
     private void InitializeThemeAndSoundboard()
@@ -47,10 +50,16 @@ public partial class MainWindow
         ThemeAccentInput.Text = settings.Theme.Accent;
         ApplyTheme();
         SoundboardAutoStartCheck.IsChecked = settings.Soundboard.AutoStart;
-        soundboardRetry.Tick += (_, _) => TryAutoStartSoundboard();
-        Loaded += (_, _) => { if (!IsOperational) return; soundboardRetry.Start(); TryAutoStartSoundboard(); };
+        soundboardRetry.Tick += async (_, _) => await TryAutoStartSoundboardAsync();
+        Loaded += async (_, _) =>
+        {
+            if (!IsOperational) return;
+            soundboardRetry.Start();
+            await RefreshSoundboardDevicesAsync();
+            await TryAutoStartSoundboardAsync();
+        };
         Closed += (_, _) => soundboardRetry.Stop();
-        RefreshSoundboardDevices();
+        SoundboardStatus.Text = "Recherche des périphériques audio…";
         RefreshSoundboardClips();
     }
     private void ApplyTheme()
@@ -78,14 +87,26 @@ public partial class MainWindow
         ApplyTheme(); SaveSoundboardSettings();
         StatusText.Text = "Thème enregistré et appliqué.";
     }
-    private void RefreshSoundboardDevicesClick(object sender, RoutedEventArgs e) { RefreshSoundboardDevices(); TryAutoStartSoundboard(); }
-    private void RefreshSoundboardDevices()
+    private async void RefreshSoundboardDevicesClick(object sender, RoutedEventArgs e)
     {
-        virtualCableInput = null;
+        SoundboardDeviceRefreshButton.IsEnabled = false;
+        SoundboardStatus.Text = "Actualisation des périphériques audio…";
         try
         {
-            var inputs = Audio.Microphones().Where(x => !x.IsVirtualCable).ToArray();
-            virtualCableInput = Audio.Outputs().FirstOrDefault(x => x.IsVirtualCable);
+            await RefreshSoundboardDevicesAsync(forceRefresh: true);
+            await TryAutoStartSoundboardAsync();
+        }
+        finally { if (!lifetime.IsCancellationRequested) SoundboardDeviceRefreshButton.IsEnabled = true; }
+    }
+
+    private async Task RefreshSoundboardDevicesAsync(bool forceRefresh = false)
+    {
+        try
+        {
+            var snapshot = await soundboardDeviceCache.GetAsync(lifetime.Token, forceRefresh);
+            if (lifetime.IsCancellationRequested) return;
+            virtualCableInput = snapshot.Outputs.FirstOrDefault(x => x.IsVirtualCable);
+            var inputs = snapshot.Microphones.Where(x => !x.IsVirtualCable).ToArray();
             soundboardRefreshing = true;
             try
             {
@@ -99,16 +120,20 @@ public partial class MainWindow
                 settings.Soundboard.VirtualOutputId = outputId;
                 SaveSoundboardSettings();
             }
-            if (virtualCableInput == null)
+            if (!string.IsNullOrWhiteSpace(snapshot.Error))
+                SoundboardStatus.Text = "Périphériques audio indisponibles : " + snapshot.Error;
+            else if (virtualCableInput == null)
                 SoundboardStatus.Text = "VB-CABLE n’est pas détecté. Installe le pilote depuis le site officiel, puis actualise les périphériques.";
             else if (!inputs.Any(x => x.Id == settings.Soundboard.MicrophoneId))
                 SoundboardStatus.Text = "VB-CABLE est prêt. Choisis ton microphone physique.";
             else
                 SoundboardStatus.Text = "VB-CABLE est prêt. Dans Discord ou le jeu, choisis CABLE Output comme microphone.";
         }
+        catch (OperationCanceledException) when (lifetime.IsCancellationRequested) { }
         catch (Exception ex) { SoundboardStatus.Text = "Périphériques audio indisponibles : " + ex.Message; }
     }
-    private void SoundboardDevicesChanged(object sender, SelectionChangedEventArgs e)
+
+    private async void SoundboardDevicesChanged(object sender, SelectionChangedEventArgs e)
     {
         if (loading || soundboardRefreshing) return;
         if (soundboard?.IsRunning == true) { soundboard.Stop(); SoundboardStartButton.Content = "Activer le micro virtuel"; }
@@ -117,7 +142,7 @@ public partial class MainWindow
         SoundboardStatus.Text = virtualCableInput == null
             ? "VB-CABLE n’est pas détecté. Installe le pilote depuis le site officiel, puis actualise les périphériques."
             : "Microphone sélectionné. Active le micro virtuel pour envoyer la voix et les sons.";
-        TryAutoStartSoundboard();
+        await TryAutoStartSoundboardAsync();
     }
     private void InstallVirtualCableClick(object sender, RoutedEventArgs e)
     {
@@ -143,39 +168,43 @@ public partial class MainWindow
         }
         catch (Exception ex) { SoundboardStatus.Text = "Installation de VB-CABLE annulée ou impossible : " + ex.Message; }
     }
-    private void TryAutoStartSoundboard()
+    private bool soundboardAutoStartBusy;
+    private async Task TryAutoStartSoundboardAsync()
     {
-        if (loading || !IsOperational || lifetime.IsCancellationRequested || !settings.Soundboard.AutoStart || string.IsNullOrWhiteSpace(settings.Soundboard.MicrophoneId) || soundboard?.IsRunning == true) return;
-        // Probe again while stopped: Windows may expose USB/Bluetooth microphones
-        // and VB-CABLE only after DeckPilot's background startup has completed.
-        RefreshSoundboardDevices();
-        if (virtualCableInput == null || SoundboardMicrophonePicker.SelectedItem is not AudioEndpoint microphone) return;
+        if (soundboardAutoStartBusy || loading || !IsOperational || lifetime.IsCancellationRequested || !settings.Soundboard.AutoStart || string.IsNullOrWhiteSpace(settings.Soundboard.MicrophoneId) || soundboard?.IsRunning == true) return;
+        soundboardAutoStartBusy = true;
         try
         {
+            // Reuse the recent device snapshot. Windows endpoint discovery runs
+            // off the UI thread and is repeated at most once per cache lifetime.
+            await RefreshSoundboardDevicesAsync();
+            if (lifetime.IsCancellationRequested || !settings.Soundboard.AutoStart || soundboard?.IsRunning == true
+                || virtualCableInput == null || SoundboardMicrophonePicker.SelectedItem is not AudioEndpoint microphone) return;
             Audio.Start(microphone.Id, virtualCableInput.Id);
             SoundboardStartButton.Content = "Arrêter le micro virtuel";
             SoundboardStatus.Text = "Micro virtuel actif automatiquement · Voix et sons envoyés vers VB-CABLE.";
         }
         catch (Exception ex) { SoundboardStatus.Text = "Micro virtuel en attente · Nouvel essai automatique : " + ex.Message; }
+        finally { soundboardAutoStartBusy = false; }
     }
-    private void SoundboardAutoStartChanged(object sender, RoutedEventArgs e)
+    private async void SoundboardAutoStartChanged(object sender, RoutedEventArgs e)
     {
         if (loading) return;
         settings.Soundboard.AutoStart = SoundboardAutoStartCheck.IsChecked == true;
-        if (settings.Soundboard.AutoStart) TryAutoStartSoundboard();
+        SaveSoundboardSettings();
+        if (settings.Soundboard.AutoStart) await TryAutoStartSoundboardAsync();
         else
         {
             soundboard?.Stop(); SoundboardStartButton.Content = "Activer le micro virtuel";
             SoundboardStatus.Text = "Micro virtuel arrêté · Démarrage automatique désactivé.";
             RefreshSoundboardClips();
         }
-        SaveSoundboardSettings();
     }
-    private void ToggleSoundboardClick(object sender, RoutedEventArgs e)
+    private async void ToggleSoundboardClick(object sender, RoutedEventArgs e)
     {
         bool enable = soundboard?.IsRunning != true;
         if (SoundboardAutoStartCheck.IsChecked != enable) SoundboardAutoStartCheck.IsChecked = enable;
-        else TryAutoStartSoundboard();
+        else await TryAutoStartSoundboardAsync();
     }
     private void AddSoundClipClick(object sender, RoutedEventArgs e)
     {
