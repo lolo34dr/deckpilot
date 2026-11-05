@@ -395,3 +395,7 @@ Validation covers legacy settings, accent validation, profile navigation and ref
 Profile exports include the referenced MP3/WAV clips (up to 32 MiB of audio per package). Imports copy embedded audio into DeckPilot’s managed Sounds folder and remap identifiers without replacing existing clips. Automatic profile backups use the same format; unavailable audio is recorded as missing rather than silently replaced. Keep the source files if you exceed the export limit. Legacy profile files remain supported. Removing a clip that is still assigned to a short or long action is blocked.
 
 Atelier accepts boards that do not yet answer the DeckPilot protocol, while still checking the USB location, Caterina bootloader and ATmega32U4 signature before programming. Each test session starts with empty results, and its report stays associated with the tested board. Closing the application during a flash or reset is blocked until writing and verification finish.
+
+### Live microphone latency
+
+DeckPilot 2.1.3 processes live audio in small, output-driven blocks. It requests 20 ms event-driven microphone capture and 40 ms playback buffers. The microphone queue is bounded to 100 ms and discards older complete frames if playback stalls; this avoids building seconds of delayed speech. These are software buffer settings, not a measured end-to-end latency guarantee. Windows, the microphone, VB-CABLE and the receiving app also contribute delay. Discord voice isolation settings are unchanged and may suppress soundboard clips because it receives the mixed signal.
