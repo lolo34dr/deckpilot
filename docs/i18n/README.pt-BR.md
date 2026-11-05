@@ -155,7 +155,7 @@ Quando uma versão mais recente do GitHub estável é encontrada, DeckPilot perg
 
 Escolhendo para atualizar mais tarde adia as instruções automáticas para 24 Verificações manuais ignoram o adiamento.
 
-As transferências usam HTTPS, com redirecionamentos restritos às máquinas do GitHub esperadas. Os arquivos temporários são armazenados em `%LOCALAPPDATA%\DeckPilot\Updates`; os downloads com mais de sete dias são limpos. A entrada de inicialização do Windows continua a usar o mesmo caminho executável após uma atualização.
+Os downloads usam HTTPS, com redirecionamentos restritos às máquinas do GitHub esperadas. Os arquivos temporários são armazenados em `%LOCALAPPDATA%\DeckPilot\Updates`; os downloads com mais de sete dias são limpos. A entrada de inicialização do Windows continua a usar o mesmo caminho executável após uma atualização.
 
 Cópias portáteis requerem uma pasta pessoal escrita. Cópias instaladas usam o instalador para diretórios protegidos; o DeckPilot app em si continua a ser executado sem direitos de administrador.
 
@@ -302,7 +302,7 @@ A **Votre macropad** O cartão mostra o estado de conexão, o firmware detectado
 
 As verificações de firmware de inicialização estão habilitadas por padrão. Após a verificação e calibração da atualização da aplicação estarem fora do caminho, um firmware identificado mais antigo pode pedir para abrir a instalação; adiar os lembretes 24 horas. Placas desconhecidas e vários candidatos não selecionados não são flashed automaticamente. Releases de Firmware são empacotados com atualizações de aplicativo do GitHub, em vez de obtido de uma fonte de firmware independente.
 
-Firmware **1.1.1** adiciona identificação da sessão, respostas cardíacas correlacionadas, mensagens delimitadas e eventos físicos de estado- chave. Estes eventos animam os botões mapeados e atualizam os diagnósticos; eles nunca invocam ações uma segunda vez. Sua primeira validação de placa física ainda é necessária, embora o firmware anterior 1.0.0 e o procedimento flash foram confirmados pelo proprietário. [documentação de protocolo e compatibilidade](FIRMWARE.pt-BR.md).
+Firmware **1.1.1** adiciona identificação da sessão, respostas cardíacas correlacionadas, mensagens delimitadas e eventos físicos de estado- chave. Estes eventos animam os botões mapeados e atualizam os diagnósticos; eles nunca invocam as ações uma segunda vez. Sua primeira validação de placa física ainda é necessária, embora o firmware anterior 1.0.0 e o procedimento flash foram confirmados pelo proprietário. [documentação de protocolo e compatibilidade](FIRMWARE.pt-BR.md).
 
 <a id="keypad-interface-140"></a>
 ## Interface de teclado (1.4.0)
@@ -331,7 +331,7 @@ A inicialização do Windows agora mantém uma preferência explícita por usuá
 <a id="sharp-keypad-rendering-profile-recovery-and-audio-controls-161"></a>
 ## renderização de teclado afiado, recuperação de perfil e controles de áudio (1.6.1)
 
-O teclado agora renderiza em tamanhos WPF nativos em vez de escalar texto através de uma Viewbox. Efeitos de sombra pai/chave e animações de escala de texto foram removidos; menores janelas rolar em vez de diminuir o teclado. O aplicativo declara consciência de DPI por monitor e usa ícones de shell maiores do Windows para aplicativos de desktop.
+O teclado agora renderiza em tamanhos WPF nativos em vez de escalar texto através de uma Viewbox. Efeitos de sombra pai/chave e animações de escala de texto foram removidos; janelas menores rolagem em vez de encolhendo o teclado. O aplicativo declara consciência de DPI por monitor e usa ícones de shell maiores do Windows para aplicativos de desktop.
 
 **Annuler / Rétablir** restaura edições de perfil, incluindo trocas de arrastar e soltar, configurações de ação, importações e criação/deleção de perfil. 50 edits during the app session. Ctrl+Z / Ctrl+Y opera em perfis fora dos campos de texto; os campos de texto mantêm sua própria desfazer/refazer. Calibração, preferências de inicialização e ações executadas não são desfeitas.
 
@@ -420,7 +420,7 @@ DeckPilot 1.9.7 corrige a desinstalação do Atelier enquanto está em execuçã
 
 DeckPilot 1.9.8 adiciona um reset Atelier explícito e confirmado que substitui o programa de usuário do tabuleiro por um esboço vazio verificado e preserva o bootloader Caterina.
 
-A validação abrange configurações legadas, validação de sotaques, navegação de perfil e remapeamento de referência, modelos portáteis, modelo/mundo/redo nativo do Windows e mudança de perfil, gravação de atalhos, cópia/colar/reset, persistência de configurações, instalação/atualização, redimensionamento de layout e uma captura real de UI. O comportamento específico do hardware ainda requer o macropad e dispositivos de áudio em um PC Windows.
+A validação abrange configurações legadas, validação de sotaque, navegação de perfil e remapeamento de referência, modelos portáteis, modelo/mundo/redo nativo do Windows e mudança de perfil, gravação de atalhos, cópia/colar/reset, persistência de configurações, instalação/atualização, redimensionamento de layout e uma captura de UI real. O comportamento específico de hardware ainda requer o macropad e dispositivos de áudio em um PC Windows.
 
 <a id="profile-sound-files-and-workshop-safety"></a>
 ### Arquivos de som de perfil e segurança da oficina
@@ -428,3 +428,8 @@ A validação abrange configurações legadas, validação de sotaques, navegaç
 Exportações de perfis incluem os clipes MP3/WAV referenciados (até 32 MiB de áudio por pacote). Importa o áudio incorporado na cópia DeckPilotA pasta de sons gerenciada e os identificadores de remape sem substituir os clipes existentes. Os backups de perfil automáticos usam o mesmo formato; o áudio não disponível é gravado como faltando em vez de ser substituído silenciosamente. Mantenha os arquivos fonte se você exceder o limite de exportação. Os arquivos de perfil legados permanecem suportados. Removendo um clipe que ainda é atribuído a uma ação curta ou longa é bloqueado.
 
 Atelier aceita placas que ainda não respondem o DeckPilot protocolo, enquanto ainda verificando a localização USB, Caterina bootloader e assinatura ATmega32U4 antes da programação. Cada sessão de teste começa com resultados vazios, e seu relatório permanece associado com a placa testada. Fechando a aplicação durante um flash ou reset é bloqueado até a escrita e verificação terminar.
+
+<a id="live-microphone-latency"></a>
+### Latência do microfone ao vivo
+
+DeckPilot 2.1.3 processos de áudio ao vivo em blocos pequenos, conduzidos por saída. 20 Captação e captura de microfones a eventos ms 40 Tampões de reprodução ms. A fila de microfones está delimitada 100 ms e descarta quadros completos mais antigos se a reprodução estiver parada; isto evita a construção de segundos de fala atrasada. Trata-se de configurações de buffer de software, não uma garantia de latência de ponta a ponta medida. Windows, o microfone, VB-CABLE e o aplicativo receptor também contribuem para o atraso. Discord configurações de isolamento de voz estão inalteradas e podem suprimir clipes de placa de som porque recebe o sinal misto.

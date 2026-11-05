@@ -11,4 +11,4 @@ DeckPilot 1.7.0 vermindert herhaalde werkzaamheden tijdens het bewerken van prof
 
 Downloaden **DeckPilot-Setup.exe** of update van de app. Profielen, kalibratie- en opstartvoorkeuren worden bewaard. Er is geen firmware-flits nodig.
 
-Validatie omvat instellingen / geschiedenis / cache regressies en Windows-installatie, update, picker, drag-and-drop, korte/lange actie bewerken en minimaliseren / herstellen controles. Dit zijn structurele optimalisaties, niet een gemeten claim van een bepaalde CPU of RAM besparen op elke PC.
+Validatie omvat instellingen / geschiedenis / cache regressies en Windows-installatie, update, picker, drag-and-drop, korte/lange actie bewerken en minimaliseren / herstellen controles. Dit zijn structurele optimalisaties, niet een gemeten claim van een bepaalde CPU of RAM te besparen op elke PC.

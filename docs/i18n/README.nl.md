@@ -64,7 +64,7 @@ DeckPilot configureert Arduino Leonardo-compatibele macropads die al verzenden *
 - **Windows-gereedschappen:** open geluid, display, Bluetooth en netwerkinstellingen, Taakbeheer, of vergrendel de sessie.
 - **Compact donkere interface:** vectorpictogrammen, toepassingspictogrammen indien beschikbaar, en subtiele animaties die de Windows-animatievoorkeuren respecteren.
 - **Achtergrondbewerking:** bewaren DeckPilot in het mededelingengebied, met standaard opstarten bij Windows-aanmelding ingeschakeld (kan worden uitgeschakeld).
-- **Automatische updates:** keurt een nieuwe release goed, dan laten we DeckPilot downloaden, verifiëren, vervangen en herstarten zelf.
+- **Automatische updates:** keuren een nieuwe release, dan laat DeckPilot downloaden, verifiëren, vervangen en herstarten zelf.
 
 <a id="getting-started"></a>
 ## Aan de slag
@@ -322,7 +322,7 @@ Voor handmatige Arduino IDE-uploads, **stoppen DeckPilot uit het tray-menu** om 
 
 **Spotify** is gescheiden van **Multimédia**. Zijn afspelen/pauzeren, volgende en vorige commando's adres van de Spotify-desktop-app's Windows-mediasessie, zelfs terwijl een browser YouTube speelt. Spotify moet geopend zijn en een beschikbare afspeelsessie hebben; start een track indien nodig. Spotify in een browser wordt niet ondersteund. Ontbreken of weigeren van Spotify-sessies produceren een fout, zonder terugval naar globale mediatoetsen of een andere speler. Geen Spotify-accountvergunning, Premiumabonnement of opgeslagen token is nodig door DeckPilot. Vensters 10 versie 2004 of later, of vensters 11, is vereist door deze bouw.
 
-Gebruik **Rechercher une action ou une application** voor vragen zoals `volume`, `skip`, `Spotify` of de naam van een geïnstalleerde app. De geïnstalleerde-app index laadt bij de eerste zoekopdracht en wordt gedurende vijf minuten gecached; handmatige bestandsselectie blijft beschikbaar. Klik op een resultaat om de geselecteerde sleutel in te stellen of sleept u deze naar een andere sleutel.
+Gebruik **Rechercher une action ou une application** voor vragen zoals `volume`, `skip`, `Spotify` of de naam van een geïnstalleerde app. De geïnstalleerde-app index laadt op de eerste zoekopdracht en wordt gedurende vijf minuten gecached; handmatige bestandsselectie blijft beschikbaar. Klik op een resultaat om de geselecteerde sleutel te configureren of sleep deze naar een andere sleutel.
 
 Sleep een actie uit de catalogus of zoekresultaten op een sleutel om deze toe te wijzen. Sleep een geconfigureerde sleutel naar een andere **ruilen van hun acties**; de fysieke kalibratie blijft onveranderd. U kunt er ook één laten vallen `.exe`, `.lnk`, `.appref-ms`, map of HTTP(S) URL op een sleutel. Droping configureert alleen de sleutel en voert nooit de actie uit. Voltooi alle ontbrekende instellingen in de editor.
 
@@ -331,7 +331,7 @@ Windows opstarten houdt nu een expliciete voorkeur per gebruiker, reparaties van
 <a id="sharp-keypad-rendering-profile-recovery-and-audio-controls-161"></a>
 ## Scherpe toetsenbordweergave, profielherstel en audiobesturing (1.6.1)
 
-Het toetsenbord rendert nu op native WPF-formaten in plaats van tekst te schalen door een Viewbox. Ouder/toets schaduw effecten en tekstschaal animaties werden verwijderd; kleinere vensters scrollen in plaats van het toetsenbord te verkleinen. De app verklaart per-monitor DPI bewustzijn en gebruikt grotere Windows shell pictogrammen voor desktop toepassingen.
+Het toetsenbord rendert nu in native WPF-formaten in plaats van tekst te schalen door een Viewbox. Ouder/toets schaduw effecten en tekstschaal animaties werden verwijderd; kleinere vensters scrollen in plaats van het toetsenbord te verkleinen. De app verklaart per-monitor DPI bewustzijn en gebruikt grotere Windows shell pictogrammen voor desktop toepassingen.
 
 **Annuler / Rétablir** herstelt profielbewerkingen, waaronder drag-and-drop swaps, actie-instellingen, import en profielaanmaak/deletie. Geschiedenis houdt 50 bewerken tijdens de appsessie. Ctrl+Z / Ctrl+Y werkt op profielen buiten tekstvelden; tekstvelden behouden hun eigen undo/redo. Kalibratie, opstartvoorkeuren en uitgevoerde acties worden niet ongedaan gemaakt.
 
@@ -339,7 +339,7 @@ Onder **Gérer les profils**, exporteer het huidige profiel of alle profielen al
 
 Voor het opslaan van gewijzigde profielen, DeckPilot houdt de vorige profielen in `%APPDATA%\DeckPilot\Backups` (20 versies, inhoud-gededupliceerd). Voorkeur-alleen opslaan maakt geen profielback-ups aan. Een back-upfout voorkomt het overschrijven van de huidige instellingen. Herstellen vervangt profielen na bevestiging en kan zelf ongedaan worden gemaakt; kalibratie blijft ongewijzigd.
 
-**Microphone Windows** schakelt mute op alle huidige Windows-eindpunten. De statusbalk en Audio Windows-kaart tonen actief/muted/mixed/un available status, vernieuwd elke twee seconden en na app commando's. Een mislukte multi-endpoint-update pogingen om vorige mute toestanden te herstellen. Deze indicatoren beschrijven Windows-eindpuntstatus, niet een hardware-switch of de eigen mute-knop van een toepassing.
+**Microphone Windows** schakelt mute op alle huidige Windows-eindpunten. De statusbalk en Audio Windows-kaart tonen actief/muted/mixed/un available status, vernieuwd elke twee seconden en na app commando's. Een mislukte multi-endpoint-update pogingen om eerdere mute toestanden te herstellen. Deze indicatoren beschrijven de Windows-eindpuntstatus, niet een hardware-switch of de eigen mute-knop van een toepassing.
 
 **Changer de sortie audio** alternatieven tussen twee geselecteerde, aangesloten uitvoerapparaten, voor Windows-console, multimedia- en communicatiestandaarden. Een ontbrekende doelstelling geeft een fout zonder een ander apparaat te kiezen. Toepassingen met hun eigen vaste uitvoer kunnen niet volgen Windows' standaard. Geïmporteerde endpoint-ID's worden getoond als niet beschikbaar totdat aangepast aan de huidige PC. Foute routing-wijzigingen proberen de vorige standaardwaarden te herstellen.
 
@@ -428,3 +428,8 @@ Validatie heeft betrekking op legacy-instellingen, accentvalidatie, profielnavig
 Profielexport omvat de referentie MP3/WAV-clips (tot 32 MiB van audio per pakket). Importeert kopie ingebed audio in DeckPilotSounds managed Sounds map and remap identifiers zonder bestaande clips te vervangen. Automatische profielback-ups gebruiken hetzelfde formaat; niet-beschikbare audio wordt opgenomen als ontbrekend in plaats van stil vervangen. Bewaar de bronbestanden als u de exportlimiet overschrijdt. Legacy profielbestanden blijven ondersteund. Verwijderen van een clip die nog steeds is toegewezen aan een korte of lange actie wordt geblokkeerd.
 
 Atelier accepteert boards die nog niet beantwoorden de DeckPilot protocol, terwijl nog steeds het controleren van de USB-locatie, Caterina bootloader en ATmega32U4 handtekening voor het programmeren. Elke testsessie begint met lege resultaten, en het rapport blijft geassocieerd met de geteste board. Het sluiten van de applicatie tijdens een flitser of reset wordt geblokkeerd totdat het schrijven en verificatie voltooid.
+
+<a id="live-microphone-latency"></a>
+### Live microfoon latentie
+
+DeckPilot 2.1.3 processen live audio in kleine, output-gedreven blokken. 20 ms gebeurtenisgestuurde microfoonopname en 40 ms afspeelbuffers. De microfoonwachtrij is begrensd aan 100 ms en gooit oudere complete frames weg als het afspelen stilstaat; dit voorkomt het opbouwen van seconden van vertraagde spraak. Dit zijn softwarebufferinstellingen, geen gemeten end-to-end latency garantie. Windows, de microfoon, VB-CABLE en de ontvangende app ook vertraging. Discord stem isolatie instellingen zijn onveranderd en kan soundboard clips onderdrukken omdat het ontvangt het gemengde signaal.

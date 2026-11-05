@@ -23,7 +23,7 @@ Aucune connexion série n'est nécessaire pour le fonctionnement normal du clavi
 <a id="install-from-deckpilot"></a>
 ## Installer depuis DeckPilot
 
-1. Conserver le croquis de récupération fourni (`firmware/Original/Original.ino`) et une configuration de téléchargement Arduino de travail comme une option de récupération. Gardez RST et GND physiquement accessible.
+1. Conserver le croquis de récupération fourni (`firmware/Original/Original.ino`) et une configuration de téléchargement Arduino fonctionnant comme une option de récupération. Gardez RST et GND physiquement accessibles.
 2. Fermer Arduino IDE, Serial Monitor et d'autres outils série. Déconnecter d'autres cartes Leonardo.
 3. Ouvrir **Firmware du macropad…**, choisissez le bon appareil et confirmez le panneau et le câblage. Un croquis original non identifié peut être installé sur seulement après confirmation explicite.
 4. Confirmer l'installation et laisser le câble USB connecté jusqu'à la fin. DeckPilot alors que la boîte de dialogue du firmware est ouverte; les événements F13–F24 ordinaires atteignent toujours Windows.
@@ -32,7 +32,7 @@ Le firmware et Windows AVRDUDE 8.0 sont groupés à l'intérieur de l'applicatio
 
 DeckPilot Atelier offre également **Effacer le programme DeckPilot**. Après une confirmation séparée, il dégage tout 28 KiB de l'application flash avec une boucle de réinitialisation vérifiée, arrêt F13-F24 et l'énumération du clavier USB. Caterina reste disponible afin que le nouveau firmware puisse être installé plus tard. Le bootloader et EEPROM sont conservés, donc ce n'est pas un effacement complet. Les données du profil restent sur le PC. Le test de la fumée de libération vérifie que cette action est visible et désactivée à moins qu'un tableau soit sélectionné.
 
-DeckPilot contrôle SHA-256, les comptes d'enregistrement Intel HEX, la présence de réinitialisateurs, les chevauchements et le **28672-octet** limite d'application avant la réinitialisation. Il correspond à l'emplacement USB physique à travers les ports d'exécution et de démarrage, utilise AVR109 à 57600 baud, nécessite la vérification écrite d'AVRDUDE, puis vérifie l'identité et la version du firmware en cours d'exécution. `2341:8036` / `2A03:8036` et Caterina `2341:0036` / `2A03:0036` Si Windows ne peut pas fournir une connexion physique correspondante, clignote est bloqué plutôt que de deviner un port.
+DeckPilot contrôle SHA-256, les comptes d'enregistrement Intel HEX, la présence de réinitialisateurs, les chevauchements et le **28672-octet** limite d'application avant la réinitialisation. Il correspond à l'emplacement USB physique à travers les ports d'exécution et de démarrage, utilise AVR109 à 57600 baud, nécessite la vérification écrite d'AVRDUDE, puis vérifie l'identité et la version du firmware en cours d'exécution. `2341:8036` / `2A03:8036` et Caterina `2341:0036` / `2A03:0036` Si Windows ne peut pas fournir une connexion physique correspondante, le clignotement est bloqué plutôt que de deviner un port.
 
 Flashing n'est pas atomique : un déconnexion de câble ou une perte de puissance peut laisser le firmware d'application incomplet. Il n'y a pas de sauvegarde ou de retour automatique du firmware. **Arduino Leonardo**. Selon le chargeur d'amorçage de la carte, connecter brièvement RST à GND deux fois peut exposer un port d'amorçage temporaire; télécharger pendant que ce port est disponible. Un chargeur d'amorçage endommagé nécessite du matériel ISP et ne peut pas être réparé par cette mise à jour USB. N'écrivez pas une autre variante de carte ou d'horloge.
 

@@ -179,7 +179,7 @@ Profils et calibrage sont stockés à l'extérieur du dossier d'application:
 
 Quitter DeckPilot avant de copier ce fichier pour sauvegarder ou restaurer votre configuration. Si un fichier de paramètres ne peut pas être lu, DeckPilot conserve une copie avec une `.backup-<date>` suffixe avant d'utiliser une configuration fraîche.
 
-Aucun compte n'est requis. Les vérifications de mise à jour contactent GitHub et peuvent être désactivées dans l'interface.
+Aucun compte n'est nécessaire. La mise à jour vérifie de contacter GitHub et peut être désactivée dans l'interface.
 
 <a id="development"></a>
 ## Développement
@@ -202,7 +202,7 @@ La bibliothèque centrale et la console vérifient également sous Linux. L'inte
 
 La console vérifie la sortie avec un statut non zéro lors de la première affirmation ratée.
 
-- Cartographie des touches, répétitions des touches retenues, libérations, changement de profil et copie d'action.
+- Cartographie des touches, répétitions des touches retenues, sorties, changement de profil et copie d'action.
 - Validation des paramètres, persistance et migration à partir de configurations plus anciennes.
 - Recherche d'applications et traitement des cibles.
 - Sélection de la version, comptes de contrôle, téléchargements tronqués ou corrompus, redirections et annulation.
@@ -286,7 +286,7 @@ Crédit suggéré :
 
 Pour la préparation de l'appareil et les contrôles de qualité de l'atelier, installer le [DeckPilot Atelier](../../docs/FACTORY.md) outil. Son installateur est publié comme **[DeckPilot- Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** Il peut clignoter le firmware inclus sur une carte Leonardo/Caterina, puis vérifier les presses courtes et longues sur tous 12 touches physiques et exporter un rapport.
 
-DeckPilot 1.1.0 comprend: **Firmware du macropad…** dialogue et firmware 1.0.0 pour le Pro Micro ATmega32U4 **5 V/ 16 MHz**, à l'aide de la configuration Leonardo/Caterina confirmée par le journal de téléchargement du propriétaire. L'outil de clignotement Windows livré n'exige pas Arduino IDE. La sélection et la confirmation des appareils sont obligatoires; les mises à jour de l'application ne clignotent jamais silencieusement le panneau.
+DeckPilot 1.1.0 comprend: **Firmware du macropad…** dialogue et firmware 1.0.0 pour le Pro Micro ATmega32U4 **5 V/ 16 MHz**, à l'aide de la configuration Leonardo/Caterina confirmée par le journal de téléchargement du propriétaire. L'outil de flashage Windows livré ne nécessite pas Arduino IDE. La sélection et la confirmation des appareils sont obligatoires; les mises à jour de l'application ne clignotent jamais silencieusement le panneau.
 
 **Le propriétaire a confirmé le succès dans l'application flashing, firmware 1.0.0 identification et tous 12 boutons sur le tableau de référence.** Gardez le croquis original et l'accès à RST/GND pour la récupération. Le clignotement du firmware ne peut pas être retourné automatiquement. Voir [firmware documentation](FIRMWARE.fr.md) pour la compatibilité, la validation, la récupération, les étapes de construction et les licences tierces. Les modes USB par bouton et les contrôles des médias natifs ne font pas partie de cette version du firmware.
 
@@ -335,7 +335,7 @@ Le clavier rend maintenant aux tailles WPF natives au lieu de mettre le texte à
 
 **Annuler / Rétablir** restaure les modifications de profil, y compris les swaps de glisser-déposer, les paramètres d'action, les importations et la création/suppression de profil. 50 édits pendant la session de l'application. Ctrl+Z / Ctrl+Y fonctionnent sur des profils en dehors des champs de texte; les champs de texte conservent leur propre undo/redo. L'étalonnage, les préférences de démarrage et les actions exécutées ne sont pas annulés.
 
-Sous **Gérer les profils**, exporter le profil actuel ou tous les profils comme `.deckpilot.json`, importer des profils en tant que nouvelles copies, ou restaurer une sauvegarde de tous les profils. Importer n'exécute jamais les actions et ne remplace jamais l'étalonnage du PC. Les profils contiennent des chemins d'action, des arguments et des identifiants de fin d'action audio, qui peuvent nécessiter un ajustement sur un autre PC.
+Sous **Gérer les profils**, exporter le profil actuel ou tous les profils comme `.deckpilot.json`, importer des profils en tant que nouvelles copies, ou restaurer une sauvegarde de tous les profils. Importer n'exécute jamais les actions et ne remplace jamais l'étalonnage du PC. Les profils contiennent des chemins d'action, des arguments et des identifiants d'extrémité audio, qui peuvent nécessiter un ajustement sur un autre PC.
 
 Avant d'enregistrer les profils modifiés, DeckPilot conserve les profils précédents dans `%APPDATA%\DeckPilot\Backups` (20 Les sauvegardes de préférences ne créent pas de sauvegardes de profil. Une défaillance de sauvegarde empêche d'écraser les paramètres actuels. Restaurer remplace les profils après confirmation et peut elle-même être annulée; l'étalonnage reste inchangé.
 
@@ -428,3 +428,8 @@ La validation couvre les paramètres hérités, la validation de l'accent, la na
 Les exportations de profil incluent les clips MP3/WAV référencés (jusqu'à 32 Mio d'audio par paquet). Importe copie audio intégrée dans DeckPilotLes sauvegardes automatiques de profils utilisent le même format; l'audio non disponible est enregistré comme manquant plutôt que remplacé silencieusement. Gardez les fichiers sources si vous dépassez la limite d'exportation. Les fichiers de profils historiques restent pris en charge. La suppression d'un clip qui est toujours assigné à une action courte ou longue est bloquée.
 
 Atelier accepte les conseils qui ne répondent pas encore DeckPilot La fermeture de l'application pendant un flash ou une réinitialisation est bloquée jusqu'à la fin de l'écriture et de la vérification.
+
+<a id="live-microphone-latency"></a>
+### Latence micro en direct
+
+DeckPilot 2.1.3 processe l'audio en direct dans de petits blocs pilotés par la sortie. 20 ms capture de microphone par événement et 40 Les tampons de lecture ms. La file d'attente du microphone est limitée à 100 ms et rejette les cadres complets plus anciens si la lecture s'arrête; cela évite de construire des secondes de parole retardée. Ce sont des paramètres tampons logiciels, pas une garantie de latence de bout en bout mesurée. Windows, le microphone, VB-CABLE et l'application de réception contribuent également au retard. Les paramètres d'isolement de la voix de discorde sont inchangés et peuvent supprimer les clips de tableau de son parce qu'il reçoit le signal mixte.

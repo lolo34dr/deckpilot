@@ -8,7 +8,7 @@ Per la configurazione hardware testata: **Pro Micro ATmega32U4, 5 V / 16 MHz**, 
 <a id="wiring-and-behavior"></a>
 ## Cablaggio e comportamento
 
-Ogni interruttore collega un perno a GND. Sono abilitate le pull-up interne. **2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15, 16** invio **F13 fino a F24** in quell'ordine. 30 Il comportamento della tastiera, i profili di Windows e la calibrazione rimangono compatibili; il rollover della tastiera USB rimane limitato dalla libreria di tastiera di Arduino. Il firmware non introduce le modalità USB per pulsante o i controlli dei media nativi.
+Ogni interruttore collega un perno a GND. Le pull-up interne sono abilitate. Perni **2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15, 16** invio **F13 fino a F24** in quell'ordine. 30 Il comportamento della tastiera, i profili di Windows e la calibrazione rimangono compatibili; il rollover della tastiera USB rimane limitato dalla libreria di tastiera di Arduino. Il firmware non introduce le modalità USB per pulsante o i controlli dei media nativi.
 
 Pinocchina **1** tenuto a GND all'avvio disabilita il funzionamento della tastiera, mantenendo il failsafe originale. Il nucleo USB può ancora supportare l'ingresso del bootloader.
 
@@ -51,7 +51,7 @@ dotnet run --project tests/DeckPilot.Checks -c Release --no-build
 
 I perni di script Arduino AVR core **1.8.6**, tastiera **1.0.6**, e AVRDUDE a monte **8.0**. I pacchetti gestiti da CLI utilizzano la validazione del pacchetto di controllo di Arduino; gli archivi binari/source AVRDUDE hanno un esplicito SHA-256 perni nella sceneggiatura. `artifacts/firmware/DeckPilot-firmware.zip` contiene DeckPilot HEX, ha generato l'applicazione-area reset HEX e il suo generatore, checksums, strumento di Windows, licenza e corrispondente archivio sorgente AVRDUDE a monte. L'editoria CI richiede il bundle; una costruzione di sviluppatori ordinario senza che possa eseguire l'applicazione, ma non può lampeggiare o ripristinare una scheda.
 
-L'originale 12- Button sketch è stato adattato da David Madison **Flusso economico** progetto, diritto d'autore 2018, MIT. Il suo avviso rimane in `DeckPilot.ino`. DeckPilot le aggiunte utilizzano la licenza MIT del repository. **AVRDUDE è un software separato sotto GPL-2.0- o tardi.**, con il suo avviso / licenza e fonte in bundle; la licenza MIT del repository non sostituisce quella licenza. https://github.com/avrdudes/avrdude/tree/v8.0 per istruzioni di costruzione a monte e avvisi di dipendenza.
+L'originale 12- Button sketch è stato adattato da David Madison **Flusso economico** progetto, diritto d'autore 2018, MIT. Il suo avviso rimane in `DeckPilot.ino`. DeckPilot le aggiunte utilizzano la licenza MIT del repository. **AVRDUDE è un software separato sotto GPL-2.0- o tardi.**, con il suo avviso/licenza e fonte in bundle; la licenza MIT del repository non sostituisce quella licenza. https://github.com/avrdudes/avrdude/tree/v8.0 per istruzioni di costruzione a monte e avvisi di dipendenza.
 
 <a id="firmware-111-and-usb-protocol-2"></a>
 ## Firmware 1.1.1 e protocollo USB 2
@@ -82,6 +82,6 @@ Board: DP2|KEYS|1234ABCD|10|1
 
 Le richieste di battito cardiaco vengono normalmente inviate ogni due secondi. L'app si riconnette se manca una risposta corrispondente 1.5 secondi; il firmware smette di diagnostica non sollecitata dopo sei secondi senza battito cardiaco o quando la connessione seriale si chiude. 1.0.0 rimane supportato attraverso la query di identità legacy, senza diagnostica chiave dal vivo. DeckPilot le app possono ancora leggere l'identità legacy del firmware 1.1.1.
 
-La versione sorgente in `DeckPilotProtocol.h` fornisce la versione del manifesto di rilascio. I pacchetti del firmware pubblicati ora contengono anche lo schizzo/intestazione corrente sotto `source/DeckPilot`, lo schizzo di recupero e DeckPilot Patente MIT.
+La versione sorgente in `DeckPilotProtocol.h` fornisce la versione del manifesto di rilascio. I pacchetti del firmware pubblicati ora contengono anche lo schizzo/header corrente sotto `source/DeckPilot`, lo schizzo di recupero e DeckPilot Patente MIT.
 
 Il collegamento diagnostico utilizza deliberatamente `Serial.dtr()` piuttosto che `bool(Serial)`: Nucleo AVR Arduino 1.8.6 inserisce un 10 ms ritardo nel `Serial_::operator bool()`. Lettura DTR mantiene direttamente il percorso diagnostico dall'aggiunta di quella pausa ad ogni ciclo key-scan. Il test del protocollo host elimina la conversione implicita bool in modo che questo modello di blocco non possa essere reintrodotto nell'implementazione del protocollo condiviso inosservato.

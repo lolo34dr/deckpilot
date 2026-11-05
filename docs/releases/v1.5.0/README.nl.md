@@ -9,4 +9,4 @@ DeckPilot 1.5.0 voegt Spotify-specifieke controles, actie zoeken en drag-and-dro
 
 De bouw vereist Windows 10 versie 2004 of later, of vensters 11. Download **DeckPilot-Setup.exe** of update van DeckPilot. Profielen en kalibratie worden bewaard; geen firmware flits is nodig. Om een eerder geblokkeerde opstart te repareren, controleer de status onder **Préférences de l’application** en inschakelen **Lancer avec Windows** Alweer.
 
-Validatie omvat gesimuleerde Spotify/browser isolatie, zoek en instellingen controles, Windows-installer/startup reparatie tests, echte muis sleep-en-druppel en native update/UI controles. Spotify afspelen naast YouTube en een echte Windows-aanmelding nog steeds bevestiging nodig op de pc van de gebruiker.
+Validatie omvat gesimuleerde Spotify/browser isolatie, zoek en instellingen controles, Windows-installer/startup reparatie testen, echte muis sleep-en-druppel en native update/UI controles. Spotify afspelen naast YouTube en een echte Windows-aanmelding nog steeds bevestiging nodig op de pc van de gebruiker.

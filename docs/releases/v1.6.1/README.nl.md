@@ -11,4 +11,4 @@ DeckPilot 1.6.1 fixes soft keypad rendering en voegt profielherstel, Windows aud
 
 Downloaden **DeckPilot-Setup.exe** of update van de app. Profielen en kalibratie worden bewaard. Audio-eindpunt keuzes moeten mogelijk worden aangepast na het importeren van profielen op een andere PC. Windows-eindpunt staat verschilt van de eigen mute van een applicatie of een hardware mute switch; fixed-output toepassingen kunnen niet volgen standaard uitvoer wijzigingen.
 
-Validatie: core profile/gesture/audio tests (audio endpoints gesimuleerd), Windows installer/update/UI tests, native mouse drag undo/redo en long-action editing. Fysische sleutel holds, werkelijke microfoon drivers en headset/speaker switching moeten nog steeds bevestiging op de hardware van de eigenaar.
+Validatie: core profile/gesture/audio tests (audio endpoints gesimuleerd), Windows installer/update/UI test, native mouse drag undo/redo en long-action editing. Fysische sleutel holds, werkelijke microfoon drivers en headset/speaker switching moeten nog steeds bevestiging op de hardware van de eigenaar.

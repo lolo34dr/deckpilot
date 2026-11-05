@@ -8,4 +8,4 @@ DeckPilot ora installa come un'applicazione regolare di Windows, con il corretto
 - La griglia principale, le etichette di posizione e la calibrazione guidata ora utilizzano tre righe di quattro chiavi. Vengono mantenuti profili/azioni esistenti; il layout precedente richiede una nuova calibrazione.
 - Firmware 1.0.0 Il proprietario ha confermato il successo del flashing, l'identificazione della versione e tutte le dodici chiavi sul macropad di riferimento.
 
-Windows 10/11 x64. Il standalone **DeckPilot.exe** e ZIP portatile rimangono disponibili per la compatibilità con l'aggiornamento precedente. `%APPDATA%\DeckPilot` e sono conservati su disinstallazione.
+Windows 10/11 x64. Il standalone **DeckPilot.exe** e ZIP portatile rimangono disponibili per la compatibilità con l'aggiornamento precedente. `%APPDATA%\DeckPilot` e sono mantenuti su disinstallazione.

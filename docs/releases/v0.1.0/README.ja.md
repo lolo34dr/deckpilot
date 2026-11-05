@@ -8,6 +8,6 @@
 - ゾーン・デ・通知 et démarrage Windows の facultatif.
 - Aucun パイロット ニ チェンジメント du プログラム レオナルド.
 
-Téléchargez(テレチャージ) **DeckPilot.exeについて** la version autonome, ou を注ぐ **DeckPilot-win-x64.zip は、** le の dossier のコンプリートを extraire 注ぎます。 Aucun のランタイム .NET のインストーラー。
+Téléchargez(テレチャージ) **DeckPilot.exeについて** la version autonome, ou を注ぐ **DeckPilot-win-x64.zip は、** le の dossier のコンプリートを extraire に注いで下さい。 Aucun のランタイム .NET のインストーラー。
 
-Le code est compilé et les vérifications automatiques sont exécutées par ce ワークフロー. Le fonctionnement matériel et l’interface restent à val un PC Windows avec le Leonardo. Les exécutables ne sont pas signés.
+Le code est compilé et les vérifications automatiques sont exécutées par ce ワークフロー. Le fonctionnement matériel et l’interface restent à valider sur un PC Windows avec le Leonardo. Les exécutables ne sont pas signés.
