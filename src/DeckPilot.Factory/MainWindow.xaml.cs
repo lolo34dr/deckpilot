@@ -75,6 +75,7 @@ public partial class MainWindow : Window
             if (devices.Count == 0) { ConnectionDot.Fill = new SolidColorBrush(Color.FromRgb(139, 150, 145)); ConnectionLabel.Text = "Carte non détectée"; }
             else if (devices.Count == 1) { ConnectionDot.Fill = (Brush)FindResource("AccentBrush"); ConnectionLabel.Text = devices[0].Bootloader ? "Bootloader détecté" : "Carte USB détectée"; }
             else { ConnectionDot.Fill = Brushes.Orange; ConnectionLabel.Text = $"{devices.Count} cartes détectées"; }
+            UpdateDeviceActionButtons();
         }
         catch (Exception ex) { FlashStatus.Text = "Détection USB indisponible : " + ex.Message; }
         finally { scanning = false; }
@@ -82,10 +83,11 @@ public partial class MainWindow : Window
 
     private void DeviceCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (FlashButton == null || ResetBoardButton == null) return;
+        if (FlashButton == null || EraseBoardButton == null) return;
         var device = DeviceCombo.SelectedItem as FactoryDevice;
         FlashButton.IsEnabled = device != null && firmwareAvailable && !flashBusy;
-        ResetBoardButton.IsEnabled = device != null && resetImageAvailable && !flashBusy;
+        EraseBoardButton.IsEnabled = device != null && resetImageAvailable && !flashBusy;
+        RecoverButton.IsEnabled = recoveryAvailable && !flashBusy;
         if (device != null) FlashStatus.Text = device.Bootloader ? "Bootloader Caterina prêt. Le firmware peut être installé." : "Carte Leonardo détectée. L’application redémarrera la carte en mode bootloader avant le flash.";
     }
 
@@ -164,15 +166,21 @@ public partial class MainWindow : Window
         var selected = DeviceCombo.SelectedItem as FactoryDevice;
         var candidates = devices.Where(d => !string.IsNullOrWhiteSpace(d.Location)).ToArray();
         var device = selected is { Location.Length: > 0 } ? selected : candidates.Length == 1 ? candidates[0] : null;
-        if (device == null) { FlashStatus.Text = "Mode récupération : rebranche la carte, sélectionne son port, puis relance le flash."; return; }
-        var answer = MessageBox.Show(this, $"Relancer l’installation vérifiée du firmware sur {device.Port} ?\n\nLaisse la carte branchée pendant la récupération.", "Récupération après échec", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
+        if (device == null)
+        {
+            RecoveryInstructions.Text = "Aucun port de récupération n’est visible pour l’instant. Laisse le macropad branché, relie brièvement ses contacts RST et GND deux fois rapidement, puis attends quelques secondes : Atelier recherche le port bootloader automatiquement. Quand il apparaît dans la liste, sélectionne-le et clique à nouveau sur Récupérer.";
+            RecoveryInstructions.Visibility = Visibility.Visible;
+            FlashStatus.Text = "En attente du bootloader Caterina. La carte ne peut pas être reflashed tant que son port n’apparaît pas.";
+            return;
+        }
+        var answer = MessageBox.Show(this, $"Réinstaller et vérifier le firmware DeckPilot sur {device.Port} ?\n\nLaisse la carte branchée pendant toute la récupération.", "Récupération du firmware", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
         if (answer == MessageBoxResult.Yes) await FlashOneAsync(device);
     }
 
     private async Task FlashOneAsync(FactoryDevice device)
     {
         if (string.IsNullOrWhiteSpace(device.Location)) { FlashStatus.Text = "Windows ne permet pas de vérifier l’emplacement USB physique. Aucun flash ne sera lancé."; return; }
-        flashBusy = true; FlashButton.IsEnabled = false; RecoverButton.IsEnabled = false; DiagnosticsButton.IsEnabled = false; BatchFlashButton.IsEnabled = false; ResetBoardButton.IsEnabled = false; FlashProgress.Visibility = Visibility.Visible; FlashProgress.IsIndeterminate = true;
+        flashBusy = true; FlashButton.IsEnabled = false; RecoverButton.IsEnabled = false; DiagnosticsButton.IsEnabled = false; BatchFlashButton.IsEnabled = false; EraseBoardButton.IsEnabled = false; FlashProgress.Visibility = Visibility.Visible; FlashProgress.IsIndeterminate = true;
         var progress = new Progress<string>(s => FlashStatus.Text = s); bool writeAttempted = false;
         try
         {
@@ -181,6 +189,8 @@ public partial class MainWindow : Window
             writeAttempted = true; recoveryAvailable = true;
             await FactoryHardware.FlashAsync(device, progress, CancellationToken.None);
             recoveryAvailable = false; RecoverButton.IsEnabled = false;
+            RecoverButton.Content = "Récupérer / relancer le flash…";
+            RecoveryInstructions.Visibility = Visibility.Collapsed;
             lastFirmwareVersion = FactoryHardware.BundleInfo()?.Version ?? lastFirmwareVersion;
             FlashStatus.Text = "Tout est prêt. Passe à l’étape 2 pour contrôler les 12 touches.";
             ShowTestPage();
@@ -188,7 +198,13 @@ public partial class MainWindow : Window
         catch (Exception ex)
         {
             recoveryAvailable = writeAttempted; RecoverButton.IsEnabled = recoveryAvailable;
-            FlashStatus.Text = writeAttempted ? ex.Message + " La récupération reste disponible : rebranche ou sélectionne le port bootloader, puis relance." : ex.Message;
+            if (writeAttempted)
+            {
+                RecoverButton.Content = "Réinstaller le firmware après échec…";
+                RecoveryInstructions.Visibility = Visibility.Visible;
+                FlashStatus.Text = ex.Message + " La récupération reste disponible.";
+            }
+            else FlashStatus.Text = ex.Message;
         }
         finally { flashBusy = false; FlashProgress.IsIndeterminate = false; FlashProgress.Visibility = Visibility.Collapsed; UpdateDeviceActionButtons(); RecoverButton.IsEnabled = recoveryAvailable; DiagnosticsButton.IsEnabled = true; BatchFlashButton.IsEnabled = true; await RefreshDevicesAsync(); }
     }
@@ -200,7 +216,7 @@ public partial class MainWindow : Window
         if (batch.Length == 0) { FlashStatus.Text = "Aucune carte avec un emplacement USB vérifiable. Branche une ou plusieurs cartes puis réessaie."; return; }
         string list = string.Join(Environment.NewLine, batch.Select(d => $"• {d.Name} · {d.Port}"));
         if (MessageBox.Show(this, $"Atelier en série : {batch.Length} carte(s) détectée(s). Chaque carte sera diagnostiquée puis flashée séparément.\n\n{list}\n\nNe débranche aucune carte avant la fin. Continuer ?", "Mode atelier en série", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) != MessageBoxResult.Yes) return;
-        flashBusy = true; recoveryAvailable = false; UpdateDeviceActionButtons(); BatchFlashButton.IsEnabled = false; DiagnosticsButton.IsEnabled = false; ResetBoardButton.IsEnabled = false; FlashProgress.Visibility = Visibility.Visible; FlashProgress.IsIndeterminate = false; FlashProgress.Maximum = batch.Length;
+        flashBusy = true; recoveryAvailable = false; UpdateDeviceActionButtons(); BatchFlashButton.IsEnabled = false; DiagnosticsButton.IsEnabled = false; EraseBoardButton.IsEnabled = false; FlashProgress.Visibility = Visibility.Visible; FlashProgress.IsIndeterminate = false; FlashProgress.Maximum = batch.Length;
         var outcomes = new List<string>(); int index = 0;
         try
         {
@@ -232,19 +248,27 @@ public partial class MainWindow : Window
         finally { flashBusy = false; BatchFlashButton.IsEnabled = true; FlashProgress.Visibility = Visibility.Collapsed; await RefreshDevicesAsync(); UpdateDeviceActionButtons(); RecoverButton.IsEnabled = recoveryAvailable; DiagnosticsButton.IsEnabled = true; }
     }
 
-    private async void ResetBoardButton_Click(object sender, RoutedEventArgs e)
+    private async void EraseBoardButton_Click(object sender, RoutedEventArgs e)
     {
         if (DeviceCombo.SelectedItem is not FactoryDevice device || flashBusy) return;
         if (string.IsNullOrWhiteSpace(device.Location)) { FlashStatus.Text = "Windows ne permet pas de confirmer l’emplacement USB physique. Aucune écriture ne sera lancée."; return; }
-        var answer = MessageBox.Show(this,
-            "Cette opération efface toute la zone programme et laisse une instruction d’arrêt sûre. Le macropad cessera d’envoyer F13–F24 et ne sera plus reconnu comme clavier. Le bootloader Caterina, l’EEPROM et les profils de l’application PC sont préservés. Ce n’est pas un effacement intégral du composant.\n\nContinuer ?",
-            "Effacer le programme de la carte", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
-        if (answer != MessageBoxResult.Yes) return;
+        var confirmation = new ResetConfirmationWindow { Owner = this };
+        if (confirmation.ShowDialog() != true) return;
 
-        flashBusy = true; UpdateDeviceActionButtons(); FlashProgress.Visibility = Visibility.Visible; FlashProgress.IsIndeterminate = true;
+        flashBusy = true; recoveryAvailable = true; RecoverButton.Content = "Réinstaller le firmware après effacement…"; UpdateDeviceActionButtons(); FlashProgress.Visibility = Visibility.Visible; FlashProgress.IsIndeterminate = true;
         var progress = new Progress<string>(s => FlashStatus.Text = s);
-        try { await FactoryHardware.ResetAsync(device, progress, CancellationToken.None); }
-        catch (Exception ex) { FlashStatus.Text = ex.Message; }
+        try
+        {
+            await FactoryHardware.ResetAsync(device, progress, CancellationToken.None);
+            RecoveryInstructions.Text = "Le programme a été effacé comme demandé. La carte disparaît alors normalement des périphériques USB. Pour la récupérer, laisse-la branchée, relie brièvement RST à GND deux fois rapidement, attends que le port bootloader apparaisse dans Atelier, puis clique sur « Réinstaller le firmware après effacement ».";
+            RecoveryInstructions.Visibility = Visibility.Visible;
+            FlashStatus.Text = "Effacement terminé. Le bootloader Caterina est conservé ; utilise la procédure affichée pour réinstaller le firmware.";
+        }
+        catch (Exception ex)
+        {
+            RecoveryInstructions.Visibility = Visibility.Visible;
+            FlashStatus.Text = "L’effacement ou sa vérification a échoué : " + ex.Message + " La récupération reste disponible.";
+        }
         finally
         {
             flashBusy = false; FlashProgress.IsIndeterminate = false; FlashProgress.Visibility = Visibility.Collapsed;
@@ -256,7 +280,8 @@ public partial class MainWindow : Window
     {
         var selected = DeviceCombo.SelectedItem as FactoryDevice;
         if (FlashButton != null) FlashButton.IsEnabled = selected != null && firmwareAvailable && !flashBusy;
-        if (ResetBoardButton != null) ResetBoardButton.IsEnabled = selected != null && resetImageAvailable && !flashBusy;
+        if (EraseBoardButton != null) EraseBoardButton.IsEnabled = selected != null && resetImageAvailable && !flashBusy;
+        if (RecoverButton != null) RecoverButton.IsEnabled = recoveryAvailable && !flashBusy;
     }
 
     private void FlashTab_Click(object sender, System.Windows.Input.MouseButtonEventArgs e) => ShowFlashPage();

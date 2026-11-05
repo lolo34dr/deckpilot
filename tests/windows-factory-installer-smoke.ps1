@@ -61,16 +61,28 @@ try {
     if ($app.MainWindowTitle -ne 'DeckPilot Atelier') { throw "Unexpected Atelier window title: $($app.MainWindowTitle)" }
     Write-Host 'PASS Atelier startup: the installed application opened its main window'
 
-    $phase = 'verify reset control and no-device safety'
+    $phase = 'verify safe flash and advanced erase controls'
     $window = [System.Windows.Automation.AutomationElement]::FromHandle($app.MainWindowHandle)
-    $resetCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::AutomationIdProperty, 'ResetBoardButton')
-    $resetButton = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $resetCondition)
-    if (!$resetButton) { throw 'Atelier reset action is missing from the installed application.' }
-    if ($resetButton.Current.IsEnabled) { throw 'Reset action must remain disabled without a selected physical device.' }
+    $advancedCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::AutomationIdProperty, 'AdvancedOperationsExpander')
+    $advanced = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $advancedCondition)
+    if (!$advanced) { throw 'The destructive reset action must be grouped under advanced operations.' }
+    $expandCollapse = $advanced.GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern)
+    if ($expandCollapse.Current.ExpandCollapseState -ne [System.Windows.Automation.ExpandCollapseState]::Collapsed) { throw 'Advanced operations must be collapsed by default.' }
+    $expandCollapse.Expand()
+    $eraseCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::AutomationIdProperty, 'EraseBoardButton')
+    $eraseButton = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $eraseCondition)
+    if (!$eraseButton) { throw 'Atelier advanced erase action is missing from the installed application.' }
+    if ($eraseButton.Current.IsEnabled) { throw 'Erase action must remain disabled without a selected physical device.' }
+    $flashCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::AutomationIdProperty, 'FlashButton')
+    $flashButton = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $flashCondition)
+    if (!$flashButton -or $flashButton.Current.Name -notlike 'Installer / réparer le firmware DeckPilot') { throw 'Atelier must expose firmware installation as the normal recovery action.' }
+    $recoveryCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::AutomationIdProperty, 'RecoveryInstructions')
+    $recoveryInstructions = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $recoveryCondition)
+    if (!$recoveryInstructions -or $recoveryInstructions.Current.Name -notmatch 'RST' -or $recoveryInstructions.Current.Name -notmatch 'GND') { throw 'Atelier must show exact manual reset recovery steps.' }
     $firmwareCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::AutomationIdProperty, 'FirmwareVersionLabel')
     $firmwareLabel = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $firmwareCondition)
     if (!$firmwareLabel -or $firmwareLabel.Current.Name -notlike 'Firmware inclus : *') { throw 'Atelier rejected the bundled firmware or reset image.' }
-    Write-Host 'PASS Atelier reset action: visible and disabled without a selected device'
+    Write-Host 'PASS Atelier reset safety: normal repair action, collapsed advanced erase, no-device guard and RST/GND recovery guidance'
 
     $phase = 'duplicate launch exits cleanly'
     $duplicate = Start-Process $executable -PassThru
