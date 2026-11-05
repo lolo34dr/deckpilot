@@ -28,6 +28,9 @@ public partial class MainWindow : Window
     private string lastDevice = "";
     private string lastFirmwareVersion = "inconnue";
     private bool recoveryAvailable;
+    private FactoryDevice? testedDevice;
+    private string testedFirmwareVersion = "inconnue";
+    private int testGeneration;
 
     public MainWindow()
     {
@@ -42,7 +45,7 @@ public partial class MainWindow : Window
         scanTimer.Tick += async (_, _) => await RefreshDevicesAsync(); scanTimer.Start();
         Loaded += async (_, _) => await RefreshDevicesAsync();
         Loaded += async (_, _) => await CheckUpdatesAsync(manual: false);
-        Closing += (_, _) => { IsClosing = true; lifetime.Cancel(); scanTimer.Stop(); testCancellation?.Cancel(); updateService.Dispose(); lifetime.Dispose(); };
+        Closing += (_, e) => { if (flashBusy) { e.Cancel = true; MessageBox.Show(this, "Attends la fin de l’écriture et de la vérification avant de fermer Atelier.", "Opération USB en cours"); return; } IsClosing = true; lifetime.Cancel(); scanTimer.Stop(); testCancellation?.Cancel(); updateService.Dispose(); lifetime.Dispose(); };
     }
 
     private void BuildKeyGrid()
@@ -140,7 +143,8 @@ public partial class MainWindow : Window
         string result = $"Diagnostic OK · {device.Name} ({device.Port}) · carte {package.Manifest.Board} · firmware inclus {bundled} · image HEX vérifiée ({new FileInfo(Path.Combine(package.Folder, "DeckPilot.hex")).Length:N0} octets). ";
         if (device.Bootloader) return result + "Bootloader Caterina prêt ; version actuellement installée non lisible en mode bootloader.";
         using var transport = new FactoryTransport(device.Port);
-        var identity = await Task.Run(() => new BoardProtocolClient(transport).Identify(CancellationToken.None));
+        var identity = await Task.Run(() => new BoardProtocolClient(transport).IdentifyOptional(CancellationToken.None));
+        if (identity == null) return result + "Aucun firmware DeckPilot identifié. Le bootloader Caterina et la signature ATmega32U4 seront vérifiés avant l’écriture.";
         lastFirmwareVersion = identity.Version;
         var installed = Version.Parse(identity.Version); var available = Version.Parse(bundled);
         if (installed > available) return result + $"ATTENTION : firmware installé {installed} plus récent que l’image incluse. Flash bloqué.";
@@ -284,6 +288,8 @@ public partial class MainWindow : Window
         var device = (DeviceCombo.SelectedItem as FactoryDevice is { Bootloader: false } selected ? selected : null)
             ?? candidates.FirstOrDefault(d => d.Id == lastDevice) ?? (candidates.Length == 1 ? candidates[0] : null);
         if (device == null) { TestStatus.Text = candidates.Length == 0 ? "Carte avec firmware DeckPilot introuvable. Installe d’abord le firmware à l’étape 1." : "Plusieurs cartes détectées. Débranche les autres cartes pour choisir sans ambiguïté."; return; }
+        ResetTestState(); testedDevice = device; lastFirmwareVersion = "inconnue";
+        int generation = ++testGeneration;
         testBusy = true; lastDevice = device.Id; ConnectTestButton.Content = "Arrêter le test"; TestStatus.Text = "Connexion au firmware…";
         testCancellation = new CancellationTokenSource(); var token = testCancellation.Token;
         try
@@ -299,6 +305,7 @@ public partial class MainWindow : Window
             }
             if (info == null) throw new IOException("Le macropad ne répond pas. Vérifie qu’il n’est pas ouvert dans DeckPilot ou un autre outil série.");
             lastFirmwareVersion = info.Firmware.Version;
+            testedFirmwareVersion = info.Firmware.Version;
             var bundledFirmware = Version.Parse(FactoryHardware.BundleInfo()!.Version);
             if (Version.Parse(info.Firmware.Version) < bundledFirmware)
             {
@@ -309,7 +316,7 @@ public partial class MainWindow : Window
             TestStatus.Text = $"Firmware {info.Firmware.Version} connecté. Appuie brièvement sur la touche physique 01.";
             TestInstructions.Text = "Suis l’ordre des touches sur la grille. Pour chaque touche : appui court, puis maintien long.";
             foreach (var key in keys) key.IsEnabled = true;
-            await Task.Run(() => client.Run(OnTelemetry, token), token);
+            await Task.Run(() => client.Run(telemetry => Dispatcher.BeginInvoke(() => { if (generation == testGeneration) ProcessMask(telemetry.Mask); }), token), token);
         }
         catch (OperationCanceledException) { }
         catch (Exception ex) { Dispatcher.Invoke(() => { TestStatus.Text = "Connexion échouée : " + ex.Message; Activity.Text = "Aucune mesure en cours."; }); }
@@ -318,6 +325,7 @@ public partial class MainWindow : Window
 
     private void StopTest()
     {
+        testGeneration++;
         testCancellation?.Cancel(); testCancellation?.Dispose(); testCancellation = null;
         foreach (var key in keys) key.IsEnabled = false;
     }
@@ -334,7 +342,7 @@ public partial class MainWindow : Window
         IsClosing = true; StopTest(); Close();
     }
 
-    private void OnTelemetry(BoardTelemetry telemetry) => Dispatcher.BeginInvoke(() => ProcessMask(telemetry.Mask));
+
 
     private void ProcessMask(int mask)
     {
@@ -403,8 +411,11 @@ public partial class MainWindow : Window
         if (physicalIndex < 12) ResultTitle.Text = $"Touche {physicalIndex + 1:00} sur 12 · {(stage == 0 ? "appui court" : "appui long")}";
     }
 
-    private void ResetTest_Click(object sender, RoutedEventArgs e)
+    private void ResetTest_Click(object sender, RoutedEventArgs e) { StopTest(); ResetTestState(); }
+
+    private void ResetTestState()
     {
+        testedDevice = null; testedFirmwareVersion = "inconnue";
         Array.Clear(shortPassed); Array.Clear(longPassed); Array.Fill(pinForPhysical, -1); events.Clear(); physicalIndex = stage = 0; fail = held = false; previousMask = 0;
         UpdateGrid(); ResultTitle.Text = "En attente"; ResultTitle.Foreground = (Brush)FindResource("MutedBrush"); Activity.Text = "En attente d’une touche…"; TestStatus.Text = "Appuie sur Démarrer le test USB pour commencer."; ExportButton.IsEnabled = false;
     }
@@ -414,7 +425,7 @@ public partial class MainWindow : Window
         if (!ExportButton.IsEnabled) return;
         var dialog = new SaveFileDialog { Title = "Enregistrer le rapport de contrôle", Filter = "Rapport texte (*.txt)|*.txt", FileName = $"DeckPilot-controle-{DateTime.Now:yyyyMMdd-HHmm}.txt", AddExtension = true, DefaultExt = ".txt" };
         if (dialog.ShowDialog() != true) return;
-        var report = new StringBuilder(); report.AppendLine("DeckPilot Atelier — Rapport de contrôle"); report.AppendLine($"Date : {DateTimeOffset.Now:yyyy-MM-dd HH:mm:ss zzz}"); report.AppendLine($"Carte : {(DeviceCombo.SelectedItem as FactoryDevice)?.Name ?? "non sélectionnée"} · {(DeviceCombo.SelectedItem as FactoryDevice)?.Port ?? "port inconnu"}"); report.AppendLine($"Firmware testé : {lastFirmwareVersion}"); report.AppendLine($"Firmware inclus : {FactoryHardware.BundleInfo()?.Version ?? "inconnu"}"); report.AppendLine("Disposition physique 01→12 :"); for (int i = 0; i < pinForPhysical.Length; i++) report.AppendLine($"  Touche {i + 1:00} → {(pinForPhysical[i] >= 0 ? $"F{13 + pinForPhysical[i]}" : "non détectée")} · court {(shortPassed[i] ? "OK" : "ÉCHEC")} · long {(longPassed[i] ? "OK" : "ÉCHEC")}"); report.AppendLine("Résultat : RÉUSSI"); report.AppendLine("Touches contrôlées : 12 / 12"); report.AppendLine("Appuis courts : 12 / 12"); report.AppendLine("Appuis longs : 12 / 12"); report.AppendLine(); report.AppendLine("Détail des mesures :"); foreach (string item in events) report.AppendLine(item);
+        var report = new StringBuilder(); report.AppendLine("DeckPilot Atelier — Rapport de contrôle"); report.AppendLine($"Date : {DateTimeOffset.Now:yyyy-MM-dd HH:mm:ss zzz}"); report.AppendLine($"Carte : {testedDevice?.Name ?? "non sélectionnée"} · {testedDevice?.Port ?? "port inconnu"}"); report.AppendLine($"Identifiant USB : {testedDevice?.Id}"); report.AppendLine($"Emplacement USB : {testedDevice?.Location}"); report.AppendLine($"Firmware testé : {testedFirmwareVersion}"); report.AppendLine($"Firmware inclus : {FactoryHardware.BundleInfo()?.Version ?? "inconnu"}"); report.AppendLine("Disposition physique 01→12 :"); for (int i = 0; i < pinForPhysical.Length; i++) report.AppendLine($"  Touche {i + 1:00} → {(pinForPhysical[i] >= 0 ? $"F{13 + pinForPhysical[i]}" : "non détectée")} · court {(shortPassed[i] ? "OK" : "ÉCHEC")} · long {(longPassed[i] ? "OK" : "ÉCHEC")}"); report.AppendLine("Résultat : RÉUSSI"); report.AppendLine("Touches contrôlées : 12 / 12"); report.AppendLine("Appuis courts : 12 / 12"); report.AppendLine("Appuis longs : 12 / 12"); report.AppendLine(); report.AppendLine("Détail des mesures :"); foreach (string item in events) report.AppendLine(item);
         try { File.WriteAllText(dialog.FileName, report.ToString(), new UTF8Encoding(true)); TestStatus.Text = "Rapport enregistré : " + dialog.FileName; } catch (Exception ex) { TestStatus.Text = "Impossible d’enregistrer le rapport : " + ex.Message; }
     }
 }

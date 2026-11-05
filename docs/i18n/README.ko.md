@@ -284,7 +284,7 @@ DeckPilot 아래에 발표됩니다. **[MIT 라이센스](../../LICENSE)**. 당�
 <a id="macropad-firmware-updates"></a>
 ## Macropad 펌웨어 업데이트
 
-장치 준비 및 워크샵 품질 검사를 위해 별도의 설치 [DeckPilot Atelier, 그리스](docs/FACTORY.md) 도구. 그것의 installer는 간행됩니다 **[DeckPilot-Atelier-Setup.exe를 설치](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** 주요 응용 프로그램에 따라. 그것은 레오나르도 / 카테리나 보드에 포함 된 펌웨어를 플래시 할 수 있으며, 모든 것에 짧은 긴 압박을 확인합니다. 12 물리적 키와 수출 보고서.
+장치 준비 및 워크샵 품질 검사를 위해 별도의 설치 [DeckPilot Atelier, 그리스](../../docs/FACTORY.md) 도구. 그것의 installer는 간행됩니다 **[DeckPilot-Atelier-Setup.exe를 설치](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** 주요 응용 프로그램에 따라. 그것은 레오나르도 / 카테리나 보드에 포함 된 펌웨어를 플래시 할 수 있으며, 모든 것에 짧은 긴 압박을 확인합니다. 12 물리적 키와 수출 보고서.
 
 DeckPilot 1.1.0 다음을 포함합니다. **Firmware du macropad…** 대화 및 펌웨어 1.0.0 직업적인 마이크로 ATmega32U4를 위해 **5 ₢ 킹 16 MHz의**, 레오나르도/카테리나 구성을 사용하여 소유자의 업로드 로그에 의해 확인. 번들 된 Windows 번쩍이는 도구는 Arduino IDE가 필요하지 않습니다. 장치 선택 및 확인은 필수입니다. 앱 업데이트는 절대 조용히 보드를 플래시하지 않습니다. 기존 F13–F24 매핑, 프로필 및 교정은 호환되지 않습니다.
 
@@ -392,7 +392,7 @@ charcoal 인터페이스는 액션 라이브러리를 먼저 배치하고, crisp
 
 DeckPilot 이제 기본으로 딥 블랙 인터페이스를 사용합니다. In **Préférences de l’application**, 배경, 패널 및 악센트 색상 변경 `#RRGGBB` 값; 테마는이 PC에 저장됩니다.
 
-더 많은 정보 **Soundboard · 마이크로 virtuel** 패널은 물리적 마이크와 MP3/WAV 클립을 선택할 수 있습니다. DeckPilot VB-Audio VB-CABLE 재생 엔드 포인트에 믹스를 자동으로 경로; Discord 또는 게임에서, 선택 **CABLE 산출** 마이크로서. 설치 및 업데이트 중 DeckPilot VB-CABLE에 대한 확인 및 누락 될 때 설치. 그것은 HTTPS에 공식 패키지를 다운로드하고 드라이버의 침묵 설치기를 실행하기 전에 Authenticode 게시자를 확인합니다. 이것은 인터넷 연결 및 관리자 권한이 필요합니다. DeckPilot 뭉치 또는 redistribute VB-Audio 파일이 아닙니다. 드라이버가 나중에 누락되면 Soundboard 패널에서 동일한 서명 검사 된 설치 프로그램을 시작할 수 있습니다. 오디오 엔진은 NAudio (MIT; 참조 [제3자 공지사항](third-party/NAudio-LICENSE.txt)). VB 케이블은 따로따로 면허, 서명한 Windows 운전사, MIT 성분 아닙니다입니다.
+더 많은 정보 **Soundboard · 마이크로 virtuel** 패널은 물리적 마이크와 MP3/WAV 클립을 선택할 수 있습니다. DeckPilot VB-Audio VB-CABLE 재생 엔드 포인트에 믹스를 자동으로 경로; Discord 또는 게임에서, 선택 **CABLE 산출** 마이크로서. 설치 및 업데이트 중 DeckPilot VB-CABLE에 대한 확인 및 누락 될 때 설치. 그것은 HTTPS에 공식 패키지를 다운로드하고 드라이버의 침묵 설치기를 실행하기 전에 Authenticode 게시자를 확인합니다. 이것은 인터넷 연결 및 관리자 권한이 필요합니다. DeckPilot 뭉치 또는 redistribute VB-Audio 파일이 아닙니다. 드라이버가 나중에 누락되면 Soundboard 패널에서 동일한 서명 검사 된 설치 프로그램을 시작할 수 있습니다. 오디오 엔진은 NAudio (MIT; 참조 [제3자 공지사항](../../third-party/NAudio-LICENSE.txt)). VB 케이블은 따로따로 면허, 서명한 Windows 운전사, MIT 성분 아닙니다입니다.
 
 <a id="deckpilot-atelier-190"></a>
 ## DeckPilot 아텔리에 (Atelier)1.9.0)

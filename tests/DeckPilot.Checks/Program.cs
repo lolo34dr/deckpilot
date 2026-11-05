@@ -141,4 +141,5 @@ passed += await ActionToolsChecks.RunAsync();
 passed += await ApplicationCatalogChecks.RunAsync();
 passed += ProfileGestureAudioChecks.Run();
 passed += FeatureChecks.Run();
+passed += AuditFixChecks.Run();
 Console.WriteLine($"{passed} checks passed.");

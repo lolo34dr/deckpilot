@@ -57,7 +57,7 @@ public partial class App : Application
                 var store = new DeckPilot.Core.SettingsStore(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DeckPilot", "settings.json"));
                 var settings = store.Load();
                 using var audio = new SoundboardEngine();
-                var physicalMicrophones = audio.Microphones().Where(m => !DeckPilot.Core.VirtualCableEndpoints.IsRecordingEndpoint(m.Name)).ToArray();
+                var physicalMicrophones = audio.Microphones().Where(m => !m.IsVirtualCable).ToArray();
                 bool configureOnlyIfNeeded = e.Args[0] == "--configure-microphone-if-needed";
                 if (configureOnlyIfNeeded && physicalMicrophones.Any(m => string.Equals(m.Id, settings.Soundboard.MicrophoneId, StringComparison.OrdinalIgnoreCase)))
                 {

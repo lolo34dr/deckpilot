@@ -18,6 +18,16 @@ function Get-PresentAudioEndpoints {
     return @()
 }
 
+function Test-CableAdapterPresent {
+    # The MEDIA adapter keeps its driver name when a user renames an audio endpoint.
+    if (Get-Command Get-PnpDevice -ErrorAction SilentlyContinue) {
+        return [bool](Get-PnpDevice -Class MEDIA -PresentOnly -ErrorAction SilentlyContinue |
+            Where-Object { $_.Status -eq 'OK' -and $_.FriendlyName -eq 'VB-Audio Virtual Cable' })
+    }
+    return [bool](Get-CimInstance Win32_PnPEntity -ErrorAction SilentlyContinue |
+        Where-Object { $_.PNPClass -eq 'MEDIA' -and $_.Status -eq 'OK' -and $_.Name -eq 'VB-Audio Virtual Cable' })
+}
+
 function Show-Notice([string]$message, [string]$title, [string]$icon) {
     $iconValue = [Enum]::Parse('System.Windows.Forms.MessageBoxIcon', $icon)
     [System.Windows.Forms.MessageBox]::Show($message, $title, [System.Windows.Forms.MessageBoxButtons]::OK, $iconValue) | Out-Null
@@ -31,7 +41,7 @@ if ($SkipSetupForTest) {
 try {
     if (!$ValidateOnly) {
         $endpoints = @(Get-PresentAudioEndpoints)
-        if (($endpoints | Where-Object { $_ -like 'CABLE Input*' }) -and ($endpoints | Where-Object { $_ -like 'CABLE Output*' })) {
+        if ((Test-CableAdapterPresent) -or (($endpoints | Where-Object { $_ -like 'CABLE Input*' }) -and ($endpoints | Where-Object { $_ -like 'CABLE Output*' }))) {
             return
         }
     }
@@ -83,7 +93,7 @@ try {
         $verified = $false
         for ($attempt = 0; $attempt -lt 20; $attempt++) {
             $endpoints = @(Get-PresentAudioEndpoints)
-            if (($endpoints | Where-Object { $_ -like 'CABLE Input*' }) -and ($endpoints | Where-Object { $_ -like 'CABLE Output*' })) { $verified = $true; break }
+            if ((Test-CableAdapterPresent) -or (($endpoints | Where-Object { $_ -like 'CABLE Input*' }) -and ($endpoints | Where-Object { $_ -like 'CABLE Output*' }))) { $verified = $true; break }
             Start-Sleep -Milliseconds 500
         }
         if (!$verified) { throw 'VB-Audio Setup finished, but Windows has not exposed both VB-CABLE endpoints yet. A restart may be required.' }

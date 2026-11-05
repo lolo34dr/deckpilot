@@ -108,11 +108,11 @@ public partial class MainWindow
         if (WithProfileSelectionLocked(() => dialog.ShowDialog(this)) != true) return;
         try
         {
-            string json = ProfileExchange.Export(all ? settings.Profiles : new[] { settings.ActiveProfile });
+            string json = PortableProfiles.Export(settings, all ? settings.Profiles : new[] { settings.ActiveProfile });
             string temporary = dialog.FileName + "." + Guid.NewGuid().ToString("N") + ".tmp";
             try { File.WriteAllText(temporary, json); File.Move(temporary, dialog.FileName, true); }
             finally { if (File.Exists(temporary)) File.Delete(temporary); }
-            StatusText.Text = "Profil exporté · Le calibrage et les préférences de ce PC ne sont pas inclus.";
+            StatusText.Text = "Profil et sons exportés · Le calibrage et les préférences de ce PC ne sont pas inclus.";
         }
         catch (Exception ex) { ReportError("Export impossible : " + ex.Message); }
     }
@@ -130,20 +130,18 @@ public partial class MainWindow
         if (WithProfileSelectionLocked(() => dialog.ShowDialog(this)) != true) return;
         try
         {
-            var package = ProfileExchange.Read(dialog.FileName);
+            var portable = PortableProfiles.Read(dialog.FileName);
+            var package = ProfileExchange.Import(portable.Profiles);
             string names = string.Join("\n", package.Profiles.Take(8).Select(p => "• " + p.Name));
             string message = restore ? $"Remplacer les profils actuels par ces {package.Profiles.Count} profil(s) ?\n\n{names}\n\nLe calibrage est conservé. Les profils actuels seront sauvegardés."
                 : $"Ajouter ces {package.Profiles.Count} profil(s) sans remplacer les vôtres ?\n\n{names}\n\nLes programmes et périphériques audio peuvent nécessiter une adaptation sur ce PC. Aucune action ne sera exécutée.";
             if (WithProfileSelectionLocked(() => MessageBox.Show(this, message, "DeckPilot", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No)) != MessageBoxResult.Yes) return;
-            if (restore) { settings.Profiles = ProfileExchange.Copy(package.Profiles); settings.ActiveProfileId = settings.Profiles[0].Id; }
-            else
-            {
-                if (settings.Profiles.Count + package.Profiles.Count > 100) throw new InvalidDataException("Limite de 100 profils atteinte.");
-                settings.ActiveProfileId = ProfileExchange.AddAsNew(settings, package)[0].Id;
-            }
+            PortableProfiles.Apply(settings, portable, restore, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DeckPilot", "Sounds"));
+            RefreshSoundboardClips();
             CancelPendingGestures(); editingLong = false;
             RefreshProfiles(); LoadEditor(); if (!Persist()) return;
-            StatusText.Text = restore ? "Profils restaurés · Annulation possible · Calibrage conservé." : "Profils importés · Aucune action exécutée.";
+            StatusText.Text = portable.Sounds.Any(c => c.Audio == null) ? "Profils restaurés · Certains fichiers audio étaient absents de la sauvegarde. Remplace les sons indisponibles."
+                : restore ? "Profils restaurés · Annulation possible · Calibrage conservé." : "Profils et sons importés · Aucune action exécutée.";
         }
         catch (Exception ex) { ReportError("Lecture des profils impossible : " + ex.Message); }
     }

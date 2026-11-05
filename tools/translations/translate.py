@@ -46,7 +46,7 @@ def prepare(out):
 
 # Markdown controls, exact code, URLs, link destinations and existing French UI labels.
 PROTECTED=re.compile(r'(`+[^`\n]*`+|!?\[[^\]\n]*\]\([^\)\n]*\)|<[^>]+>|https?://[^\s<>]+|DeckPilot|\b\d+(?:[.,]\d+)*\b|\*\*|\*|\||&[a-zA-Z#0-9]+;)')
-UI=['Lancer avec Windows','Firmware du macropad…','Votre macropad','Connexion et diagnostic','Options avancées · fichier et arguments','Tester l’action','Hors ligne','Multimédia','Rechercher une action ou une application','Préférences de l’application','Annuler / Rétablir','Gérer les profils','Microphone Windows','Changer de sortie audio','appui court / appui long','Réduire les animations','Changer de profil','Commandes Windows','Enregistrer un raccourci','Activité récente']
+UI=['CABLE Output','CABLE Input','Soundboard · micro virtuel','VB-Audio Virtual Cable','VB-CABLE','Soundboard','NAudio','Lancer avec Windows','Firmware du macropad…','Votre macropad','Connexion et diagnostic','Options avancées · fichier et arguments','Tester l’action','Hors ligne','Multimédia','Rechercher une action ou une application','Préférences de l’application','Annuler / Rétablir','Gérer les profils','Microphone Windows','Changer de sortie audio','appui court / appui long','Réduire les animations','Changer de profil','Commandes Windows','Enregistrer un raccourci','Activité récente']
 
 
 
@@ -242,6 +242,14 @@ class Engine:
         if len(re.findall(r'^#{1,6} ',source,re.M))!=len(re.findall(r'^#{1,6} ',result,re.M)):raise RuntimeError('Section omitted during translation')
         return result
 
+def rebase_readme_links(text,language):
+    def target(match):
+        url=match[1]
+        if url.startswith(('http:', 'https:', '#', '/', 'mailto:')):return match[0]
+        if url=='firmware/README.md':return f'](FIRMWARE.{language}.md)'
+        return '](../../'+url+')'
+    return re.sub(r'\]\(([^)]+)\)',target,text)
+
 def translate(language,source,out,cache):
     engine=Engine(language,cache)
     dest=out/'docs/i18n';dest.mkdir(parents=True,exist_ok=True)
@@ -249,7 +257,7 @@ def translate(language,source,out,cache):
     original=original.replace('src="deckpilot','src="../../deckpilot')
     original=original.replace('href="README.md"','href="../../README.md"')
     original=re.sub(r'href="docs/i18n/(README\.[^"]+)"',r'href="\1"',original)
-    original=original.replace('](LICENSE)','](../../LICENSE)').replace('](firmware/README.md)',f'](FIRMWARE.{language}.md)')
+    original=rebase_readme_links(original,language)
     documents=[original]+[r['body'] for r in json.loads((source/'releases.json').read_text())]
     if (source/'firmware.md').exists():documents.append((source/'firmware.md').read_text())
     engine.prefill(documents)

@@ -47,7 +47,7 @@
 
 DeckPilot configures Arduino Leonardo-compatible macropads that already send **F13–F24** as USB keyboard inputs, arranged in **3 rows of 4 keys**. The physical key order can be arbitrary: a guided calibration maps each button to its position.
 
-**No additional driver or firmware changes are required.** The application interface is currently in French. Choose a language above for a complete translated README, including the technical reference and version history. Translations are generated automatically; this English original is the reference.
+**The F13–F24 keyboard features need no additional driver or firmware changes. Soundboard mixing requires the signed VB-CABLE audio driver, installed by Setup when missing.** The application interface is currently in French. Choose a language above for a complete translated README, including the technical reference and version history. Translations are generated automatically; this English original is the reference.
 
 ## Features
 
@@ -361,7 +361,7 @@ The firmware remains **1.1.1**. Accepting an automatic firmware offer now correc
 
 DeckPilot now uses a deep black interface by default. In **Préférences de l’application**, change the background, panel and accent colors using `#RRGGBB` values; your theme is saved on this PC.
 
-The **Soundboard · micro virtuel** panel lets you select your physical microphone and MP3/WAV clips. DeckPilot automatically routes the mix to the VB-Audio VB-CABLE playback endpoint; in Discord or a game, choose **CABLE Output** as the microphone. During installation and updates, DeckPilot checks for VB-CABLE and installs it when missing. It downloads the official package over HTTPS and verifies the Authenticode publisher before running the driver's silent installer. This requires an internet connection and administrator permission. DeckPilot does not bundle or redistribute VB-Audio files. If the driver is missing later, you can start the same signature-checked installer from the Soundboard panel. The audio engine uses NAudio (MIT; see [third-party notice](third-party/NAudio-LICENSE.txt)). VB-CABLE is a separately licensed, signed Windows driver, not an MIT component.
+The **Soundboard · micro virtuel** panel lets you select your physical microphone and MP3/WAV clips. DeckPilot automatically routes the mix to the VB-Audio VB-CABLE playback endpoint; in Discord or a game, choose **`CABLE Output`** as the microphone. During installation and updates, DeckPilot checks for VB-CABLE and installs it when missing. It downloads the official package over HTTPS and verifies the Authenticode publisher before running the driver's silent installer. This requires an internet connection and administrator permission. DeckPilot does not bundle or redistribute VB-Audio files. If the driver is missing later, you can start the same signature-checked installer from the Soundboard panel. The audio engine uses NAudio (MIT; see [third-party notice](third-party/NAudio-LICENSE.txt)). VB-CABLE is a separately licensed, signed Windows driver, not an MIT component.
 
 ## DeckPilot Atelier (1.9.0)
 
@@ -389,3 +389,9 @@ DeckPilot 1.9.7 fixes uninstalling Atelier while it is running. The Windows rele
 DeckPilot 1.9.8 adds an explicit, confirmed Atelier reset that replaces the board's user program with a verified empty sketch and preserves the Caterina bootloader.
 
 Validation covers legacy settings, accent validation, profile navigation and reference remapping, portable templates, native Windows template/undo/redo and profile switching, shortcut recording, copy/paste/reset, settings persistence, installation/update, layout resizing and an actual UI capture. Hardware-specific behavior still requires the macropad and audio devices on a Windows PC.
+
+### Profile sound files and workshop safety
+
+Profile exports include the referenced MP3/WAV clips (up to 32 MiB of audio per package). Imports copy embedded audio into DeckPilot’s managed Sounds folder and remap identifiers without replacing existing clips. Automatic profile backups use the same format; unavailable audio is recorded as missing rather than silently replaced. Keep the source files if you exceed the export limit. Legacy profile files remain supported. Removing a clip that is still assigned to a short or long action is blocked.
+
+Atelier accepts boards that do not yet answer the DeckPilot protocol, while still checking the USB location, Caterina bootloader and ATmega32U4 signature before programming. Each test session starts with empty results, and its report stays associated with the tested board. Closing the application during a flash or reset is blocked until writing and verification finish.

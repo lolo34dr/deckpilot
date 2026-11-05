@@ -43,6 +43,12 @@ jobs:
       - name: Verify Windows installation, upgrade and uninstall
         shell: powershell
         run: ./tests/windows-installer-smoke.ps1 -Installer artifacts/installer/DeckPilot-Setup.exe
+      - name: Build Atelier installer
+        shell: pwsh
+        run: ./installer/build-factory.ps1
+      - name: Verify Atelier installation, launch, upgrade and uninstall
+        shell: powershell
+        run: ./tests/windows-factory-installer-smoke.ps1 -Installer artifacts/installer/DeckPilot-Atelier-Setup.exe
       - name: Verify native update and application picker
         shell: powershell
         run: ./tests/windows-update-smoke.ps1 -Executable artifacts/standalone/DeckPilot.exe
