@@ -15,6 +15,15 @@ internal static class AuditFixChecks
             var source = new Settings(); var clip = new SoundboardClip { Name = "Test", FilePath = path }; source.Soundboard.Clips.Add(clip);
             source.Profiles[0].Buttons[0] = new() { Kind = ActionKind.Soundboard, Target = clip.Id.ToString(), LongPressEnabled = true,
                 LongPressAction = new() { Kind = ActionKind.Soundboard, Target = clip.Id.ToString() } };
+            Check("Automatic virtual microphone startup defaults on for existing settings and preserves an explicit stop", () =>
+            {
+                var prefsPath=Path.Combine(root,"autostart","prefs.json"); Directory.CreateDirectory(Path.GetDirectoryName(prefsPath)!);
+                File.WriteAllText(prefsPath,"{\"Version\":1,\"LayoutColumns\":4}");
+                var prefsStore=new SettingsStore(prefsPath); var prefs=prefsStore.Load(); Expect(prefs.Soundboard.AutoStart);
+                prefs.Soundboard.AutoStart=false; prefs.Soundboard.MicrophoneId="saved-physical-microphone"; prefsStore.Save(prefs);
+                var restored=prefsStore.Load(); Expect(!restored.Soundboard.AutoStart && restored.Soundboard.MicrophoneId=="saved-physical-microphone");
+                restored.Soundboard.AutoStart=true; prefsStore.Save(restored); Expect(prefsStore.Load().Soundboard.AutoStart);
+            });
             Check("Portable sound profiles preserve audio and remap short and long actions without leaking source paths", () =>
             {
                 source.Profiles[0].Buttons[0].Target = clip.Id.ToString().ToUpperInvariant();

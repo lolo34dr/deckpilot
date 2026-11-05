@@ -215,6 +215,7 @@
         <TextBlock Text="Microphone physique"/><ComboBox x:Name="SoundboardMicrophonePicker" DisplayMemberPath="Name" SelectionChanged="SoundboardDevicesChanged"/>
         <Button Content="Actualiser les périphériques" Click="RefreshSoundboardDevicesClick" HorizontalAlignment="Left"/>
         <Button Content="Installer le pilote audio virtuel…" Click="InstallVirtualCableClick" HorizontalAlignment="Left"/>
+        <CheckBox x:Name="SoundboardAutoStartCheck" Content="Activer automatiquement avec DeckPilot" Checked="SoundboardAutoStartChanged" Unchecked="SoundboardAutoStartChanged"/>
         <Button x:Name="SoundboardStartButton" Content="Activer le micro virtuel" Click="ToggleSoundboardClick" HorizontalAlignment="Left"/>
         <TextBlock x:Name="SoundboardStatus" Text="Micro virtuel arrêté." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,5,0,10"/>
         <Button Content="Ajouter un son MP3 ou WAV…" Click="AddSoundClipClick" HorizontalAlignment="Left"/>

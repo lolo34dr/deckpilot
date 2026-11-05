@@ -399,3 +399,7 @@ Atelier accepts boards that do not yet answer the DeckPilot protocol, while stil
 ### Live microphone latency
 
 DeckPilot 2.1.3 processes live audio in small, output-driven blocks. It requests 20 ms event-driven microphone capture and 40 ms playback buffers. The microphone queue is bounded to 100 ms and discards older complete frames if playback stalls; this avoids building seconds of delayed speech. These are software buffer settings, not a measured end-to-end latency guarantee. Windows, the microphone, VB-CABLE and the receiving app also contribute delay. Discord voice isolation settings are unchanged and may suppress soundboard clips because it receives the mixed signal.
+
+### Automatic virtual microphone startup
+
+DeckPilot 2.1.4 automatically activates the virtual microphone when the selected physical microphone and VB-CABLE are available. This also works in the background after Windows sign-in when **Start with Windows** is enabled. Missing devices are retried every five seconds. Stopping the virtual microphone explicitly saves automatic startup as disabled; re-enable it in the Soundboard panel. Clips are only played when requested.
