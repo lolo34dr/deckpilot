@@ -4,19 +4,19 @@ DeckPilot 1.9.0 adds DeckPilot Atelier, um aplicativo de oficina do Windows sepa
 
 - Instale o firmware incluído em placas Leonardo / Pro Micro ATmega32U4 com o bootloader Caterina.
 - Execute verificações guiadas de curto-pressão e longa-pressão para cada chave física, grave seu mapeamento F13-F24 e salve um relatório de controle de qualidade.
-- Baixar **DeckPilot- Atelier- Setup.exe** desta versão. O original DeckPilot a configuração e o firmware permanecem disponíveis separadamente.
+- Transferir **DeckPilot- Atelier- Setup.exe** desta versão. O original DeckPilot a configuração e o firmware permanecem disponíveis separadamente.
 
 DeckPilot 1.8.0 adiciona um espaço de trabalho atualizado e maneiras mais rápidas de construir e usar seus perfis.
 
-- Limpar a interface carvão/leal, biblioteca de ação primeiro, crocante 3 × 4 chaves, cores de acento-chave e preferência de movimento reduzido.
+- Limpar a interface carvão/leal, biblioteca de ação primeiro, crocante 3 × 4 chaves, cores de acento chave e preferência de movimento reduzido.
 - Três modelos de perfil editáveis: Música e áudio, Desktop e produtividade e Criação.
-- Ações de perfil: mude para um perfil nomeado, o próximo ou o perfil anterior a partir de uma chave. Os conjuntos de perfil importados mantêm seus links internos.
-- Ações do Windows: abrir configurações comuns ou Gerenciador de tarefas, ou explicitamente bloquear o PC.
-- Copiar/cortar/colar/repor chaves inteiras, incluindo longas prensas e cores, com desfazer/refazer e uma área de transferência local do aplicativo.
+- Ações de perfil: mude para um perfil nomeado, o próximo ou o perfil anterior de uma chave. Os conjuntos de perfil importados mantêm seus links internos.
+- Ações do Windows: abrir configurações comuns ou Gerenciador de tarefas, ou bloquear explicitamente o PC.
+- Copiar/cortar/colar/reset chaves inteiras, incluindo longas prensas e cores, com desfazer/refazer e uma área de transferência app-local.
 - Capture um atalho de teclado diretamente; Escape cancela e as teclas do macropad permanecem reservadas durante a captura.
-- Pesquisa de ação Ctrl+K e um histórico clearable, somente de sessão do último 30 acções.
-- Corrigir o prompt de firmware automático de modo a aceitá- lo abre o gerenciador de firmware. Os gestos pendentes são cancelados através de mudanças de perfil.
+- Ctrl+K pesquisa de ação e um histórico desobstruído, somente de sessão do último 30 acções.
+- Corrigir o prompt de firmware automático de modo a aceitá-lo abre o gerenciador de firmware. Os gestos pendentes são cancelados através de alterações de perfil.
 
-Baixar **DeckPilot- Setup.exe** ou atualização do aplicativo. Perfis existentes, calibração e preferências de inicialização são preservadas. Firmware permanece **1.1.1**; nenhum flash é necessário para essas características.
+Transferir **DeckPilot- Setup.exe** ou atualização do aplicativo. Perfis existentes, calibração e preferências de inicialização são preservadas. Firmware permanece **1.1.1**; nenhum flash é necessário para essas características.
 
-A validação inclui verificações de compatibilidade/navegação/importação/template do núcleo e instalação nativa do Windows, atualização, picker, arrastar e soltar, desfazer/refazer, criação de modelo, ações de perfil, captura de atalhos, edição de área de transferência, layout e minimização/restauração de verificações. O comportamento físico do macropad e do dispositivo de áudio ainda depende do hardware do proprietário do Windows.
+A validação inclui as verificações de compatibilidade/navegação/importação/template e instalação nativa do Windows, atualização, picador, arrastar e soltar, desfazer/refazer, criação de modelo, ações de perfil, captura de atalhos, edição de área de transferência, layout e minimização/restore. O comportamento físico do macropad e do dispositivo de áudio ainda depende do hardware do proprietário do Windows.

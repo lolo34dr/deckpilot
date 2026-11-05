@@ -3,7 +3,7 @@
 DeckPilot 1.3.2 mejora la conexión USB y comprueba el firmware macropad al inicio.
 
 - Panel de conexión con reconexión automática, firmware detectado, diagnóstico de estado de botón en vivo/USB y selección explícita de tableros cuando varios dispositivos están presentes.
-- Comprobaciones de firmware de inicio y propuestas de actualización, con un 24- retraso de recordatorio de horas y una opción para deshabilitar notificaciones de firmware. La instalación todavía necesita confirmación.
+- Comprobaciones de firmware de inicio y propuestas de actualización, con un 24- retraso de recordatorio de horas y una opción para desactivar notificaciones de firmware. La instalación todavía necesita confirmación.
 - Nuevo firmware **1.1.1**: mensajes de protocolo consolidados, fichas de sesión frescas, respuestas de latidos cardíacos correlacionados y eventos de estado clave. La cartografía F13-F24 sigue siendo invariable, incluyendo el uso independiente.
 - Firmware manager libera automáticamente el puerto serial del monitor antes de la identificación/flashing y vuelve a conectarse después. Firmware 1.0.0 y las consultas de identidad heredadas siguen siendo apoyadas.
 - Los perfiles se pueden seleccionar en el menú de bandejas; Ctrl+S guarda cambios; el diagnóstico de conexión se puede copiar para el soporte.

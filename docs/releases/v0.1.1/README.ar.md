@@ -9,6 +9,6 @@ Interface plus sobre pour DeckPilot, inspirée de la disposition Stream Deck.
 
 Les profils et le calibrage existants sont conservés. Quittez l’ancienne version depuis son icône près de l’horloge avant de remplacer l’exécutable.
 
-Téléchargez **DeckPilot-هناك .** pour la version autonome, ou **DeckPilot-W-X64.zip** pour le dossier complet à extraire. Windows 10/11 X64, aucun runtime.NET à installer.
+Téléchargez **DeckPilot.....** pour la version autonome, ou **DeckPilot-W-X64.zip** pour le dossier complet à extraire. Windows 10/11 X64, aucun runtime.NET à installer.
 
 La compilation Windows et les 16 vérifications automatiques sont exécutées avant publication. Le rendu à l’écran et le matériel restent à valider sur votre PC Windows. Les exécutables ne sont pas signés.
