@@ -1,8 +1,8 @@
 > Esta é uma tradução automática das notas de lançamento completas. O original em inglês é a referência.
 
-Preparação do repositório para renomear: `streamdeck-diy` → `deckpilot`.
+Preparação de renomeação do repositório: `streamdeck-diy` → `deckpilot`.
 
-- As verificações de atualização suportam ambos os nomes do repositório, antes e depois da renomeação.
+- As verificações de atualização suportam ambos os nomes dos repositórios, antes e depois da renomeação.
 - A validação do download aceita apenas os caminhos exatos dos ativos de liberação pertencentes a esses dois repositórios.
 - As ações de perfis, calibração e aplicação estão inalteradas.
 

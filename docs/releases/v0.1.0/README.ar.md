@@ -2,8 +2,8 @@
 
 الصيغة الأولية DeckPilot صب النوافذ 10/11 X64.
 
-- Interface sombre avec grille de 4 lignes et 3 كولونز
-- جيش تحرير الكونغو 12 boutons F13 à F24.
+- Interface sombre avec grille de 4 lignes et 3 المستعمرات.
+- جيش الدفاع المدني 12 boutons F13 à F24.
 - Profils manuels et actions: touche libre, application, dossier, site, raccourci et multimédia.
 - Zone de notification et démarrage Windows facultatif.
 - Aucun pilote ni changement du programme du Leonardo.

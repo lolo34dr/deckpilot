@@ -11,4 +11,4 @@ Les profils et le calibrage existent sont conservés. Quittez l'ancienne version
 
 Télécharger **DeckPilot.exe** pour la version autonome, ou **DeckPilot-win-x64.zip** pour le dossier complet à extraire. Windows 10/11 x64, aucun runtime .NET à installer.
 
-La compilation Windows et les 16 les vérifications automatiques sont exécutées avant publication. Le rendu à l'écran et le matériel restent à valider sur votre PC Windows. Les exécutables ne sont pas signés.
+La compilation Windows et les 16 vérifications automatiques sont exécutées avant publication. Le rendu à l'écran et le matériel restent à valider sur votre PC Windows. Les exécutables ne sont pas signés.

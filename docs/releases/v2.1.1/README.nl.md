@@ -1,0 +1,65 @@
+> Dit is een automatische vertaling van de volledige release notes. Het Engelse origineel is de referentie.
+
+DeckPilot 2.1.1 verbetert de installatie en updates:
+
+- Controleer automatisch op VB-CABLE tijdens de eerste installatie en upgrades, en download en start het officiële ondertekende installatieprogramma wanneer het stuurprogramma ontbreekt.
+- Toon Windows opstarten, automatische update controles en gereduceerde-motion voorkeuren tijdens de setup en updates, met bestaande keuzes vooraf geselecteerd en bewaard.
+- Bewaar de geselecteerde fysieke microfoon en verzoek microfoon setup alleen wanneer nodig.
+- Fix installateur initialisatie en detectie van bestaande installaties.
+
+Downloaden **DeckPilot-Setup.exe** of de update accepteren in DeckPilot. Windows administrator goedkeuring is vereist. Bestaande profielen en kalibratie worden bewaard. DeckPilot Atelier blijft op 1.0.10 en firmware blijft op 1.1.1; beide zijn opgenomen in de gedeelde release.
+
+Validatie: core checks en Windows build, installer upgrade/uninstall en native applicatie tests uitgevoerd voor release publicatie. Audio hardware gedrag vereist nog steeds testen op de PC van de gebruiker.
+
+DeckPilot 2.1.0 houdt de diepzwarte interface en aanpasbare kleuren, en routeert de soundboard door VB-Audio VB-CABLE automatisch. Gebruikers selecteren alleen hun fysieke microfoon; het virtuele afspeeleindpunt is vastgesteld zodat spraak en MP3/WAV-clips niet per ongeluk naar luidsprekers kunnen worden verzonden. DeckPilot installatieprogramma kan het officiële VB-CABLE pakket downloaden, de uitgever van de Authenticode verifiëren en de driver setup van de leverancier starten; het pakket wordt niet herverdeeld. In Discord of een spel, selecteert u CABLE Output als microfoon. Atelier blijft op versie 1.0.10.
+
+DeckPilot 1.9.11 en DeckPilot Atelier 1.0.10 voeg pre-flash hardware en firmware diagnostics toe, een firmware-versievergelijking, een geleide herstelactie na onderbroken brieven, sequentiële multi-board knipperen met een batchrapport, en een fysieke-position-to-F13.F24 lay-out controleer in elk key-control rapport.
+
+DeckPilot 1.9.11 bevat dezelfde Atelier update in de gedeelde installer release.
+
+DeckPilot 1.9.10 herstelt gedeelde releases die beide bevatten DeckPilot en DeckPilot Atelier 1.0.9. Beide toepassingen nogmaals controleer dezelfde laatste GitHub release.
+
+Als u Atelier installeerde 1.0.8 vanaf het aparte releasekanaal, installeren DeckPilot-Atelier-Setup.exe van deze release een keer terug naar gedeelde updates. Eerdere Atelier versies en DeckPilot kan gebruik maken van hun bestaande updater.
+
+DeckPilot Atelier 1.0.7 voegt een bevestigde programma-gebied wissen dat alles leegt 28 KiB van de gebruiker flits, laat een veilige reset loop, en behoudt Caterina en EEPROM. Reset blijft uitgeschakeld totdat een fysieke board is geselecteerd.
+
+DeckPilot 1.9.7 herstelt Atelier verwijderen terwijl de app is geopend. Atelier 1.0.6 corrigeert ook de Windows DPI manifest, die verhinderde dat de geïnstalleerde app te starten.
+
+DeckPilot 1.9.6 herstelt de Windows DPI manifest dat voorkomen DeckPilot Atelier vanaf opening na installatie.
+
+DeckPilot 1.9.5 bevat gedetailleerde Atelier opstarten diagnostiek in de Windows release check.
+
+DeckPilot 1.9.4 verbetert de Atelier Windows opstart rooktest om toepassing crash details te rapporteren.
+
+DeckPilot 1.9.3 fixeert de Atelier bouwen metadata om de firmware manifest te lezen uit de gebundelde firmware archief.
+
+DeckPilot 1.9.2 fixeert de Atelier release verpakking stap en verbetert de bouw diagnostiek.
+
+DeckPilot 1.9.1 verbetert de Atelier installatie startup en voegt automatische app en firmware update controles.
+
+- Het installatieprogramma lanceert Atelier in de ingelogde Windows-gebruikerssessie en stopt/herstart het veilig voor upgrades.
+- Atelier controleert GitHub bij opstarten en op verzoek. Het kondigt nieuwere Atelier bouwt of gebundeld firmware, vervolgens downloadt een installateur geverifieerd tegen de gepubliceerde SHA-256 bestand.
+- Firmware wordt alleen geflitst nadat de gebruiker de flash actie kiest; een app-update schrijft nooit op zichzelf naar een aangesloten bord.
+
+Het Atelier installatieprogramma start ook in de ingelogde Windows-sessie van de gebruiker na een nieuwe installatie. De release workflow opent nu de geïnstalleerde app, controleert vervolgens upgrade en verwijdert terwijl het draait.
+
+DeckPilot 1.9.0 voegt toe DeckPilot Atelier, een aparte Windows workshop app voor het knipperen van nieuwe macropads en het controleren van alle 12 Sleutels.
+
+- Installeer de meegeleverde firmware op Leonardo / Pro Micro ATmega32U4 boards met de Caterina bootloader.
+- Voer begeleide short-press en long-press controles voor elke fysieke sleutel, neem zijn F13.F24 mapping, en sla een kwaliteitscontrolerapport.
+- Downloaden **DeckPilot-Atelier-Setup.exe** van deze release. Het origineel DeckPilot installatie en firmware blijven apart beschikbaar.
+
+DeckPilot 1.8.0 voegt een vernieuwde werkruimte toe en snellere manieren om uw profielen te bouwen en te gebruiken.
+
+- Helderere houtskool/teale interface, actiebibliotheek eerst, knapperig 3 × 4 sleutels, sleutel accent kleuren en gereduceerde-motion voorkeur.
+- Drie bewerkbare profielsjablonen: Muziek en audio, Bureaublad en productiviteit, en Creatie.
+- Profielacties: schakel over naar een benoemd profiel, het volgende of het vorige profiel van een sleutel. Geïmporteerde profielsets houden hun interne links.
+- Windows-acties: open gemeenschappelijke instellingen of Taakbeheer, of vergrendel expliciet de PC.
+- Kopieer / knip / plak / reset hele toetsen, inclusief lange persen en kleuren, met undo / redo en een app-local klembord.
+- Een sneltoets direct vastleggen; Escape annuleert en macropad toetsen blijven gereserveerd tijdens het vastleggen.
+- Ctrl+K-actie zoeken en een duidelijke, sessie-alleen geschiedenis van de laatste 30 acties.
+- Repareer de automatische firmware prompt zodat het accepteert opent de firmware manager. In afwachting gebaren worden geannuleerd over profielwijzigingen.
+
+Downloaden **DeckPilot-Setup.exe** of update van de app. Bestaande profielen, kalibratie en opstartvoorkeuren worden bewaard. Firmware blijft **1.1.1**; voor deze functies is geen flits nodig.
+
+Validatie omvat kerncompatibiliteit/navigatie/import/template controles en native Windows-installatie, update, picker, drag-and-drop, undo/redo, sjabloon creatie, profiel acties, snelkoppeling, klembord bewerken, lay-out en minimaliseert / herstellen controles. Fysische macropad en audio-apparaat gedrag nog steeds afhankelijk van de eigenaar zijn Windows hardware.
