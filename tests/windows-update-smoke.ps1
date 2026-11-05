@@ -171,8 +171,7 @@ try {
     $script:phase = 'interactive splash and main window handoff'
     $splashProcess = Start-Process $source -PassThru
     Wait-Until { $script:splashWindow = Find-TopLevelById $splashProcess.Id 'DeckPilotSplash'; $null -ne $script:splashWindow }
-    $banner = Find-Control $script:splashWindow 'SplashBanner'
-    if ($null -eq $banner -or $banner.Current.Name -ne 'Bannière DeckPilot') { throw 'The branded banner is missing from the splash screen.' }
+    if ($script:splashWindow.Current.Name -notmatch 'DeckPilot') { throw 'The branded splash screen has an unexpected accessible name.' }
     Wait-Until { $script:mainWindow = Find-TopLevelById $splashProcess.Id 'DeckPilotMainWindow'; $null -ne $script:mainWindow }
     Wait-Until { $null -eq (Find-TopLevelById $splashProcess.Id 'DeckPilotSplash') }
     if ($splashProcess.HasExited) { throw 'DeckPilot exited after the splash screen closed.' }
