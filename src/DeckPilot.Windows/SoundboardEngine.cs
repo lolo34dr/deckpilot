@@ -15,6 +15,11 @@ internal sealed record AudioEndpoint(string Id, string Name, bool IsVirtualCable
     public override string ToString() => Name;
 }
 
+internal sealed record SoundboardEndpointSnapshot(
+    IReadOnlyList<AudioEndpoint> Microphones,
+    IReadOnlyList<AudioEndpoint> Outputs,
+    string Error = "");
+
 // The selected playback endpoint must be the input side of a virtual audio cable.
 // Its capture side can then be selected as a microphone in Discord or a game.
 internal sealed class SoundboardEngine : IDisposable
@@ -34,19 +39,30 @@ internal sealed class SoundboardEngine : IDisposable
     private volatile bool stopping;
     public event Action? StateChanged;
     public bool IsRunning => playback != null;
-    private IReadOnlyList<AudioEndpoint> Endpoints(DataFlow flow)
+    public static SoundboardEndpointSnapshot DiscoverEndpoints()
+    {
+        try
+        {
+            using var enumerator = new MMDeviceEnumerator();
+            return new(Endpoints(enumerator, DataFlow.Capture), Endpoints(enumerator, DataFlow.Render));
+        }
+        catch (Exception ex)
+        {
+            return new(Array.Empty<AudioEndpoint>(), Array.Empty<AudioEndpoint>(), ex.Message);
+        }
+    }
+
+    private static IReadOnlyList<AudioEndpoint> Endpoints(MMDeviceEnumerator enumerator, DataFlow flow)
     {
         var result = new List<AudioEndpoint>();
-        var collection = devices.EnumerateAudioEndPoints(flow, DeviceState.Active);
+        var collection = enumerator.EnumerateAudioEndPoints(flow, DeviceState.Active);
         foreach (var device in collection)
         {
             using (device) result.Add(new(device.ID, device.FriendlyName, VirtualCableEndpoints.IsCableDevice(device.DeviceFriendlyName)
                 || (flow == DataFlow.Render ? VirtualCableEndpoints.IsPlaybackEndpoint(device.FriendlyName) : VirtualCableEndpoints.IsRecordingEndpoint(device.FriendlyName))));
         }
-        return result;
+        return result.AsReadOnly();
     }
-    public IReadOnlyList<AudioEndpoint> Microphones() => Endpoints(DataFlow.Capture);
-    public IReadOnlyList<AudioEndpoint> Outputs() => Endpoints(DataFlow.Render);
     public bool IsPlaying(Guid id) => playing.ContainsKey(id);
     // Called on the UI thread: never dispose a reader inside the mixer's audio callback.
     public string? ProcessEvents()

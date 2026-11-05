@@ -1,7 +1,9 @@
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Linq;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace DeckPilot.Windows;
 public partial class App : Application
@@ -56,8 +58,9 @@ public partial class App : Application
             {
                 var store = new DeckPilot.Core.SettingsStore(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DeckPilot", "settings.json"));
                 var settings = store.Load();
-                using var audio = new SoundboardEngine();
-                var physicalMicrophones = audio.Microphones().Where(m => !m.IsVirtualCable).ToArray();
+                var endpoints = await Task.Run(SoundboardEngine.DiscoverEndpoints);
+                if (!string.IsNullOrWhiteSpace(endpoints.Error)) throw new System.IO.IOException(endpoints.Error);
+                var physicalMicrophones = endpoints.Microphones.Where(m => !m.IsVirtualCable).ToArray();
                 bool configureOnlyIfNeeded = e.Args[0] == "--configure-microphone-if-needed";
                 if (configureOnlyIfNeeded && physicalMicrophones.Any(m => string.Equals(m.Id, settings.Soundboard.MicrophoneId, StringComparison.OrdinalIgnoreCase)))
                 {
@@ -92,10 +95,19 @@ public partial class App : Application
             Shutdown();
             return;
         }
+        SplashWindow? splash = null;
+        if (!e.Args.Contains("--background"))
+        {
+            splash = new SplashWindow();
+            splash.Show();
+            // Let WPF render the branded splash before building the main window.
+            await Dispatcher.InvokeAsync(static () => { }, DispatcherPriority.ContextIdle).Task;
+        }
         MainWindow window;
         try { window = new MainWindow(e.Args.Contains("--background")) { ShowActivated = !e.Args.Contains("--background") }; }
         catch (Exception ex)
         {
+            if (splash?.IsVisible == true) splash.Close();
             try
             {
                 var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DeckPilot");
@@ -104,6 +116,12 @@ public partial class App : Application
             }
             catch { }
             throw;
+        }
+        MainWindow = window;
+        if (splash != null)
+        {
+            splash.SetReducedMotion(window.ReducedMotion);
+            window.ContentRendered += async (_, _) => await splash.CloseWhenReadyAsync();
         }
         installerExit = new EventWaitHandle(false, EventResetMode.AutoReset, @"Local\DeckPilot.InstallExit");
         installerWait = ThreadPool.RegisterWaitForSingleObject(installerExit, (_, _) => Dispatcher.BeginInvoke(window.RequestInstallerExit), null, Timeout.Infinite, false);

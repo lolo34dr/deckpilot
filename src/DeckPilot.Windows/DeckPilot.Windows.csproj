@@ -7,9 +7,12 @@
     <NoWarn>$(NoWarn);WFAC010</NoWarn>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets/DeckPilot.ico</ApplicationIcon>
-    <AssemblyName>DeckPilot</AssemblyName><Version>2.1.4</Version>
+    <AssemblyName>DeckPilot</AssemblyName><Version>2.1.5</Version>
   </PropertyGroup>
-  <ItemGroup><Resource Include="../../deckpilotlogo.png" Link="Assets/DeckPilot.png" /></ItemGroup>
+  <ItemGroup>
+    <Resource Include="../../deckpilotlogo.png" Link="Assets/DeckPilot.png" />
+    <Resource Include="../../deckpilotbanner.png" Link="Assets/DeckPilot-Banner.png" />
+  </ItemGroup>
   <ItemGroup><Content Include="Install-VBCABLE.ps1" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.IO.Ports" Version="8.0.0" />

@@ -46,6 +46,12 @@ function Find-Control($Root, [string]$Id) {
     $condition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::AutomationIdProperty, $Id)
     return $Root.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
 }
+function Find-TopLevelById([int]$ProcessId, [string]$Id) {
+    $processCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ProcessIdProperty, $ProcessId)
+    $idCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::AutomationIdProperty, $Id)
+    $condition = [System.Windows.Automation.AndCondition]::new($processCondition, $idCondition)
+    return [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Children, $condition)
+}
 function Invoke-Control($Element) {
     if ($null -eq $Element) { throw 'Contrôle introuvable.' }
     $Element.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
@@ -159,9 +165,21 @@ $startupKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
 $startupBefore = Read-RegistryValue $startupKey DeckPilot
 $preferenceBefore = Read-RegistryValue 'HKCU:\Software\DeckPilot' StartupConfigured
 $startupEnabledBefore = Read-RegistryValue 'HKCU:\Software\DeckPilot' StartupEnabled
-$parent = $null; $worker = $null; $replacement = $null
+$parent = $null; $worker = $null; $replacement = $null; $splashProcess = $null
 try {
     New-Item -ItemType Directory -Force $stage, $installed, (Split-Path $settingsPath) | Out-Null
+    $script:phase = 'interactive splash and main window handoff'
+    $splashProcess = Start-Process $source -PassThru
+    Wait-Until { $script:splashWindow = Find-TopLevelById $splashProcess.Id 'DeckPilotSplash'; $null -ne $script:splashWindow }
+    $banner = Find-Control $script:splashWindow 'SplashBanner'
+    if ($null -eq $banner -or $banner.Current.Name -ne 'Bannière DeckPilot') { throw 'The branded banner is missing from the splash screen.' }
+    Wait-Until { $script:mainWindow = Find-TopLevelById $splashProcess.Id 'DeckPilotMainWindow'; $null -ne $script:mainWindow }
+    Wait-Until { $null -eq (Find-TopLevelById $splashProcess.Id 'DeckPilotSplash') }
+    if ($splashProcess.HasExited) { throw 'DeckPilot exited after the splash screen closed.' }
+    Stop-Process -Id $splashProcess.Id -Force
+    $splashProcess.WaitForExit()
+    $splashProcess = $null
+
     $target = Join-Path $installed 'DeckPilot renamed.exe'
     $downloaded = Join-Path $stage 'DeckPilot.exe'
     Copy-Item $source $target
@@ -630,6 +648,7 @@ finally {
     if ($replacement -and !$replacement.HasExited) { Stop-Process -Id $replacement.Id -Force; $replacement.WaitForExit() }
     if ($worker -and !$worker.HasExited) { Stop-Process -Id $worker.Id -Force; $worker.WaitForExit() }
     if ($parent -and !$parent.HasExited) { Stop-Process -Id $parent.Id -Force; $parent.WaitForExit() }
+    if ($splashProcess -and !$splashProcess.HasExited) { Stop-Process -Id $splashProcess.Id -Force; $splashProcess.WaitForExit() }
     if ($null -ne $existingSettings) { [IO.File]::WriteAllBytes($settingsPath, $existingSettings) }
     elseif (Test-Path $settingsPath) { Remove-Item $settingsPath }
     if ($null -ne $startupBefore) { Set-ItemProperty $startupKey DeckPilot $startupBefore }
