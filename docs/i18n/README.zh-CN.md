@@ -284,7 +284,7 @@ DeckPilot 将在 **[MIT 许可证](../../LICENSE)**。您可以使用、复制�
 <a id="macropad-firmware-updates"></a>
 ## Macropad 固件更新
 
-设备准备和车间质量检查,安装单独的 [DeckPilot 爱特利尔](docs/FACTORY.md) 工具。它的安装器作为 **[DeckPilot- Atelier - Setup.exe (英语).](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** 它可以将包含的固件闪到Leonardo/Caterina 板上,然后检查所有的短和长按 12 物理密钥并导出报表。
+设备准备和车间质量检查,安装单独的 [DeckPilot 爱特利尔](../../docs/FACTORY.md) 工具。它的安装器作为 **[DeckPilot- Atelier - Setup.exe (英语).](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** 它可以将包含的固件闪到Leonardo/Caterina 板上,然后检查所有的短和长按 12 物理密钥并导出报表。
 
 DeckPilot 1.1.0 包括a **Firmware du macropad…** 对话框和固件 1.0.0 支持微型ATmega32U4 **5 第 五 条 国 家 16 兆赫( MHz)**,使用所有者上传日志确认的Leonardo/Caterina配置。捆绑的Windows闪存工具不需要Arduino IDE。设备选择和确认是强制性的;应用程序更新从未默默地闪烁过棋盘。现有的F13-F24映射、配置和校准仍然兼容。
 
@@ -392,7 +392,7 @@ Windows 烟雾检查继续执行本地鼠标拖放并验证保存的任务、互
 
 DeckPilot 现在默认使用深黑界面。 in **Préférences de l’application**,修改背景、面板和重音颜色 `#RRGGBB` 值; 您的主题被保存在这个 PC 上。
 
-那个... **声板 微美德l** 面板允许您选择物理麦克风和 MP3/WAV 剪辑。 DeckPilot 自动将混音引导到 VB- Audio VB- Cable 播放结束点; 在 Discord 或游戏中, 选择 **表2 产出** 在安装和更新过程中, DeckPilot 检查 VB- CABLE 并在缺失时安装它。 它会在 HTTPS 上下载官方软件包, 并在运行驱动程序无声安装器之前验证认证码发布器。 这需要互联网连接和管理员权限 。 DeckPilot 不捆绑或重新分配 VB-Audio 文件。如果驱动程序稍后丢失,您可以从 Soundboard 面板上启动相同的签名检查安装器。音频引擎使用 NAudio (MIT; 见) [第三方当事人通知](third-party/NAudio-LICENSE.txt)). VB-CABLE是一个单独的许可,签名的Windows驱动程序,而不是MIT组件.
+那个... **声板 微美德l** 面板允许您选择物理麦克风和 MP3/WAV 剪辑。 DeckPilot 自动将混音引导到 VB- Audio VB- Cable 播放结束点; 在 Discord 或游戏中, 选择 **表2 产出** 在安装和更新过程中, DeckPilot 检查 VB- CABLE 并在缺失时安装它。 它会在 HTTPS 上下载官方软件包, 并在运行驱动程序无声安装器之前验证认证码发布器。 这需要互联网连接和管理员权限 。 DeckPilot 不捆绑或重新分配 VB-Audio 文件。如果驱动程序稍后丢失,您可以从 Soundboard 面板上启动相同的签名检查安装器。音频引擎使用 NAudio (MIT; 见) [第三方当事人通知](../../third-party/NAudio-LICENSE.txt)). VB-CABLE是一个单独的许可,签名的Windows驱动程序,而不是MIT组件.
 
 <a id="deckpilot-atelier-190"></a>
 ## DeckPilot Atelier( 发音 )1.9.0)

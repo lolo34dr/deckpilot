@@ -13,7 +13,29 @@ namespace DeckPilot.Windows;
 public partial class MainWindow
 {
     private SoundboardEngine? soundboard;
-    private SoundboardEngine Audio => soundboard ??= new SoundboardEngine();
+    private SoundboardEngine Audio
+    {
+        get
+        {
+            if (soundboard == null)
+            {
+                soundboard = new SoundboardEngine();
+                soundboard.StateChanged += () => Dispatcher.BeginInvoke(() =>
+                {
+                    if (lifetime.IsCancellationRequested) return;
+                    try
+                    {
+                        string? error = soundboard.ProcessEvents();
+                        SoundboardStartButton.Content = soundboard.IsRunning ? "Arrêter le micro virtuel" : "Activer le micro virtuel";
+                        if (error != null) SoundboardStatus.Text = "Audio interrompu : " + error;
+                        RefreshSoundboardClips();
+                    }
+                    catch (Exception ex) { SoundboardStatus.Text = "Audio indisponible : " + ex.Message; }
+                });
+            }
+            return soundboard;
+        }
+    }
     private bool soundboardRefreshing;
     private AudioEndpoint? virtualCableInput;
     private void InitializeThemeAndSoundboard()
@@ -56,8 +78,8 @@ public partial class MainWindow
         virtualCableInput = null;
         try
         {
-            var inputs = Audio.Microphones().Where(x => !VirtualCableEndpoints.IsRecordingEndpoint(x.Name)).ToArray();
-            virtualCableInput = Audio.Outputs().FirstOrDefault(x => VirtualCableEndpoints.IsPlaybackEndpoint(x.Name));
+            var inputs = Audio.Microphones().Where(x => !x.IsVirtualCable).ToArray();
+            virtualCableInput = Audio.Outputs().FirstOrDefault(x => x.IsVirtualCable);
             soundboardRefreshing = true;
             try
             {
@@ -73,7 +95,7 @@ public partial class MainWindow
             }
             if (virtualCableInput == null)
                 SoundboardStatus.Text = "VB-CABLE n’est pas détecté. Installe le pilote depuis le site officiel, puis actualise les périphériques.";
-            else if (string.IsNullOrWhiteSpace(settings.Soundboard.MicrophoneId))
+            else if (!inputs.Any(x => x.Id == settings.Soundboard.MicrophoneId))
                 SoundboardStatus.Text = "VB-CABLE est prêt. Choisis ton microphone physique.";
             else
                 SoundboardStatus.Text = "VB-CABLE est prêt. Dans Discord ou le jeu, choisis CABLE Output comme microphone.";
@@ -153,9 +175,23 @@ public partial class MainWindow
         {
             var row = new DockPanel { Margin = new Thickness(0, 3, 0, 3) };
             var remove = new Button { Content = "×", ToolTip = "Retirer ce son", MinWidth = 28, Padding = new Thickness(7, 3, 7, 3) };
-            remove.Click += (_, _) => { soundboard?.StopClip(clip.Id); settings.Soundboard.Clips.Remove(clip); SaveSoundboardSettings(); RefreshSoundboardClips(); };
+            remove.Click += (_, _) =>
+            {
+                if (settings.Profiles.SelectMany(p => p.Buttons).SelectMany(a => a.LongPressAction == null ? new[] { a } : new[] { a, a.LongPressAction })
+                    .Any(a => a.Kind == ActionKind.Soundboard && Guid.TryParse(a.Target, out var id) && id == clip.Id))
+                { SoundboardStatus.Text = "Ce son est affecté à un bouton. Retire d’abord ses actions avant de supprimer le son."; return; }
+                soundboard?.StopClip(clip.Id); settings.Soundboard.Clips.Remove(clip); SaveSoundboardSettings(); RefreshSoundboardClips();
+            };
             DockPanel.SetDock(remove, Dock.Right); row.Children.Add(remove);
-            var play = new Button { Content = clip.Name, ToolTip = clip.FilePath, HorizontalContentAlignment = HorizontalAlignment.Left };
+            var relink = new Button { Content = "…", ToolTip = "Remplacer ou retrouver le fichier audio", MinWidth = 28, Padding = new Thickness(7, 3, 7, 3) };
+            relink.Click += (_, _) =>
+            {
+                var dialog = new OpenFileDialog { Filter = "Audio MP3 ou WAV|*.mp3;*.wav", Title = "Retrouver le son · " + clip.Name };
+                if (dialog.ShowDialog(this) != true) return;
+                soundboard?.StopClip(clip.Id); clip.FilePath = dialog.FileName; SaveSoundboardSettings(); RefreshSoundboardClips();
+            };
+            DockPanel.SetDock(relink, Dock.Right); row.Children.Add(relink);
+            var play = new Button { Content = Audio.IsPlaying(clip.Id) ? "■ " + clip.Name : clip.Name, ToolTip = clip.FilePath, HorizontalContentAlignment = HorizontalAlignment.Left };
             play.Click += (_, _) =>
             {
                 try { play.Content = Audio.Toggle(clip.Id, clip.FilePath) ? "■ " + clip.Name : clip.Name; }

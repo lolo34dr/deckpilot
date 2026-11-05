@@ -104,7 +104,11 @@ public static class ProfileBackups
 {
     public static void Save(string directory, IEnumerable<Profile> profiles)
     {
-        string json = ProfileExchange.Export(profiles);
+        SaveJson(directory, ProfileExchange.Export(profiles));
+    }
+    public static void Save(string directory, Settings settings) => SaveJson(directory, PortableProfiles.Export(settings, settings.Profiles, requireAudio: false));
+    private static void SaveJson(string directory, string json)
+    {
         string hash = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(json)))[..12];
         Directory.CreateDirectory(directory);
         if (Directory.GetFiles(directory, "profiles-*-" + hash + ".deckpilot.json").Length == 0)

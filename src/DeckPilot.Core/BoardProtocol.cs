@@ -41,6 +41,8 @@ public interface IBoardTransport : IDisposable
     string ReadLine();
 }
 
+public sealed class BoardResponseTimeoutException(string message) : IOException(message);
+
 public sealed class BoardProtocolClient(IBoardTransport transport)
 {
     private readonly string session = BoardProtocol.NewSession();
@@ -49,6 +51,11 @@ public sealed class BoardProtocolClient(IBoardTransport transport)
     {
         transport.WriteLine("DECKPILOT?");
         return ReadUntil(FirmwareIdentity.Parse, cancellation, TimeSpan.FromMilliseconds(1500));
+    }
+    public FirmwareIdentity? IdentifyOptional(CancellationToken cancellation)
+    {
+        try { return Identify(cancellation); }
+        catch (BoardResponseTimeoutException) { return null; }
     }
     public BoardInfo Connect(CancellationToken cancellation)
     {
@@ -68,7 +75,7 @@ public sealed class BoardProtocolClient(IBoardTransport transport)
             try { var result = parse(transport.ReadLine()); if (result != null) return result; }
             catch (TimeoutException) { }
         }
-        throw new IOException("La carte ne répond pas avec le protocole attendu. Fermez les autres outils série puis réessayez.");
+        throw new BoardResponseTimeoutException("La carte ne répond pas avec le protocole attendu. Fermez les autres outils série puis réessayez.");
     }
     public void Run(Action<BoardTelemetry> report, CancellationToken cancellation)
     {

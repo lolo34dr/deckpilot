@@ -156,8 +156,9 @@ public sealed class SettingsStore(string path)
             if (previous != null)
             {
                 _ = ProfileExchange.Export(settings.Profiles);
-                if (!ProfileExchange.HaveSameContent(previous.Profiles, settings.Profiles))
-                    ProfileBackups.Save(BackupsPath, previous.Profiles);
+                if (!ProfileExchange.HaveSameContent(previous.Profiles, settings.Profiles)
+                    || JsonSerializer.Serialize(previous.Soundboard.Clips) != JsonSerializer.Serialize(settings.Soundboard.Clips))
+                    ProfileBackups.Save(BackupsPath, previous);
             }
         }
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);

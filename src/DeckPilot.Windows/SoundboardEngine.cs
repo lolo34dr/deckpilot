@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
+using DeckPilot.Core;
 using System.IO;
 using System.Linq;
 using NAudio.CoreAudioApi;
@@ -8,7 +10,7 @@ using NAudio.Wave.SampleProviders;
 
 namespace DeckPilot.Windows;
 
-internal sealed record AudioEndpoint(string Id, string Name)
+internal sealed record AudioEndpoint(string Id, string Name, bool IsVirtualCable = false)
 {
     public override string ToString() => Name;
 }
@@ -28,9 +30,42 @@ internal sealed class SoundboardEngine : IDisposable
     private WasapiOut? playback;
     private MixingSampleProvider? mixer;
     private WaveFormat? mixFormat;
+    private readonly ConcurrentQueue<ISampleProvider> finished = new();
+    private readonly ConcurrentQueue<string> faults = new();
+    private volatile bool stopping;
+    public event Action? StateChanged;
     public bool IsRunning => playback != null;
-    public IReadOnlyList<AudioEndpoint> Microphones() => devices.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active).Select(d => new AudioEndpoint(d.ID, d.FriendlyName)).ToArray();
-    public IReadOnlyList<AudioEndpoint> Outputs() => devices.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active).Select(d => new AudioEndpoint(d.ID, d.FriendlyName)).ToArray();
+    private IReadOnlyList<AudioEndpoint> Endpoints(DataFlow flow)
+    {
+        var result = new List<AudioEndpoint>();
+        var collection = devices.EnumerateAudioEndPoints(flow, DeviceState.Active);
+        foreach (var device in collection)
+        {
+            using (device) result.Add(new(device.ID, device.FriendlyName, VirtualCableEndpoints.IsCableDevice(device.DeviceFriendlyName)
+                || (flow == DataFlow.Render ? VirtualCableEndpoints.IsPlaybackEndpoint(device.FriendlyName) : VirtualCableEndpoints.IsRecordingEndpoint(device.FriendlyName))));
+        }
+        return result;
+    }
+    public IReadOnlyList<AudioEndpoint> Microphones() => Endpoints(DataFlow.Capture);
+    public IReadOnlyList<AudioEndpoint> Outputs() => Endpoints(DataFlow.Render);
+    public bool IsPlaying(Guid id) => playing.ContainsKey(id);
+    // Called on the UI thread: never dispose a reader inside the mixer's audio callback.
+    public string? ProcessEvents()
+    {
+        while (finished.TryDequeue(out var samples))
+        {
+            var item = playing.FirstOrDefault(p => ReferenceEquals(p.Value.Samples, samples));
+            if (item.Value != null) StopClip(item.Key);
+        }
+        if (!faults.TryDequeue(out var fault)) return null;
+        Stop(); return fault;
+    }
+    private void AudioStopped(object? sender, StoppedEventArgs e)
+    {
+        if (stopping || (!ReferenceEquals(sender, capture) && !ReferenceEquals(sender, playback))) return;
+        faults.Enqueue(e.Exception?.Message ?? "Le périphérique audio s’est arrêté. Rebranche-le puis réactive le micro virtuel.");
+        StateChanged?.Invoke();
+    }
 
     public void Start(string microphoneId, string outputId)
     {
@@ -42,15 +77,19 @@ internal sealed class SoundboardEngine : IDisposable
             outputDevice = devices.GetDevice(outputId);
             var microphone = microphoneDevice; var output = outputDevice;
             if (microphone.State != DeviceState.Active || output.State != DeviceState.Active) throw new IOException("Un périphérique audio sélectionné est débranché.");
+            stopping = false;
             capture = new WasapiCapture(microphone);
+            capture.RecordingStopped += AudioStopped;
             var format = output.AudioClient.MixFormat;
             mixFormat = WaveFormat.CreateIeeeFloatWaveFormat(format.SampleRate, format.Channels);
             voiceBuffer = new BufferedWaveProvider(capture.WaveFormat) { BufferDuration = TimeSpan.FromSeconds(2), DiscardOnBufferOverflow = true, ReadFully = true };
             voiceConverter = new MediaFoundationResampler(voiceBuffer, mixFormat) { ResamplerQuality = 30 };
             mixer = new MixingSampleProvider(mixFormat) { ReadFully = true };
+            mixer.MixerInputEnded += (_, e) => { finished.Enqueue(e.SampleProvider); StateChanged?.Invoke(); };
             mixer.AddMixerInput(voiceConverter.ToSampleProvider());
             capture.DataAvailable += (_, data) => voiceBuffer?.AddSamples(data.Buffer, 0, data.BytesRecorded);
             playback = new WasapiOut(output, AudioClientShareMode.Shared, true, 100);
+            playback.PlaybackStopped += AudioStopped;
             playback.Init(mixer);
             playback.Play();
             capture.StartRecording();
@@ -66,7 +105,7 @@ internal sealed class SoundboardEngine : IDisposable
             bool wasPlaying = previous.Reader.Position < previous.Reader.Length;
             mixer.RemoveMixerInput(previous.Samples);
             previous.Converter.Dispose(); previous.Reader.Dispose();
-            if (wasPlaying) return false;
+            if (wasPlaying) { StateChanged?.Invoke(); return false; }
         }
         if (!File.Exists(path) || !(path.EndsWith(".wav", StringComparison.OrdinalIgnoreCase) || path.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase))) throw new IOException("Fichier MP3 ou WAV introuvable.");
         AudioFileReader? reader = null;
@@ -78,6 +117,7 @@ internal sealed class SoundboardEngine : IDisposable
             var samples = converter.ToSampleProvider();
             mixer.AddMixerInput(samples);
             playing.Add(id, new(reader, converter, samples));
+            StateChanged?.Invoke();
             return true;
         }
         catch { converter?.Dispose(); reader?.Dispose(); throw; }
@@ -91,10 +131,12 @@ internal sealed class SoundboardEngine : IDisposable
 
     public void Stop()
     {
+        stopping = true;
         capture?.StopRecording(); capture?.Dispose(); capture = null;
         playback?.Stop(); playback?.Dispose(); playback = null;
         foreach (var item in playing.Values) { item.Converter.Dispose(); item.Reader.Dispose(); }
         playing.Clear();
+        finished.Clear(); faults.Clear();
         voiceConverter?.Dispose(); voiceConverter = null; voiceBuffer = null; mixer = null; mixFormat = null;
         microphoneDevice?.Dispose(); microphoneDevice = null; outputDevice?.Dispose(); outputDevice = null;
     }

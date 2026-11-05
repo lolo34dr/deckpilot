@@ -143,13 +143,7 @@ internal static class FactoryHardware
             using (var validationTransport = new FactoryTransport(device.Port))
             {
                 var validationClient = new BoardProtocolClient(validationTransport);
-                FirmwareIdentity? firmwareIdentity = null;
-                for (int attempt = 0; attempt < 8 && firmwareIdentity == null; attempt++)
-                {
-                    cancellation.ThrowIfCancellationRequested();
-                    try { firmwareIdentity = await Task.Run(() => validationClient.Identify(cancellation), cancellation); }
-                    catch (IOException) when (attempt < 7) { await Task.Delay(400, cancellation); }
-                }
+                var firmwareIdentity = await Task.Run(() => validationClient.IdentifyOptional(cancellation), cancellation);
                 if (firmwareIdentity != null && Version.Parse(firmwareIdentity.Version) > Version.Parse(package.Manifest.Version))
                     throw new IOException($"La carte contient le firmware plus récent {firmwareIdentity.Version}. Le firmware {package.Manifest.Version} inclus ne sera pas écrit.");
             }
