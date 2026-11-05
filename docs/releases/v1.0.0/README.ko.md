@@ -6,4 +6,4 @@ Aucun 변경 fonctionnel ni visuel. Seul le numéro de version de l’applicatio
 
 댄스 DeckPilot 0.2.0, 타티아스 **Vérifier 메인텐트**, puis는 확인합니다 **메트레 à jour**, ou attendez la recherche automatique. Aucun téléchargement manuel n'est nécessaire 부 ce 시험.
 
-Téléchargements également 장애 : **DeckPilot.exe를**, **DeckPilot-윈-x64.zip** 기타 제품 **SHA256SUMS.txt 파일 형식**. 윈도우 10/11 엑스64.
+Téléchargements également 장애 : **DeckPilot.exe 파일**, **DeckPilot-윈-x64.zip** (주) **SHA256SUMS.txt 파일 형식**. 윈도우 10/11 엑스64.
