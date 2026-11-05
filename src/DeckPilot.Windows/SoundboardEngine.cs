@@ -19,14 +19,13 @@ internal sealed record AudioEndpoint(string Id, string Name, bool IsVirtualCable
 // Its capture side can then be selected as a microphone in Discord or a game.
 internal sealed class SoundboardEngine : IDisposable
 {
-    private sealed record Playing(AudioFileReader Reader, MediaFoundationResampler Converter, ISampleProvider Samples);
+    private sealed record Playing(AudioFileReader Reader, ISampleProvider Samples);
     private readonly MMDeviceEnumerator devices = new();
     private readonly Dictionary<Guid, Playing> playing = new();
     private MMDevice? microphoneDevice;
     private MMDevice? outputDevice;
     private WasapiCapture? capture;
-    private BufferedWaveProvider? voiceBuffer;
-    private MediaFoundationResampler? voiceConverter;
+    private RealtimeAudioBuffer? voiceBuffer;
     private WasapiOut? playback;
     private MixingSampleProvider? mixer;
     private WaveFormat? mixFormat;
@@ -78,21 +77,20 @@ internal sealed class SoundboardEngine : IDisposable
             var microphone = microphoneDevice; var output = outputDevice;
             if (microphone.State != DeviceState.Active || output.State != DeviceState.Active) throw new IOException("Un périphérique audio sélectionné est débranché.");
             stopping = false;
-            capture = new WasapiCapture(microphone);
+            capture = new WasapiCapture(microphone, true, RealtimeAudio.CaptureBufferMilliseconds);
             capture.RecordingStopped += AudioStopped;
             var format = output.AudioClient.MixFormat;
             mixFormat = WaveFormat.CreateIeeeFloatWaveFormat(format.SampleRate, format.Channels);
-            voiceBuffer = new BufferedWaveProvider(capture.WaveFormat) { BufferDuration = TimeSpan.FromSeconds(2), DiscardOnBufferOverflow = true, ReadFully = true };
-            voiceConverter = new MediaFoundationResampler(voiceBuffer, mixFormat) { ResamplerQuality = 30 };
+            voiceBuffer = new RealtimeAudioBuffer(capture.WaveFormat);
             mixer = new MixingSampleProvider(mixFormat) { ReadFully = true };
             mixer.MixerInputEnded += (_, e) => { finished.Enqueue(e.SampleProvider); StateChanged?.Invoke(); };
-            mixer.AddMixerInput(voiceConverter.ToSampleProvider());
+            mixer.AddMixerInput(RealtimeAudio.Convert(voiceBuffer, mixFormat));
             capture.DataAvailable += (_, data) => voiceBuffer?.AddSamples(data.Buffer, 0, data.BytesRecorded);
-            playback = new WasapiOut(output, AudioClientShareMode.Shared, true, 100);
+            playback = new WasapiOut(output, AudioClientShareMode.Shared, true, RealtimeAudio.PlaybackBufferMilliseconds);
             playback.PlaybackStopped += AudioStopped;
             playback.Init(mixer);
-            playback.Play();
             capture.StartRecording();
+            playback.Play();
         }
         catch { Stop(); throw; }
     }
@@ -104,29 +102,27 @@ internal sealed class SoundboardEngine : IDisposable
         {
             bool wasPlaying = previous.Reader.Position < previous.Reader.Length;
             mixer.RemoveMixerInput(previous.Samples);
-            previous.Converter.Dispose(); previous.Reader.Dispose();
+            previous.Reader.Dispose();
             if (wasPlaying) { StateChanged?.Invoke(); return false; }
         }
         if (!File.Exists(path) || !(path.EndsWith(".wav", StringComparison.OrdinalIgnoreCase) || path.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase))) throw new IOException("Fichier MP3 ou WAV introuvable.");
         AudioFileReader? reader = null;
-        MediaFoundationResampler? converter = null;
         try
         {
             reader = new AudioFileReader(path);
-            converter = new MediaFoundationResampler(reader, mixFormat) { ResamplerQuality = 30 };
-            var samples = converter.ToSampleProvider();
+            var samples = RealtimeAudio.Convert(reader, mixFormat);
             mixer.AddMixerInput(samples);
-            playing.Add(id, new(reader, converter, samples));
+            playing.Add(id, new(reader, samples));
             StateChanged?.Invoke();
             return true;
         }
-        catch { converter?.Dispose(); reader?.Dispose(); throw; }
+        catch { reader?.Dispose(); throw; }
     }
 
     public void StopClip(Guid id)
     {
         if (!playing.Remove(id, out var item)) return;
-        mixer?.RemoveMixerInput(item.Samples); item.Converter.Dispose(); item.Reader.Dispose();
+        mixer?.RemoveMixerInput(item.Samples); item.Reader.Dispose();
     }
 
     public void Stop()
@@ -134,10 +130,10 @@ internal sealed class SoundboardEngine : IDisposable
         stopping = true;
         capture?.StopRecording(); capture?.Dispose(); capture = null;
         playback?.Stop(); playback?.Dispose(); playback = null;
-        foreach (var item in playing.Values) { item.Converter.Dispose(); item.Reader.Dispose(); }
+        foreach (var item in playing.Values) { item.Reader.Dispose(); }
         playing.Clear();
         finished.Clear(); faults.Clear();
-        voiceConverter?.Dispose(); voiceConverter = null; voiceBuffer = null; mixer = null; mixFormat = null;
+        voiceBuffer = null; mixer = null; mixFormat = null;
         microphoneDevice?.Dispose(); microphoneDevice = null; outputDevice?.Dispose(); outputDevice = null;
     }
     public void Dispose() { Stop(); devices.Dispose(); }
