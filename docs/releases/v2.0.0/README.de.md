@@ -1,6 +1,6 @@
 > Dies ist eine automatische Übersetzung der vollständigen Release Notes. Das englische Original ist die Referenz.
 
-DeckPilot 2.0.0 Die neue Resonanzwand akzeptiert MP3/WAV-Clips, lässt Benutzer ein physisches Mikrofon und einen virtuellen Kabelausgang auswählen und mischt Stimme mit Clips für die Verwendung als Mikrofon in Spielen oder Anrufen. Clips können von der App aus gestartet oder einer Makropad-Taste zugewiesen werden. Ein virtuelles Audiokabel wie VB-CABLE muss separat unter Windows installiert werden; Atelier bleibt bei der Version 1.0.10.
+DeckPilot 2.0.0 führt eine tiefschwarze Oberfläche mit gespeichertem Hintergrund, Panel und Akzentfarben ein. Die neue Resonanzwand akzeptiert MP3/WAV-Clips, lässt Benutzer ein physisches Mikrofon und einen virtuellen Kabelausgang auswählen und mischt Stimme mit Clips für die Verwendung als Mikrofon in Spielen oder Anrufen. Clips können von der App aus gestartet oder einer Makropad-Taste zugewiesen werden. Ein virtuelles Audiokabel wie VB-CABLE muss separat unter Windows installiert werden; Atelier bleibt in der Version 1.0.10.
 
 DeckPilot 1.9.11 und DeckPilot Atelier 1.0.10 Hinzufügen von Pre-Flash-Hardware- und Firmware-Diagnose, eines Firmware-Versionsvergleichs, einer geführten Wiederherstellungsaktion nach unterbrochenem Schreiben, sequentiellen Multi-Board-Flashing mit einem Batch-Bericht und einer physikalischen Position-zu-F13-F24-Layout-Check in jedem Key-Control-Bericht.
 

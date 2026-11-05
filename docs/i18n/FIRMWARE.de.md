@@ -1,4 +1,4 @@
-> Hierbei handelt es sich um eine automatische Übersetzung der kompletten Firmware-Dokumentation. Das englische Original ist die Referenz. Befehle und Identifikatoren bleiben exakt erhalten.
+> Das ist eine automatische Übersetzung der kompletten Firmware-Dokumentation. Das englische Original ist die Referenz. Befehle und Identifikatoren bleiben exakt erhalten.
 
 <a id="deckpilot-firmware"></a>
 # DeckPilot Firmware
@@ -34,9 +34,9 @@ DeckPilot Atelier bietet auch **Programm Effacer le DeckPilot**Nach einer separa
 
 DeckPilot prüft SHA-256Intel HEX zeichnet Prüfsummen, Reset-Vektor-Präsenz, Überlappungen und die **28672-byte** Anwendungsgrenze vor dem Reset. Es entspricht dem physischen USB-Standort über Laufzeit- und Bootloader-Ports, verwendet AVR109 bei 57600 baud, erfordert die Schreibverifizierung von AVRDUDE, überprüft dann die Identität und Version der laufenden Firmware. Es werden keine Sicherungen, EEPROM oder der Bootloader geschrieben. `2341:8036` / `2A03:8036` und Caterina `2341:0036` / `2A03:0036` Wenn Windows keine passende physische Verbindung bereitstellen kann, wird das Blinken blockiert, anstatt einen Port zu erraten.
 
-Blinken ist nicht atomar: eine Kabeltrennung oder ein Stromausfall kann die Anwendungs-Firmware unvollständig machen. Es gibt kein automatisches Firmware-Backup oder Rollback. **Arduino Leonardo**. Je nach Bootloader des Boards kann ein kurzzeitiges zweimaliges Anschließen von RST an GND einen temporären Bootloader-Port freilegen; Uploaden während dieser Port verfügbar ist. Ein beschädigter Bootloader benötigt ISP-Hardware und kann nicht mit diesem USB-Updater repariert werden. Schreiben Sie keine andere Board- oder Clock-Variante.
+Blinken ist nicht atomar: Eine Kabeltrennung oder ein Stromausfall kann die Firmware der Anwendung unvollständig machen. Es gibt kein automatisches Firmware-Backup oder Rollback. **Arduino Leonardo**. Je nach Bootloader des Boards kann ein kurzzeitiges zweimaliges Anschließen von RST an GND einen temporären Bootloader-Port freilegen; Uploaden während dieser Port verfügbar ist. Ein beschädigter Bootloader benötigt ISP-Hardware und kann nicht mit diesem USB-Updater repariert werden. Schreiben Sie keine andere Board- oder Clock-Variante.
 
-Das letzte abgeschlossene AVRDUDE-Log der Haupt-App wird unter `%LOCALAPPDATA%\DeckPilot\Firmware\last-flash.log`Atelier installiert und setzt die Logs ein `%LOCALAPPDATA%\DeckPilotFactory\last-flash.log` und `last-reset.log`.
+Das letzte abgeschlossene AVRDUDE-Log der Haupt-App wird unter `%LOCALAPPDATA%\DeckPilot\Firmware\last-flash.log`Atelier installiert und setzt die Logs in `%LOCALAPPDATA%\DeckPilotFactory\last-flash.log` und `last-reset.log`.
 
 <a id="build"></a>
 ## Bauwerk
@@ -56,7 +56,7 @@ Das Original 12-Button Skizze wurde von David Madison angepasst **Stream Billig*
 <a id="firmware-111-and-usb-protocol-2"></a>
 ## Firmware 1.1.1 und USB-Protokoll 2
 
-Firmware 1.1.1 fügt einen schreibgeschützten Diagnoselink hinzu, während das gleiche F13-F24-Tastatur-Mapping und PIN-1 Startup Failsafe. **Der physische Test des Besitzers deckte die Firmware ab 1.0.0Firmware 1.1.1 hat automatisierte Protokolltests und einen AVR-Build, benötigt aber immer noch seinen ersten Test auf der eigentlichen Platine.** Profile und Kalibrierung bleiben auf dem PC und müssen für dieses Firmware-Update nicht neu erstellt werden.
+Firmware 1.1.1 fügt einen schreibgeschützten Diagnoselink hinzu, während das gleiche F13-F24-Tastatur-Mapping und Pin-1 Startup Failsafe. **Der physische Test des Besitzers deckte die Firmware ab 1.0.0Firmware 1.1.1 hat automatisierte Protokolltests und einen AVR-Build, benötigt aber immer noch seinen ersten Test auf der eigentlichen Platine.** Profile und Kalibrierung bleiben auf dem PC und müssen für dieses Firmware-Update nicht neu erstellt werden.
 
 Die neue App identifiziert die angeschlossene Karte, hält ihren seriellen Port offen, verbindet sich nach dem Ausstecken wieder und überprüft ihre Firmware-Version beim Start und nach der Wiederverbindung. Firmware-Updates werden mit App-Releases geliefert: Start-Checks vergleichen die angeschlossene Firmware mit dem validierten Bundle in der installierten App. App-Update-Checks erhalten immer noch neuere Releases von GitHub. Es gibt keinen separaten Firmware-Download-Kanal.
 
