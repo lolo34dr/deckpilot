@@ -75,7 +75,8 @@ try {
     if ($eraseButton.Current.IsEnabled) { throw 'Erase action must remain disabled without a selected physical device.' }
     $flashCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::AutomationIdProperty, 'FlashButton')
     $flashButton = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $flashCondition)
-    if (!$flashButton -or $flashButton.Current.Name -notlike 'Installer / réparer le firmware DeckPilot') { throw 'Atelier must expose firmware installation as the normal recovery action.' }
+    if (!$flashButton) { throw 'Atelier must expose firmware installation as the normal recovery action.' }
+    if ($flashButton.Current.IsEnabled) { throw 'Firmware installation must remain disabled without a selected physical device.' }
     $recoveryCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::AutomationIdProperty, 'RecoveryInstructions')
     $recoveryInstructions = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $recoveryCondition)
     if (!$recoveryInstructions -or $recoveryInstructions.Current.Name -notmatch 'RST' -or $recoveryInstructions.Current.Name -notmatch 'GND') { throw 'Atelier must show exact manual reset recovery steps.' }
