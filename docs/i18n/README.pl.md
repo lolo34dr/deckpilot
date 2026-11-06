@@ -82,7 +82,7 @@ Opublikowane pliki do pobrania zawierają runtime .NET. **Nie trzeba instalować
 ### Zainstaluj i uruchom
 
 1. Pobieranie **[DeckPilot-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** i uruchom instalatora. Windows prosi o zgodę administratora na instalację do **Program Files\DeckPilot**.
-2. Instalator pozwala wybrać, czy DeckPilot zaczyna się od systemu Windows, automatycznie sprawdza aktualizacje aplikacji i redukuje animacje. Domyślnie sprawdzane są startup i update; zmniejszone animacje są wyłączone. VB-CABLE kierowca wymagany przez Soundboard i instaluje go automatycznie, jeśli brakuje. Do sprawdzenia kierowcy wymagane jest połączenie internetowe.
+2. Instalator pozwala wybrać, czy DeckPilot zaczyna się od systemu Windows, automatycznie sprawdza aktualizacje aplikacji i redukuje animacje. Domyślnie sprawdzane są startup i aktualizacje; zmniejszone animacje są wyłączone. VB-CABLE kierowca wymagany przez Soundboard i instaluje go automatycznie, jeśli brakuje. Do sprawdzenia kierowcy wymagane jest połączenie internetowe.
 3. Instalator dodaje DeckPilot do Windows **Instalowane aplikacje** i tworzy skrót Menu Start. Skrót pulpitu jest domyślnie wybierany.
 4. Połącz makro-pad i otwórz DeckPilot ze skrótu.
 5. Postępuj zgodnie z kalibracją od lewej do prawej strony **4 kolumny**, następnie w następnym wierszu, dla **trzy wiersze**. Każdy przycisk musi wysłać inny klawisz F13- F24.
@@ -136,7 +136,7 @@ Uruchomienie systemu Windows jest domyślnie włączone dla bieżącego użytkow
 
 Picker odczytuje skróty z menu bieżącego użytkownika i systemowego, a następnie uzupełnia je o `Get-StartApps` wyniki z katalogu aplikacji Windows.
 
-Szukaj ignoruje przypadek i akcent. Duplikaty nazwy są zgrupowane, przy czym wpisy w menu Start mają pierwszeństwo. Przenośne aplikacje i programy bez zarejestrowanych skrótów mogą być nadal wybierane ręcznie. Jeśli katalog Windows jest niedostępny, dostępne są czytelne skróty w menu Start.
+Wyszukiwanie ignoruje przypadek i akcent. Duplikaty nazwy są zgrupowane, przy czym pozycje w menu Start mają pierwszeństwo. Przenośne aplikacje i programy bez zarejestrowanych skrótów mogą być nadal wybierane ręcznie. Jeśli katalog Windows jest niedostępny, dostępne są czytelne skróty w menu Start.
 
 Windows uruchamia wybrane skróty. `shell:AppsFolder`. Opcjonalne argumenty odnoszą się do programów opartych na plikach i skrótów; są one ukryte dla wpisów AppsFolder.
 
@@ -159,7 +159,7 @@ Wybór do aktualizacji późniejsze pocztówki automatyczne prompts dla 24 Kontr
 
 Pliki do pobrania używają HTTPS, z przekierowaniem ograniczonym do oczekiwanych hostów GitHub. Pliki tymczasowe są przechowywane w `%LOCALAPPDATA%\DeckPilot\Updates`; pliki do pobrania starsze niż siedem dni są czyszczone. Wpis startowy systemu Windows nadal używa tej samej ścieżki wykonywalnej po aktualizacji.
 
-Kopie przenośne wymagają zapisu osobistego folderu. Zainstalowane kopie używają instalatora dla chronionych katalogów; DeckPilot sama aplikacja nadal działa bez praw administratora.
+Kopie przenośne wymagają zapisanego folderu osobistego. Zainstalowane kopie używają instalatora dla chronionych katalogów; DeckPilot sama aplikacja nadal działa bez praw administratora.
 
 **Aktualizacja z 0.1.x?** Zakończ starą wersję z obszaru powiadomienia i ręcznie zastąp wykonywalny najnowszym wydaniem raz. Te starsze wersje nie zawierają updater. Późniejsze aktualizacje mogą być zainstalowane z wewnątrz DeckPilot.
 
@@ -313,7 +313,7 @@ Im większy 3 × 4 klawiatura śledzi fizyczną obudowę i czarne nasadki klawis
 
 Wybierz klucz do edycji. **Options avancées · fichier et arguments** utrzymuje ręczne ścieżki aplikacji i argumenty startowe zawalone domyślnie, podczas gdy podstawowe foldery i cele strony internetowej pozostają rozszerzone. **Tester l’action** zapisuje i wysyła wybrane działanie na bieżącym komputerze PC; wskaźnik sukcesu potwierdza wysyłkę, a nie ukończenie wewnątrz innej aplikacji. Skróty klawiszowe mają na celu aktywne okno. Wolne klawisze F13- F24 nie mają działania testowego.
 
-Kiedy makropad jest odłączony, **Hors ligne** i towarzysząca podpowiedź wyjaśnia, że profile mogą być wciąż edytowane i testowane. Konfiguracja jest przechowywana na komputerze PC i pozostaje dostępna przez cały czas rozłączania i ponownego łączenia. Te usprawnienia interfejsu działają z istniejącym oprogramowaniem firmowym i nie wymagają dodatkowego błysku.
+Kiedy makropad jest odłączony, **Hors ligne** i towarzysząca podpowiedź wyjaśnia, że profile mogą być nadal edytowane i testowane. Konfiguracja jest przechowywana na komputerze PC i pozostaje dostępna przez cały czas rozłączania i ponownego łączenia. Te usprawnienia interfejsu działają z istniejącym oprogramowaniem firmowym i nie wymagają dodatkowego błysku.
 
 Menu obszaru zgłoszeniowego włącza teraz bezpośrednio profile. **Ctrl + S** Zapisuje bieżącą konfigurację przycisku. Nieprawidłowe pliki konfiguracyjne są kopiowane zanim zostanie użyta świeża konfiguracja. Instalacja aplikacji, ikony menu desktop / Start, preferencje startowe i istniejący automatyczny updater są zatrzymywane.
 
@@ -333,7 +333,7 @@ Uruchomienie systemu Windows utrzymuje teraz wyraźną preferencję dla użytkow
 <a id="sharp-keypad-rendering-profile-recovery-and-audio-controls-161"></a>
 ## Redukcja klawiatury Sharp, odzysk profilu i sterowanie dźwiękiem (1.6.1)
 
-Klawiatura renderuje teraz na natywnych rozmiarach WPF zamiast skalowania tekstu przez Viewbox. Efekty cieni rodzicielskiej / kluczowej oraz animacje skali tekstu zostały usunięte; mniejsze okna przewijają się raczej niż kurczą klawiaturę. Aplikacja deklaruje świadomość DPI monitora i wykorzystuje większe ikony powłoki systemu Windows do aplikacji na pulpicie.
+Klawiatura renderuje teraz na natywnych rozmiarach WPF zamiast skalowania tekstu przez Viewbox. Efekty cieni rodzicielskiej / kluczowej oraz animacje skali tekstu zostały usunięte; mniejsze okna przewijają się raczej niż kurczą klawiaturę. Aplikacja deklaruje świadomość DPI monitora i używa większych ikon powłoki systemu Windows do aplikacji na pulpicie.
 
 **Annuler / Rétablir** Przywraca edycje profili, w tym swapy drag- and- drop, ustawienia akcji, import i tworzenie / usuwanie profilu. Historia utrzymuje 50 edytuje podczas sesji aplikacji. Ctrl + Z / Ctrl + Y działa na profilach poza polami tekstowymi; pola tekstowe zachowują swoje własne cofnięcie / redo. Kalibracja, preferencje startowe i wykonywane działania nie są cofane.
 
@@ -352,7 +352,7 @@ Kontrole podstawowe obejmują granice powtarzania / zwalniania, jednoczesne przy
 <a id="search-and-ci-reliability-fixes-164"></a>
 ## Wyszukiwarka i niezawodność CI (1.6.4)
 
-Równoważne wyniki wyszukiwania zachowują swoje istniejące przyciski WPF. Katalog instalalled- app i debuunce timer defer result result result while a search short is capture or a drag is in progress. To zapobiega usuwaniu przycisku źródłowego podczas interakcji.
+Równoważne wyniki wyszukiwania zachowują swoje istniejące przyciski WPF. Katalog instalalled- app i debuunce timer defer result result result while a search short is catching or a drag is in progress. To zapobiega usuwaniu przycisku źródłowego podczas interakcji.
 
 Kontrola dymu w systemie Windows nadal wykonuje natywne przeciągnięcia myszy i sprawdza zapisane zadania, swapy, cofnięcie / redo i oba gesty prasowe. Klient testowy używa fizycznych współrzędnych kursora, aby dopasować się do granic Automatyzacji UI niezależnie od DPI, skupia się przed pomiarem i skanuje wszystkie wartości procentowe przewijania. Sprawdzenie regresji sprawdza również, czy równoważne przeszukiwania zachowują ten sam dostępny przycisk. Podręczne poświadczenia startowe czekają na załadowany uchwyt WPF i wymagają pięciu kolejnych obserwacji hidden- okiennych, podczas gdy aplikacja pozostaje przy życiu.
 
@@ -360,7 +360,7 @@ Zbuduj i wydaj Workflows za pomocą Node.js 24 działania. Kompilator Arduino po
 
 Ustawienia odczytywane w testach Windows wyraźnie pozwalają odczytywać / pisać / usuwać udostępnianie i parse UTF-8 po zamknięciu czytnika. To zapobiega temu, że test sam w sobie odmawia wymiany plików atomowych aplikacji. Test historyczny utrzymuje stare zdjęcie otwarte w trzech cyklach cofania / ponownego wykonania i sprawdza, czy pozostaje nienaruszony podczas zmiany ustawień na żywo.
 
-W systemie Windows istniejące pliki konfiguracyjne są oddane `File.Replace` zamiast trybu nadpisarskiego `File.Move`Wspiera to czytniki, które pozwalają na usuwanie przy zachowaniu kompletnego starego migawki. Podstawowy apartament testuje trzy zastępstwa z czytnikiem utrzymywanym w otwartym; Kontrola rdzenia systemu Windows działa przed kompilacją oprogramowania firmowego i publikacją, tak więc błędy trwałości są wykrywane wcześnie.
+W systemie Windows istniejące pliki konfiguracyjne są oddane `File.Replace` a nie tryb nadpisarski `File.Move`Wspiera to czytniki, które pozwalają na usuwanie przy zachowaniu kompletnego starego migawki. Podstawowy apartament testuje trzy zastępstwa z czytnikiem utrzymywanym w otwartym; Kontrola rdzenia systemu Windows działa przed kompilacją oprogramowania firmowego i publikacją, tak więc błędy trwałości są wykrywane wcześnie.
 
 Czytnik migawek testowych może czekać aż 500 ms dla Windows udostępniania / naruszenia blokady podczas `ReplaceFile` commits. Czekanie dotyczy tylko otwarcia migawki, nigdy nie wykonywania lub ponownego wykonania działania aplikacji. Inne błędy, źle ukształtowany JSON i trwałe zamki pozostają niepowodzeniem.
 
@@ -371,7 +371,7 @@ Zapisywanie identycznych ustawień sprawdza bieżący plik, ale pomija pracę za
 
 Search and picker udostępniają niezmienny katalog instalalny- aplikacji na pięć minut (15 seconds for a partial result). Współbieżni konsumenci dzielą jeden skan; zamknięcie jednego pickera nie anuluje innego konsumenta. Odśwież obejście pamięci podręcznej, a każdy picker ma swój własny filtr / widok. Skanowanie i katalog parsowanie uruchomić z gwintu UI; picker filtrowanie jest obciążone przez 120 MS. Wyszukiwarka akcji ponownie sprawdza ten cache po jego porażce i po powrocie z picker, więc odświeżony katalog jest tam dostępny również.
 
-Aktualizacje UI planszy teraz śledzić powiadomienia o połączeniach zamiast budzenia każdego 100 ms. Zamówione powiadomienia o odłączeniu nadal anulują oczekujące ładownie. Haki Keyboard kolejki wizualne pracy, podczas supresji i gestu czasu pozostają synchroniczne. Ukryte / zminimalizowane okna zatrzymać animacje sprzężenia zwrotnego i używać dziesięciosekundowy interwał sondowania audio zamiast dwóch sekund; ponowne otwarcie lub wydanie komendy audio żąda świeży stan. W oczekiwaniu audio odświeża udostępniać pętlę i zawierać życzenia przychodzące podczas istniejącego czytania. Niezmienione migawki audio i zamrożone szczotki unikają powtarzania przydziałów UI. Process wrapers zwracany przez uruchomienie aplikacji są usuwane bez zamykania uruchomionego programu.
+Aktualizacje UI planszy teraz śledzić powiadomienia o połączeniach zamiast budzenia każdego 100 ms. Zamówione powiadomienia o odłączeniu nadal anulują oczekujące uchwyty. Haki Keyboard kolejki wizualne pracy, podczas supresji i gestu czasu pozostają synchroniczne. Ukryte / zminimalizowane okna zatrzymać animacje sprzężenia zwrotnego i używać dziesięciosekundowy interwał sondowania audio zamiast dwóch sekund; ponowne otwarcie lub wydanie komendy audio żąda świeży stan. W oczekiwaniu audio odświeża udostępniać pętlę i zawierać żądania przybywające podczas istniejącego czytania. Niezmienione migawki audio i zamrożone szczotki uniknąć powtarzających się przydziałów UI. Process wrapers zwracany przez uruchomienie aplikacji są usuwane bez zamykania uruchomionego programu.
 
 Zmiany te zmniejszają określoną pracę; nie tworzą niezależnej od maszyn wartości procentowej procesora / pamięci RAM. Native hardware audio przełącznik i fizyczne zachowanie klucza nadal wymagają walidacji na komputerze z systemem Windows PC z makro pad.
 

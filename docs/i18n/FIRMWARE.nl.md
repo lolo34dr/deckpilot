@@ -34,7 +34,7 @@ DeckPilot Atelier houdt **Effacer le firmware de la carte** onder ingestorte gea
 
 DeckPilot controleert SHA-256, Intel HEX registreren controlesums, reset-vector aanwezigheid, overlappingen en de **28672-byte** toepassingsgrens voor de reset. Het komt overeen met de fysieke USB-locatie over de runtime en bootloader poorten, gebruikt AVR109 op 57600 baud, vereist AVRDUDE's schrijfverificatie, controleert dan de identiteit en versie van de draaiende firmware. Het schrijft geen zekeringen, EEPROM of de bootloader. Alleen Leonardo ID's `2341:8036` / `2A03:8036` en Caterina `2341:0036` / `2A03:0036` worden geaccepteerd. Als Windows geen passende fysieke verbinding kan bieden, wordt knipperen eerder geblokkeerd dan raden van een poort.
 
-Flitsen is niet atomair: een kabel loskoppelen of stroomverlies kan de toepassing firmware incompleet laten. Er is geen automatische firmware back-up of rollback. Indien nodig, opnieuw uploaden van de oorspronkelijke schets met Arduino IDE ingesteld op **Arduino Leonardo**. Afhankelijk van de bootloader van het bord, kan kort aansluiten van RST op GND tweemaal een tijdelijke bootloader poort blootleggen; uploaden terwijl die poort beschikbaar is. Een beschadigde bootloader vereist ISP hardware en kan niet worden gerepareerd door deze USB-updater. Schrijf geen ander bord of klokvariant.
+Flitsen is niet atomair: een kabel loskoppelen of stroomverlies kan de toepassing firmware incompleet laten. Er is geen automatische firmware back-up of rollback. Indien nodig, opnieuw uploaden van de originele schets met Arduino IDE ingesteld op **Arduino Leonardo**. Afhankelijk van de bootloader van het bord, kan kort aansluiten van RST op GND tweemaal een tijdelijke bootloader poort blootleggen; uploaden terwijl die poort beschikbaar is. Een beschadigde bootloader vereist ISP hardware en kan niet worden gerepareerd door deze USB-updater. Schrijf geen ander bord of klokvariant.
 
 Het laatst voltooide AVRDUDE-logboek van de belangrijkste app wordt opgeslagen op `%LOCALAPPDATA%\DeckPilot\Firmware\last-flash.log`. Atelier houdt logs installeren en resetten in `%LOCALAPPDATA%\DeckPilotFactory\last-flash.log` en `last-reset.log`.
 
@@ -49,7 +49,7 @@ dotnet build DeckPilot.sln -c Release -p:RequireFirmwareBundle=true
 dotnet run --project tests/DeckPilot.Checks -c Release --no-build
 ```
 
-Het script pinnen Arduino AVR kern **1.8.6**, Keyboard **1.0.6**, en stroomopwaarts AVRDUDE **8.0**. CLI-beheerde pakketten gebruiken Arduino's package checksum validatie; AVRDUDE binaire/bronarchieven hebben expliciete SHA-256 Pinnen in het script. `artifacts/firmware/DeckPilot-firmware.zip` bevat de DeckPilot HEX, gegenereerde applicatie-gebied reset HEX en zijn generator, checksums, Windows-tool, licentie en bijbehorende upstream AVRDUDE bron archief. Publishing CI vereist de bundel; een gewone ontwikkelaar bouwen zonder het kan de app draaien, maar kan niet knipperen of een bord resetten.
+Het script pinnen Arduino AVR kern **1.8.6**, Keyboard **1.0.6**, en stroomopwaarts AVRDUDE **8.0**. CLI-beheerde pakketten gebruiken Arduino's package checksum validatie; AVRDUDE binaire/bronarchieven hebben expliciete SHA-256 Pinnen in het script. `artifacts/firmware/DeckPilot-firmware.zip` bevat de DeckPilot HEX, gegenereerde toepassing-gebied reset HEX en zijn generator, checksums, Windows-tool, licentie en bijbehorende upstream AVRDUDE bron archief. Publishing CI vereist de bundel; een gewone ontwikkelaar bouwen zonder het kan de app draaien, maar kan niet knipperen of opnieuw instellen van een board.
 
 Het origineel 12- De schets van de knoop is aangepast aan David Madison's **Stroom Goedkope** project, auteursrecht 2018MIT, zijn bericht blijft binnen. `DeckPilot.ino`. DeckPilot toevoegingen maken gebruik van de repository MIT licentie. **AVRDUDE is aparte software onder GPL-2.0-of-later**, met de aankondiging/licentie en bron gebundeld; de repository MIT licentie vervangt die licentie niet. https://github.com/avrdudes/avrdude/tree/v8.0 voor instructies voor upstreambouw en kennisgeving van afhankelijkheid.
 
@@ -66,7 +66,7 @@ Een oudere gedetecteerde firmware vraagt één keer per app sessie, met een 24-u
 
 Het nieuwe `DeckPilotProtocol.h` is dezelfde uitvoering uitgeoefend door `tests/firmware-protocol.cpp`. Het maakt gebruik van fixed-size buffers, begrensde invoerverwerking en beschikbare USB-ruimte verzenden; knop scannen wordt nooit opzettelijk vertraagd tijdens het wachten op een host. De nieuwste hangende knop masker wordt gecoalesced onder tegendruk. Er zijn geen commando's om macro's uit te voeren, EEPROM schrijven, uitschakelen van het toetsenbord, wijzigen profielen of flash firmware over dit kenmerkende protocol.
 
-Bij 115200 baud, regels eindigen met LF (CRLF wordt geaccepteerd). Sessietekens bevatten precies acht hexadecimale tekens in hoofdletters. Alle getallen zijn niet ondertekend decimale tekens. Voorbeelden:
+Bij 115200 baud, regels eindigen met LF (CRLF wordt geaccepteerd). Sessietekens bevatten precies acht hexadecimale tekens in hoofdletters. Alle getallen zijn decimale cijfers niet ondertekend. Voorbeelden:
 
 ```
 PC:    DECKPILOT?

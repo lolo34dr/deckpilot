@@ -24,7 +24,7 @@ DeckPilot 2.1.4 Windows Sign-in 후 배경 시작을 포함하여 앱으로 구�
 - 명시된 정지 비활성화 및 자동 시작 설정 저장; 다시 활성화 Soundboard 패널 또는 활성화 버튼. 오디오 클립은 자동으로 재생되지 않습니다.
 - Atelier는 남아 있습니다 1.0.11 펌웨어가 남아 있습니다. 1.1.1.
 
-Validation에는 설정 마이그레이션/라운드 트립 체크 및 기본 Windows UI 체크가 persisted automatic-start preference, 그리고 기존의 오디오 및 설치자 체크를 포함합니다. 물리적 장치 시작/리커넥션은 여전히 소유자의 하드웨어에 달려 있습니다.
+Validation에는 설정 마이그레이션/라운드 트립 체크 및 기본 Windows UI 체크가 persisted automatic-start preference, 그리고 기존 오디오 및 설치자 체크를 포함합니다. 물리적 장치 시작/리커넥션은 여전히 소유자의 하드웨어에 달려 있습니다.
 
 DeckPilot 2.1.3 Soundboard 마이크 지연 시간을 줄이고 라이브 오디오 경로에서 1초 변환 블록을 제거합니다.
 

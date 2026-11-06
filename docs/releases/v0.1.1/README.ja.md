@@ -2,7 +2,7 @@
 
 インターフェイス プラスの sobre の注ぐこと DeckPilot、inspirée de la disposition Stream Deck。
 
-- パレットanthracite et gris, typographie と Compacte et 抑制 du 壮大な texte d’accueil.
+- パレットanthracite et gris, typographie と コンパクト et 抑制 du 壮大な texte d’accueil.
 - グリルデ 4 × 3 avec pictogrammes et bordure de sélection discrète に触れます。
 - Choix des action à droite et réglages de la touche sous la grille.
 - Gestion des profils dans un panneau reliable ; calibrage et barre de titre assortis au thème sombre.

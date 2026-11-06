@@ -1,6 +1,6 @@
 > Esta é uma tradução automática das notas de lançamento completas. O original em inglês é a referência.
 
-DeckPilot 1.5.0 adiciona controles específicos do Spotify, pesquisa de ação e arrastar e soltar, e repara o registro de inicialização do Windows.
+DeckPilot 1.5.0 adiciona controles específicos do Spotify, pesquisa de ação e arrastar e soltar e repara o registro de inicialização do Windows.
 
 - **Spotify** reproduzir/pausar, endereço próximo e anterior apenas a sessão de mídia do Spotify desktop, mantendo a reprodução do navegador/YouTube separada. Abra o Spotify e inicie a reprodução uma vez. O Spotify em um navegador não é suportado; não há nenhum backback de mídia global se o Spotify estiver faltando ou se recusar um comando.
 - Procure ações e aplicativos instalados por nome ou palavras-chave, como volume, pular, Spotify ou Discord. Clique nos resultados ou arraste-os para uma chave.

@@ -32,7 +32,7 @@ DECKPILOT|1|promicro-32u4-16mhz|1.1.1
 
 DeckPilot 爱特利尔保留 **点菜的软件** 需要输入 `EFFACER`,清除所有 28 应用程序的 KiB 有经过验证的重置回路, 并停止 F13 – F24 和正常的 USB 计数。 Caterina 仍然可用, 但卡片在被手动装入启动器模式之前不会在 Atelier 中再次出现。 保持连接, 短暂连接 **RST 读取** 改为: **两次快速的GND**,然后选择其临时 Arduino Leonardo / rootloader COM 端口并使用 Atelier 的回收动作重新安装 DeckPilot。 Atelier 显示这些指令,并在擦除或被中断的闪存后保持恢复功能。启动器和EEPROM 保存下来;这不是全芯片擦除。配置数据保留在PC上。
 
-DeckPilot 检查SHA -256,英特尔HEX记录校验和,重置-飞行器存在,重叠和 **28672- 字节** 重置前的应用程序边界。 它匹配运行时间和启动器端口的物理 USB 位置, 使用 AVR109 。 57600 baud, 需要 AVRDUDE 的写入验证, 然后检查运行的固件的身份和版本。 它不写引信、 EEPROM 或装入器。 只有 Leonardo IDs `2341:8036` / `2A03:8036` 和卡特琳娜岛 `2341:0036` / `2A03:0036` 如果 Windows 无法提供匹配的物理连接,闪存会被屏蔽而不是猜测端口。
+DeckPilot 检查SHA -256,英特尔HEX记录校验和,重置-飞行器存在,重叠和 **28672- 字节** 重置前的应用程序边界。 它匹配运行时间和启动器端口的物理 USB 位置, 使用 AVR109 。 57600 baud, 需要 AVRDUDE 的书写验证, 然后检查运行的固件的身份和版本。 它不写引信、 EEPROM 或启动器。 只有 Leonardo IDs `2341:8036` / `2A03:8036` 和卡特琳娜岛 `2341:0036` / `2A03:0036` 如果 Windows 无法提供匹配的物理连接,闪存会被屏蔽而不是猜测端口。
 
 闪光不是原子: 电缆断开或断电可以使应用程序固件不全。 没有自动固件备份或回滚。 如有必要, 用 Arduino IDE 设置重新装入原始草图 。 **阿杜伊诺·莱昂纳多**。根据棋盘的后置器,两次将 RST 与 GND 短暂连接可能会暴露一个临时后置器端口; 当该端口可用时, 上传。 损坏后后置器需要ISP 硬件, 无法由此 USB 更新器修复 。 请不要写入不同的后置板或时钟变体 。
 
@@ -49,7 +49,7 @@ dotnet build DeckPilot.sln -c Release -p:RequireFirmwareBundle=true
 dotnet run --project tests/DeckPilot.Checks -c Release --no-build
 ```
 
-剧本 : Arduino AVR 核心 **1.8.6**键盘 **1.0.6**,和上游 AVRDUDE **8.0**. CLI管理软件包使用Arduino的软件包校验和验证;AVRDUDE 二进制/源文件档案有明确的SHA-.256 脚本中指针。 `artifacts/firmware/DeckPilot-firmware.zip` 包含 DeckPilot HEX,生成的应用程序区域重置了HEX及其生成器,校验和,Windows工具,许可证和相应的上游AVRDUDE源档案. Publishing CI需要捆绑;普通开发商的构建没有它就可以运行应用但不能闪出或重置一个板.
+剧本 : Arduino AVR 核心 **1.8.6**键盘 **1.0.6**,和上游 AVRDUDE **8.0**. CLI管理软件包使用Arduino的软件包校验和验证;AVRDUDE 二进制/源文件档案有明确的SHA-.256 脚本中指针。 `artifacts/firmware/DeckPilot-firmware.zip` 包含 DeckPilot HEX,生成的应用程序区域重置了HEX及其生成器,校验和,Windows工具,许可证和相应的上游AVRDUDE源归档. Publishing CI需要捆绑;普通开发商的构建没有它就可以运行应用程序但不能闪出或重置一个板.
 
 原画 12- 扣子素描改自大卫·麦迪逊 **流出廉价** 版权项目 2018麻省理工学院,其通知仍在 `DeckPilot.ino`. DeckPilot 添加使用寄存器MIT许可证. **AVRDUDE是GPL-下的单独软件.2.0- 或后来**,其通知/许可证和来源捆绑;存储器MIT许可证不取代该许可证。 https://github.com/avrdudes/avrdude/tree/v8.0 用于上游建设指令和依赖性通知。
 
@@ -60,7 +60,7 @@ dotnet run --project tests/DeckPilot.Checks -c Release --no-build
 
 新应用程序识别了连接的卡片,保持其序列端口的开通,解接后重新连接,并在启动时和重联后检查其固件版本. Firmware更新随应用程序发布而来: 启动检查将连接的固件与已安装的应用程序中包含的已验证的捆绑进行对比. App更新检查仍然从 GitHub 获得更新的发布. 没有单独的固件仅限下载通道.
 
-检测到的更古老的固件提示每一次应用会话,其中 24- 延迟时提醒延迟。通知可禁用 **Connexion et diagnostic**。未知的Arduino草图、断开的设备以及模糊的多卡选择不会触发自动闪出或更新提示。固件安装总是需要确认。打开固件管理器会暂停显示器并等待序列端口的发布;在对话框关闭后,监测会恢复。
+检测到的更古老的固件提示每一次应用会话,其中 24- 延迟时提示延迟。通知可禁用。 **Connexion et diagnostic**。未知的Arduino草图、断开的设备以及模糊的多卡选择不会触发自动闪出或更新提示。固件安装总是需要确认。打开固件管理器会暂停显示器并等待序列端口的发布;在对话框关闭后,监测会恢复。
 
 **从Arduino IDE 手动上传一个内容, 退出 DeckPilot 首先从它的托盘图标。** 关闭主窗口只隐藏它,所以它继续拥有串行连接. DeckPilot 和另一个串行显示器不能同时使用同一端口。如果另一个工具已经拥有端口,应用程序会报告问题并重试而不影响普通键盘键。
 

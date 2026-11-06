@@ -3,7 +3,7 @@
 인터페이스 플러스 sobre 붓 DeckPilot, inspirée de la disposition 스트림 데크.
 
 - Palette anthracite et gris, typographie plus compacte et 억압 du grand texte d'accueil.
-- 그릴 드 4 × 3 접촉 avec pictogrammes 외 bordure de sélection discrète.
+- 햄버거 4 × 3 접촉 avec pictogrammes 외 bordure de sélection discrète.
 - 최강의 행동 à droite et réglages de la touche sous la Grille.
 - Gestion des profils dans un panneau repliable; 캘리브레이션 et barre de titre assortis au thème sombre.
 

@@ -10,7 +10,7 @@
 
 각 스위치는 GND에 1개의 핀을 연결합니다. 내부 끌어당기는 것은 활성화됩니다. 핀 **2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15, 16** 이름 * **F13를 통해 F24** 그 순서에서. 안정되어 있는 30 ms debounce는 압박을 자주적으로 취급하고 풀어 놓습니다. 키보드 행동, Windows 측 단면도 및 구경측정은 호환이 남아 있습니다; USB 키보드 rollover는 Arduino의 키보드 도서관에 의해 제한됩니다. 굳힌모는 per-button USB 형태 또는 본래 매체 통제를 아직 소개하지 않습니다.
 
-핀 핀 **1** 시작에서 GND에 개최되는 키보드 작동, 원래의 실패를 보존. USB 코어는 여전히 bootloader 항목을 지원할 수 있습니다. GND에 VCC를 연결하지 마십시오.
+핀 핀 **1** 시작에서 GND에 개최 된 키보드 작동, 원래의 실패를 보존. USB 코어는 여전히 bootloader 항목을 지원할 수 있습니다. GND에 VCC를 연결하지 마십시오.
 
 현재 USB CDC 직렬 인터페이스 답변 `DECKPILOT?\n` (주) 115200 태그 :
 
@@ -23,14 +23,14 @@ DECKPILOT|1|promicro-32u4-16mhz|1.1.1
 <a id="install-from-deckpilot"></a>
 ## 설치하기 DeckPilot
 
-1. 공급된 회복 sketch 유지 (`firmware/Original/Original.ino`) 및 복구 옵션으로 작업 Arduino 업로드 설정. RST 및 GND 물리적으로 액세스 유지.
+1. 공급된 회복 sketch 유지 (`firmware/Original/Original.ino`) 및 작업 Arduino 업로드 설정 복구 옵션으로. RST 및 GND 물리적으로 액세스 유지.
 2. Arduino IDE, 시리얼 모니터 및 기타 직렬 도구. 다른 레오나르도 보드를 분리합니다.
 3. ᄋᄋᄋ **Firmware du macropad…**, 정확한 장치를 선택하고 널과 배선을 확인합니다. unidentified 본래 sketch는 명시한 확인 후에만 설치될 수 있습니다.
 4. 설치를 확인하고 완료 될 때까지 연결된 USB 케이블을 남깁니다. 키보드 작업이 중단됩니다. DeckPilot 펌웨어 대화상자가 열리면서 일반 F13–F24 이벤트는 여전히 Windows에 도달합니다.
 
 펌웨어 및 Windows AVRDUDE 8.0 게시된 앱 내에서 번들됩니다. Arduino IDE 또는 별도의 드라이버 설치가 수행되지 않습니다. DeckPilot. Windows는 이미 소유자의 성공적인 업로드를 위해 한대로 이사회의 USB 직렬 포트를 노출해야합니다. 새로운 펌웨어 버전은 GitHub의 앱 업데이트로 전달됩니다. 앱 업데이트 **아니다.** 자동적으로 플래시 하드웨어. 각 플래시는 확인을 요구합니다.
 
-DeckPilot Atelier 유지 **Effacer le 펌웨어 드 라 carte** 붕괴된 진보된 가동의 밑에. 그것은 typing를 요구합니다 `EFFACER`, 모든 것을 지우십시오 28 검증 된 리셋 루프와 응용 프로그램 플래시의 KiB, 그리고 F13–F24 및 일반 USB의 축소를 중지합니다. Caterina는 사용할 수 있지만, 카드는 Atelier에서 수동으로 bootloader 모드로 넣을 때까지 다시 나타나지 않습니다. 연결 유지, 간단히 연결 **RST 소개** 으로 **빨리 GND 두 배**, 그런 다음 임시 Arduino 레오나르도 / bootloader COM 포트를 선택하고 다시 설치하기 위해 Atelier의 복구 작업을 사용합니다. DeckPilot. Atelier는 이 지시를 표시하고 지우기 또는 중단한 섬광 후에 활성화된 회복을 지킵니다. bootloader와 EEPROM는 보존됩니다; 이것은 가득 차있 칩 지우기 아닙니다. 단면도 자료는 PC에 체재합니다.
+DeckPilot Atelier 유지 **Effacer le 펌웨어 드 라 carte** 붕괴된 진보된 가동의 밑에. 그것은 typing를 요구합니다 `EFFACER`, 모든 것을 지우십시오 28 확인 된 리셋 루프와 응용 프로그램 플래시의 KiB, 그리고 F13–F24 및 일반 USB enumeration을 중지합니다. Caterina는 사용할 수 있지만, 카드는 Atelier에서 수동으로 bootloader 모드로 넣을 때까지 다시 나타나지 않습니다. 연결 유지, 간단히 연결 **RST 소개** 으로 **빨리 GND 두 배**, 그런 다음 임시 Arduino 레오나르도 / bootloader COM 포트를 선택하고 다시 설치하기 위해 Atelier의 복구 작업을 사용합니다. DeckPilot. Atelier는 이 지시를 표시하고 지우기 또는 중단한 섬광 후에 활성화된 회복을 지킵니다. bootloader와 EEPROM는 보존됩니다; 이것은 가득 차있 칩 지우기 아닙니다. 단면도 자료는 PC에 체재합니다.
 
 DeckPilot 체크 SHA-256, 인텔 HEX 기록 체크섬, 재시동력 존재, 오버랩 및 **28672-바이트** 응용 프로그램을 재설정하기 전에 경계. 그것은 런타임과 bootloader 포트에 걸쳐 물리적 USB 위치를 일치, 사용 AVR109 에 57600 baud는, AVRDUDE의 쓰기 검증을 요구하고, 그 후에 실행 펌웨어의 정체성과 버전을 검사합니다. 그것은 신관, EEPROM 또는 부트 로더를 쓰지 않습니다. 레오나르도 IDs만 `2341:8036` / `2A03:8036` 그리고 Caterina `2341:0036` / `2A03:0036` 허용됩니다. Windows가 일치하는 물리적 연결을 제공 할 수 없다면, 깜박임은 포트를 추측하는 것보다 오히려 차단됩니다.
 
@@ -51,7 +51,7 @@ dotnet run --project tests/DeckPilot.Checks -c Release --no-build
 
 스크립트 핀 Arduino AVR 코어 **1.8.6**, 키보드 **1.0.6**, 및 상류 AVRDUDE **8.0**. CLI 관리 패키지 사용 Arduino의 패키지 체크섬 검증; AVRDUDE 바이너리 / 소스 아카이브는 SHA-를 명시256 스크립트에 핀. `artifacts/firmware/DeckPilot-firmware.zip` 다음을 포함합니다. DeckPilot HEX, 생성 된 응용 프로그램-area 리셋 HEX 및 그 발전기, 체크섬, Windows 도구, 라이센스 및 해당 업스트림 AVRDUDE 소스 아카이브. 출판 CI는 번들 필요; 응용 프로그램을 실행할 수 없는 일반 개발자 빌드는 플래시 또는 보드를 재설정 할 수 없습니다.
 
-이름 * 12-button 스케치는 David Madison 's에서 적용되었습니다. **Stream 저렴한** 프로젝트, 저작권 2018, MIT. 그것의 통보는 안으로 남아 있습니다 `DeckPilot.ino`. DeckPilot 저장소 MIT 라이선스를 사용할 수 있습니다. **AVRDUDE는 GPL-의 밑에 분리되는 소프트웨어입니다2.0-또는-later**, 그것의 공지/라이센스 및 소스 번들; 저장소 MIT 라이센스는 그 라이센스를 대체하지 않습니다. 참조 https://github.com/avrdudes/avrdude/tree/v8.0 업스트림 빌드 지침 및 의존성 통지.
+이름 * 12- 버튼 스케치는 데이비드 매디슨 (David Madison)의 적응되었습니다. **Stream 저렴한** 프로젝트, 저작권 2018, MIT. 그것의 통보는 안으로 남아 있습니다 `DeckPilot.ino`. DeckPilot 저장소 MIT 라이선스를 사용할 수 있습니다. **AVRDUDE는 GPL-의 밑에 분리되는 소프트웨어입니다2.0-또는-later**, 그것의 공지/라이센스 및 소스 번들; 저장소 MIT 라이센스는 그 라이센스를 대체하지 않습니다. 참조 https://github.com/avrdudes/avrdude/tree/v8.0 업스트림 빌드 지침 및 의존성 통지.
 
 <a id="firmware-111-and-usb-protocol-2"></a>
 ## 회사 소개 1.1.1 및 USB 프로토콜 2
@@ -60,7 +60,7 @@ dotnet run --project tests/DeckPilot.Checks -c Release --no-build
 
 새로운 앱은 연결된 카드를 식별하고, 직렬 포트가 열리고, 플러그를 해제 한 후 다시 연결하고, 펌웨어 버전이 시작 후 다시 연결됩니다. 펌웨어 업데이트는 앱 릴리스로 전달됩니다. 시작 체크는 설치된 앱에 포함 된 검증 된 번들과 연결 펌웨어를 비교합니다. 앱 업데이트는 GitHub에서 더 새로운 릴리스를 얻을 수 있습니다. 별도의 펌웨어 전용 다운로드 채널이 없습니다.
 
-앱 세션 당 한 번 펌웨어 프롬프트를 감지했습니다. 24-일시 알림 지연. 알림은 아래에서 비활성화 될 수 있습니다. **Connexion et diagnostic**. 알려진 Arduino sketches, 분리 장치 및 주변 다중 카드 선택은 자동 깜박임 또는 업데이트 프롬프트를 트리거하지 않습니다. 펌웨어 설치는 항상 확인을 요구합니다. 펌웨어 관리자를 열고 시리얼 포트에 대한 모니터와 대기를 중단합니다. 대화 상자가 닫힌 후 다시 모니터링합니다.
+앱 세션 당 한 번 펌웨어 프롬프트를 감지했습니다. 24-일시 알림 지연. 알림은 아래에서 비활성화 될 수 있습니다. **Connexion et diagnostic**. 알려진 Arduino sketches, 분리 장치 및 주변 다중 카드 선택은 자동 깜박임 또는 업데이트 프롬프트를 트리거하지 않습니다. 펌웨어 설치는 항상 확인이 필요합니다. 펌웨어 관리자는 모니터를 중단하고 직렬 포트에 대한 대기를 풀어 놓습니다. 대화 상자가 닫힌 후 다시 모니터링합니다.
 
 **Arduino IDE의 매뉴얼 업로드를 위해, 종료 DeckPilot 첫 번째 트레이 아이콘에서.** 메인 창을 닫는 것은 숨기므로 연속 연결이 계속됩니다. DeckPilot 또 다른 시리얼 모니터는 동시에 동일한 포트를 사용할 수 없습니다. 또 다른 도구가 이미 포트를 소유하면, 응용 프로그램은 일반 키보드 키에 영향을 미치지 않고 문제와 retries를보고합니다.
 

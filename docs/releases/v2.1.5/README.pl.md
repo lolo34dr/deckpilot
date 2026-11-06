@@ -16,7 +16,7 @@ DeckPilot 2.1.4 automatycznie uruchamia skonfigurowany wirtualny mikrofon za pom
 - Wyraźne zatrzymanie wyłącza i zapisuje preferencje automatic- start; włączyć go ponownie z Soundboard panel lub przycisk aktywacji. Klipy audio nigdy nie są odtwarzane automatycznie.
 - Pozostałości atelier 1.0.11 i firmware pozostaje 1.1.1.
 
-Walidacja zawiera ustawienia migracji / kontroli przejazdu oraz natywną kontrolę UI systemu Windows dla utrzymujących się preferencji automatycznego uruchamiania, plus istniejące kontrole audio i instalatora. Fizyczne urządzenie uruchamianie / ponowne podłączenie nadal zależy od sprzętu właściciela.
+Walidacja zawiera ustawienia migracji / kontroli przejazdu oraz natywną kontrolę UI systemu Windows dla utrzymujących się preferencji automatic- start, plus istniejące kontrole audio i instalatora. Fizyczne urządzenie uruchamianie / ponowne połączenie nadal zależy od sprzętu właściciela.
 
 DeckPilot 2.1.3 redukuje opóźnienie mikrofonu na płycie dźwiękowej i usuwa jednosekundowe bloki konwersji z żywej ścieżki audio.
 
@@ -33,7 +33,7 @@ DeckPilot 2.1.2 oraz DeckPilot Atelier 1.0.11 naprawić bezpieczeństwo warsztat
 - Atelier może przygotować deski Leonardo / Caterina, które nie odpowiadają jeszcze na DeckPilot protokół; błędy seryjne nadal przerywają miganie, a lokalizacja USB, bootloader i podpis MCU pozostają zweryfikowane.
 - Każda inspekcja zaczyna się od pustych wyników. Raporty zatrzymują sprawdzoną tablicę i oprogramowanie firmowe, a nieświeże wywołania USB nie mogą mieć wpływu na nową sesję.
 - Atelier zamykający podczas pisania lub weryfikacji oprogramowania firmowego jest zablokowany.
-- Eksport profili i automatyczne kopie zapasowe profili mogą przechowywać wymienione pliki MP3 / WAV (32 Import kopii wbudowanych klipów do zarządzanego folderu i remap krótkie / długie referencje działania. Import profilu legacy pozostają wspierane; brak kopii zapasowej audio jest wyraźnie zgłaszane.
+- Eksport profili i automatyczne kopie zapasowe profili mogą przechowywać wymienione pliki MP3 / WAV (32 Import kopii wbudowanych klipów do zarządzanego folderu i remap krótkie / długie referencje działania. Import profilu Legacy pozostaje obsługiwany; brak kopii zapasowej audio jest wyraźnie zgłaszane.
 - Płyta dźwiękowa wydaje ukończone klipy, aktualizuje wskaźniki odtwarzania i raporty przerywane strumienie audio. VB-CABLE punkty końcowe są rozpoznawane poprzez ich tożsamość adaptera.
 - Prawidłowe przetłumaczone linki README i zachować nazwy urządzeń technicznych podczas tłumaczenia. VB-CABLE wymóg.
 

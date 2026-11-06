@@ -2,7 +2,7 @@
 
 DeckPilot 1.6.1 부드러운 키패드 렌더링을 수정하고 프로파일 복구, Windows 오디오 제어 및 짧은 / 긴 프레스를 추가합니다.
 
-- Native-size 키패드 텍스트: 전체 갑판 스케일링 및 콘텐츠 그림자 효과 제거, per-monitor DPI 인식 및 더 큰 데스크탑 앱 아이콘 추가. 작은 창 스크롤 대신 수축 키.
+- Native-size 키패드 텍스트: 전체 데크 스케일링 및 콘텐츠 그림자 효과 제거, per-monitor DPI 인식 및 더 큰 데스크탑 앱 아이콘 추가. 작은 창 스크롤 대신 수축 키.
 - undo/redo 프로파일 편집, 드래그 앤 드롭 포함 (drop-and-drop)50 앱 세션 당 변경); 텍스트 필드는 기본 Ctrl + Z / Ctrl + Y를 유지합니다.
 - 프로필 가져 오기 / 내보내기 및 20 자동 이전 버전 백업. 새 사본을 추가; 복원 및 보존 교정. 수입 된 작업은 자동으로 실행되지 않습니다.
 - Global Windows 마이크 toggle with a persistent status-bar Indicator and live endpoint status. 모든 능동 캡처 엔드포인트는 함께 뮤트/unmuted입니다.
