@@ -7,6 +7,6 @@ DeckPilot 1.5.0 aggiunge i controlli Spotify-specific, la ricerca di azione e dr
 - Trascinare le azioni di catalogo/ricerca sui tasti, scambiare le azioni di due chiavi senza modificare la calibrazione, o rilasciare un link eseguibile, scorciatoia, cartella o HTTP(S).
 - Startup mantiene una preferenza salvata per utente, ripara i percorsi mancanti/stale, rileva le bandiere disabili di Windows note e supporta la riattivazione esplicita.
 
-La costruzione richiede Windows 10 versione 2004 o più tardi, o Windows 11. Scarica **DeckPilot-Setup.exe** o aggiornamento da DeckPilot. Profili e taratura sono conservati; non è necessario alcun flash firmware. Per riparare un'avvio precedentemente bloccato, controllare il suo stato sotto **Préférences de l’application** e abilitare **Lancer avec Windows** di nuovo.
+La costruzione richiede Windows 10 versione 2004 o più tardi, o Windows 11. Scarica **DeckPilot-Setup.exe** o aggiornamento da DeckPilot. Profili e taratura sono conservati; non è necessario alcun flash firmware. Per riparare un'avvio precedentemente bloccato, controllare il suo stato in **Préférences de l’application** e abilitare **Lancer avec Windows** di nuovo.
 
-La validazione include l'isolamento simulato di Spotify/browser, i controlli di ricerca e impostazioni, i test di riparazione di Windows installer/startup, i controlli reali di drag-and-drop e di aggiornamento/UI nativo.
+La validazione include l'isolamento simulato di Spotify/browser, i controlli di ricerca e impostazioni, i test di riparazione di Windows installer/startup, i controlli reali di drag-and-drop del mouse e di aggiornamento/UI nativo.
