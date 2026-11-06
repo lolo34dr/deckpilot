@@ -253,6 +253,17 @@ try {
     Wait-Until { (Read-SharedJson $settingsPath).Soundboard.AutoStart -eq $false }
     $autoSound.Toggle()
     Wait-Until { (Read-SharedJson $settingsPath).Soundboard.AutoStart -eq $true }
+    $script:phase = 'microphone noise-suppression preferences'
+    $noiseSuppression = (Find-Control $root 'SoundboardNoiseSuppressionCheck').GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern)
+    if ($noiseSuppression.Current.ToggleState -ne [System.Windows.Automation.ToggleState]::On) { throw 'Microphone noise suppression should default to enabled' }
+    $noiseStrength = (Find-Control $root 'SoundboardNoiseSuppressionSlider').GetCurrentPattern([System.Windows.Automation.RangeValuePattern]::Pattern)
+    $noiseStrength.SetValue(64)
+    Wait-Until { (Read-SharedJson $settingsPath).Soundboard.NoiseSuppressionStrengthPercent -eq 64 }
+    $noiseSuppression.Toggle()
+    Wait-Until { (Read-SharedJson $settingsPath).Soundboard.NoiseSuppressionEnabled -eq $false }
+    $noiseSuppression.Toggle()
+    Wait-Until { (Read-SharedJson $settingsPath).Soundboard.NoiseSuppressionEnabled -eq $true }
+    Write-Host 'PASS microphone noise suppression: enabled by default, intensity and toggle persist without a physical microphone'
     $script:phase = 'persist soundboard-only speaker return preferences'
     $monitor = (Find-Control $root 'SoundboardMonitorCheck').GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern)
     if ($monitor.Current.ToggleState -ne [System.Windows.Automation.ToggleState]::Off) { throw 'The speaker return should default to off' }

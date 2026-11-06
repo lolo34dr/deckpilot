@@ -42,6 +42,14 @@ internal sealed class SoundboardEngine : IDisposable
     private MMDevice? outputDevice;
     private WasapiCapture? capture;
     private RealtimeAudioBuffer? voiceBuffer;
+    private volatile RealtimeAudioBuffer? noiseVoiceBuffer;
+    private ISampleProvider? rawVoiceSamples;
+    private ISampleProvider? noiseVoiceSamples;
+    private SelectableSampleProvider? selectableVoiceSamples;
+    private NoiseSuppressionSampleProvider? noiseSuppressionSamples;
+    private RnNoiseDenoiser? noiseDenoiser;
+    private volatile bool noiseSuppressionEnabled = true;
+    private int noiseSuppressionStrengthPercent = 75;
     private WasapiOut? playback;
     private MixingSampleProvider? mixer;
     private WaveFormat? mixFormat;
@@ -62,6 +70,7 @@ internal sealed class SoundboardEngine : IDisposable
     public event Action? StateChanged;
     public bool IsRunning => playback != null;
     public string? MonitorError { get; private set; }
+    public string? NoiseSuppressionError { get; private set; }
     public static SoundboardEndpointSnapshot DiscoverEndpoints()
     {
         try
@@ -72,6 +81,60 @@ internal sealed class SoundboardEngine : IDisposable
         catch (Exception ex)
         {
             return new(Array.Empty<AudioEndpoint>(), Array.Empty<AudioEndpoint>(), ex.Message);
+        }
+    }
+
+    public void ConfigureNoiseSuppression(bool enabled, int strengthPercent)
+    {
+        if (strengthPercent is < 0 or > 100) throw new ArgumentOutOfRangeException(nameof(strengthPercent));
+        noiseSuppressionStrengthPercent = strengthPercent;
+        NoiseSuppressionError = null;
+
+        if (!IsRunning)
+        {
+            noiseSuppressionEnabled = enabled;
+            return;
+        }
+
+        if (enabled)
+        {
+            EnsureNoiseSuppressionPath();
+            noiseSuppressionSamples!.StrengthPercent = strengthPercent;
+            noiseVoiceBuffer!.Clear();
+            noiseSuppressionEnabled = true;
+            selectableVoiceSamples!.Select(noiseVoiceSamples!);
+        }
+        else
+        {
+            noiseSuppressionEnabled = false;
+            voiceBuffer?.Clear();
+            selectableVoiceSamples!.Select(rawVoiceSamples!);
+        }
+    }
+
+    private void EnsureNoiseSuppressionPath()
+    {
+        if (noiseVoiceSamples != null) return;
+        if (voiceBuffer == null || mixFormat == null || rawVoiceSamples == null || selectableVoiceSamples == null)
+            throw new InvalidOperationException("Le microphone virtuel n’est pas encore prêt.");
+
+        var input = new RealtimeAudioBuffer(voiceBuffer.WaveFormat);
+        RnNoiseDenoiser? denoiser = null;
+        try
+        {
+            var mono = RealtimeAudio.Convert(input, WaveFormat.CreateIeeeFloatWaveFormat(48000, 1));
+            denoiser = new RnNoiseDenoiser();
+            var suppressor = new NoiseSuppressionSampleProvider(mono, denoiser, noiseSuppressionStrengthPercent);
+            var converted = RealtimeAudio.ConvertSamples(suppressor, mixFormat);
+            noiseVoiceBuffer = input;
+            noiseDenoiser = denoiser;
+            noiseSuppressionSamples = suppressor;
+            noiseVoiceSamples = converted;
+        }
+        catch
+        {
+            denoiser?.Dispose();
+            throw;
         }
     }
 
@@ -246,6 +309,7 @@ internal sealed class SoundboardEngine : IDisposable
     {
         Stop();
         MonitorError = null;
+        NoiseSuppressionError = null;
         if (string.IsNullOrWhiteSpace(microphoneId) || string.IsNullOrWhiteSpace(outputId)) throw new InvalidOperationException("Choisis un micro physique et la sortie d’un câble audio virtuel.");
         try
         {
@@ -259,10 +323,29 @@ internal sealed class SoundboardEngine : IDisposable
             var format = output.AudioClient.MixFormat;
             mixFormat = WaveFormat.CreateIeeeFloatWaveFormat(format.SampleRate, format.Channels);
             voiceBuffer = new RealtimeAudioBuffer(capture.WaveFormat);
+            rawVoiceSamples = RealtimeAudio.Convert(voiceBuffer, mixFormat);
+            selectableVoiceSamples = new SelectableSampleProvider(rawVoiceSamples, mixFormat);
             mixer = new MixingSampleProvider(mixFormat) { ReadFully = true };
             mixer.MixerInputEnded += (_, e) => { finished.Enqueue(e.SampleProvider); StateChanged?.Invoke(); };
-            mixer.AddMixerInput(RealtimeAudio.Convert(voiceBuffer, mixFormat));
-            capture.DataAvailable += (_, data) => voiceBuffer?.AddSamples(data.Buffer, 0, data.BytesRecorded);
+            mixer.AddMixerInput(selectableVoiceSamples);
+            if (noiseSuppressionEnabled)
+            {
+                try
+                {
+                    EnsureNoiseSuppressionPath();
+                    selectableVoiceSamples.Select(noiseVoiceSamples!);
+                }
+                catch (Exception ex)
+                {
+                    NoiseSuppressionError = "Réduction de bruit indisponible : " + ex.Message;
+                    noiseVoiceBuffer = null;
+                }
+            }
+            capture.DataAvailable += (_, data) =>
+            {
+                voiceBuffer?.AddSamples(data.Buffer, 0, data.BytesRecorded);
+                if (noiseSuppressionEnabled) noiseVoiceBuffer?.AddSamples(data.Buffer, 0, data.BytesRecorded);
+            };
             playback = new WasapiOut(output, AudioClientShareMode.Shared, true, RealtimeAudio.PlaybackBufferMilliseconds);
             playback.PlaybackStopped += AudioStopped;
             playback.Init(mixer);
@@ -333,7 +416,9 @@ internal sealed class SoundboardEngine : IDisposable
         foreach (var item in playing.Values) { item.Reader.Dispose(); }
         playing.Clear();
         finished.Clear(); faults.Clear();
-        voiceBuffer = null; mixer = null; mixFormat = null;
+        noiseDenoiser?.Dispose(); noiseDenoiser = null;
+        noiseSuppressionSamples = null; noiseVoiceSamples = null; rawVoiceSamples = null; selectableVoiceSamples = null;
+        noiseVoiceBuffer = null; voiceBuffer = null; mixer = null; mixFormat = null;
         microphoneDevice?.Dispose(); microphoneDevice = null; outputDevice?.Dispose(); outputDevice = null;
     }
     public void Dispose() { Stop(); devices.Dispose(); }

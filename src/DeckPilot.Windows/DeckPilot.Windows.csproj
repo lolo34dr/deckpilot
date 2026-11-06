@@ -2,16 +2,18 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType><TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
     <UseWPF>true</UseWPF><UseWindowsForms>true</UseWindowsForms><EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ImplicitUsings>disable</ImplicitUsings><Nullable>enable</Nullable>
     <!-- WPF is the entry point; NotifyIcon is the only WinForms UI. DPI is set before HWND creation in the WPF manifest. -->
     <NoWarn>$(NoWarn);WFAC010</NoWarn>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets/DeckPilot.ico</ApplicationIcon>
-    <AssemblyName>DeckPilot</AssemblyName><Version>2.1.9</Version>
+    <AssemblyName>DeckPilot</AssemblyName><Version>2.2.0</Version>
   </PropertyGroup>
   <ItemGroup>
     <Resource Include="../../deckpilotlogo.png" Link="Assets/DeckPilot.png" />
     <Resource Include="../../deckpilotbanner.png" Link="Assets/DeckPilot-Banner.png" />
+    <EmbeddedResource Include="../../artifacts/native/win-x64/rnnoise.dll" LogicalName="DeckPilot.Native.rnnoise.dll" Condition="Exists('../../artifacts/native/win-x64/rnnoise.dll')" />
   </ItemGroup>
   <ItemGroup><Content Include="Install-VBCABLE.ps1" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
   <ItemGroup>
@@ -22,6 +24,9 @@
   </ItemGroup>
   <Target Name="RequireFirmwareBundle" BeforeTargets="PrepareForBuild" Condition="'$(RequireFirmwareBundle)' == 'true' And !Exists('../../artifacts/firmware/DeckPilot-firmware.zip')">
     <Error Text="Build the firmware bundle with firmware/tools/build.ps1 before publishing." />
+  </Target>
+  <Target Name="RequireNoiseReductionBundle" BeforeTargets="PrepareForBuild" Condition="'$(RequireNoiseReductionBundle)' == 'true' And !Exists('../../artifacts/native/win-x64/rnnoise.dll')">
+    <Error Text="Build the bundled RNNoise native library with third-party/RNNoise/build.ps1 before publishing." />
   </Target>
   <ItemGroup><ProjectReference Include="../DeckPilot.Core/DeckPilot.Core.csproj" /></ItemGroup>
 </Project>
