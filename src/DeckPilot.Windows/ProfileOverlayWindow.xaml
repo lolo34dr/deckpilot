@@ -12,8 +12,8 @@
    <Grid.ColumnDefinitions><ColumnDefinition Width="40"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
    <Image Source="/Assets/DeckPilot.png" Width="29" Height="29" VerticalAlignment="Center" HorizontalAlignment="Left"/>
    <StackPanel Grid.Column="1">
-    <TextBlock Text="PROFIL ACTIF" Foreground="{DynamicResource AccentBrush}" FontSize="10" FontWeight="SemiBold"/>
-    <TextBlock x:Name="ProfileNameText" FontSize="17" FontWeight="SemiBold" Foreground="#F5F5F8"
+    <TextBlock x:Name="OverlayKindText" Text="PROFIL ACTIF" Foreground="{DynamicResource AccentBrush}" FontSize="10" FontWeight="SemiBold"/>
+    <TextBlock x:Name="ProfileNameText" FontSize="17" FontWeight="SemiBold" Foreground="#F5F5F8" MaxWidth="260"
                TextTrimming="CharacterEllipsis" Margin="0,4,0,0" AutomationProperties.AutomationId="ProfileOverlayName"/>
    </StackPanel>
   </Grid>

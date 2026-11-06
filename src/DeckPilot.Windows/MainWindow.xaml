@@ -201,8 +201,8 @@
       <Button Content="Appliquer le thème" Click="ApplyThemeClick" HorizontalAlignment="Left"/>
       <CheckBox x:Name="ReduceMotionCheck" Content="Réduire les animations" Checked="ReduceMotionChanged" Unchecked="ReduceMotionChanged"/>
       <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,8,0,12"/>
-      <TextBlock Text="Notification de changement de profil" FontWeight="SemiBold" Margin="0,0,0,4"/>
-      <CheckBox x:Name="ProfileOverlayEnabledCheck" Content="Afficher le profil à l’écran"/>
+      <TextBlock Text="Notifications de profil et de sons" FontWeight="SemiBold" Margin="0,0,0,4"/>
+      <CheckBox x:Name="ProfileOverlayEnabledCheck" Content="Afficher le profil et les sons à l’écran"/>
       <TextBlock Text="Emplacement" Foreground="{StaticResource MutedBrush}"/>
       <ComboBox x:Name="ProfileOverlayPositionPicker" DisplayMemberPath="Name" SelectionChanged="ProfileOverlayPositionChanged"
                 AutomationProperties.Name="Emplacement de la notification">
@@ -219,7 +219,7 @@
        <Slider x:Name="ProfileOverlayYSlider" Minimum="0" Maximum="100" SmallChange="0.1" LargeChange="1" TickFrequency="0.1" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft" AutomationProperties.Name="Position verticale de la notification en pourcentage"/>
       </StackPanel>
       <Button x:Name="ProfileOverlayPreviewButton" AutomationProperties.AutomationId="ProfileOverlayPreviewButton" Content="Enregistrer et prévisualiser" Click="SaveProfileOverlayClick" HorizontalAlignment="Left" Margin="0,6,0,6"/>
-      <TextBlock x:Name="ProfileOverlayHint" Text="La notification s’affiche sur l’écran utilisé, y compris sur les jeux en fenêtre ou sans bordure. Le plein écran exclusif peut la masquer." Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,8"/>
+      <TextBlock x:Name="ProfileOverlayHint" Text="Le profil actif ou le son joué s’affiche sur l’écran utilisé, y compris sur les jeux en fenêtre ou sans bordure. Le plein écran exclusif peut masquer la notification." Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,8"/>
       <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,8,0,12"/>
       <TextBlock Text="Mises à jour" FontWeight="SemiBold" Margin="0,0,0,6"/>
       <CheckBox x:Name="AutoUpdateCheck" Content="Rechercher automatiquement" Click="AutoUpdateClick"/>

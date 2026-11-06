@@ -164,5 +164,6 @@ passed += ProfileGestureAudioChecks.Run();
 passed += FeatureChecks.Run();
 passed += AuditFixChecks.Run();
 passed += RealtimeAudioChecks.Run();
+passed += SoundboardMonitorChecks.Run();
 passed += await AudioEndpointCacheChecks.RunAsync();
 Console.WriteLine($"{passed} checks passed.");

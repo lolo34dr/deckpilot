@@ -309,7 +309,12 @@ public partial class MainWindow
             var play = new Button { Content = Audio.IsPlaying(clip.Id) ? "■ " + clip.Name : clip.Name, ToolTip = clip.FilePath, HorizontalContentAlignment = HorizontalAlignment.Left };
             play.Click += (_, _) =>
             {
-                try { play.Content = Audio.Toggle(clip.Id, clip.FilePath) ? "■ " + clip.Name : clip.Name; }
+                try
+                {
+                    bool isPlaying = Audio.Toggle(clip.Id, clip.FilePath);
+                    play.Content = isPlaying ? "■ " + clip.Name : clip.Name;
+                    if (isPlaying) ShowSoundboardOverlay(clip.Name);
+                }
                 catch (Exception ex) { SoundboardStatus.Text = "Son indisponible : " + ex.Message; }
             };
             row.Children.Add(play); SoundboardClipList.Children.Add(row);
