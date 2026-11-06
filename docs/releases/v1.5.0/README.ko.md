@@ -9,4 +9,4 @@ DeckPilot 1.5.0 Spotify-specific controls, 액션 검색 및 드래그 앤 드�
 
 빌드는 Windows가 필요합니다. 10 이름 * 2004 또는 나중에, 또는 Windows 11. 다운로드 **DeckPilot-설정.exe** 또는 에서 업데이트 DeckPilot. 단면도와 구경측정은 보존됩니다; 굳힌모 섬광은 필요하지 않습니다. 이전에 막힌 시작을 고치기 위하여는, 그것의 상태를 아래 검사하십시오 **Préférences de l’application** 지원 및 지원 **Lancer avec Windows** 다시.
 
-Validation는 가장된 Spotify/browser 고립, 수색 및 조정 체크, Windows installer/startup 수선 시험, 진짜 쥐 끌기 배경 및 본래 갱신/UI 체크를 포함합니다. Spotify는 YouTube와 진짜 Windows 표시에서 아직도 사용자의 PC에 확인을 필요로 합니다.
+유효성 검사는 가장된 Spotify/browser 고립, 수색 및 조정 체크, Windows installer/startup 수선 시험, 진짜 쥐 끌기 배경 및 본래 갱신/UI 체크를 포함합니다. Spotify는 YouTube와 진짜 Windows 표시에서 아직도 사용자의 PC에 확인을 필요로 합니다.

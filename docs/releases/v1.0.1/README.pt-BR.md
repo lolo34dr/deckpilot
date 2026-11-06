@@ -2,7 +2,7 @@
 
 Preparação de renomeação do repositório: `streamdeck-diy` → `deckpilot`.
 
-- As verificações de atualização suportam ambos os nomes dos repositórios, antes e depois da renomeação.
+- As verificações de atualização suportam ambos os nomes do repositório, antes e depois da mudança de nome.
 - A validação do download aceita apenas os caminhos exatos dos ativos de liberação pertencentes a esses dois repositórios.
 - As ações de perfis, calibração e aplicação estão inalteradas.
 

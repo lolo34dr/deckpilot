@@ -2,10 +2,10 @@
 
 DeckPilot 1.3.0 verbessert die USB-Verbindung und prüft die Macropad-Firmware beim Start.
 
-- Verbindungs-Dashboard mit automatischer Wiederverbindung, erkannter Firmware, Live-Button-Zustand/USB-Diagnose und expliziter Board-Auswahl, wenn mehrere Geräte vorhanden sind.
-- Startup-Firmware prüft und aktualisiert Vorschläge, mit einem 24- Stunde Erinnerungsverzögerung und eine Option zum Deaktivieren von Firmware-Benachrichtigungen.
-- Neue Firmware **1.1.0**: Bounded Protocol Messages, Fresh Session Tokens, Correled Heartbeat Responses und Key-State Events Die F13-F24-Mapping bleibt unverändert, einschließlich Standalone-Nutzung.
-- Der Firmware-Manager gibt den seriellen Port des Monitors automatisch frei, bevor er identifiziert/blinkt, und verbindet sich danach wieder. 1.0.0 Legacy Identity Queries werden weiterhin unterstützt.
+- Verbindungs-Dashboard mit automatischer Wiederverbindung, erkannter Firmware, Live-Button-Status/USB-Diagnose und expliziter Board-Auswahl, wenn mehrere Geräte vorhanden sind.
+- Startup-Firmware überprüft und aktualisiert Vorschläge, mit einem 24- Stunde Erinnerungsverzögerung und eine Option zum Deaktivieren von Firmware-Benachrichtigungen.
+- Neue Firmware **1.1.0**: Bounded Protocol Messages, Fresh Session Tokens, korrelierte Heartbeat Responses und Key-State Events Die F13-F24-Mapping bleibt unverändert, einschließlich Standalone-Nutzung.
+- Der Firmware-Manager gibt den seriellen Port des Monitors automatisch frei, bevor er identifiziert / blinkt, und verbindet sich danach wieder. 1.0.0 Legacy Identity Queries werden weiterhin unterstützt.
 - Profile können aus dem Tray-Menü ausgewählt werden; Ctrl+S speichert Änderungen; Verbindungsdiagnosen können zur Unterstützung kopiert werden.
 
 Firmware-Updates werden in App-Releases geliefert; Startup-Checks vergleichen die erkannte Version mit dem mitgelieferten Bundle. Keine Hardware wird lautlos geblinkt. **Firmware 1.1.0 Es muss noch ein erster Physical-Board-Test durchgeführt werden:** Firmware 1.0.0 und das frühere Flash-Verfahren wurden vom Eigentümer validiert, während dieses neue Protokoll durch Host-Tests und AVR-Compilation abgedeckt wird.

@@ -6,7 +6,7 @@ Versione di Première de DeckPilot Versare Windows 10/11 x64.
 - Calibrazione guidé des 12 boutons F13 à F24.
 - Profils manuels et azioni: touche libre, applicazione, dossier, sito, raccourci et multimédia.
 - Zona di notifica et démarrage Windows facultatif.
-- Aucun pilote ni changement du program du Leonardo.
+- Aucun pilotae ni changement du program du Leonardo.
 
 Téléchargez **DeckPilot.exe** versare la versione autonome, ou **DeckPilot-win-x64.zip** versare il dossier completa a extraire. Aucun runtime .NET à installer.
 
