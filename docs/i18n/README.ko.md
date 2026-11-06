@@ -275,7 +275,7 @@ Windows ARM64의 경우, 별도로 게시 `-r win-arm64` 대상 기계에 대한
 <a id="license-and-credit"></a>
 ## 라이센스 및 신용
 
-DeckPilot 아래에 발표됩니다 **[MIT 라이센스](../../LICENSE)**. 당신은 사용, 복사, 수정, and redistribute it, including commercially, as long as you keep the copyright and license notices required by the license.
+DeckPilot 아래에 발표됩니다 **[MIT 라이센스](../../LICENSE)**. 당신은 사용, 복사, 수정, and redistribute it, including commercially, as long as you keep the copyright and license notices required by the license. 번들 RNNoise audio denoiser is a 별도의 타사 구성 요소 BSD-style license; 참조 [`third-party/RNNoise/COPYING`](../../third-party/RNNoise/COPYING) · [`third-party/RNNoise/NOTICE.md`](../../third-party/RNNoise/NOTICE.md).
 
 당신이 위에 구축하는 경우 DeckPilot, 작은 눈에 보이는 신용 및 이 저장소에 연결은 평가될 것입니다. 이 추가 신용은 선택적입니다; MIT 고시를 지키는 것은 아직도 요구됩니다.
 
@@ -388,6 +388,13 @@ charcoal 인터페이스는 액션 라이브러리를 먼저 배치하고, crisp
 - **빠른 접근:** Ctrl+K 또는 라이브러리 버튼은 동작 검색에 초점을 맞추고 있습니다. **Activité récente** 계속하기 30 이 세션의 메모리에서 파견 / 실패 작업, 프로그램 인수 또는 대상 경로 저장하지 않고. 그것은 언제든지 명확하게 될 수 있습니다. 성공적인 파견은 대상 앱에서 완료하지 않습니다.
 
 펌웨어가 남아 있습니다. **1.1.1**. 자동적인 굳힌모 제안을 지금 정확하게 굳힌모를 여십시오; 이전 modal 감시는 그 handoff를 방지했습니다. 굳힌모, reconnect 및 섬광 체크는 장소에서 남아 있습니다. 새로운 workspace 특징은 굳힌모가 필요하지 않습니다.
+
+<a id="microphone-noise-suppression-220"></a>
+## 마이크 소음 억제 (Microphone Noise 억제)2.2.0)
+
+**Soundboard · micro virtuel** 이제 선택한 물리적 마이크에 대한 로컬 RNNoise 소음 억제가 포함되어 있습니다. Enable **Filtrer le bruit du 마이크** 그리고 조정 **팟캐스트**. DeckPilot Soundboard 클립에서 섞기 전에 음성을 필터링, 그래서 클립은 변하지 않고 소음 필터로 제거하지 않습니다. 필터는 사용하는 모든 프로그램에 대해 작동합니다. **CABLE Output** 게임 및 음성 채팅 앱을 포함한 마이크로; 물리적 마이크를 직접 사용하지 않는 프로그램을 설정 DeckPilot.
+
+오디오는 현지에서 처리됩니다. DeckPilot. 그것은 기록되거나 네트워크를 통해 보내지 않습니다. RNNoise는 안으로 작동합니다 10 ms, 48 kHz 모노 프레임; 이 프레임 크기는 Windows, 장치 및에 따라 최종 보증이 아닙니다. VB-CABLE. 이 갱신은 굳힌모를 요구하지 않습니다. 본래 RNNoise 성분은 그것의 자신의 BSD 작풍 면허에 의해, 위 표기됩니다.
 
 <a id="soundboard-return-and-on-screen-sound-notifications-219"></a>
 ## Soundboard 반환 및 화면 사운드 알림 (on-screen sound notifications)2.1.9)

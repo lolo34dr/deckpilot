@@ -275,7 +275,7 @@ Compress-Archive -Path artifacts/win-x64/* -DestinationPath artifacts/DeckPilot-
 <a id="license-and-credit"></a>
 ## 许可证和信贷
 
-DeckPilot 将在 **[MIT 许可证](../../LICENSE)**。您可以使用、复制、修改和再分配,包括商业用途,只要您保留许可证所要求的版权和许可证通知。
+DeckPilot 将在 **[MIT 许可证](../../LICENSE)**。只要您保留许可证所要求的版权和许可通知,您可以使用、复制、修改和再分配,包括商业使用。捆绑的RNNOIS Audioiser是其BSD式许可证下的一个单独的第三方组件;见 [`third-party/RNNoise/COPYING`](../../third-party/RNNoise/COPYING) 财务报告和财务报告 [`third-party/RNNoise/NOTICE.md`](../../third-party/RNNoise/NOTICE.md).
 
 如果你继续前进 DeckPilot,请提供少量可见的信贷和与该存储库的链接。这些额外信贷是可选的;仍需要保存麻省理工学院的通知。
 
@@ -388,6 +388,13 @@ Windows 烟雾检查继续执行本地鼠标拖放并验证保存的任务、互
 - **快速访问 :** Ctrl+K或库按钮聚焦动作搜索. **Activité récente** 保留最后一个 30 发送/ 失败此会话的内存操作, 不存储程序参数或目标路径。 它可随时被清除。 成功发送并不能保证目标应用程序的完成 。
 
 坚固的遗物 **1.1.1**。接受自动固件提议现在正确打开固件管理器;前一个模式守护阻止了这种交接。现有的固件身份、心跳、重联和闪存检查仍然有效。新的工作空间特性不需要固件闪存。
+
+<a id="microphone-noise-suppression-220"></a>
+## 微型话筒噪声抑制(2.2.0)
+
+**Soundboard · micro virtuel** 现在包括选定物理麦克风的本地 RNNOUIS 噪声抑制。 启用 **麦克风吹嘘声** 调整 **强度**. DeckPilot 在混入音板剪辑之前过滤声音, 因此剪辑保持不变, 并且不会被噪音过滤器移除。 过滤器适用于任何使用的程序 。 **CABLE Output** 作为其麦克风,包括游戏和语音聊天应用程序; 设置用于直接使用物理麦克风的程序不会通过 DeckPilot.
+
+音频在本地处理 DeckPilot。它没有被记录或通过网络发送。 10 女士们, 48 kHz 单帧; 此帧大小不是一个端到端的间隔保证, 也取决于 Windows, 设备及 VB-CABLE。此更新不需要硬软件闪存。 本地的 RNnoise 组件由上面提到的自己的 BSD 类许可证覆盖 。
 
 <a id="soundboard-return-and-on-screen-sound-notifications-219"></a>
 ## Soundboard 返回和屏幕上的声音通知( E)2.1.9)

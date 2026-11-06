@@ -1,6 +1,6 @@
 > Dies ist eine automatische Übersetzung der vollständigen Release Notes. Das englische Original ist die Referenz.
 
-DeckPilot zeigt jetzt sein eigenes Logo in Windows anstelle des generischen Anwendungssymbols an.
+DeckPilot zeigt nun ein eigenes Logo in Windows anstelle des generischen Anwendungssymbols an.
 
 - Die ausführbare Anwendung bettet ein multi-auflösendes Windows-Symbol ein.16–256 px.
 - Der Installer und der Windows-Deinstallationseintrag verwenden das Projektlogo.
