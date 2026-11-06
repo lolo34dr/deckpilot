@@ -8,7 +8,10 @@ namespace DeckPilot.Windows;
 
 public partial class MainWindow
 {
-    private sealed record OverlayPositionChoice(string Name, ProfileOverlayPosition Position);
+    private sealed record OverlayPositionChoice(string Name, ProfileOverlayPosition Position)
+    {
+        public override string ToString() => Name;
+    }
     private ProfileOverlayWindow? profileOverlay;
 
     private void InitializeProfileOverlayPreferences()
