@@ -1,6 +1,6 @@
 > Dies ist eine automatische Übersetzung der vollständigen Release Notes. Das englische Original ist die Referenz.
 
-DeckPilot 2.1.2 und DeckPilot Atelier 1.0.11 fixe Werkstattsicherheit, Resonanzbodenzuverlässigkeit und tragbare Profilgeräusche
+DeckPilot 2.1.2 und DeckPilot Atelier 1.0.11 fixe Werkstattsicherheit, Resonanzbodenzuverlässigkeit und tragbare Profilgeräusche.
 
 - Atelier kann Leonardo / Caterina Boards vorbereiten, die noch nicht antworten DeckPilot Protokoll; Serienfehler hören immer noch auf zu blinken und der USB-Speicherort, der Bootloader und die MCU-Signatur bleiben verifiziert.
 - Jede Inspektion beginnt mit leeren Ergebnissen. Berichte behalten die getestete Platine und Firmware bei, und veraltete USB-Rückrufe können eine neue Sitzung nicht beeinflussen.
@@ -14,15 +14,15 @@ Validierung umfasst Kernregressionsüberprüfungen, Firmware-Protokolltests, Üb
 DeckPilot 2.1.1 Verbessert Installation und Updates:
 
 - Automatische Überprüfung für VB-CABLE bei der ersten Installation und Upgrades, und laden Sie den offiziell signierten Installateur herunter und starten Sie ihn, wenn der Fahrer fehlt.
-- Windows-Start, automatische Update-Checks und reduzierte Bewegungseinstellungen während der Einrichtung und Updates anzeigen, wobei vorhandene Optionen vorgewählt und erhalten bleiben.
+- Windows-Start, automatische Update-Checks und reduzierte Bewegungseinstellungen während der Einrichtung und Updates anzeigen, wobei vorhandene Optionen vorgewählt und beibehalten werden.
 - Behalten Sie das ausgewählte physische Mikrofon und fordern Sie die Mikrofoneinrichtung nur bei Bedarf an.
 - Fix Installer Initialisierung und Erkennung von vorhandenen Installationen.
 
-Download **DeckPilotSetup.exe** oder akzeptieren Sie das Update in DeckPilotWindows-Administratorgenehmigung erforderlich. Bestehende Profile und Kalibrierung bleiben erhalten. DeckPilot Atelier bleibt bei 1.0.10 Firmware bleibt bei 1.1.1Beide sind im Shared Release enthalten.
+Download **DeckPilotSetup.exe** oder akzeptieren Sie das Update in DeckPilot. Windows-Administratorgenehmigung erforderlich. Bestehende Profile und Kalibrierung bleiben erhalten. DeckPilot Atelier bleibt bei 1.0.10 Firmware bleibt bei 1.1.1Beide sind im Shared Release enthalten.
 
 Validierung: Kernüberprüfungen und Windows Build, Installer-Upgrade/Deinstallierung und native Anwendungstests laufen vor der Veröffentlichung. Das Verhalten der Audio-Hardware erfordert weiterhin Tests auf dem PC des Benutzers.
 
-DeckPilot 2.1.0 behält das tiefschwarze Interface und die anpassbaren Farben bei und leitet die Resonanzwand durch VB-Audio VB-CABLE Benutzer wählen nur ihr physisches mikrofon aus; der virtuelle wiedergabe-endpunkt ist behoben, so dass sprach- und mp3/wav-clips nicht versehentlich an lautsprecher gesendet werden können. DeckPilot Installateur kann das offizielle herunterladen VB-CABLE Paket, überprüfen Sie den Authenticode-Publisher und starten Sie das Treiber-Setup des Anbieters; das Paket wird nicht neu verteilt. CABLE Output Atelier bleibt in der Version 1.0.10.
+DeckPilot 2.1.0 behält das tiefschwarze Interface und die anpassbaren Farben bei und leitet den Resonanzboden durch VB-Audio VB-CABLE Benutzer wählen nur ihr physisches mikrofon aus; der virtuelle wiedergabe-endpunkt ist behoben, so dass sprach- und mp3/wav-clips nicht versehentlich an lautsprecher gesendet werden können. DeckPilot Installateur kann das offizielle herunterladen VB-CABLE Paket, überprüfen Sie den Authenticode-Publisher und starten Sie das Treiber-Setup des Anbieters; das Paket wird nicht neu verteilt. CABLE Output Atelier bleibt in der Version 1.0.10.
 
 DeckPilot 1.9.11 und DeckPilot Atelier 1.0.10 Hinzufügen von Pre-Flash-Hardware- und Firmware-Diagnose, eines Firmware-Versionsvergleichs, einer geführten Wiederherstellungsaktion nach unterbrochenem Schreiben, sequentiellen Multi-Board-Flashing mit einem Batch-Bericht und einer physikalischen Position-zu-F13-F24-Layout-Check in jedem Key-Control-Bericht.
 
@@ -40,7 +40,7 @@ DeckPilot 1.9.6 Behebt das Windows DPI-Manifest, das verhindert wurde DeckPilot 
 
 DeckPilot 1.9.5 enthält eine detaillierte Atelier-Startdiagnose im Windows-Release-Check.
 
-DeckPilot 1.9.4 verbessert den Atelier Windows-Startrauchtest, um Details zum Anwendungsabsturz zu melden.
+DeckPilot 1.9.4 verbessert den Atelier Windows-Startrauchtest, um Anwendungsabsturzdetails zu melden.
 
 DeckPilot 1.9.3 behebt die Atelier-Build-Metadaten, um das Firmware-Manifest aus dem gebündelten Firmware-Archiv zu lesen.
 
@@ -48,9 +48,9 @@ DeckPilot 1.9.2 Behebt den Schritt der Atelier-Release-Verpackung und verbessert
 
 DeckPilot 1.9.1 verbessert das Atelier Installer-Startup und fügt automatische App- und Firmware-Update-Checks hinzu.
 
-- Der Installer startet Atelier in der angemeldeten Windows-Benutzersitzung und stoppt/startet es sicher für Upgrades.
-- Atelier prüft GitHub beim Start und auf Abruf. Es kündigt neuere Atelier-Builds oder gebündelte Firmware an und lädt dann ein Installationsprogramm herunter, das mit dem veröffentlichten SHA-Test verifiziert wurde.256 Datei.
-- Firmware wird erst geblinkt, nachdem der Benutzer die Flash-Aktion ausgewählt hat; ein App-Update schreibt niemals selbst auf ein angeschlossenes Board.
+- Das Installationsprogramm startet Atelier in der angemeldeten Windows-Benutzersitzung und stoppt/startet es sicher für Upgrades.
+- Atelier prüft GitHub beim Start und auf Abruf. Es kündigt neuere Atelier-Builds oder gebündelte Firmware an und lädt dann ein Installationsprogramm herunter, das mit dem veröffentlichten SHA verifiziert wurde.256 Datei.
+- Firmware wird nur geblinkt, nachdem der Benutzer die Flash-Aktion ausgewählt hat; ein App-Update schreibt niemals selbst auf ein angeschlossenes Board.
 
 Das Atelier-Installationsprogramm wird auch in der angemeldeten Windows-Sitzung des Benutzers nach einer Neuinstallation gestartet. Der Release-Workflow öffnet nun die installierte App, überprüft dann das Upgrade und die Deinstallation, während sie ausgeführt wird.
 
@@ -58,19 +58,19 @@ DeckPilot 1.9.0 Zusätze DeckPilot Atelier, eine separate Windows-Workshop-App z
 
 - Installieren Sie die mitgelieferte Firmware auf Leonardo / Pro Micro ATmega32U4 Boards mit dem Caterina Bootloader.
 - Führen Sie geführte Kurz- und Langdruckprüfungen für jeden physischen Schlüssel aus, notieren Sie die F13-F24-Zuordnung und speichern Sie einen Qualitätskontrollbericht.
-- Download **DeckPilot-Atelier-Setup.exe** aus diesem Release. Das Original DeckPilot Setup und Firmware bleiben separat verfügbar.
+- Download **DeckPilot-Atelier-Setup.exe** aus dieser Veröffentlichung. Das Original DeckPilot Setup und Firmware bleiben separat verfügbar.
 
 DeckPilot 1.8.0 fügt einen aktualisierten Arbeitsbereich und schnellere Möglichkeiten zum Erstellen und Verwenden Ihrer Profile hinzu.
 
-- Klarere Holzkohle/Tee-Schnittstelle, Aktionsbibliothek zuerst, knackig 3 × 4 Tasten, Akzentfarben und Reduzierte Bewegungspräferenz.
+- Klarere Holzkohle/Tee-Schnittstelle, Aktionsbibliothek zuerst, knackig 3 × 4 Tasten, Akzentfarben und Präferenz mit reduzierter Bewegung.
 - Drei editierbare Profilvorlagen: Musik und Audio, Desktop und Produktivität und Erstellung.
 - Profilaktionen: Wechseln Sie von einem Schlüssel zu einem benannten Profil, dem nächsten oder dem vorherigen Profil. Importierte Profilsätze behalten ihre internen Links bei.
 - Windows-Aktionen: Öffnen Sie allgemeine Einstellungen oder Task-Manager oder sperren Sie den PC explizit.
 - Kopieren / Schneiden / Einfügen / Zurücksetzen ganzer Tasten, einschließlich langer Drücke und Farben, mit Undo / Redo und einer App-lokalen Zwischenablage.
 - Erfassen Sie eine Tastenkombination direkt; Escape bricht ab und Makropad-Tasten bleiben während der Aufnahme reserviert.
-- Ctrl+K-Action-Suche und eine übersichtliche, Session-only-Historie der letzten 30 Aktionen.
+- Ctrl+K-Action-Suche und eine überprüfbare, Session-only-Historie der letzten 30 Aktionen.
 - Beheben Sie die automatische Firmware-Eingabeaufforderung, so dass sie den Firmware-Manager öffnet. Ausstehende Gesten werden bei Profiländerungen abgebrochen.
 
 Download **DeckPilotSetup.exe** oder Update aus der App. Bestehende Profile, Kalibrierungs- und Startpräferenzen bleiben erhalten. Firmware bleibt erhalten **1.1.1**Für diese Features ist kein Flash erforderlich.
 
-Die Validierung umfasst Kernkompatibilität / Navigation / Import / Template-Prüfungen und native Windows-Installation, Update, Picker, Drag-and-Drop, Undo / Redo, Template-Erstellung, Profilaktionen, Shortcut-Erfassung, Clipboard-Bearbeitung, Layout und Minimierung / Wiederherstellung von Prüfungen. Das Verhalten von Macropads und Audiogeräten hängt immer noch von der Windows-Hardware des Besitzers ab.
+Die Validierung umfasst Kernkompatibilität / Navigation / Import / Template-Prüfungen und native Windows-Installation, Update, Picker, Drag-and-Drop, Rückgängigmachen / Redo, Template-Erstellung, Profilaktionen, Shortcut-Erfassung, Clipboard-Bearbeitung, Layout und Minimierung / Wiederherstellung von Prüfungen. Das Verhalten von Macropads und Audiogeräten hängt immer noch von der Windows-Hardware des Besitzers ab.
