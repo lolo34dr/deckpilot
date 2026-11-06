@@ -10,7 +10,7 @@
  <Grid Margin="24">
   <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
   <StackPanel><TextBlock Text="Vos applications" FontSize="23" FontWeight="SemiBold"/><TextBlock Text="Cherchez un nom, sans retrouver son fichier .exe." Foreground="{StaticResource MutedBrush}" Margin="0,7,0,16"/></StackPanel>
-  <TextBox x:Name="SearchBox" Grid.Row="1" TextChanged="SearchChanged" AutomationProperties.Name="Rechercher une application" ToolTip="Rechercher une application"/>
+  <TextBox x:Name="SearchBox" Grid.Row="1" TextChanged="SearchChanged" AutomationProperties.AutomationId="ApplicationSearchBox" AutomationProperties.Name="Rechercher une application" ToolTip="Rechercher une application"/>
   <ListBox x:Name="AppList" AutomationProperties.AutomationId="InstalledApplications" Grid.Row="2" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="SelectionChanged" MouseDoubleClick="AppDoubleClick" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
    <ListBox.ItemTemplate><DataTemplate>
     <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="44"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>

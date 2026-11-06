@@ -78,6 +78,8 @@
           <TextBlock Grid.Column="2" Text="›" FontSize="22" Foreground="#B7B5C1" VerticalAlignment="Center" Margin="10,0,0,0"/>
          </Grid>
         </Button>
+        <Button x:Name="ChooseDeckPilotButton" AutomationProperties.AutomationId="ChooseDeckPilotButton" Content="Affecter « Ouvrir DeckPilot »" Click="ChooseDeckPilotClick"
+                HorizontalAlignment="Left" FontSize="11" ToolTip="Affiche la fenêtre DeckPilot déjà active en arrière-plan."/>
        </StackPanel>
        <Expander x:Name="AdvancedOptionsExpander" Foreground="#B1B0BA" Header="Options avancées" Margin="0,0,0,10" IsExpanded="False" AutomationProperties.AutomationId="AdvancedOptionsExpander">
        <StackPanel>
@@ -198,6 +200,20 @@
       <TextBlock Text="Accent · #RRGGBB" Foreground="{StaticResource MutedBrush}"/><TextBox x:Name="ThemeAccentInput" MaxLength="7"/>
       <Button Content="Appliquer le thème" Click="ApplyThemeClick" HorizontalAlignment="Left"/>
       <CheckBox x:Name="ReduceMotionCheck" Content="Réduire les animations" Checked="ReduceMotionChanged" Unchecked="ReduceMotionChanged"/>
+      <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,8,0,12"/>
+      <TextBlock Text="Notification de changement de profil" FontWeight="SemiBold" Margin="0,0,0,4"/>
+      <CheckBox x:Name="ProfileOverlayEnabledCheck" Content="Afficher le profil à l’écran"/>
+      <TextBlock Text="Emplacement" Foreground="{StaticResource MutedBrush}"/>
+      <ComboBox x:Name="ProfileOverlayPositionPicker" DisplayMemberPath="Name" SelectionChanged="ProfileOverlayPositionChanged"
+                AutomationProperties.Name="Emplacement de la notification"/>
+      <StackPanel x:Name="ProfileOverlayCustomPanel" Visibility="Collapsed">
+       <DockPanel><TextBlock Text="Horizontal" Foreground="{StaticResource MutedBrush}"/><TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" Foreground="{StaticResource MutedBrush}" Text="{Binding ElementName=ProfileOverlayXSlider, Path=Value, StringFormat={}{0:0.0} %}"/></DockPanel>
+       <Slider x:Name="ProfileOverlayXSlider" Minimum="0" Maximum="100" SmallChange="0.1" LargeChange="1" TickFrequency="0.1" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft" AutomationProperties.Name="Position horizontale de la notification en pourcentage"/>
+       <DockPanel Margin="0,8,0,0"><TextBlock Text="Vertical" Foreground="{StaticResource MutedBrush}"/><TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" Foreground="{StaticResource MutedBrush}" Text="{Binding ElementName=ProfileOverlayYSlider, Path=Value, StringFormat={}{0:0.0} %}"/></DockPanel>
+       <Slider x:Name="ProfileOverlayYSlider" Minimum="0" Maximum="100" SmallChange="0.1" LargeChange="1" TickFrequency="0.1" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft" AutomationProperties.Name="Position verticale de la notification en pourcentage"/>
+      </StackPanel>
+      <Button x:Name="ProfileOverlayPreviewButton" AutomationProperties.AutomationId="ProfileOverlayPreviewButton" Content="Enregistrer et prévisualiser" Click="SaveProfileOverlayClick" HorizontalAlignment="Left" Margin="0,6,0,6"/>
+      <TextBlock x:Name="ProfileOverlayHint" Text="La notification s’affiche sur l’écran utilisé, y compris sur les jeux en fenêtre ou sans bordure. Le plein écran exclusif peut la masquer." Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,8"/>
       <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,8,0,12"/>
       <TextBlock Text="Mises à jour" FontWeight="SemiBold" Margin="0,0,0,6"/>
       <CheckBox x:Name="AutoUpdateCheck" Content="Rechercher automatiquement" Click="AutoUpdateClick"/>

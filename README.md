@@ -103,6 +103,8 @@ The single-file executable extracts its bundled dependencies into the user's .NE
 | Website | Opens an HTTP or HTTPS address in your default browser. |
 | Keyboard shortcut | Sends a key combination to the active window. |
 | Media | Controls playback, tracks, volume, or mute. |
+| Spotify | Controls Spotify playback and adjusts only Spotify's Windows audio-session volume. |
+| Application — DeckPilot | Shows the existing DeckPilot window, including when it is running in the notification area. |
 
 For application actions, open the application picker and search by name. The manual file selector remains available, with optional program arguments under advanced options. Enter arguments according to the target application's syntax.
 
@@ -294,7 +296,7 @@ For manual Arduino IDE uploads, **quit DeckPilot from its tray menu** to free th
 
 ## Spotify, action search and drag-and-drop (1.5.0)
 
-**Spotify** is separate from **Multimédia**. Its play/pause, next and previous commands address the Spotify desktop app's Windows media session, even while a browser is playing YouTube. Spotify must be open and have an available playback session; start a track once if necessary. Spotify in a browser is not supported. Missing or refusing Spotify sessions produce an error, with no fallback to global media keys or another player. No Spotify account authorization, Premium subscription or stored token is needed by DeckPilot. Windows 10 version 2004 or later, or Windows 11, is required by this build.
+**Spotify** is separate from **Multimédia**. Its play/pause, next and previous commands address the Spotify desktop app's Windows media session, even while a browser is playing YouTube. Spotify volume +/− adjusts Spotify's Windows audio session in 5% steps, leaving the master volume and other players unchanged. Spotify must be open and have an available playback session; start a track once if necessary. Spotify in a browser is not supported. Missing Spotify sessions produce an error, with no fallback to global media keys or another player. No Spotify account authorization, Premium subscription or stored token is needed by DeckPilot. Windows 10 version 2004 or later, or Windows 11, is required by this build.
 
 Use **Rechercher une action ou une application** for queries such as `volume`, `skip`, `Spotify` or an installed app's name. The installed-app index loads on the first search and is cached for five minutes; manual file selection remains available. Click a result to configure the selected key or drag it onto another key.
 
@@ -356,6 +358,12 @@ The charcoal interface puts the action library first, separates profile controls
 - **Quick access:** Ctrl+K or the Library button focuses action search. **Activité récente** keeps the last 30 dispatched/failed actions in memory for this session, without storing program arguments or target paths. It can be cleared at any time. A successful dispatch does not guarantee completion in the target app.
 
 The firmware remains **1.1.1**. Accepting an automatic firmware offer now correctly opens the firmware manager; the previous modal guard prevented that handoff. Existing firmware identity, heartbeat, reconnect and flash checks remain in place. New workspace features do not need a firmware flash.
+
+## Open DeckPilot and profile notifications (2.1.7)
+
+Under **Ouvrir une application**, choose the built-in **DeckPilot** entry or click **Affecter « Ouvrir DeckPilot »**. This action brings the existing DeckPilot window to the front; its target stays valid after an app update or reinstall. It is also available in action search.
+
+Changing profiles shows a brief, click-through notification with the active profile name. In **Préférences de l’application**, you can disable it, choose any corner, or set a custom horizontal and vertical position. **Enregistrer et prévisualiser** shows the result immediately. The notification follows the screen containing the foreground app and also appears while DeckPilot is hidden. It can appear over borderless/windowed games; exclusive full-screen games may cover normal Windows overlays.
 
 ## DeckPilot 2.1.0: fixed signed virtual microphone routing
 

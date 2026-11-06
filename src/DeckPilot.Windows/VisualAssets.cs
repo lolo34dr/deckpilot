@@ -50,8 +50,15 @@ public static class VectorIcons
 public static class ApplicationIcons
 {
     private static readonly Dictionary<string, ImageSource> Cache = new(StringComparer.OrdinalIgnoreCase);
+    private static readonly Lazy<ImageSource> DeckPilotIcon = new(() =>
+    {
+        var logo = new BitmapImage(new Uri("pack://application:,,,/Assets/DeckPilot.png"));
+        logo.Freeze();
+        return logo;
+    });
     public static ImageSource ForTarget(string target)
     {
+        if (ApplicationTarget.IsDeckPilot(target)) return DeckPilotIcon.Value;
         if (string.IsNullOrWhiteSpace(target) || ApplicationTarget.IsPackaged(target) || !File.Exists(target)) return VectorIcons.ForKind(ActionKind.Application);
         if (Cache.TryGetValue(target, out var cached)) return cached;
         var info = new ShellFileInfo();

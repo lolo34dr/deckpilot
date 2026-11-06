@@ -28,10 +28,28 @@ public static class ActionToolsChecks
         bool cancelled = false;
         try { await SpotifyPlayback.SendAsync([spotify], 0xB0, cancellation.Token); } catch (OperationCanceledException) { cancelled = true; }
         Check(invalid && cancelled && spotify.Commands.Count == 3, "Unsupported Spotify commands and cancellation cannot send a media command");
+        var spotifyVolume = new VolumeSession("Spotify", true, .50f);
+        var spotifyIdle = new VolumeSession("SpotifyAB.SpotifyMusic_123", false, .30f);
+        var youtubeVolume = new VolumeSession("chrome", true, .80f);
+        Check(SpotifyVolume.Adjust([spotifyVolume, spotifyIdle, youtubeVolume], 0xAF) == 1
+            && Math.Abs(spotifyVolume.Volume - .55f) < .001f && Math.Abs(spotifyIdle.Volume - .30f) < .001f && Math.Abs(youtubeVolume.Volume - .80f) < .001f,
+            "Spotify volume changes only its active Windows audio session, never the browser or master volume");
+        Check(SpotifyVolume.Adjust([spotifyIdle], 0xAE) == 1 && Math.Abs(spotifyIdle.Volume - .25f) < .001f,
+            "Spotify volume remains adjustable from its inactive session when playback is paused");
+        var minimum = new VolumeSession("Spotify.exe", false, 0f);
+        var maximum = new VolumeSession("Spotify", true, 1f);
+        SpotifyVolume.Adjust([minimum], 0xAE); SpotifyVolume.Adjust([maximum], 0xAF);
+        bool missingSpotifyVolume = false, invalidVolumeKey = false;
+        try { SpotifyVolume.Adjust([youtubeVolume], 0xAF); } catch (InvalidOperationException) { missingSpotifyVolume = true; }
+        try { SpotifyVolume.Adjust([spotifyVolume], 0xB3); } catch (ArgumentException) { invalidVolumeKey = true; }
+        Check(minimum.Volume == 0f && maximum.Volume == 1f && missingSpotifyVolume && invalidVolumeKey
+            && youtubeVolume.Volume == .80f && SpotifyVolume.IsSpotifyProcess("SpotifyAB.SpotifyMusic") && !SpotifyVolume.IsSpotifyProcess("chrome"),
+            "Spotify volume clamps safely and never falls back to global media volume");
         var volume = ActionSearch.Find("volume", []);
         var apps = new[] { new InstalledApplication("Discord", @"C:\Apps\Discord.lnk", "Menu"), new InstalledApplication("Éditeur", @"C:\Apps\edit.exe", "Menu") };
         var discord = ActionSearch.Find("DISCORD", apps);
         Check(volume.Where(p => p.Action.Kind == ActionKind.Media).Select(p => p.Action.Key).Order().SequenceEqual(new[] { 0xAD, 0xAE, 0xAF })
+            && volume.Where(p => p.Action.Kind == ActionKind.Spotify).Select(p => p.Action.Key).Order().SequenceEqual(new[] { 0xAE, 0xAF })
             && volume.Any(p => p.Action.Kind == ActionKind.System && p.Action.Target == "sound-settings") && discord.Single().Action.Target == apps[0].Target
             && ActionSearch.Find("editeur", apps).Single().Action.ApplicationName == "Éditeur", "Action search finds volume presets and installed applications regardless of case or accents");
         var next = ActionSearch.Find("skip", []).Where(p => p.Action.Kind == ActionKind.Spotify).Single();
@@ -54,5 +72,12 @@ public static class ActionToolsChecks
         public bool Accept { get; init; } = true;
         public List<int> Commands { get; } = [];
         public Task<bool> SendAsync(int key, CancellationToken cancellation) { cancellation.ThrowIfCancellationRequested(); Commands.Add(key); return Task.FromResult(Accept); }
+    }
+    private sealed class VolumeSession(string processName, bool isActive, float volume) : ISpotifyVolumeSession
+    {
+        public string ProcessName => processName;
+        public bool IsActive => isActive;
+        public float Volume { get; private set; } = volume;
+        public void SetVolume(float value) => Volume = value;
     }
 }

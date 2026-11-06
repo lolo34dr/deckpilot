@@ -93,7 +93,7 @@ public partial class MainWindow : Window
         keys.AddRange(new Choice[] { new("Entrée", 0x0D), new("Échap", 0x1B), new("Espace", 0x20), new("Tabulation", 0x09), new("Retour arrière", 0x08), new("Page précédente", 0x21), new("Page suivante", 0x22), new("Fin", 0x23), new("Début", 0x24), new("Gauche", 0x25), new("Haut", 0x26), new("Droite", 0x27), new("Bas", 0x28), new("Insérer", 0x2D), new("Supprimer", 0x2E) });
         ShortcutPicker.ItemsSource = keys;
         MediaPicker.ItemsSource = new Choice[] { new("Lecture / pause", 0xB3), new("Piste suivante", 0xB0), new("Piste précédente", 0xB1), new("Volume +", 0xAF), new("Volume −", 0xAE), new("Muet", 0xAD) };
-        SpotifyPicker.ItemsSource = new Choice[] { new("Lecture / pause", 0xB3), new("Piste suivante", 0xB0), new("Piste précédente", 0xB1) };
+        SpotifyPicker.ItemsSource = new Choice[] { new("Lecture / pause", 0xB3), new("Piste suivante", 0xB0), new("Piste précédente", 0xB1), new("Volume Spotify + (5 %)", 0xAF), new("Volume Spotify − (5 %)", 0xAE) };
         BuildGrid();
         InitializeWorkspaceFeatures();
         InitializeActionTools();
@@ -119,7 +119,7 @@ public partial class MainWindow : Window
         CreateTray();
         feedbackTimer.Tick += (_, _) => RefreshFeedback();
         Closing += WindowClosing;
-        Closed += (_, _) => { firmwareTimer.Stop(); boardConnection?.Dispose(); feedbackTimer.Stop(); updateTimer.Stop(); lifetime.Cancel(); updateService.Dispose(); soundboard?.Dispose(); hook?.Dispose(); tray?.Dispose(); trayIcon?.Dispose(); };
+        Closed += (_, _) => { profileOverlay?.Close(); firmwareTimer.Stop(); boardConnection?.Dispose(); feedbackTimer.Stop(); updateTimer.Stop(); lifetime.Cancel(); updateService.Dispose(); soundboard?.Dispose(); hook?.Dispose(); tray?.Dispose(); trayIcon?.Dispose(); };
         loading = false;
         UpdateHistoryState();
         StatusText.Text = "Prêt · Choisissez un bouton pour le personnaliser.";
@@ -374,7 +374,7 @@ public partial class MainWindow : Window
             ActionKind.Soundboard => "Joue ou arrête le son sélectionné dans le micro virtuel. Ajoute d’abord un MP3/WAV dans le panneau Soundboard.",
             ActionKind.Microphone => "Coupe ou réactive tous les microphones Windows actifs. L’état est affiché dans la carte Audio Windows.",
             ActionKind.AudioOutput => "Alterne entre deux sorties par défaut Windows. Les applications réglées sur une sortie fixe peuvent ne pas suivre ce changement.",
-            ActionKind.Spotify => "Contrôle uniquement Spotify pour Windows, même si YouTube est actif. Ouvrez Spotify et lancez une lecture. Le lecteur Spotify dans un navigateur n’est pas pris en charge.",
+            ActionKind.Spotify => "Les commandes de lecture ciblent Spotify pour Windows. Volume +/− règle uniquement sa session audio Windows par pas de 5 %, sans modifier YouTube, un jeu ou le volume général. Lancez une lecture Spotify pour créer sa session audio ; le lecteur Spotify dans un navigateur n’est pas pris en charge.",
             ActionKind.Profile => "Change de profil avec cette touche. Choisissez un profil précis, le suivant ou le précédent. Le calibrage reste commun.",
             ActionKind.System => "Ouvre un réglage ou un outil Windows. Le verrouillage protège l’accès à votre session sans arrêter vos applications.",
             _ => "Contrôles multimédias généraux de Windows : peuvent agir sur YouTube ou un autre lecteur actif."
@@ -512,7 +512,12 @@ public partial class MainWindow : Window
                 Audio.Toggle(clip.Id, clip.FilePath);
             }
             else if (action.Kind == ActionKind.Spotify)
-                await SpotifyController.RunAsync(action.Key, lifetime.Token);
+            {
+                if (action.Key is 0xAF or 0xAE) await SpotifyVolumeController.RunAsync(action.Key, lifetime.Token);
+                else await SpotifyController.RunAsync(action.Key, lifetime.Token);
+            }
+            else if (action.Kind == ActionKind.Application && ApplicationTarget.IsDeckPilot(action.Target))
+                ShowMain();
             else if (action.Kind is ActionKind.Application or ActionKind.Folder or ActionKind.Website or ActionKind.System)
                 await Task.Run(() => ActionRunner.Run(action));
             else ActionRunner.Run(action);
@@ -637,6 +642,13 @@ public partial class MainWindow : Window
         if (string.IsNullOrWhiteSpace(LabelEditor.Text)) LabelEditor.Text = app.Name[..Math.Min(50, app.Name.Length)];
         UpdateApplicationSummary(); SaveEditor();
     }
+    private void ChooseDeckPilotClick(object sender, RoutedEventArgs e)
+    {
+        TargetEditor.Text = ApplicationTarget.DeckPilot;
+        pickedApplicationName = "DeckPilot";
+        if (string.IsNullOrWhiteSpace(LabelEditor.Text)) LabelEditor.Text = "Ouvrir DeckPilot";
+        UpdateApplicationSummary(); SaveEditor();
+    }
     private void TargetChanged(object sender, TextChangedEventArgs e)
     {
         if (loading) return;
@@ -646,14 +658,15 @@ public partial class MainWindow : Window
     {
         string target = TargetEditor.Text.Trim();
         SelectedApplicationName.Text = !string.IsNullOrWhiteSpace(pickedApplicationName) ? pickedApplicationName :
-            target.Length == 0 ? "Parcourir les applications installées" : ApplicationTarget.IsPackaged(target) ? "Application Windows sélectionnée" : Path.GetFileNameWithoutExtension(target);
+            target.Length == 0 ? "Parcourir les applications installées" : ApplicationTarget.IsDeckPilot(target) ? "DeckPilot · cette application" : ApplicationTarget.IsPackaged(target) ? "Application Windows sélectionnée" : Path.GetFileNameWithoutExtension(target);
         SelectedApplicationIcon.Source = ApplicationIcons.ForTarget(target);
+        bool builtIn = ActionPicker.SelectedIndex == (int)ActionKind.Application && ApplicationTarget.IsDeckPilot(target);
         bool packaged = ActionPicker.SelectedIndex == (int)ActionKind.Application && ApplicationTarget.IsPackaged(target);
-        TargetEditor.Visibility = packaged ? Visibility.Collapsed : Visibility.Visible;
+        TargetEditor.Visibility = packaged || builtIn ? Visibility.Collapsed : Visibility.Visible;
         if (ActionPicker.SelectedIndex == (int)ActionKind.Application)
         {
-            ArgumentsPanel.Visibility = packaged ? Visibility.Collapsed : Visibility.Visible;
-            TargetLabel.Text = packaged ? "Remplacer par un fichier" : "Chemin du programme";
+            ArgumentsPanel.Visibility = packaged || builtIn ? Visibility.Collapsed : Visibility.Visible;
+            TargetLabel.Text = packaged || builtIn ? "Remplacer par un fichier" : "Chemin du programme";
         }
     }
     private void RefreshTrayProfiles()
