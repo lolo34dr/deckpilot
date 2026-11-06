@@ -110,6 +110,8 @@ O executável de arquivo único extrai suas dependências empacotadas no cache .
 | Sítio Web | Abre um endereço HTTP ou HTTPS em seu navegador padrão. |
 | Atalho do teclado | Envia uma combinação de teclas para a janela activa. |
 | Mídia | Controla a reprodução, faixas, volume ou mudo. |
+| Spotify | Controles Spotify playback e ajusta apenas o volume de sessão de áudio do Spotify no Windows. |
+| Aplicação — DeckPilot | Mostra o existente DeckPilot janela, incluindo quando estiver em execução na área de notificação. |
 
 Para as ações do aplicativo, abra o seletor de aplicativos e pesquise pelo nome. O seletor de arquivos manual permanece disponível, com argumentos de programa opcionais sob opções avançadas. Digite os argumentos de acordo com a sintaxe do aplicativo alvo.
 
@@ -240,7 +242,7 @@ Para Windows ARM64, publicar separadamente com `-r win-arm64` e validar na máqu
 
 Com o Leonardo ligado:
 
-- Calibrar tudo 12 posições em uma ordem arbitrária F13-F24. Confirme que as chaves duplicadas são rejeitadas e cancelar preserva o mapeamento anterior.
+- Calibrar tudo 12 posições em uma ordem arbitrária F13–F24. Confirmar que as chaves duplicadas são rejeitadas e cancelar preserva o mapeamento anterior.
 - Atribua uma chave livre em um jogo e verifique se o jogo recebe normalmente.
 - Inicie um programa configurado e, em seguida, segure o botão: ele deve lançar uma vez até a liberação. Inclua caminhos contendo espaços e argumentos opcionais.
 - Teste uma pasta, um site, um atalho em uma aplicação comum e controles de mídia.
@@ -320,9 +322,9 @@ Para uploads manuais do Arduino IDE, **sair DeckPilot a partir do menu da bandej
 <a id="spotify-action-search-and-drag-and-drop-150"></a>
 ## Spotify, pesquisa de ação e arrastar- e- soltar (1.5.0)
 
-**Spotify** é separado de **Multimédia**. Seus comandos de reprodução/pausa, próximo e anterior, endereçam-se à sessão de mídia do aplicativo do Spotify no Windows, mesmo enquanto um navegador estiver reproduzindo o YouTube. O Spotify deve estar aberto e ter uma sessão de reprodução disponível; inicie uma faixa uma vez, se necessário. O Spotify em um navegador não é suportado. Faltando ou recusando as sessões do Spotify produzem um erro, sem retorno às teclas de mídia globais ou outro player. Nenhuma autorização da conta do Spotify, assinatura Premium ou token armazenado é necessário DeckPilot. Windows 10 versão 2004 ou mais tarde, ou Windows 11, é exigido por esta construção.
+**Spotify** é separado de **Multimédia**. Seu play/pause, próximo e comandos anteriores endereço da sessão de mídia do aplicativo do Spotify desktop Windows, mesmo enquanto um navegador está jogando YouTube. Spotify volume + / − ajusta sessão de áudio do Spotify Windows em 5% etapas, deixando o volume mestre e outros jogadores inalterados. O Spotify deve estar aberto e ter uma sessão de reprodução disponível; inicie uma faixa uma vez, se necessário. O Spotify em um navegador não é suportado. As sessões do Spotify em falta produzem um erro, sem retorno às teclas de mídia globais ou outro player. Nenhuma autorização da conta do Spotify, assinatura Premium ou token armazenado é necessária DeckPilot. Windows 10 versão 2004 ou mais tarde, ou Windows 11, é exigido por esta construção.
 
-Utilização **Rechercher une action ou une application** para consultas como `volume`, `skip`, `Spotify` ou o nome de uma aplicação instalada. O índice de aplicações instaladas carrega na primeira pesquisa e é guardado em 'cache' durante cinco minutos; a selecção manual de ficheiros permanece disponível. Carregue num resultado para configurar a chave seleccionada ou arraste- a para outra tecla.
+Utilização **Rechercher une action ou une application** para consultas como `volume`, `skip`, `Spotify` ou o nome de uma aplicação instalada. O índice de aplicações instaladas carrega na primeira pesquisa e fica em 'cache' durante cinco minutos; a selecção manual de ficheiros permanece disponível. Carregue num resultado para configurar a chave seleccionada ou arraste- a para outra tecla.
 
 Arraste uma acção do catálogo ou dos resultados da pesquisa para uma chave para a atribuir. Arraste uma chave configurada para outra para **trocar as suas acções**; a calibração física permanece inalterada. Você também pode soltar um `.exe`, `.lnk`, `.appref-ms`, pasta ou URL HTTP( S) em uma chave. Soltar apenas configura a chave e nunca executa a ação. Complete qualquer configuração em falta no editor.
 
@@ -331,7 +333,7 @@ A inicialização do Windows agora mantém uma preferência explícita por usuá
 <a id="sharp-keypad-rendering-profile-recovery-and-audio-controls-161"></a>
 ## renderização de teclado afiado, recuperação de perfil e controles de áudio (1.6.1)
 
-O teclado agora renderiza em tamanhos WPF nativos em vez de escalar texto através de uma Viewbox. Efeitos de sombra pai/chave e animações de escala de texto foram removidos; janelas menores rolagem em vez de encolhendo o teclado. O aplicativo declara consciência de DPI por monitor e usa ícones de shell maiores do Windows para aplicativos de desktop.
+O teclado agora renderiza em tamanhos WPF nativos em vez de escalar texto através de uma Viewbox. Efeitos de sombra pai/chave e animações de escala de texto foram removidos; menores janelas rolar em vez de diminuir o teclado. O aplicativo declara consciência de DPI por monitor e usa ícones de shell maiores do Windows para aplicativos de desktop.
 
 **Annuler / Rétablir** restaura edições de perfil, incluindo trocas de arrastar e soltar, configurações de ação, importações e criação/deleção de perfil. 50 edits during the app session. Ctrl+Z / Ctrl+Y opera em perfis fora dos campos de texto; os campos de texto mantêm sua própria desfazer/refazer. Calibração, preferências de inicialização e ações executadas não são desfeitas.
 
@@ -339,7 +341,7 @@ Embaixo **Gérer les profils**, exportar o perfil atual ou todos os perfis como 
 
 Antes de salvar perfis alterados, DeckPilot mantém os perfis anteriores em `%APPDATA%\DeckPilot\Backups` (20 versões, deduplicadas pelo conteúdo). As poupanças apenas de preferência não criam cópias de segurança de perfil. Uma falha de backup impede a substituição das configurações atuais. A restauração substitui os perfis após a confirmação e pode ser desfeita; a calibração permanece inalterada.
 
-**Microphone Windows** comuta o estado mudo em todos os parâmetros de captura do Windows atualmente ativos. A barra de estado persistente e o cartão do Audio Windows mostram estado ativo/mutilado/indisponível, atualizado a cada dois segundos e após os comandos de aplicativos. Uma atualização de vários pontos falhou para restaurar estados mudos anteriores. Estes indicadores descrevem o estado de terminal do Windows, não um switch de hardware ou o próprio botão mudo de uma aplicação.
+**Microphone Windows** comuta o estado mudo em todos os parâmetros de captura do Windows atualmente ativos. A barra de estado persistente e o cartão do Audio Windows mostram estado ativo/mutilado/indisponível, atualizado a cada dois segundos e após os comandos da aplicação. Uma atualização de vários pontos falhou nas tentativas de restaurar estados mudos anteriores. Estes indicadores descrevem o estado do terminal do Windows, não um switch de hardware ou o próprio botão mudo de uma aplicação.
 
 **Changer de sortie audio** alterna entre dois dispositivos de saída selecionados e conectados, para os padrões de console, multimídia e comunicações do Windows. Um alvo ausente dá um erro sem escolher outro dispositivo. Os aplicativos com seu próprio resultado fixo podem não seguir o padrão do Windows. IDs de endpoint importados são mostrados como indisponíveis até serem adaptados ao PC atual. Mudanças de roteamento falhadas tentam restaurar os padrões anteriores.
 
@@ -369,7 +371,7 @@ A gravação de configurações idênticas verifica o arquivo atual, mas ignora 
 
 Pesquisar e escolher compartilhar um imutável catálogo de aplicativos instalados por cinco minutos (15 segundos para um resultado parcial). Os consumidores simultâneos partilham uma pesquisa; fechar um captador não cancela outro consumidor. Actualizar ignora a 'cache', e cada captador tem o seu próprio filtro/visualização. A digitalização e a análise do catálogo são executadas fora do tópico UI; a filtragem do captador é deduzida por 120 ms. A pesquisa de ação verifica novamente este cache após sua defloração e ao retornar do catador, então um catálogo atualizado também está disponível lá.
 
-Atualizações de interface de bordo agora seguir notificações de conexão em vez de acordar cada 100 ms. As notificações de desconexão ordenadas ainda cancelam as esperas pendentes. Os ganchos do teclado fazem filas de trabalho visual, enquanto a supressão e o timing do gesto permanecem síncronos. As janelas ocultas/minimizadas param as animações de feedback e usam um intervalo de sondagem de áudio de dez segundos em vez de dois segundos; reabrindo ou emitindo um comando de áudio solicitam um estado fresco imediatamente. As atualizações de áudio pendentes partilham um ciclo e incluem as solicitações que chegam durante uma leitura existente. Os instantâneos de áudio inalterados e pincéis congelados evitam a atribuição de UI repetidas. Os invólucros de processo devolvidos ao lançar uma aplicação são eliminados sem fechar o programa lançado.
+Atualizações de interface de bordo agora seguir notificações de conexão em vez de acordar cada 100 ms. As notificações de desconexão ordenadas ainda cancelam as esperas pendentes. Os ganchos de teclado fazem filas de trabalho visual, enquanto a supressão e o timing do gesto permanecem síncronos. As janelas ocultas/minimizadas param as animações de feedback e usam um intervalo de votação de áudio de dez segundos em vez de dois segundos; reabrindo ou emitindo um comando de áudio solicitam um estado fresco imediatamente. As atualizações de áudio pendentes partilham um ciclo e incluem as solicitações que chegam durante uma leitura existente. Os instantâneos de áudio inalterados e pincéis congelados evitam a atribuição de UI repetidas. Os invólucros de processo devolvidos ao lançar uma aplicação são eliminados sem fechar o programa lançado.
 
 Essas mudanças reduzem o trabalho especificado; elas não estabelecem uma porcentagem de CPU/RAM independente de máquina. A mudança de áudio de hardware nativo e o comportamento da chave física ainda requerem validação em um PC Windows com o macropad.
 
@@ -379,13 +381,20 @@ Essas mudanças reduzem o trabalho especificado; elas não estabelecem uma porce
 A interface carvão coloca a biblioteca de ação em primeiro lugar, separa controles de perfil do tamanho nativo nítido 3 × 4 teclado e configurações de ação de grupos em um cartão. Acentos de teclas distinguem suas próprias categorias; seleção, foco do teclado e feedback de ação permanecem separados. **Réduire les animations** nas preferências completa a configuração de animação do Windows. Janelas menores retêm o acesso de rolagem em vez de encolher o texto da chave.
 
 - **Modelos de perfil:** em baixo **Gérer les profils**, adicione Música e áudio, Desktop e produtividade, ou Criação. Cada modelo cria um perfil editável separado e nunca executa suas ações. Perfis existentes e calibração física são retidos. Os atalhos do teclado usam a aplicação ativa, cujas ligações podem diferir.
-- **Chaves de perfil:** atribuir **Changer de profil**, então selecione um perfil nomeado ou ciclo para frente/para trás. As referências entre perfis são remapeadas ao importar um conjunto ou duplicar um perfil de autorreferência. Um destino em falta reporta um erro e pode ser substituído no editor.
+- **Chaves de perfil:** atribuir **Changer de profil**, então selecione um perfil chamado ou ciclo para frente/para trás. As referências entre perfis são remapeadas ao importar um conjunto ou duplicar um perfil de autorreferência. Um destino em falta reporta um erro e pode ser substituído no editor.
 - **Comandos do Windows:** Utilização **Commandes Windows** para abrir configurações comuns ou Gerenciador de tarefas, ou explicitamente bloquear o PC. Os comandos vêm de uma lista fixa, sem script para entrar. A ação de bloqueio requer a assinatura de volta no Windows.
 - **Área de transferência de teclas completa:** Carregue com o botão direito numa tecla para a copiar, cortar, colar ou redefinir, incluindo a acção longa e o acento. Ctrl+C/X/V e Apagar o trabalho enquanto uma tecla do baralho tem a focagem do teclado; os campos de texto normais mantêm os seus atalhos de edição. A área de transferência da tecla fica dentro DeckPilot e está limpo ao sair. Estas edições suportam desfazer/refazer.
 - **Gravador de atalhos:** selecione uma ação do teclado e clique **Enregistrer un raccourci**. Pressione uma combinação suportada, em seguida, salvá-lo. Escape cancela; F13-F24 é reservado para o macropad durante a gravação. Combinações reservadas ao Windows ainda pode exigir os controles manuais.
 - **Acesso rápido:** Ctrl+K ou o botão Biblioteca foca a pesquisa de ação. **Activité récente** mantém o último 30 As ações enviadas/falhadas na memória para esta sessão, sem armazenar os argumentos do programa ou os caminhos de destino. Ela pode ser limpa a qualquer momento. Um envio bem- sucedido não garante a conclusão no aplicativo alvo.
 
 O firmware permanece **1.1.1**. Aceitar uma oferta de firmware automática agora abre corretamente o gerenciador de firmware; o guarda modal anterior impediu essa transferência. Identidade de firmware existente, batimentos cardíacos, reconexões e verificações flash permanecem no local. Novos recursos de espaço de trabalho não precisam de um flash de firmware.
+
+<a id="open-deckpilot-and-profile-notifications-217"></a>
+## Abrir DeckPilot e notificações de perfil (2.1.7)
+
+Embaixo **Aplicativo Ouvrir une**, escolha o embutido **DeckPilot** entrada ou clique **Afetador « Ouvrir DeckPilot »**. Esta acção traz os actuais DeckPilot janela para a frente; seu alvo permanece válido após uma atualização ou reinstalação de uma aplicação. Ela também está disponível na pesquisa de ação.
+
+A alteração de perfis mostra uma notificação breve, com o nome do perfil activo. In **Préférences de l’application**, você pode desativá-lo, escolher qualquer canto, ou definir uma posição horizontal e vertical personalizada. **Inscrição e pré-visualização** mostra o resultado imediatamente. A notificação segue o ecrã que contém a aplicação de primeiro plano e também aparece enquanto DeckPilot está oculto. Ele pode aparecer sobre jogos sem borda / windowed; jogos de tela cheia exclusivos podem cobrir sobreposições normais do Windows.
 
 <a id="deckpilot-210-fixed-signed-virtual-microphone-routing"></a>
 ## DeckPilot 2.1.0: roteamento de microfone virtual com assinatura fixa
@@ -420,7 +429,7 @@ DeckPilot 1.9.7 corrige a desinstalação do Atelier enquanto está em execuçã
 
 DeckPilot 1.9.8 adiciona um reset Atelier explícito e confirmado que substitui o programa de usuário do tabuleiro por um esboço vazio verificado e preserva o bootloader Caterina.
 
-A validação abrange configurações legadas, validação de sotaque, navegação de perfil e remapeamento de referência, modelos portáteis, modelo/mundo/redo nativo do Windows e mudança de perfil, gravação de atalhos, cópia/colar/reset, persistência de configurações, instalação/atualização, redimensionamento de layout e uma captura de UI real. O comportamento específico de hardware ainda requer o macropad e dispositivos de áudio em um PC Windows.
+Validação abrange configurações legadas, validação de sotaque, navegação de perfil e remapeamento de referência, modelos portáteis, modelo/mundo/redo nativos do Windows e mudança de perfil, gravação de atalhos, cópia/colar/reset, persistência de configurações, instalação/atualização, redimensionamento de layout e uma captura de UI real. O comportamento específico de hardware ainda requer o macropad e dispositivos de áudio em um PC Windows.
 
 <a id="profile-sound-files-and-workshop-safety"></a>
 ### Arquivos de som de perfil e segurança da oficina
@@ -433,3 +442,8 @@ Atelier aceita placas que ainda não respondem o DeckPilot protocolo, enquanto a
 ### Latência do microfone ao vivo
 
 DeckPilot 2.1.3 processos de áudio ao vivo em blocos pequenos, conduzidos por saída. 20 Captação e captura de microfones a eventos ms 40 Tampões de reprodução ms. A fila de microfones está delimitada 100 ms e descarta quadros completos mais antigos se a reprodução estiver parada; isto evita a construção de segundos de fala atrasada. Trata-se de configurações de buffer de software, não uma garantia de latência de ponta a ponta medida. Windows, o microfone, VB-CABLE e o aplicativo receptor também contribuem para o atraso. Discord configurações de isolamento de voz estão inalteradas e podem suprimir clipes de placa de som porque recebe o sinal misto.
+
+<a id="automatic-virtual-microphone-startup"></a>
+### Inicialização automática do microfone virtual
+
+DeckPilot 2.1.4 ativa automaticamente o microfone virtual quando o microfone físico selecionado e VB-CABLE estão disponíveis. Isto também funciona em segundo plano após o login no Windows quando **Iniciar com as janelas** está activado. Os dispositivos em falta são repetidos a cada cinco segundos. Parar o microfone virtual salva explicitamente a inicialização automática como desactivada; habilita- a novamente no Soundboard painel. Os clipes só são reproduzidos quando solicitados.

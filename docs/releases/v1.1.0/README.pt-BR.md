@@ -1,6 +1,6 @@
 > Esta é uma tradução automática das notas de lançamento completas. O original em inglês é a referência.
 
-DeckPilot agora pode instalar firmware no macropad DIY Pro Micro diretamente a partir do aplicativo.
+DeckPilot agora pode instalar firmware no micropad DIY Pro diretamente a partir do aplicativo.
 
 - Novo **Firmware du macropad…** diálogo com a seleção e confirmação do dispositivo antes de piscar.
 - Firmware agrupado **1.0.0** preserva F13–F24 e acrescenta um DeckPilot resposta de identidade/versão sobre a série USB.

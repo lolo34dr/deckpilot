@@ -9,6 +9,6 @@ DeckPilot 1.7.0 reduz o trabalho repetido ao editar perfis, encontrar aplicaçõ
 - As sondagens de estado de áudio a cada dois segundos, visíveis e a cada dez segundos, quando ocultas/minimizadas, são refrescantes imediatamente ao reabrir e após os comandos de áudio. As requisições de atualização sobrepostas são coalescidas sem deixar cair a atualização pós-comando.
 - Janelas ocultas param temporizadores de feedback visual e ignoram as esperas de renderização cosmética. Escovas de UI congeladas são reutilizadas e as embalagens de processo de aplicação lançadas são descartadas.
 
-Transferir **DeckPilot- Setup.exe** ou atualização a partir do aplicativo. Perfis, calibração e preferências de inicialização são preservados. Nenhum flash de firmware é necessário.
+Transferir **DeckPilot- Setup.exe** ou atualização a partir do aplicativo. Perfis, calibração e preferências de inicialização são preservadas. Nenhum flash de firmware é necessário.
 
 A validação inclui configurações/história/regressões de cache e instalação do Windows, atualização, picador, arrastar e soltar, edição de ação curta/longa e minimizar/restaurar verificações. Estas são otimizações estruturais, não uma reivindicação medida de uma determinada CPU ou gravação de RAM em cada PC.

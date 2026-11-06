@@ -1,6 +1,6 @@
 > Esta é uma tradução automática das notas de lançamento completas. O original em inglês é a referência.
 
-Aplicações instalées, interface affinée et mises à jour automatiques.
+Aplicações instalées, interface affinée et mises à jour automatices.
 
 - Selecteur d’aplications avec recherche par nom : menu Démarrer et catalog Windows/Microsoft Store. Le choix manuel d’un `.exe` descansar disponível.
 - Icônes des applications lorsqu’elles sont disponibles, pictogrames vectoriels et animations discrètes respeitant les préférences Windows.

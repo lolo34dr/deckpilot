@@ -68,7 +68,7 @@ DeckPilot 1.9.0 더 보기 DeckPilot Atelier, 새로운 Macropads를 번쩍이�
 
 - 레오나르도 / Pro Micro ATmega32U4 보드에 포함된 펌웨어를 Caterina bootloader로 설치하십시오.
 - 모든 물리적 키를 위한 짧은 압박과 긴 압박 체크를 실행하고, 그것의 F13–F24 매핑을 기록하고, 품질 관리 보고를 저장하십시오.
-- 지원하다 **DeckPilot-Atelier-Setup.exe에** 이 릴리스에서. 원래 DeckPilot 설정 및 펌웨어는 별도로 사용할 수 있습니다.
+- 지원하다 **DeckPilot-Atelier-Setup.exe를 설치** 이 릴리스에서. 원래 DeckPilot 설정 및 펌웨어는 별도로 사용할 수 있습니다.
 
 DeckPilot 1.8.0 새로 고침된 작업 공간과 더 빠른 방법을 추가하여 프로필을 작성하고 사용합니다.
 
