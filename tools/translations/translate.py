@@ -276,6 +276,22 @@ def translate(language,source,out,cache):
         (directory/f'README.{language}.md').write_text('> '+release_notice+'\n\n'+engine.markdown(body) if body else engine.text('No release notes were provided.')+'\n',encoding='utf-8')
     print(f'Completed {language}: full README and all published release notes',flush=True)
 
+def release_body(tag,english,localized,max_bytes=120000):
+    contents=[english,'',MARKER,'']
+    for lang,body in localized.items():
+        contents+=['<details>',f'<summary>{lang}</summary>','',body,'</details>','']
+    full='\n'.join(contents)
+    if len(full.encode('utf-8'))<=max_bytes:return full
+
+    # GitHub limits release body size. Keep every complete translation in the
+    # repository and link to it, rather than truncating or omitting a language.
+    links=[english,'',MARKER,'','Complete translations of these release notes:','']
+    links += [f'- [{lang}](https://github.com/lolo34dr/deckpilot/blob/main/docs/releases/{tag}/README.{lang}.md)' for lang in localized]
+    compact='\n'.join(links)+'\n'
+    if len(compact.encode('utf-8'))>max_bytes:
+        raise RuntimeError('English release notes exceed GitHub body size; full translations remain in docs/releases')
+    return compact
+
 def publish(source):
     expected=json.loads((source/'manifest.json').read_text())['readme_sha256']
     if hashlib.sha256(Path('README.md').read_bytes()).hexdigest()!=expected:raise RuntimeError('README changed during translation; rerun against current source')
@@ -284,12 +300,8 @@ def publish(source):
     for release in json.loads((source/'releases.json').read_text()):
         directory=Path('docs/releases')/release['tag'];directory.mkdir(parents=True,exist_ok=True)
         (directory/'README.en.md').write_text(release['body']+'\n',encoding='utf-8')
-        contents=[release['body'],'',MARKER,'']
-        for lang in LANGUAGES:
-            body=(directory/f'README.{lang}.md').read_text()
-            contents+=['<details>',f'<summary>{lang}</summary>','',body,'</details>','']
-        body='\n'.join(contents)
-        if len(body)>120000:raise RuntimeError('Translated release exceeds GitHub body size; no truncation permitted')
+        localized={lang:(directory/f'README.{lang}.md').read_text() for lang in LANGUAGES}
+        body=release_body(release['tag'],release['body'],localized)
         current=json.loads(request(f"https://api.github.com/repos/lolo34dr/deckpilot/releases/{release['id']}"))
         if (current['body'] or '').partition(MARKER)[0].rstrip()!=release['body']:raise RuntimeError('Release notes edited during translation; refusing overwrite')
         if current['body']==body:continue
