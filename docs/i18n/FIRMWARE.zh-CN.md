@@ -30,7 +30,7 @@ DECKPILOT|1|promicro-32u4-16mhz|1.1.1
 
 固件和视窗 AVRDUDE 8.0 被捆绑在已发布的应用中。没有Arduino IDE或单独的驱动程序安装由 DeckPilot。 Windows 必须已经曝光了董事会的 USB 串行端口, 就像它为所有者成功上传所做的那样。 新的固件版本会随应用程序更新从 GitHub 发送; 更新应用程序确实 **没有** 自动闪存硬件。每个闪存需要确认 。
 
-DeckPilot Atelier 也提议 **effacer le 方案 DeckPilot**。在单独确认之后,它清除所有 28 应用程序的 KiB 有经过验证的重置回路, 停止了 F13 – F24 和 USB 键盘计数 。 Caterina 仍然可用, 因此以后可以安装新的固件 。 启动器和 EEEROM 保存下来, 所以这不是一个全芯片擦除器。 配置数据保留在 PC 上。 释放烟雾测试检查显示此动作并禁用, 除非选中一个棋盘 。
+DeckPilot 爱特利尔保留 **点菜的软件** 需要输入 `EFFACER`,清除所有 28 应用程序的 KiB 有经过验证的重置回路, 并停止 F13 – F24 和正常的 USB 计数。 Caterina 仍然可用, 但卡片在被手动装入启动器模式之前不会在 Atelier 中再次出现。 保持连接, 短暂连接 **RST 读取** 改为: **两次快速的GND**,然后选择其临时 Arduino Leonardo / rootloader COM 端口并使用 Atelier 的回收动作重新安装 DeckPilot。 Atelier 显示这些指令,并在擦除或被中断的闪存后保持恢复功能。启动器和EEPROM 保存下来;这不是全芯片擦除。配置数据保留在PC上。
 
 DeckPilot 检查SHA -256,英特尔HEX记录校验和,重置-飞行器存在,重叠和 **28672- 字节** 重置前的应用程序边界。 它匹配运行时间和启动器端口的物理 USB 位置, 使用 AVR109 。 57600 baud, 需要 AVRDUDE 的写入验证, 然后检查运行的固件的身份和版本。 它不写引信、 EEPROM 或装入器。 只有 Leonardo IDs `2341:8036` / `2A03:8036` 和卡特琳娜岛 `2341:0036` / `2A03:0036` 如果 Windows 无法提供匹配的物理连接,闪存会被屏蔽而不是猜测端口。
 
@@ -49,7 +49,7 @@ dotnet build DeckPilot.sln -c Release -p:RequireFirmwareBundle=true
 dotnet run --project tests/DeckPilot.Checks -c Release --no-build
 ```
 
-剧本 : Arduino AVR 核心 **1.8.6**键盘 **1.0.6**,和上游 AVRDUDE **8.0**. CLI管理软件包使用Arduino的软件包校验和验证;AVRDUDE 二进制/源文件档案有明确的SHA-.256 脚本中指针。 `artifacts/firmware/DeckPilot-firmware.zip` 包含 DeckPilot HEX,生成的应用程序区域重置了HEX及其生成器,校验和,Windows工具,许可证和相应的上游AVRDUDE源归档. Publishing CI需要捆绑;普通开发商的构建没有它就可以运行应用程序但不能闪出或重置一个板.
+剧本 : Arduino AVR 核心 **1.8.6**键盘 **1.0.6**,和上游 AVRDUDE **8.0**. CLI管理软件包使用Arduino的软件包校验和验证;AVRDUDE 二进制/源文件档案有明确的SHA-.256 脚本中指针。 `artifacts/firmware/DeckPilot-firmware.zip` 包含 DeckPilot HEX,生成的应用程序区域重置了HEX及其生成器,校验和,Windows工具,许可证和相应的上游AVRDUDE源档案. Publishing CI需要捆绑;普通开发商的构建没有它就可以运行应用但不能闪出或重置一个板.
 
 原画 12- 扣子素描改自大卫·麦迪逊 **流出廉价** 版权项目 2018麻省理工学院,其通知仍在 `DeckPilot.ino`. DeckPilot 添加使用寄存器MIT许可证. **AVRDUDE是GPL-下的单独软件.2.0- 或后来**,其通知/许可证和来源捆绑;存储器MIT许可证不取代该许可证。 https://github.com/avrdudes/avrdude/tree/v8.0 用于上游建设指令和依赖性通知。
 
@@ -60,13 +60,13 @@ dotnet run --project tests/DeckPilot.Checks -c Release --no-build
 
 新应用程序识别了连接的卡片,保持其序列端口的开通,解接后重新连接,并在启动时和重联后检查其固件版本. Firmware更新随应用程序发布而来: 启动检查将连接的固件与已安装的应用程序中包含的已验证的捆绑进行对比. App更新检查仍然从 GitHub 获得更新的发布. 没有单独的固件仅限下载通道.
 
-检测到的更古老的固件提示每一次应用会话,其中 24- 延迟时提示延迟。通知可禁用。 **Connexion et diagnostic**。未知的Arduino草图、断开的设备以及模糊的多卡选择不会触发自动闪出或更新提示。固件安装总是需要确认。打开固件管理器会暂停显示器并等待序列端口的发布;在对话框关闭后,监测会恢复。
+检测到的更古老的固件提示每一次应用会话,其中 24- 延迟时提醒延迟。通知可禁用 **Connexion et diagnostic**。未知的Arduino草图、断开的设备以及模糊的多卡选择不会触发自动闪出或更新提示。固件安装总是需要确认。打开固件管理器会暂停显示器并等待序列端口的发布;在对话框关闭后,监测会恢复。
 
 **从Arduino IDE 手动上传一个内容, 退出 DeckPilot 首先从它的托盘图标。** 关闭主窗口只隐藏它,所以它继续拥有串行连接. DeckPilot 和另一个串行显示器不能同时使用同一端口。如果另一个工具已经拥有端口,应用程序会报告问题并重试而不影响普通键盘键。
 
 新的计划 `DeckPilotProtocol.h` 由下列人员执行的相同: `tests/firmware-protocol.cpp`。它使用固定大小的缓冲器、边框输入处理和可用的 USB 传输空间; 在等待主机时, 按钮扫描永远不会被故意延迟。 最新的待处理按钮掩码是在后压下连接起来的。 没有命令执行宏、 写入 EEPROM、 禁用键盘、 修改配置文件或此诊断协议上的闪光固件 。
 
-时 115200 baud, 以 LF( CRLF 被接受) 为结尾的行。 会话符号包含整整8个大写小数十六进制字符。 所有数字都是未签名小数。 例如 :
+时 115200 baud, 以 LF( CRLF 被接受) 为结尾的行。 会话符号包含整整八个大写小数十六进制字符。 所有数字都是未签名小数。 例如 :
 
 ```
 PC:    DECKPILOT?

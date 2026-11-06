@@ -11,4 +11,4 @@ DeckPilot 1.7.0 riduce il lavoro ripetuto durante la modifica dei profili, la ri
 
 Scarica **DeckPilot-Setup.exe** I profili, le preferenze di calibrazione e di avvio sono conservati e non è richiesto alcun flash firmware.
 
-La validazione include impostazioni/regressioni di storia/cache e installazione di Windows, aggiornamento, picker, drag-and-drop, editing di azione breve/lungo e minimizzare/ripristinare i controlli.
+La validazione include impostazioni/storia/cache regressioni e installazione di Windows, aggiornamento, picker, drag-and-drop, editing di azione breve/lungo e minimizzare/ripristinare i controlli.

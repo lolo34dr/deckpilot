@@ -11,4 +11,4 @@ DeckPilot 1.7.0 Reduziert wiederholte Arbeit beim Bearbeiten von Profilen, beim 
 
 Download **DeckPilotSetup.exe** oder Update aus der App. Profile, Kalibrierungs- und Starteinstellungen bleiben erhalten. Es ist kein Firmware-Flash erforderlich.
 
-Die Validierung umfasst Einstellungen/Historie/Cache-Regressionen und Windows-Installation, Update, Picker, Drag-and-Drop, Kurz-/Lang-Action-Bearbeitung und Minimierung/Wiederherstellungsprüfungen.
+Die Validierung umfasst Einstellungen/Historie/Cache-Regressionen und Windows-Installation, Update, Picker, Drag-and-Drop, Kurz-/Lang-Action-Bearbeitung und Minimierung/Wiederherstellungsprüfungen. Dies sind strukturelle Optimierungen, nicht ein gemessener Anspruch auf eine bestimmte CPU- oder RAM-Speicherung auf jedem PC.

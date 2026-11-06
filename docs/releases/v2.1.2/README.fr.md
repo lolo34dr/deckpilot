@@ -2,7 +2,7 @@
 
 DeckPilot 2.1.2 et DeckPilot Atelier 1.0.11 fixer la sécurité de l'atelier, la fiabilité de la carte sonore et les sons de profil portables.
 
-- Atelier peut préparer des planches Leonardo/Caterina qui ne répondent pas encore DeckPilot protocole; les défaillances série arrêtent toujours le clignotement et l'emplacement USB, le chargeur d'amorçage et la signature MCU restent vérifiés.
+- Atelier peut préparer des planches Leonardo/Caterina qui ne répondent pas encore DeckPilot protocole; les pannes série arrêtent toujours le clignotement et l'emplacement USB, le chargeur d'amorçage et la signature MCU restent vérifiés.
 - Chaque inspection commence par des résultats vides. Les rapports conservent la carte et le firmware testés, et les callbacks USB bloqués ne peuvent pas affecter une nouvelle session.
 - Fermeture Atelier pendant l'écriture ou la vérification du firmware est bloqué.
 - Les exportations de profils et les sauvegardes automatiques de profils peuvent conserver les fichiers MP3/WAV référencés (32 Importation de clips intégrés dans un dossier géré et remap des références d'action courte/longue. Les importations de profil historique restent prises en charge; l'audio de sauvegarde manquant est signalé explicitement.

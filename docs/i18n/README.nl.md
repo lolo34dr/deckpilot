@@ -110,6 +110,8 @@ De single-file uitvoerbaar haalt zijn gebundelde afhankelijkheden in de gebruike
 | Site | Opent een HTTP- of HTTPS-adres in uw standaard browser. |
 | Sneltoets | Stuurt een sleutelcombinatie naar het actieve venster. |
 | Media | Controleert afspelen, tracks, volume, of dempen. |
+| Spotify | Controles Spotify playback en past alleen Spotify's audio-sessie volume van Windows. |
+| Toepassing DeckPilot | Toont de bestaande DeckPilot venster, inclusief wanneer het actief is in het mededelingengebied. |
 
 Voor toepassingsacties, open de toepassingskicker en zoek op naam. De handmatige bestandsselector blijft beschikbaar, met optionele programmaargumenten onder geavanceerde opties. Voer argumenten in volgens de syntaxis van de doeltoepassing.
 
@@ -311,7 +313,7 @@ Hoe groter 3 × 4 keypad volgt de fysieke behuizing en zwarte toetsenborden. Elk
 
 Kies een sleutel om het te bewerken. **Options avancées · fichier et arguments** houdt handmatige toepassingspaden en startargumenten standaard ingestort, terwijl essentiële map- en websitebestemmingen blijven uitgebreid. Instortende instellingen ontruimen hun waarden niet. **Tester l’action** slaat en verstuurt de geselecteerde actie op de huidige PC; een succesindicator bevestigt verzending, niet voltooiing in een andere app. Toetsenbord sneltoetsen richten zich op het actieve venster. Gratis F13_F24 toetsen hebben geen testactie.
 
-Wanneer het macropad wordt verbroken, **Hors ligne** en de bijbehorende hint legt uit dat profielen nog steeds bewerkt kunnen worden en acties getest kunnen worden. Configuratie wordt opgeslagen op de PC en blijft beschikbaar tijdens het verbreken en opnieuw verbinden. Deze verbeteringen van de interface werken met de bestaande firmware en vereisen geen extra flits.
+Wanneer het macropad wordt verbroken, **Hors ligne** en de begeleidende hint legt uit dat profielen nog steeds kunnen worden bewerkt en acties getest. Configuratie wordt opgeslagen op de PC en blijft beschikbaar tijdens het verbreken en opnieuw verbinden. Deze verbeteringen van de interface werken met de bestaande firmware en vereisen geen extra flits.
 
 Het menu notificatie-gebied schakelt nu de profielen direct over. **Druk op Ctrl+S** slaat de huidige knopconfiguratie op. Ongeldige configuratiebestanden worden geback-upt voordat een nieuwe configuratie wordt gebruikt. App-installatie, desktop/Start menupictogrammen, opstartvoorkeuren en de bestaande automatische update worden bewaard.
 
@@ -320,9 +322,9 @@ Voor handmatige Arduino IDE-uploads, **stoppen DeckPilot uit het tray-menu** om 
 <a id="spotify-action-search-and-drag-and-drop-150"></a>
 ## Spotify, actie zoeken en slepen (1.5.0)
 
-**Spotify** is gescheiden van **Multimédia**. Zijn afspelen/pauzeren, volgende en vorige commando's adres van de Spotify-desktop-app's Windows-mediasessie, zelfs terwijl een browser YouTube speelt. Spotify moet geopend zijn en een beschikbare afspeelsessie hebben; start een track indien nodig. Spotify in een browser wordt niet ondersteund. Ontbreken of weigeren van Spotify-sessies produceren een fout, zonder terugval naar globale mediatoetsen of een andere speler. Geen Spotify-accountvergunning, Premiumabonnement of opgeslagen token is nodig door DeckPilot. Vensters 10 versie 2004 of later, of vensters 11, is vereist door deze bouw.
+**Spotify** is gescheiden van **Multimédia**. Zijn afspelen/pauzeren, volgende en vorige commando's adres van de Spotify desktop app's Windows media sessie, zelfs terwijl een browser YouTube speelt. Spotify volume +/− past Spotify's Windows audio sessie in 5%-stappen, waarbij het hoofdvolume en andere spelers ongewijzigd blijven. Spotify moet geopend zijn en een beschikbare afspeelsessie hebben; start een track indien nodig. Spotify in een browser wordt niet ondersteund. Ontbrekende Spotify-sessies produceren een foutmelding, zonder terugval naar globale mediatoetsen of een andere speler. Geen Spotify-accountmachtiging, Premium-abonnement of opgeslagen token is nodig door DeckPilot. Vensters 10 versie 2004 of later, of vensters 11, is vereist door deze bouw.
 
-Gebruik **Rechercher une action ou une application** voor vragen zoals `volume`, `skip`, `Spotify` of de naam van een geïnstalleerde app. De geïnstalleerde-app index laadt op de eerste zoekopdracht en wordt gedurende vijf minuten gecached; handmatige bestandsselectie blijft beschikbaar. Klik op een resultaat om de geselecteerde sleutel te configureren of sleep deze naar een andere sleutel.
+Gebruik **Rechercher une action ou une application** voor vragen zoals `volume`, `skip`, `Spotify` of de naam van een geïnstalleerde app. De geïnstalleerde-app index laadt bij de eerste zoekopdracht en wordt gedurende vijf minuten gecached; handmatige bestandsselectie blijft beschikbaar. Klik op een resultaat om de geselecteerde sleutel in te stellen of sleept u deze naar een andere sleutel.
 
 Sleep een actie uit de catalogus of zoekresultaten op een sleutel om deze toe te wijzen. Sleep een geconfigureerde sleutel naar een andere **ruilen van hun acties**; de fysieke kalibratie blijft onveranderd. U kunt er ook één laten vallen `.exe`, `.lnk`, `.appref-ms`, map of HTTP(S) URL op een sleutel. Droping configureert alleen de sleutel en voert nooit de actie uit. Voltooi alle ontbrekende instellingen in de editor.
 
@@ -339,13 +341,13 @@ Onder **Gérer les profils**, exporteer het huidige profiel of alle profielen al
 
 Voor het opslaan van gewijzigde profielen, DeckPilot houdt de vorige profielen in `%APPDATA%\DeckPilot\Backups` (20 versies, inhoud-gededupliceerd). Voorkeur-alleen opslaan maakt geen profielback-ups aan. Een back-upfout voorkomt het overschrijven van de huidige instellingen. Herstellen vervangt profielen na bevestiging en kan zelf ongedaan worden gemaakt; kalibratie blijft ongewijzigd.
 
-**Microphone Windows** schakelt mute op alle huidige Windows-eindpunten. De statusbalk en Audio Windows-kaart tonen actief/muted/mixed/un available status, vernieuwd elke twee seconden en na app commando's. Een mislukte multi-endpoint-update pogingen om eerdere mute toestanden te herstellen. Deze indicatoren beschrijven de Windows-eindpuntstatus, niet een hardware-switch of de eigen mute-knop van een toepassing.
+**Microphone Windows** schakelt mute op alle huidige Windows-eindpunten. De statusbalk en Audio Windows-kaart tonen actief/muted/mixed/un available status, vernieuwd elke twee seconden en na app commando's. Een mislukte multi-endpoint-update pogingen om vorige mute toestanden te herstellen. Deze indicatoren beschrijven Windows-eindpuntstatus, niet een hardware-switch of de eigen mute-knop van een toepassing.
 
-**Changer de sortie audio** alternatieven tussen twee geselecteerde, aangesloten uitvoerapparaten, voor Windows-console, multimedia- en communicatiestandaarden. Een ontbrekende doelstelling geeft een fout zonder een ander apparaat te kiezen. Toepassingen met hun eigen vaste uitvoer kunnen niet volgen Windows' standaard. Geïmporteerde endpoint-ID's worden getoond als niet beschikbaar totdat aangepast aan de huidige PC. Foute routing-wijzigingen proberen de vorige standaardwaarden te herstellen.
+**Changer de sortie audio** alternatieven tussen twee geselecteerde, aangesloten uitvoerapparaten, voor Windows-console, multimedia- en communicatiestandaarden. Een ontbrekende doelstelling geeft een fout zonder een ander apparaat te kiezen. Toepassingen met hun eigen vaste uitvoer volgen mogelijk niet de standaard van Windows. Geïmporteerde endpoint-ID's worden getoond als niet beschikbaar totdat ze aangepast zijn aan de huidige PC. Foute routing-wijzigingen proberen de vorige standaardwaarden te herstellen.
 
 Instellen **appui court / appui long**, kies eerst een geconfigureerde actie, schakel de optie twee-actie in, selecteer het gebaar om te bewerken en stel een drempel in 200 tot 3000 ms. Zonder deze modus behouden de acties onmiddellijk key-down gedrag. Met het, korte acties lopen op release voor de drempel; lange acties lopen eenmaal op de drempel (of bij release als de timer nog niet is uitgevoerd). Een lange actie loopt nooit ook de korte. Gratis F13.F24 passthrough sleutels kunnen geen dual-action modus gebruiken. In afwachting van gebaren worden geannuleerd op profiel / configuratie veranderingen, kalibratie, firmware operaties, sessie wijzigingen en schorsing. Geen firmware flits is nodig; de bestaande key-down / key-up rapporten van het toetsenbord leveren de gebaren.
 
-Core controles hebben betrekking op repeat/release grenzen, gelijktijdige houders, annulering, profiel geschiedenis/exchange/backups en audio rollback met behulp van nep-eindpunten. Windows UI controleert de uitoefening van werkelijke drag undo/redo, het configureren van een lange actie en drempel, native keypad afmetingen na het wijzigen en de microfoon indicator. Werkelijke microfoon drivers, headset / speaker schakelen en fysieke holds nog steeds nodig validatie op de eigenaar PC.
+Core controles hebben betrekking op repeat/release grenzen, gelijktijdige houders, annulering, profiel geschiedenis/exchange/backups en audio rollback met behulp van nep-eindpunten. Windows UI controleert de uitoefening van de werkelijke drag undo/redo, het configureren van een lange actie en drempel, native keypad afmetingen na grootte en de microfoon indicator. Werkelijke microfoon drivers, headset / speaker schakelen en fysieke holds nog steeds nodig validatie op de eigenaar PC.
 
 <a id="search-and-ci-reliability-fixes-164"></a>
 ## Zoeken en betrouwbaarheid van de CI's (1.6.4)
@@ -356,7 +358,7 @@ Windows rook controles blijven uitvoeren native muis slepen en valideren opgesla
 
 Bouw en release workflows gebruiken Node.js 24 De Arduino compiler blijft op CLI 1.2.2; CI downloadt het Windows-archief met een gepinde SHA-256 checksum. De firmware en de toolchain versies zijn ongewijzigd.
 
-Instellingen leest in Windows-tests expliciet toestaan lezen / schrijven / verwijderen delen en ontleden UTF-8 na het sluiten van de lezer. Dit voorkomt dat de test zelf de vervanging van het atoombestand van de app te weigeren. De geschiedenistest houdt een oude snapshot open over drie undo/redo cycli en controleert of het intact blijft terwijl de live-instellingen veranderen.
+Instellingen leest in Windows-tests expliciet toestaan lezen / schrijven / verwijderen delen en ontleden UTF-8 na het sluiten van de lezer. Dit voorkomt dat de test zelf de vervanging van het atoombestand van de app te weigeren. De geschiedenis test houdt een oude snapshot open over drie undo/redo cycli en controleert of het intact blijft terwijl de live-instellingen veranderen.
 
 Op Windows, bestaande instellingen bestanden zijn vastgelegd met `File.Replace` in plaats van overschrijven-modus `File.Move`. Dit ondersteunt lezers die het verwijderen toestaan met behoud van een volledige oude snapshot. De core suite test drie vervangingen met een lezer gehouden open; Windows core controles lopen voordat firmware compilatie en publishing zodat persistentie mislukkingen worden gedetecteerd vroeg.
 
@@ -367,7 +369,7 @@ Een test snapshot lezer kan wachten tot 500 ms voor Windows-deel-/lock-overtredi
 
 Het opslaan van identieke instellingen controleert het huidige bestand, maar slaat vervanging en back-up werk over. Externe bewerkingen/deletetion en mislukte schrijven worden nog steeds gedetecteerd. `ButtonAction` heeft waarde gelijkheid (met inbegrip van de lange actie); editor vuile controles vermijden JSON serialisatie. Geschiedenis houdt losse model snapshots, valideert nieuwe staten, en voorkomt JSON parsing tijdens undo/redo. 50-editlimiet en 20 profiel back-ups blijven.
 
-Zoeken en picker delen een onveranderlijke geïnstalleerd-app catalogus voor vijf minuten (15 seconden voor een gedeeltelijk resultaat). Gelijktijdige gebruikers delen een scan; sluiten van een picker annuleert geen andere consument. Vernieuwt omzeilt de cache, en elke picker heeft zijn eigen filter/view. Scannen en catalogus parsing lopen uit de UI-draad; picker filtering wordt gedebounced door 120 ms. Actie zoeken hercheckt deze cache na zijn debounce en bij terugkeer van de picker, dus een vernieuwde catalogus is er ook beschikbaar.
+Zoeken en picker delen een onveranderlijke geïnstalleerd-app catalogus voor vijf minuten (15 seconden voor een gedeeltelijk resultaat). Gelijktijdige gebruikers delen een scan; sluiten van een picker annuleert geen andere consument. Vernieuwt omzeilt de cache, en elke picker heeft zijn eigen filter/view. Scanning en catalogus parsing lopen uit de UI-draad; picker filtering wordt gedebounced door 120 ms. Actie zoeken hercheckt deze cache na zijn debounce en bij terugkeer van de picker, dus een vernieuwde catalogus is er ook beschikbaar.
 
 Bord UI updates nu volgen verbinding meldingen in plaats van elke wakker te maken 100 Ms. Bestelde disconnect notificaties nog steeds annuleren hangende holds. Toetsenbord haken wachtrij visueel werk, terwijl onderdrukking en gebaren timing blijven synchroniseren. Verborgen/geminimaliseerde vensters stoppen feedback animaties en gebruik een tien-seconde audio polling interval in plaats van twee seconden; heropenen of het uitgeven van een audio commando verzoekt verse staat onmiddellijk. In afwachting van audio refreshes delen een lus en omvatten verzoeken die tijdens een bestaande lezing arriveren. Ongewijzigde audio snapshots en bevroren penselen voorkomen herhaalde UI toewijzingen. Processwrappers teruggestuurd door het starten van een app worden verwijderd zonder het gestarte programma te sluiten.
 
@@ -387,6 +389,13 @@ De houtskool interface plaatst de actiebibliotheek op de eerste plaats, scheidt 
 
 De firmware blijft **1.1.1**. Het accepteren van een automatische firmware aanbod opent nu correct de firmware manager; de vorige modal guard verhinderde die overdracht. Bestaande firmware identiteit, hartslag, reconnect en flash controles blijven op zijn plaats. Nieuwe werkruimte functies hebben geen firmware flits nodig.
 
+<a id="open-deckpilot-and-profile-notifications-217"></a>
+## Open DeckPilot en profielmeldingen (2.1.7)
+
+Onder **Ouvrir une-toepassing**, kies de ingebouwde **DeckPilot** invoer of klik **Affecter Ouvrir DeckPilot »**. Dit beroep brengt het bestaande DeckPilot venster naar voren; het doel blijft geldig na een update of opnieuw installeren van een app. Het is ook beschikbaar in actie zoeken.
+
+Het wijzigen van profielen toont een korte, click-through melding met de actieve profielnaam. **Préférences de l’application**, u kunt uitschakelen, kies elke hoek, of stel een aangepaste horizontale en verticale positie. **Enregistrer et prévisualiser** toont het resultaat onmiddellijk. De melding volgt het scherm met de voorgrond app en verschijnt ook terwijl DeckPilot Het kan verschijnen over grenzeloos / windowed games; exclusieve full-screen games kunnen betrekking hebben op normale Windows-overlays.
+
 <a id="deckpilot-210-fixed-signed-virtual-microphone-routing"></a>
 ## DeckPilot 2.1.0: vaste gesigneerde virtuele microfoonrouting
 
@@ -404,13 +413,13 @@ De afzonderlijke **DeckPilot Atelier** Windows installatie bereidt nieuwe DIY ma
 
 DeckPilot Atelier controleert GitHub voor app en gebundeld-firmware-updates bij het opstarten en op verzoek. Updates vereisen bevestiging en gebruik de release SHA-256 manifest. Firmware wordt nooit automatisch geflitst door een update; na Atelier updates, kies de firmware actie wanneer u klaar bent om het aangesloten bord te programmeren.
 
-Atelier 1.0.7 voegt een bevestigde **Programma Effacer le DeckPilot** De Commissie is van mening dat de 28 KiB toepassingsgebied met een geverifieerde veilige stop-instructie, zodat het bord stopt met werken als een toetsenbord terwijl het behoud van Caterina voor herstel en toekomstige knipperen. Het laat de bootloader, EEPROM en Windows profielen onaangeroerd.
+Atelier 1.0.7 voegt een bevestigde **Programma Effacer le DeckPilot** De Commissie is van mening dat de 28 KiB toepassingsgebied met een geverifieerde veilige stop instructie, zodat het bord stopt met werken als een toetsenbord terwijl het behoud van Caterina voor herstel en toekomstige knipperen. Het laat de bootloader, EEPROM en Windows profielen onaangeroerd.
 
 Versie 1.9.1 Repareert de lancering van Atelier na installatie door het te starten in de ingelogde Windows-sessie. De updater kan een nieuwere Atelier pakket of firmware bundel installeren, vervolgens de app opnieuw opstarten. De Windows release pipeline controleert eerst starten, upgraden en verwijderen voor het Atelier installatieprogramma.
 
 Versie 1.9.2 verbetert de Atelier Windows verpakking stap en rapporteert de exacte storing locatie in CI.
 
-Versie 1.9.3 corrigeert hoe het Windows-pakket de meegeleverde firmwareversie leest, dus Atelier's update controle volgt de firmware die in het installatiesysteem wordt verzonden.
+Versie 1.9.3 corrigeert hoe het Windows-pakket de meegeleverde firmwareversie leest, dus Atelier's update check volgt de firmware verzonden in het installatiesysteem.
 
 De Atelier release check nu meldt het opstarten van diagnostiek als Windows het geïnstalleerde venster niet opent.
 
@@ -420,7 +429,7 @@ DeckPilot 1.9.7 repareert het verwijderen van Atelier terwijl het wordt uitgevoe
 
 DeckPilot 1.9.8 voegt een expliciete, bevestigde Atelier reset toe die het gebruikersprogramma van het bord vervangt door een geverifieerde lege schets en de Caterina bootloader bewaart.
 
-Validatie heeft betrekking op legacy-instellingen, accentvalidatie, profielnavigatie en remapping, draagbare sjablonen, native Windows sjabloon/undo/redo en profielswitching, snelkoppelingsopname, kopieer/plakken/reset, instellingen persistentie, installatie/update, layout-indeling en een werkelijke UI-opname. Hardware-specifiek gedrag vereist nog steeds het macropad en audio-apparaten op een Windows-pc.
+Validatie omvat legacy-instellingen, accentvalidatie, profielnavigatie en remapping, draagbare sjablonen, native Windows template/undo/redo en profiel switching, snelkoppeling opnemen, kopiëren/plakken/reset, instellingen persistentie, installatie/update, lay-out formaat en een werkelijke UI-opname. Hardware-specifiek gedrag vereist nog steeds het macropad en audio-apparaten op een Windows-pc.
 
 <a id="profile-sound-files-and-workshop-safety"></a>
 ### Profiel geluidsbestanden en veiligheid van de werkplaats
@@ -433,3 +442,8 @@ Atelier accepteert boards die nog niet beantwoorden de DeckPilot protocol, terwi
 ### Live microfoon latentie
 
 DeckPilot 2.1.3 processen live audio in kleine, output-gedreven blokken. 20 ms gebeurtenisgestuurde microfoonopname en 40 ms afspeelbuffers. De microfoonwachtrij is begrensd aan 100 ms en gooit oudere complete frames weg als het afspelen stilstaat; dit voorkomt het opbouwen van seconden van vertraagde spraak. Dit zijn softwarebufferinstellingen, geen gemeten end-to-end latency garantie. Windows, de microfoon, VB-CABLE en de ontvangende app ook vertraging. Discord stem isolatie instellingen zijn onveranderd en kan soundboard clips onderdrukken omdat het ontvangt het gemengde signaal.
+
+<a id="automatic-virtual-microphone-startup"></a>
+### Automatische virtuele microfoon opstarten
+
+DeckPilot 2.1.4 automatisch de virtuele microfoon activeert wanneer de geselecteerde fysieke microfoon en VB-CABLE zijn beschikbaar. Dit werkt ook op de achtergrond na Windows-aanmelding wanneer **Beginnen met Windows** is ingeschakeld. Ontbrekende apparaten worden elke vijf seconden opgehaald. Stoppen van de virtuele microfoon slaat automatisch opstarten expliciet op als uitgeschakeld; opnieuw inschakelen in de Soundboard paneel. Clips worden alleen afgespeeld op verzoek.

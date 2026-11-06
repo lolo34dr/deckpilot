@@ -12,7 +12,7 @@ Cada interruptor conecta um pino ao GND. As pull-ups internas estão habilitadas
 
 Pino **1** Mantido em GND na inicialização desativa a operação do teclado, preservando o sistema de segurança original. O núcleo USB ainda pode suportar a entrada do carregador de inicialização. Não conecte VCC ao GND.
 
-A atual interface serial USB CDC responde `DECKPILOT?\n` em 115200 baud com:
+A interface serial USB CDC atual responde `DECKPILOT?\n` em 115200 baud com:
 
 ```
 DECKPILOT|1|promicro-32u4-16mhz|1.1.1
@@ -30,11 +30,11 @@ Nenhuma ligação serial é necessária para a operação normal do teclado. A i
 
 O firmware e o AVRDUDE do Windows 8.0 são empacotados dentro do aplicativo publicado. Nenhum IDE Arduino ou instalação de driver separada é realizada por DeckPilot. O Windows já deve expor a porta serial USB do conselho, como fez para o upload bem sucedido do proprietário. Novas versões de firmware são entregues com atualizações de aplicativo do GitHub; atualização do aplicativo faz **não** hardware flash automaticamente. Cada flash requer confirmação.
 
-DeckPilot Atelier também oferece **Programa Effacer le DeckPilot**. Depois de uma confirmação separada, ele limpa tudo 28 O KiB do flash da aplicação com um loop de reset verificado, parando o F13- F24 e a enumeração do teclado USB. A Caterina permanece disponível para que o firmware novo possa ser instalado mais tarde. O carregador de boot e o EEPROM são preservados, por isso isto não é uma eliminação completa do chip. Os dados do perfil permanecem no PC. O teste de fumo de libertação verifica que esta acção está visível e desactivada, a menos que seja seleccionada uma placa.
+DeckPilot Atelier mantém **Effacer le firmware da carta** sob operações avançadas colapsadas. Requer digitação `EFFACER`, limpa tudo 28 KiB de flash de aplicativo com um loop de reset verificado, e pára F13-F24 e enumeração USB normal. Caterina permanece disponível, mas o cartão não aparecerá novamente em Atelier até que seja colocado manualmente no modo bootloader. Mantenha-o conectado, brevemente conecte **RST** para **GND duas vezes rapidamente**, em seguida, selecione sua porta temporária Arduino Leonardo / bootloader COM e use a ação de recuperação de Atelier para reinstalar DeckPilot. Atelier exibe estas instruções e mantém a recuperação habilitada após apagamento ou um flash interrompido. O carregador de boot e EEPROM são preservados; esta não é uma apagar full-chip. Dados do perfil permanece no PC.
 
 DeckPilot Verifica o SHA-256, Checksums de registro Intel HEX, presença do vetor de reset, sobreposições e o **28672-Adeus.** o limite da aplicação antes da redefinição. Corresponde à localização física USB através das portas 'runtime' e 'bootloader', usa o AVR109 em 57600 baud, requer verificação de escrita do AVRDUDE, em seguida, verifica a identidade e versão do firmware em execução. Ele não escreve fusíveis, EEPROM ou o carregador de boot. Apenas IDs Leonardo `2341:8036` / `2A03:8036` e Caterina `2341:0036` / `2A03:0036` são aceitos. Se o Windows não pode fornecer uma conexão física correspondente, piscando é bloqueado em vez de adivinhar uma porta.
 
-Flashing não é atômico: uma desconexão de cabo ou perda de energia pode deixar o firmware do aplicativo incompleto. Não há backup ou rollback de firmware automático. Se necessário, re-upload o esboço original com o Arduino IDE configurado para **Arduino Leonardo**. Dependendo do carregador de boot da placa, conectando brevemente RST ao GND duas vezes pode expor uma porta de bootloader temporária; upload enquanto essa porta está disponível. Um carregador de boot danificado requer hardware ISP e não pode ser reparado por este atualizador USB. Não escreva uma diferente placa ou variante do relógio.
+Flashing não é atômico: uma desconexão de cabo ou perda de energia pode deixar o firmware do aplicativo incompleto. Não há backup ou rollback de firmware automático. Se necessário, re-upload o esboço original com o Arduino IDE configurado para **Arduino Leonardo**. Dependendo do carregador de boot da placa, conectar brevemente RST ao GND duas vezes pode expor uma porta de bootloader temporária; upload enquanto essa porta está disponível. Um carregador de boot danificado requer hardware ISP e não pode ser reparado por este atualizador USB. Não escreva uma diferente placa ou variante do relógio.
 
 O último registo AVRDUDE da aplicação principal está armazenado em `%LOCALAPPDATA%\DeckPilot\Firmware\last-flash.log`. Atelier mantém instalar e redefinir logs em `%LOCALAPPDATA%\DeckPilotFactory\last-flash.log` e `last-reset.log`.
 
@@ -51,7 +51,7 @@ dotnet run --project tests/DeckPilot.Checks -c Release --no-build
 
 O script pins Arduino AVR core **1.8.6**, Teclado **1.0.6**, e AVRDUDE a montante **8.0**Os pacotes geridos por CLI utilizam a validação da soma de verificação de pacotes do Arduino; os arquivos binários/fonte do AVRDUDE têm SHA-256 pins no guião. `artifacts/firmware/DeckPilot-firmware.zip` contém a DeckPilot HEX, área de aplicação gerada redefinir HEX e seu gerador, checksums, ferramenta Windows, licença e correspondente upstream AVRDUDE arquivo de origem. Publicação CI requer o pacote; um desenvolvedor comum construir sem ele pode executar o aplicativo, mas não pode flash ou redefinir um tabuleiro.
 
-O original 12- O esboço do botão foi adaptado do David Madison. **Barato de fluxo** projeto, copyright 2018, MIT. Seu aviso permanece em `DeckPilot.ino`. DeckPilot as adições usam a licença do repositório MIT. **AVRDUDE é software separado sob GPL-2.0-ou depois**, com o seu aviso/licença e código-fonte empacotado; a licença do repositório MIT não substitui essa licença. https://github.com/avrdudes/avrdude/tree/v8.0 para instruções de compilação a montante e avisos de dependência.
+O original 12- O esboço do botão foi adaptado do David Madison. **Barato de fluxo** projeto, copyright 2018, MIT. Seu aviso permanece em `DeckPilot.ino`. DeckPilot as adições usam a licença do repositório MIT. **AVRDUDE é software separado sob GPL-2.0-ou depois**, com seu aviso/licença e código-fonte empacotado; a licença do repositório MIT não substitui essa licença. https://github.com/avrdudes/avrdude/tree/v8.0 para instruções de compilação a montante e avisos de dependência.
 
 <a id="firmware-111-and-usb-protocol-2"></a>
 ## Firmware 1.1.1 e protocolo USB 2

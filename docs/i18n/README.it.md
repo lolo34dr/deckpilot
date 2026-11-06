@@ -110,6 +110,8 @@ L'eseguibile single-file estrae le sue dipendenze in bundle nella cache .NET del
 | Sito web | Apre un indirizzo HTTP o HTTPS nel browser predefinito. |
 | Taglio di scelta rapida | Invia una combinazione chiave alla finestra attiva. |
 | Media | Controlla la riproduzione, le tracce, il volume o il muto. |
+| Spotify | Controlla la riproduzione Spotify e regola solo il volume di sessione audio di Windows di Spotify. |
+| Applicazione DeckPilot | Mostra l'esistente DeckPilot finestra, compreso quando è in esecuzione nell'area di notifica. |
 
 Per le azioni di applicazione, aprire il raccoglitore di applicazione e cercare per nome. Il selettore di file manuale rimane disponibile, con argomenti di programma facoltativi sotto opzioni avanzate. Inserisci argomenti in base alla sintassi dell'applicazione di destinazione.
 
@@ -210,7 +212,7 @@ La console controlla l'uscita con uno stato non zero sulla prima affermazione fa
 
 Il controllo file-lock viene eseguito solo su Windows.
 
-GitHub Azioni funziona anche `tests/windows-update-smoke.ps1` Si avvia l'helper di aggiornamento, esce dal processo originale, verifica la sostituzione e la conferma di avvio, verifica la conservazione delle impostazioni, quindi apre il picker di applicazione installato tramite UI Automation e salva una selezione. Esercita anche eseguibili rinomati e percorsi contenenti spazi. Questo script è riservato per l'account di test GitHub Actions usa e getta. `tests/windows-installer-smoke.ps1`: Real Program File installazione, desktop/Start menu scorciatoie, avvio predefinito, aggiornamento con l'applicazione aperta, la conservazione di avvio disabili, e la disinstallazione senza cancellare i profili.
+GitHub Azioni funziona anche `tests/windows-update-smoke.ps1` Avvia l'helper dell'aggiornamento, esce dal processo originale, verifica la conferma della sostituzione e dell'avvio, verifica la conservazione delle impostazioni, quindi apre il picker dell'applicazione installato tramite UI Automation e salva una selezione. Esercita anche gli eseguibili rinomati e i percorsi che contengono gli spazi. Questo script è riservato all'account di test GitHub Actions usa e getta. `tests/windows-installer-smoke.ps1`: Real Program File installazione, desktop/Start menu scorciatoie, avvio predefinito, aggiornamento con l'applicazione aperta, la conservazione di avvio disabili, e la disinstallazione senza cancellare i profili.
 
 <a id="publish-a-standalone-windows-folder"></a>
 ### Pubblica una cartella di Windows standalone
@@ -225,7 +227,7 @@ Distribuire l'archivio completo. Il flusso di lavoro di Windows build produce an
 <a id="publish-a-github-release"></a>
 ### Pubblica un rilascio di GitHub
 
-Aggiornare la versione dell'applicazione e `.github/release-notes.md`, quindi spingere una corrispondenza `v*` tag, come ad esempio `v1.0.0`. Il flusso di lavoro di rilascio verifica che il tag corrisponde alla versione del progetto ed esegue la validazione prima di pubblicare:
+Aggiornare la versione dell'applicazione e `.github/release-notes.md`, quindi spingere una corrispondenza `v*` tag, come ad esempio `v1.0.0`. Il flusso di lavoro di rilascio controlla che il tag corrisponde alla versione del progetto ed esegue la validazione prima di pubblicare:
 
 | Scarica | Contenuto |
 | --- | --- |
@@ -263,7 +265,7 @@ Con Leonardo collegato:
 
 | Sentiero | Oggetto |
 | --- | --- |
-| `src/DeckPilot.Core` | Impostazioni, stato chiave, ricerca, convalida di rilascio di GitHub, download verificati e operazioni di sostituzione. |
+| `src/DeckPilot.Core` | Impostazioni, stato chiave, ricerca, convalida di rilascio GitHub, download verificati e operazioni di sostituzione. |
 | `src/DeckPilot.Windows` | Interfaccia WPF, catalogo delle applicazioni, icone, azioni di Windows, integrazione di area di notifica e helper di aggiornamento. |
 | `tests/DeckPilot.Checks` | Controlli eseguibili senza un quadro di prova esterno. |
 | `tests/windows-update-smoke.ps1` | Aggiornamento nativo di Windows e test di fumo di applicazione-picker utilizzato da CI. |
@@ -286,7 +288,7 @@ Credito consigliato:
 
 Per la preparazione del dispositivo e i controlli di qualità dell'officina, installare il separato [DeckPilot Atelier](../../docs/FACTORY.md) strumento. Il suo installatore è pubblicato come **[DeckPilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** accanto all'applicazione principale. Può lampeggiare il firmware incluso su una tavola Leonardo/Caterina, quindi controllare brevi e lunghe presse su tutti 12 chiavi fisiche ed esportare un rapporto.
 
-DeckPilot 1.1.0 include un **Firmware du macropad…** dialogo e firmware 1.0.0 per il Pro Micro ATmega32U4 **5 V / 16 MHz**, utilizzando la configurazione Leonardo/Caterina confermata dal registro di caricamento del proprietario. Lo strumento di flashing in bundle di Windows non richiede Arduino IDE. La selezione e la conferma del dispositivo sono obbligatori; gli aggiornamenti delle app non lampeggiano mai silenziosamente la scheda.
+DeckPilot 1.1.0 include un **Firmware du macropad…** dialogo e firmware 1.0.0 per il Pro Micro ATmega32U4 **5 V / 16 MHz**, utilizzando la configurazione Leonardo/Caterina confermata dal registro di caricamento del proprietario. Lo strumento di flashing in bundle di Windows non richiede Arduino IDE. La selezione e la conferma dei dispositivi sono obbligatori; gli aggiornamenti delle app non lampeggiano mai silenziosamente la scheda.
 
 **Il proprietario ha confermato successo in-app flashing, firmware 1.0.0 identificazione e tutto 12 pulsanti sulla scheda di riferimento.** Mantenere lo schizzo originale e l'accesso a RST/GND per il recupero. [documentazione del firmware](FIRMWARE.it.md) per la compatibilità, la validazione, il recupero, i passaggi di costruzione e le licenze di terze parti. Le modalità USB di Per-button e i controlli dei media nativi non fanno parte di questa versione del firmware.
 
@@ -320,7 +322,7 @@ Per gli upload manuali di Arduino IDE, **Qui. DeckPilot dal suo menu di vassoio*
 <a id="spotify-action-search-and-drag-and-drop-150"></a>
 ## Spotify, ricerca azione e drag-and-drop (1.5.0)
 
-**Spotify** è separato da **Multimédia**. Il suo gioco/pausa, i comandi successivi e precedenti si rivolgono alla sessione multimediale di Windows dell'app desktop Spotify, anche mentre un browser sta giocando a YouTube. Spotify deve essere aperto e avere una sessione di riproduzione disponibile; avviare una traccia una volta o più. Spotify in un browser non è supportato. DeckPilot. Windows 10 versione 2004 o più tardi, o Windows 11, è richiesto da questa costruzione.
+**Spotify** è separato da **Multimédia**. Il suo gioco/pausa, i comandi successivi e precedenti si rivolgono alla sessione media di Windows dell'app desktop Spotify, anche mentre un browser sta giocando a YouTube. 5Spotify deve essere aperto e avere una sessione di riproduzione disponibile; avviare una traccia una volta se necessario. Spotify in un browser non è supportato. Le sessioni Missing Spotify producono un errore, senza alcuna ricaduta sui tasti multimediali globali o su un altro lettore. DeckPilot. Windows 10 versione 2004 o più tardi, o Windows 11, è richiesto da questa costruzione.
 
 Uso **Rechercher une action ou une application** per quesiti come `volume`, `skip`, `Spotify` L'indice installato-app carica sulla prima ricerca e viene memorizzato nella cache per cinque minuti; la selezione manuale dei file rimane disponibile. Fare clic su un risultato per configurare la chiave selezionata o trascinarla su un'altra chiave.
 
@@ -350,7 +352,7 @@ I controlli core coprono i limiti di ripetizione/rilascio, le detenzioni simulta
 <a id="search-and-ci-reliability-fixes-164"></a>
 ## Correzioni di affidabilità di ricerca e CI (1.6.4)
 
-I risultati di ricerca equivalenti mantengono i pulsanti WPF esistenti. Il catalogo installato-app e il timer debunce differiscono la sostituzione dei risultati mentre un pulsante di ricerca viene catturato o una resistenza è in corso. Questo impedisce che un pulsante sorgente venga rimosso durante un'interazione.
+I risultati di ricerca equivalenti mantengono i pulsanti WPF esistenti. Il catalogo installato-app e il timer di debunce differiscono la sostituzione dei risultati mentre un pulsante di ricerca viene catturato o un trascinamento è in corso. Questo impedisce che un pulsante sorgente venga rimosso durante un'interazione.
 
 I controlli di fumo di Windows continuano a eseguire trascinamenti nativo del mouse e convalidare le assegnazioni salvate, swap, undo/redo ed entrambi i gesti di stampa. Il client di test utilizza le coordinate del cursore fisico per abbinare i limiti di automazione UI indipendentemente dal DPI, si concentra prima di misurare e scansiona tutte le percentuali di scorrimento.
 
@@ -367,7 +369,7 @@ Un lettore di istantanee di prova può aspettare fino a 500 ms per la condivisio
 
 Risparmio di impostazioni identiche controlla il file corrente, ma salta la sostituzione e il lavoro di backup. Le modifiche esterne / cancellazione e le scritture fallite sono ancora rilevate. `ButtonAction` ha l'uguaglianza di valore (compresa la lunga azione); i controlli sporchi dell'editor evitano la serializzazione di JSON. La storia mantiene le istantanee del modello staccate, convalida nuovi stati, ed evita la parsing di JSON durante l'undo/redo. 50-edit limit e 20 i backup dei profili rimangono.
 
-Ricerca e picker condividono un catalogo immutabile installato-app per cinque minuti (15 secondi per un risultato parziale). I consumatori concorrenti condividono una scansione; la chiusura di un raccoglitore non cancella un altro consumatore. Refresh bypassa la cache, e ogni raccoglitore ha un proprio filtro / vista. Scansione e catalogo parsing eseguire il thread UI; il filtro del picker è debounced da 120 ms. La ricerca d'azione ricontrolla questa cache dopo il suo debounce e quando ritorna dal raccoglitore, quindi è disponibile anche un catalogo aggiornato.
+Ricerca e picker condividono un catalogo immutabile installato-app per cinque minuti (15 secondi per un risultato parziale). I consumatori concorrenti condividono una scansione; la chiusura di un raccoglitore non cancella un altro consumatore. Refresh bypassa la cache, e ogni raccoglitore ha un proprio filtro / vista. Scansione e catalogo parsing eseguire il thread UI; il filtro del picker è debounced da 120 ms. La ricerca di azione ricontrolla questa cache dopo il suo debounce e quando ritorna dal raccoglitore, quindi è disponibile anche un catalogo aggiornato.
 
 Gli aggiornamenti di bordo UI ora seguono le notifiche di connessione invece di svegliare ogni 100 ms. Le notifiche di disconnessione ordinate annullano ancora le detenzioni in sospeso. I ganci di tastiera agganciano il lavoro visivo della coda, mentre la soppressione e il temporizzazione del gesto rimangono sincroni. Le animazioni di feedback nascoste/minimizzate arrestano e utilizzano un intervallo di polling audio di dieci secondi invece di due secondi; la riapertura o l'emissione di un comando audio richiede lo stato fresco immediatamente.
 
@@ -387,12 +389,19 @@ L'interfaccia carbone mette in primo luogo la libreria di azione, separa i contr
 
 Il firmware rimane **1.1.1**. L'accettazione di un'offerta firmware automatico ora apre correttamente il firmware manager; la precedente guardia modale ha impedito che il handoff. L'identità del firmware esistente, battito cardiaco, ricollegamento e controlli flash rimangono in vigore.
 
+<a id="open-deckpilot-and-profile-notifications-217"></a>
+## Aprire DeckPilot e notifiche del profilo (2.1.7)
+
+Sottotitolo **Ouvrir una domanda**, scegliere il built-in **DeckPilot** ingresso o click **Affettare « Ouvrir DeckPilot »**. Questa azione porta l'esistente DeckPilot finestra sul davanti; il suo obiettivo rimane valido dopo un aggiornamento o una reinstallazione dell'app.
+
+Cambiare i profili mostra una breve, click-through notifica con il nome del profilo attivo. **Préférences de l’application**, è possibile disattivarlo, scegliere qualsiasi angolo, o impostare una posizione orizzontale e verticale personalizzata. **Effettuare prenotazioni online** mostra immediatamente il risultato. La notifica segue lo schermo contenente l'app in primo piano e appare anche mentre DeckPilot È nascosto. Può apparire oltre i giochi senza confini / conviviali; esclusivi giochi a schermo intero possono coprire normali overlay di Windows.
+
 <a id="deckpilot-210-fixed-signed-virtual-microphone-routing"></a>
 ## DeckPilot 2.1.0: instradamento del microfono virtuale firmato fisso
 
 DeckPilot ora utilizza un'interfaccia nera profonda per impostazione predefinita. In **Préférences de l’application**, cambiare lo sfondo, il pannello e i colori accenti utilizzando `#RRGGBB` valori; il tuo tema viene salvato su questo PC.
 
-The **Soundboard · micro virtuel** pannello consente di selezionare il microfono fisico e clip MP3/WAV. DeckPilot esegue automaticamente il mix al VB-Audio VB-CABLE riproduzione endpoint; in Discord o un gioco, scegliere **`CABLE Output`** durante l'installazione e gli aggiornamenti, DeckPilot assegni VB-CABLE scarica il pacchetto ufficiale su HTTPS e verifica l'editore di Authenticode prima di eseguire l'installatore silenzioso del driver. Ciò richiede una connessione internet e l'autorizzazione dell'amministratore. DeckPilot non fa il bundle o ridistribuisce i file VB-Audio. Se il driver manca in seguito, è possibile avviare lo stesso programma di installazione controllato dalla firma dal Soundboard pannello. Il motore audio utilizza NAudio (MIT; vedi [avviso di terze parti](../../third-party/NAudio-LICENSE.txt)). VB-CABLE è un driver Windows con licenza separata, firmato, non un componente MIT.
+The **Soundboard · micro virtuel** pannello consente di selezionare il microfono fisico e clip MP3/WAV. DeckPilot esegue automaticamente il mix al VB-Audio VB-CABLE riproduzione endpoint; in Discord o un gioco, scegliere **`CABLE Output`** come il microfono. Durante l'installazione e gli aggiornamenti, DeckPilot assegni VB-CABLE scarica il pacchetto ufficiale su HTTPS e verifica l'editore di Authenticode prima di eseguire l'installatore silenzioso del driver. Ciò richiede una connessione internet e l'autorizzazione dell'amministratore. DeckPilot non fa il bundle o ridistribuisce i file VB-Audio. Se il driver manca in seguito, è possibile avviare lo stesso programma di installazione controllato dalla firma dal Soundboard pannello. Il motore audio utilizza NAudio (MIT; vedi [avviso di terze parti](../../third-party/NAudio-LICENSE.txt)). VB-CABLE è un driver Windows con licenza separata, firmato, non un componente MIT.
 
 <a id="deckpilot-atelier-190"></a>
 ## DeckPilot Atelier (in inglese)1.9.0)
@@ -425,7 +434,7 @@ La validazione copre le impostazioni legacy, la convalida dell'accento, la navig
 <a id="profile-sound-files-and-workshop-safety"></a>
 ### Profilo file audio e sicurezza officina
 
-Le esportazioni di profilati includono le clip MP3/WAV di riferimento (fino a 32 MiB audio per pacchetto). Importa copia audio incorporato in DeckPilotI backup del profilo automatico utilizzano lo stesso formato; l'audio non disponibile viene registrato come mancante piuttosto che silenziosamente sostituito. Mantenere i file di origine se si supera il limite di esportazione. I file del profilo legacy rimangono supportati. Rimozione di una clip che è ancora assegnato a una breve o lunga azione è bloccata.
+Le esportazioni di profilati includono le clip MP3/WAV di riferimento (fino a 32 MiB audio per pacchetto). Importa copia audio incorporato in DeckPilotI backup del profilo automatico utilizzano lo stesso formato; l'audio non disponibile viene registrato come mancante piuttosto che silenziosamente sostituito. Mantenere i file di origine se si supera il limite di esportazione. I file del profilo legacy rimangono supportati. Rimozione di una clip che è ancora assegnato a un'azione breve o lunga è bloccato.
 
 Atelier accetta tavole che non rispondono ancora DeckPilot protocollo, mentre controlla ancora la posizione USB, Caterina bootloader e ATmega32U4 firma prima della programmazione. Ogni sessione di test inizia con i risultati vuoti, e il suo rapporto rimane associato alla scheda testata.
 
@@ -433,3 +442,8 @@ Atelier accetta tavole che non rispondono ancora DeckPilot protocollo, mentre co
 ### Latenza del microfono dal vivo
 
 DeckPilot 2.1.3 processi audio dal vivo in piccoli blocchi di uscita-driven. Richiede 20 ms acquisizione e cattura del microfono dell'evento 40 ms buffer di riproduzione. La coda del microfono è legata a 100 ms e scarta le cornici complete più vecchie se le bancarelle di riproduzione; questo evita la costruzione di secondi di discorso ritardato. Queste sono le impostazioni del buffer del software, non una garanzia di latenza end-to-end misurata. VB-CABLE e l'applicazione di ricezione contribuiscono anche ritardo. Le impostazioni di isolamento vocale discord sono invariate e possono sopprimere le clip audio perché riceve il segnale misto.
+
+<a id="automatic-virtual-microphone-startup"></a>
+### Avvio automatico del microfono virtuale
+
+DeckPilot 2.1.4 attiva automaticamente il microfono virtuale quando il microfono fisico selezionato e VB-CABLE Questo funziona anche in background dopo l'accesso di Windows quando **Iniziare con Windows** è abilitato. I dispositivi mancanti vengono riattivati ogni cinque secondi. La memorizzazione del microfono virtuale salva esplicitamente l'avvio automatico come disabilitato; riattivarlo nel Soundboard pannello. Le clip vengono giocate solo quando richiesto.

@@ -6,7 +6,7 @@ DeckPilot 1.9.7 fija Atelier desinstalar mientras la aplicación está abierta. 
 
 DeckPilot 1.9.6 fija el manifiesto DPI de Windows que previno DeckPilot Atelier desde la apertura después de la instalación.
 
-DeckPilot 1.9.5 Incluye diagnósticos detallados de inicio de Atelier en el cheque de liberación de Windows.
+DeckPilot 1.9.5 Incluye diagnósticos detallados de arranque Atelier en el cheque de liberación de Windows.
 
 DeckPilot 1.9.4 mejora la prueba de humo de arranque de Atelier Windows para informar detalles de fallo de la aplicación.
 
@@ -35,10 +35,10 @@ DeckPilot 1.8.0 añade un espacio de trabajo refrescado y formas más rápidas d
 - Acciones de perfil: cambiar a un perfil nombrado, el siguiente o el perfil anterior de una clave. Los conjuntos de perfil importado mantienen sus enlaces internos.
 - Acciones de Windows: abrir ajustes comunes o Administrador de tareas, o bloquear explícitamente el PC.
 - Copiar/cortar/paste/reestablecer teclas completas, incluyendo largas prensas y colores, con deshacer/redo y un portapapeles plano.
-- Capturar un acceso directo al teclado; Escapar cancela y las teclas macropadas permanecen reservadas durante la captura.
+- Capturar un atajo de teclado directamente; Escapar cancela y las teclas macropadas permanecen reservadas durante la captura.
 - Ctrl+K búsqueda de acción y una historia clara y sencilla de la última sesión 30 acciones.
 - Arregla el impulso automático de firmware para aceptarlo abre el gestor de firmware. Los gestos pendientes se cancelan a través de los cambios de perfil.
 
 Descargar **DeckPilot-Setup.exe** o actualización de la aplicación. Se conservan los perfiles existentes, las preferencias de calibración y puesta en marcha. **1.1.1**; no se requiere flash para estas características.
 
-La validación incluye compatibilidad de núcleos/navigation/import/template checks e instalación nativa de Windows, actualización, picker, drag-and-drop, undo/redo, creación de plantillas, acciones de perfil, captura atajo, edición de portapapeles, diseño y minimizar/restore checks. El comportamiento de macropado físico y audio-dispositivo todavía depende del hardware de Windows del propietario.
+La validación incluye compatibilidad de núcleo/avigación/import/template checks e instalación nativa de Windows, actualización, picker, drag-and-drop, undo/redo, creación de plantillas, acciones de perfil, captura atajo, edición de portapapeles, diseño y minimizar/restore checks. El comportamiento de macropado físico y audio-dispositivo todavía depende del hardware Windows del propietario.
