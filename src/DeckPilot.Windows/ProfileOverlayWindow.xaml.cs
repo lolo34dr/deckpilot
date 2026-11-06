@@ -42,12 +42,20 @@ public partial class ProfileOverlayWindow : Window
     }
 
     public void ShowProfile(string profileName, ProfileOverlaySettings settings, bool reduceMotion)
+        => ShowNotice("PROFIL ACTIF", profileName, "Profil DeckPilot", settings, reduceMotion);
+
+    public void ShowSoundboard(string clipName, ProfileOverlaySettings settings, bool reduceMotion)
+        => ShowNotice("SON DU SOUNDBOARD", clipName, "Son DeckPilot", settings, reduceMotion);
+
+    private void ShowNotice(string kind, string name, string windowTitle, ProfileOverlaySettings settings, bool reduceMotion)
     {
         revision++;
         hideTimer.Stop();
         BeginAnimation(OpacityProperty, null);
         reducedMotion = reduceMotion || !SystemParameters.ClientAreaAnimation;
-        ProfileNameText.Text = profileName;
+        Title = windowTitle;
+        OverlayKindText.Text = kind;
+        ProfileNameText.Text = name;
 
         IntPtr foreground = GetForegroundWindow();
         Forms.Screen screen = foreground != IntPtr.Zero ? Forms.Screen.FromHandle(foreground) : Forms.Screen.PrimaryScreen!;

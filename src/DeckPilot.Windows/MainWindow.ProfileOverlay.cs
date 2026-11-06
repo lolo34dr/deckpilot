@@ -55,7 +55,7 @@ public partial class MainWindow
         };
         if (!Persist()) { settings.ProfileOverlay = previous; return; }
         ShowProfileOverlay(settings.ActiveProfile.Name, preview: true);
-        StatusText.Text = "Notification de profil enregistrée · Aperçu affiché.";
+        StatusText.Text = "Notifications enregistrées · Aperçu affiché.";
     }
 
     private void ShowProfileOverlay(string profileName, bool preview = false)
@@ -69,6 +69,20 @@ public partial class MainWindow
         catch (Exception ex)
         {
             ReportError("Notification de profil indisponible : " + ex.Message);
+        }
+    }
+
+    private void ShowSoundboardOverlay(string clipName)
+    {
+        if (!settings.ProfileOverlay.Enabled) return;
+        try
+        {
+            profileOverlay ??= new ProfileOverlayWindow();
+            profileOverlay.ShowSoundboard(clipName, settings.ProfileOverlay, settings.ReduceMotion);
+        }
+        catch (Exception ex)
+        {
+            ReportError("Notification de son indisponible : " + ex.Message);
         }
     }
 }

@@ -509,7 +509,7 @@ public partial class MainWindow : Window
             else if (action.Kind == ActionKind.Soundboard)
             {
                 if (!Guid.TryParse(action.Target, out var soundId) || settings.Soundboard.Clips.FirstOrDefault(c => c.Id == soundId) is not { } clip) throw new IOException("Son du soundboard introuvable. Choisis un son dans l’éditeur.");
-                Audio.Toggle(clip.Id, clip.FilePath);
+                if (Audio.Toggle(clip.Id, clip.FilePath)) ShowSoundboardOverlay(clip.Name);
             }
             else if (action.Kind == ActionKind.Spotify)
             {

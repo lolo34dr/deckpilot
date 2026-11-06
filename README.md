@@ -359,6 +359,16 @@ The charcoal interface puts the action library first, separates profile controls
 
 The firmware remains **1.1.1**. Accepting an automatic firmware offer now correctly opens the firmware manager; the previous modal guard prevented that handoff. Existing firmware identity, heartbeat, reconnect and flash checks remain in place. New workspace features do not need a firmware flash.
 
+## Soundboard return and on-screen sound notifications (2.1.9)
+
+In **Soundboard · micro virtuel**, enable **Entendre aussi les sons du soundboard** to hear clips through your headset or speakers as well as the virtual microphone. Choose the physical output and set the separate return volume from 0 to 100%. This return is off by default and saved on this PC. It plays **only soundboard clips**; your physical microphone is never added to the speaker output. The virtual microphone still sends your voice and clips to VB-CABLE.
+
+Changing the volume does not interrupt the virtual microphone. If your selected speaker disconnects, the return stops while the virtual microphone continues. Reconnect it, refresh the device list, or choose another output. Headphones help prevent your physical microphone from picking up clips acoustically.
+
+The speaker return now uses the selected device's advertised Windows audio format, including extensible formats used by some USB headsets, and falls back from event-driven playback if a driver rejects it. Starting a soundboard clip also displays its name in the same configurable, click-through overlay as profile changes. The overlay preference and position apply to both notices.
+
+DeckPilot Atelier remains at 1.0.12 and firmware remains 1.1.1. No firmware flash is needed. Actual speaker routing still depends on the Windows audio device and should be checked on the owner's PC.
+
 ## Soundboard speaker return (2.1.8)
 
 In **Soundboard · micro virtuel**, enable **Entendre aussi les sons du soundboard** to hear clips through your headset or speakers as well as the virtual microphone. Choose the physical output and set the separate return volume from 0 to 100%. This return is off by default and saved on this PC. It plays **only soundboard clips**; your physical microphone is never added to the speaker output. The virtual microphone still sends your voice and clips to VB-CABLE.

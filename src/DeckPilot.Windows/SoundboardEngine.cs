@@ -5,6 +5,7 @@ using DeckPilot.Core;
 using System.IO;
 using System.Linq;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
@@ -50,6 +51,7 @@ internal sealed class SoundboardEngine : IDisposable
     private WasapiOut? monitorPlayback;
     private MixingSampleProvider? monitorMixer;
     private WaveFormat? monitorFormat;
+    private WaveFormat? monitorOutputFormat;
     private readonly ConcurrentQueue<ISampleProvider> monitorFinished = new();
     private readonly ConcurrentQueue<string> monitorFaults = new();
     private bool monitorEnabled;
@@ -156,15 +158,34 @@ internal sealed class SoundboardEngine : IDisposable
         if (VirtualCableEndpoints.IsCableDevice(output.DeviceFriendlyName) || VirtualCableEndpoints.IsPlaybackEndpoint(output.FriendlyName))
             throw new InvalidOperationException("Choisis un casque ou des haut-parleurs, pas VB-CABLE, pour le retour audio.");
         var format = output.AudioClient.MixFormat;
+        monitorOutputFormat = format;
         monitorFormat = WaveFormat.CreateIeeeFloatWaveFormat(format.SampleRate, format.Channels);
         monitorMixer = new MixingSampleProvider(monitorFormat) { ReadFully = true };
         monitorMixer.MixerInputEnded += (_, e) => { monitorFinished.Enqueue(e.SampleProvider); StateChanged?.Invoke(); };
         monitorStopping = false;
-        monitorPlayback = new WasapiOut(output, AudioClientShareMode.Shared, true, RealtimeAudio.PlaybackBufferMilliseconds);
-        monitorPlayback.PlaybackStopped += MonitorStopped;
-        monitorPlayback.Init(monitorMixer);
+        try { monitorPlayback = CreateMonitorPlayback(output, useEventSync: true); }
+        catch (COMException) { monitorPlayback = CreateMonitorPlayback(output, useEventSync: false); }
         foreach (var item in playing.Values) AddMonitorClip(item, resume: true);
         monitorPlayback.Play();
+    }
+
+    private WasapiOut CreateMonitorPlayback(MMDevice output, bool useEventSync)
+    {
+        var candidate = new WasapiOut(output, AudioClientShareMode.Shared, useEventSync,
+            useEventSync ? RealtimeAudio.PlaybackBufferMilliseconds : Math.Max(80, RealtimeAudio.PlaybackBufferMilliseconds));
+        try
+        {
+            candidate.PlaybackStopped += MonitorStopped;
+            candidate.Init(new SoundboardMonitorWaveProvider(monitorMixer!, monitorOutputFormat!));
+            return candidate;
+        }
+        catch
+        {
+            candidate.PlaybackStopped -= MonitorStopped;
+            try { candidate.Dispose(); }
+            catch (Exception) { }
+            throw;
+        }
     }
 
     private void AddMonitorClip(Playing item, bool resume = false)
@@ -214,7 +235,7 @@ internal sealed class SoundboardEngine : IDisposable
             catch (Exception) { }
         }
         foreach (var item in playing.Values) StopMonitorClip(item);
-        monitorMixer = null; monitorFormat = null;
+        monitorMixer = null; monitorFormat = null; monitorOutputFormat = null;
         try { monitorDevice?.Dispose(); }
         catch (Exception) { }
         monitorDevice = null;
