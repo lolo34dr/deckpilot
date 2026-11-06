@@ -6,4 +6,4 @@ Aucun 変更 fonctionnel ni visuel. Seul le numéro de version de l’applicatio
 
 ダンズ DeckPilot 0.2.0, utilisez **Vérifierメインテナント**、puis の確認 **Mettre à ジュール**, ou は、ラ ・ レチェロの automatique に出席します。. Aucun téléchargement manuel n'est nécessaire は、CE テストを注ぐ.
 
-Téléchargements également 免責条項 : **DeckPilot.exeについて**, **DeckPilot-win-x64.zip は、** ツイート **SHA256SUMS.txtの特長**. ウィンドウズ 10/11 x64 .
+Téléchargements également 免責条項 : **DeckPilot.exeについて**, **DeckPilot-win-x64.zipの** ツイート **SHA256SUMS.txtの特長**. ウィンドウズ 10/11 x64 .
