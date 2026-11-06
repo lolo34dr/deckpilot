@@ -34,6 +34,18 @@ Add-Type -AssemblyName UIAutomationTypes
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
+# Previous installer-upgrade checks run in this same disposable Windows user
+# session. Clear any process they may have left so it cannot own DeckPilot's
+# single-instance mutex and hide the splash window from this test.
+foreach ($staleProcess in @(Get-Process -Name DeckPilot -ErrorAction SilentlyContinue)) {
+    try {
+        Stop-Process -Id $staleProcess.Id -Force -ErrorAction Stop
+        $staleProcess.WaitForExit()
+    } catch {
+        if (!$staleProcess.HasExited) { throw "Could not stop a previous DeckPilot test instance (PID $($staleProcess.Id)): $($_.Exception.Message)" }
+    }
+}
+
 function Wait-Until([scriptblock]$Condition, [int]$Seconds = 45) {
     $deadline = [DateTime]::UtcNow.AddSeconds($Seconds)
     do {
@@ -172,7 +184,16 @@ try {
     New-Item -ItemType Directory -Force $stage, $installed, (Split-Path $settingsPath) | Out-Null
     $script:phase = 'interactive splash and main window handoff'
     $splashProcess = Start-Process $source -PassThru
-    Wait-Until { $script:splashWindow = Find-TopLevelById $splashProcess.Id 'DeckPilotSplash'; $null -ne $script:splashWindow }
+    Wait-Until {
+        $splashProcess.Refresh()
+        if ($splashProcess.HasExited) {
+            $startupLog = Join-Path $env:LOCALAPPDATA 'DeckPilot/startup-error.log'
+            $diagnostic = if (Test-Path $startupLog) { Get-Content $startupLog -Raw } else { 'No startup-error.log was created.' }
+            throw "DeckPilot exited before showing its splash (exit=$($splashProcess.ExitCode)). $diagnostic"
+        }
+        $script:splashWindow = Find-TopLevelById $splashProcess.Id 'DeckPilotSplash'
+        $null -ne $script:splashWindow
+    }
     if ($script:splashWindow.Current.Name -notmatch 'DeckPilot') { throw 'The branded splash screen has an unexpected accessible name.' }
     Wait-Until { $script:mainWindow = Find-TopLevelById $splashProcess.Id 'DeckPilotMainWindow'; $null -ne $script:mainWindow }
     Wait-Until { $null -eq (Find-TopLevelById $splashProcess.Id 'DeckPilotSplash') }
