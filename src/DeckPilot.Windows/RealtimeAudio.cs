@@ -20,6 +20,10 @@ internal sealed class RealtimeAudioBuffer : IWaveProvider
         data = new byte[checked(frames * format.BlockAlign)];
     }
     public int BufferedBytes { get { lock (gate) return length; } }
+    public void Clear()
+    {
+        lock (gate) { start = 0; length = 0; }
+    }
     private void Validate(byte[] buffer, int offset, int count)
     {
         if (buffer == null) throw new ArgumentNullException(nameof(buffer));
@@ -68,6 +72,10 @@ internal static class RealtimeAudio
         if (input.WaveFormat is WaveFormatExtensible extensible)
             input = new StandardWaveProvider(input, extensible.ToStandardWaveFormat());
         ISampleProvider samples = input.ToSampleProvider();
+        return ConvertSamples(samples, output);
+    }
+    public static ISampleProvider ConvertSamples(ISampleProvider samples, WaveFormat output)
+    {
         if (samples.WaveFormat.SampleRate != output.SampleRate)
             samples = new WdlResamplingSampleProvider(samples, output.SampleRate);
         if (samples.WaveFormat.Channels != output.Channels)

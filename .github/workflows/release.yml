@@ -34,8 +34,15 @@ jobs:
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '8.0.x'
+      - name: Build the bundled RNNoise noise suppressor
+        shell: pwsh
+        run: |
+          cmake --version
+          ./third-party/RNNoise/build.ps1
       - name: Verify core behavior on Windows
         run: dotnet run --project tests/DeckPilot.Checks -c Release
+        env:
+          DECKPILOT_REQUIRE_RNNOISE: '1'
       - name: Install verified Arduino CLI 1.2.2
         shell: pwsh
         run: ./firmware/tools/install-cli.ps1
@@ -52,12 +59,12 @@ jobs:
       - name: Build application
         shell: pwsh
         run: |
-          dotnet build DeckPilot.sln -c Release -p:RequireFirmwareBundle=true
+          dotnet build DeckPilot.sln -c Release -p:RequireFirmwareBundle=true -p:RequireNoiseReductionBundle=true
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Publish portable folder
-        run: dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true -p:RequireFirmwareBundle=true -p:PublishSingleFile=false -o artifacts/win-x64
+        run: dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true -p:RequireFirmwareBundle=true -p:RequireNoiseReductionBundle=true -p:PublishSingleFile=false -o artifacts/win-x64
       - name: Publish standalone executable
-        run: dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true -p:RequireFirmwareBundle=true -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o artifacts/standalone
+        run: dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true -p:RequireFirmwareBundle=true -p:RequireNoiseReductionBundle=true -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o artifacts/standalone
       - name: Build Windows installer
         shell: pwsh
         run: |

@@ -1,4 +1,5 @@
 using DeckPilot.Core;
+using System.Text.Json;
 
 int passed = 0;
 void Check(string name, Action test)
@@ -35,9 +36,15 @@ Check("Version 2 theme and soundboard preferences validate without breaking old 
 Check("Soundboard monitor preferences persist separately from the virtual microphone", () => {
     var prefs = new Settings();
     Expect(!prefs.Soundboard.MonitorEnabled && prefs.Soundboard.MonitorOutputId == "" && prefs.Soundboard.MonitorVolumePercent == 50);
+    Expect(prefs.Soundboard.NoiseSuppressionEnabled && prefs.Soundboard.NoiseSuppressionStrengthPercent == 75);
+    var legacySoundboard = JsonSerializer.Deserialize<SoundboardSettings>("{\"AutoStart\":true,\"MicrophoneId\":\"old-mic\",\"VirtualOutputId\":\"old-cable\"}")!;
+    Expect(legacySoundboard.NoiseSuppressionEnabled && legacySoundboard.NoiseSuppressionStrengthPercent == 75
+        && legacySoundboard.MicrophoneId == "old-mic");
     prefs.Soundboard.MonitorEnabled = true;
     prefs.Soundboard.MonitorOutputId = "physical-speakers";
     prefs.Soundboard.MonitorVolumePercent = 35;
+    prefs.Soundboard.NoiseSuppressionEnabled = false;
+    prefs.Soundboard.NoiseSuppressionStrengthPercent = 62;
     string directory = Path.Combine(Path.GetTempPath(), "deckpilot-monitor-" + Guid.NewGuid().ToString("N"));
     try
     {
@@ -45,10 +52,14 @@ Check("Soundboard monitor preferences persist separately from the virtual microp
         store.Save(prefs);
         var restored = store.Load();
         Expect(restored.Soundboard.MonitorEnabled && restored.Soundboard.MonitorOutputId == "physical-speakers"
-            && restored.Soundboard.MonitorVolumePercent == 35 && restored.Soundboard.AutoStart);
+            && restored.Soundboard.MonitorVolumePercent == 35 && restored.Soundboard.AutoStart
+            && !restored.Soundboard.NoiseSuppressionEnabled && restored.Soundboard.NoiseSuppressionStrengthPercent == 62);
         restored.Soundboard.MonitorVolumePercent = 101; Reject(restored.Validate);
         restored.Soundboard.MonitorVolumePercent = -1; Reject(restored.Validate);
         restored.Soundboard.MonitorVolumePercent = 0;
+        restored.Soundboard.NoiseSuppressionStrengthPercent = 101; Reject(restored.Validate);
+        restored.Soundboard.NoiseSuppressionStrengthPercent = -1; Reject(restored.Validate);
+        restored.Soundboard.NoiseSuppressionStrengthPercent = 75;
         restored.Soundboard.MonitorOutputId = null!; Reject(restored.Validate);
     }
     finally { if (Directory.Exists(directory)) Directory.Delete(directory, recursive: true); }
@@ -165,5 +176,6 @@ passed += FeatureChecks.Run();
 passed += AuditFixChecks.Run();
 passed += RealtimeAudioChecks.Run();
 passed += SoundboardMonitorChecks.Run();
+passed += NoiseSuppressionChecks.Run();
 passed += await AudioEndpointCacheChecks.RunAsync();
 Console.WriteLine($"{passed} checks passed.");

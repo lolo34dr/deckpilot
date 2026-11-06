@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
- <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup>
+ <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><AllowUnsafeBlocks>true</AllowUnsafeBlocks></PropertyGroup>
  <ItemGroup><ProjectReference Include="../../src/DeckPilot.Core/DeckPilot.Core.csproj"/></ItemGroup>
  <ItemGroup><Compile Include="../../src/DeckPilot.Windows/ApplicationCatalogCache.cs" Link="ApplicationCatalogCache.cs"/></ItemGroup>
  <ItemGroup><Compile Include="../../src/DeckPilot.Windows/AsyncSnapshotCache.cs" Link="AsyncSnapshotCache.cs"/></ItemGroup>
- <ItemGroup><PackageReference Include="NAudio.Core" Version="2.2.1"/><Compile Include="../../src/DeckPilot.Windows/RealtimeAudio.cs" Link="RealtimeAudio.cs"/><Compile Include="../../src/DeckPilot.Windows/SoundboardMonitorWaveProvider.cs" Link="SoundboardMonitorWaveProvider.cs"/></ItemGroup>
+ <ItemGroup><PackageReference Include="NAudio.Core" Version="2.2.1"/><Compile Include="../../src/DeckPilot.Windows/RealtimeAudio.cs" Link="RealtimeAudio.cs"/><Compile Include="../../src/DeckPilot.Windows/SoundboardMonitorWaveProvider.cs" Link="SoundboardMonitorWaveProvider.cs"/><Compile Include="../../src/DeckPilot.Windows/VoiceNoiseSuppression.cs" Link="VoiceNoiseSuppression.cs"/></ItemGroup>
+ <ItemGroup><EmbeddedResource Include="../../artifacts/native/win-x64/rnnoise.dll" LogicalName="DeckPilot.Native.rnnoise.dll" Condition="Exists('../../artifacts/native/win-x64/rnnoise.dll')"/></ItemGroup>
 </Project>

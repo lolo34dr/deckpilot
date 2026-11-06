@@ -31,10 +31,12 @@ public partial class MainWindow
                         SoundboardStartButton.Content = soundboard.IsRunning ? "Arrêter le micro virtuel" : "Activer le micro virtuel";
                         if (error != null) SoundboardStatus.Text = "Audio interrompu : " + error;
                         if (!string.IsNullOrWhiteSpace(soundboard.MonitorError)) SoundboardMonitorStatus.Text = soundboard.MonitorError;
+                        UpdateNoiseSuppressionStatus();
                         RefreshSoundboardClips();
                     }
                     catch (Exception ex) { SoundboardStatus.Text = "Audio indisponible : " + ex.Message; }
                 });
+                soundboard.ConfigureNoiseSuppression(settings.Soundboard.NoiseSuppressionEnabled, settings.Soundboard.NoiseSuppressionStrengthPercent);
                 ApplySoundboardMonitorSettings();
             }
             return soundboard;
@@ -42,6 +44,7 @@ public partial class MainWindow
     }
     private readonly DispatcherTimer soundboardRetry = new() { Interval = TimeSpan.FromSeconds(5) };
     private readonly DispatcherTimer monitorSaveTimer = new() { Interval = TimeSpan.FromMilliseconds(300) };
+    private readonly DispatcherTimer noiseSuppressionSaveTimer = new() { Interval = TimeSpan.FromMilliseconds(300) };
     private readonly AsyncSnapshotCache<SoundboardEndpointSnapshot> soundboardDeviceCache =
         new(() => Task.Run(SoundboardEngine.DiscoverEndpoints), TimeSpan.FromSeconds(15));
     private bool soundboardRefreshing;
@@ -53,11 +56,15 @@ public partial class MainWindow
         ThemeAccentInput.Text = settings.Theme.Accent;
         ApplyTheme();
         SoundboardAutoStartCheck.IsChecked = settings.Soundboard.AutoStart;
+        SoundboardNoiseSuppressionCheck.IsChecked = settings.Soundboard.NoiseSuppressionEnabled;
+        SoundboardNoiseSuppressionSlider.Value = settings.Soundboard.NoiseSuppressionStrengthPercent;
         SoundboardMonitorCheck.IsChecked = settings.Soundboard.MonitorEnabled;
         SoundboardMonitorVolumeSlider.Value = settings.Soundboard.MonitorVolumePercent;
+        UpdateNoiseSuppressionStatus();
         UpdateSoundboardMonitorStatus();
         soundboardRetry.Tick += async (_, _) => await TryAutoStartSoundboardAsync();
         monitorSaveTimer.Tick += (_, _) => { monitorSaveTimer.Stop(); SaveSoundboardSettings(); };
+        noiseSuppressionSaveTimer.Tick += (_, _) => { noiseSuppressionSaveTimer.Stop(); SaveSoundboardSettings(); };
         Loaded += async (_, _) =>
         {
             if (!IsOperational) return;
@@ -69,6 +76,7 @@ public partial class MainWindow
         {
             soundboardRetry.Stop();
             if (monitorSaveTimer.IsEnabled) { monitorSaveTimer.Stop(); SaveSoundboardSettings(); }
+            if (noiseSuppressionSaveTimer.IsEnabled) { noiseSuppressionSaveTimer.Stop(); SaveSoundboardSettings(); }
         };
         SoundboardStatus.Text = "Recherche des périphériques audio…";
         RefreshSoundboardClips();
@@ -198,6 +206,7 @@ public partial class MainWindow
                 || virtualCableInput == null || SoundboardMicrophonePicker.SelectedItem is not AudioEndpoint microphone) return;
             Audio.Start(microphone.Id, virtualCableInput.Id);
             ApplySoundboardMonitorSettings();
+            UpdateNoiseSuppressionStatus();
             SoundboardStartButton.Content = "Arrêter le micro virtuel";
             SoundboardStatus.Text = "Micro virtuel actif automatiquement · Voix et sons envoyés vers VB-CABLE.";
         }
@@ -223,6 +232,63 @@ public partial class MainWindow
         if (SoundboardAutoStartCheck.IsChecked != enable) SoundboardAutoStartCheck.IsChecked = enable;
         else await TryAutoStartSoundboardAsync();
     }
+
+    private void SoundboardNoiseSuppressionChanged(object sender, RoutedEventArgs e)
+    {
+        if (loading) return;
+        bool previous = settings.Soundboard.NoiseSuppressionEnabled;
+        bool enabled = SoundboardNoiseSuppressionCheck.IsChecked == true;
+        try
+        {
+            Audio.ConfigureNoiseSuppression(enabled, settings.Soundboard.NoiseSuppressionStrengthPercent);
+            settings.Soundboard.NoiseSuppressionEnabled = enabled;
+            SaveSoundboardSettings();
+            UpdateNoiseSuppressionStatus();
+        }
+        catch (Exception ex)
+        {
+            settings.Soundboard.NoiseSuppressionEnabled = previous;
+            bool wasLoading = loading; loading = true;
+            SoundboardNoiseSuppressionCheck.IsChecked = previous;
+            loading = wasLoading;
+            SoundboardNoiseSuppressionStatus.Text = "Réduction de bruit indisponible : " + ex.Message;
+        }
+    }
+
+    private void SoundboardNoiseSuppressionStrengthChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (loading) return;
+        int value = (int)Math.Round(e.NewValue);
+        if (settings.Soundboard.NoiseSuppressionStrengthPercent == value) return;
+        int previous = settings.Soundboard.NoiseSuppressionStrengthPercent;
+        settings.Soundboard.NoiseSuppressionStrengthPercent = value;
+        try
+        {
+            soundboard?.ConfigureNoiseSuppression(settings.Soundboard.NoiseSuppressionEnabled, value);
+            noiseSuppressionSaveTimer.Stop(); noiseSuppressionSaveTimer.Start();
+            UpdateNoiseSuppressionStatus();
+        }
+        catch (Exception ex)
+        {
+            settings.Soundboard.NoiseSuppressionStrengthPercent = previous;
+            bool wasLoading = loading; loading = true;
+            SoundboardNoiseSuppressionSlider.Value = previous;
+            loading = wasLoading;
+            SoundboardNoiseSuppressionStatus.Text = "Réduction de bruit indisponible : " + ex.Message;
+        }
+    }
+
+    private void UpdateNoiseSuppressionStatus()
+    {
+        string? error = soundboard?.NoiseSuppressionError;
+        if (!string.IsNullOrWhiteSpace(error))
+            SoundboardNoiseSuppressionStatus.Text = error;
+        else if (settings.Soundboard.NoiseSuppressionEnabled)
+            SoundboardNoiseSuppressionStatus.Text = "RNNoise filtre la voix envoyée à CABLE Output. Sélectionne cette entrée dans tes applications ; les sons du soundboard restent intacts.";
+        else
+            SoundboardNoiseSuppressionStatus.Text = "Réduction désactivée · Le micro est transmis sans filtre.";
+    }
+
     private void SoundboardMonitorChanged(object sender, RoutedEventArgs e)
     {
         if (loading) return;

@@ -241,6 +241,18 @@
         <Button x:Name="SoundboardStartButton" Content="Activer le micro virtuel" Click="ToggleSoundboardClick" HorizontalAlignment="Left"/>
         <TextBlock x:Name="SoundboardStatus" Text="Micro virtuel arrêté." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,5,0,10"/>
         <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,2,0,12"/>
+        <TextBlock Text="Réduction de bruit" FontWeight="SemiBold" Margin="0,0,0,4"/>
+        <CheckBox x:Name="SoundboardNoiseSuppressionCheck" AutomationProperties.AutomationId="SoundboardNoiseSuppressionCheck"
+                  Content="Filtrer le bruit du microphone" Checked="SoundboardNoiseSuppressionChanged" Unchecked="SoundboardNoiseSuppressionChanged"/>
+        <StackPanel IsEnabled="{Binding ElementName=SoundboardNoiseSuppressionCheck, Path=IsChecked}">
+         <DockPanel><TextBlock Text="Intensité"/><TextBlock DockPanel.Dock="Right" Text="{Binding ElementName=SoundboardNoiseSuppressionSlider, Path=Value, StringFormat={}{0:0}%}" Foreground="{StaticResource MutedBrush}"/></DockPanel>
+         <DockPanel><TextBlock Text="Léger"/><TextBlock DockPanel.Dock="Right" Text="Fort" Foreground="{StaticResource MutedBrush}"/></DockPanel>
+         <Slider x:Name="SoundboardNoiseSuppressionSlider" Minimum="0" Maximum="100" SmallChange="1" LargeChange="10" TickFrequency="1" IsSnapToTickEnabled="True"
+                 AutomationProperties.AutomationId="SoundboardNoiseSuppressionSlider" AutomationProperties.Name="Intensité de la réduction de bruit"
+                 ValueChanged="SoundboardNoiseSuppressionStrengthChanged"/>
+        </StackPanel>
+        <TextBlock x:Name="SoundboardNoiseSuppressionStatus" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" FontSize="11" Margin="0,2,0,12"/>
+        <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,2,0,12"/>
         <TextBlock Text="Retour des sons" FontWeight="SemiBold" Margin="0,0,0,4"/>
         <CheckBox x:Name="SoundboardMonitorCheck" AutomationProperties.AutomationId="SoundboardMonitorCheck"
                   Content="Entendre aussi les sons du soundboard" Checked="SoundboardMonitorChanged" Unchecked="SoundboardMonitorChanged"/>
