@@ -32,6 +32,27 @@ Check("Version 2 theme and soundboard preferences validate without breaking old 
     prefs.Theme.Accent = "#AABBCC";
     prefs.Soundboard.Clips[0].FilePath = "sound.exe"; Reject(prefs.Validate);
 });
+Check("Soundboard monitor preferences persist separately from the virtual microphone", () => {
+    var prefs = new Settings();
+    Expect(!prefs.Soundboard.MonitorEnabled && prefs.Soundboard.MonitorOutputId == "" && prefs.Soundboard.MonitorVolumePercent == 50);
+    prefs.Soundboard.MonitorEnabled = true;
+    prefs.Soundboard.MonitorOutputId = "physical-speakers";
+    prefs.Soundboard.MonitorVolumePercent = 35;
+    string directory = Path.Combine(Path.GetTempPath(), "deckpilot-monitor-" + Guid.NewGuid().ToString("N"));
+    try
+    {
+        var store = new SettingsStore(Path.Combine(directory, "settings.json"));
+        store.Save(prefs);
+        var restored = store.Load();
+        Expect(restored.Soundboard.MonitorEnabled && restored.Soundboard.MonitorOutputId == "physical-speakers"
+            && restored.Soundboard.MonitorVolumePercent == 35 && restored.Soundboard.AutoStart);
+        restored.Soundboard.MonitorVolumePercent = 101; Reject(restored.Validate);
+        restored.Soundboard.MonitorVolumePercent = -1; Reject(restored.Validate);
+        restored.Soundboard.MonitorVolumePercent = 0;
+        restored.Soundboard.MonitorOutputId = null!; Reject(restored.Validate);
+    }
+    finally { if (Directory.Exists(directory)) Directory.Delete(directory, recursive: true); }
+});
 Check("VB-CABLE routes only to its playback endpoint and hides its virtual microphone from physical input choices", () => {
     Expect(VirtualCableEndpoints.IsPlaybackEndpoint("CABLE Input (VB-Audio Virtual Cable)"));
     Expect(VirtualCableEndpoints.IsRecordingEndpoint("CABLE Output (VB-Audio Virtual Cable)"));

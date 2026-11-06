@@ -240,6 +240,21 @@
         <CheckBox x:Name="SoundboardAutoStartCheck" Content="Activer automatiquement avec DeckPilot" Checked="SoundboardAutoStartChanged" Unchecked="SoundboardAutoStartChanged"/>
         <Button x:Name="SoundboardStartButton" Content="Activer le micro virtuel" Click="ToggleSoundboardClick" HorizontalAlignment="Left"/>
         <TextBlock x:Name="SoundboardStatus" Text="Micro virtuel arrêté." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,5,0,10"/>
+        <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,2,0,12"/>
+        <TextBlock Text="Retour des sons" FontWeight="SemiBold" Margin="0,0,0,4"/>
+        <CheckBox x:Name="SoundboardMonitorCheck" AutomationProperties.AutomationId="SoundboardMonitorCheck"
+                  Content="Entendre aussi les sons du soundboard" Checked="SoundboardMonitorChanged" Unchecked="SoundboardMonitorChanged"/>
+        <StackPanel IsEnabled="{Binding ElementName=SoundboardMonitorCheck, Path=IsChecked}">
+         <TextBlock Text="Casque ou haut-parleurs"/>
+         <ComboBox x:Name="SoundboardMonitorOutputPicker" DisplayMemberPath="Name"
+                   AutomationProperties.AutomationId="SoundboardMonitorOutputPicker" AutomationProperties.Name="Sortie du retour des sons"
+                   SelectionChanged="SoundboardMonitorDeviceChanged"/>
+         <DockPanel><TextBlock Text="Volume du retour"/><TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" Foreground="{StaticResource MutedBrush}" Text="{Binding ElementName=SoundboardMonitorVolumeSlider, Path=Value, StringFormat={}{0:0} %}"/></DockPanel>
+         <Slider x:Name="SoundboardMonitorVolumeSlider" Minimum="0" Maximum="100" SmallChange="1" LargeChange="10" TickFrequency="1" IsSnapToTickEnabled="True"
+                 AutomationProperties.AutomationId="SoundboardMonitorVolumeSlider" AutomationProperties.Name="Volume du retour des sons en pourcentage"
+                 ValueChanged="SoundboardMonitorVolumeChanged"/>
+        </StackPanel>
+        <TextBlock x:Name="SoundboardMonitorStatus" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" FontSize="11" Margin="0,2,0,12"/>
         <Button Content="Ajouter un son MP3 ou WAV…" Click="AddSoundClipClick" HorizontalAlignment="Left"/>
         <StackPanel x:Name="SoundboardClipList"/>
        </StackPanel>

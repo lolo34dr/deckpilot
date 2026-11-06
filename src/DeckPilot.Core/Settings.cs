@@ -70,8 +70,14 @@ public sealed class SoundboardSettings
     public bool AutoStart { get; set; } = true;
     public string MicrophoneId { get; set; } = "";
     public string VirtualOutputId { get; set; } = "";
+    public bool MonitorEnabled { get; set; }
+    public string MonitorOutputId { get; set; } = "";
+    public int MonitorVolumePercent { get; set; } = 50;
     public List<SoundboardClip> Clips { get; set; } = [];
-    public bool IsValid() => MicrophoneId != null && VirtualOutputId != null && MicrophoneId.Length < 1024 && VirtualOutputId.Length < 1024 && Clips != null && Clips.Count <= 48 && Clips.All(c => c != null && c.Id != Guid.Empty && c.Name is { Length: > 0 and <= 64 } && c.FilePath is { Length: > 0 and <= 4096 } && (c.FilePath.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) || c.FilePath.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))) && Clips.Select(c => c.Id).Distinct().Count() == Clips.Count;
+    public bool IsValid() => MicrophoneId != null && VirtualOutputId != null && MonitorOutputId != null
+        && MicrophoneId.Length < 1024 && VirtualOutputId.Length < 1024 && MonitorOutputId.Length < 1024
+        && MonitorVolumePercent is >= 0 and <= 100
+        && Clips != null && Clips.Count <= 48 && Clips.All(c => c != null && c.Id != Guid.Empty && c.Name is { Length: > 0 and <= 64 } && c.FilePath is { Length: > 0 and <= 4096 } && (c.FilePath.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) || c.FilePath.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))) && Clips.Select(c => c.Id).Distinct().Count() == Clips.Count;
 }
 public sealed class Settings
 {
