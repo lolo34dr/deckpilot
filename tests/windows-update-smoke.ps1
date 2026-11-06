@@ -306,13 +306,14 @@ try {
     $list = Find-Control $picker 'InstalledApplications'
     $script:phase = 'list installed applications'
     (Find-Control $picker 'ApplicationSearchBox').GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue('DeckPilot')
-    $items = $null
+    $deckPilotItem = $null
     Wait-Until {
-        $condition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::ListItem)
-        $script:items = $list.FindAll([System.Windows.Automation.TreeScope]::Descendants, $condition)
-        $script:items.Count -gt 0 -and $script:items[0].Current.Name -like 'DeckPilot*'
+        $name = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::NameProperty, 'DeckPilot')
+        $type = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::ListItem)
+        $script:deckPilotItem = $list.FindFirst([System.Windows.Automation.TreeScope]::Descendants, [System.Windows.Automation.AndCondition]::new($name, $type))
+        $null -ne $script:deckPilotItem
     } 60
-    $items[0].GetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern).Select()
+    $deckPilotItem.GetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern).Select()
     Invoke-Control (Find-Control $picker 'ChooseInstalledApplication')
     Wait-Until {
         try { $data = Read-SharedJson $settingsPath; return $data.Profiles[0].Buttons[0].Target -eq 'deckpilot:self' } catch { return $false }
