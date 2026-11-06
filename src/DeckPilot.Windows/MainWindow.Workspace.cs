@@ -25,6 +25,7 @@ public partial class MainWindow
         ProfileTemplatePicker.SelectedIndex = 0;
         ReduceMotionCheck.IsChecked = settings.ReduceMotion;
         Motion.ReduceMotion = settings.ReduceMotion;
+        InitializeProfileOverlayPreferences();
         AccentPicker.SelectionChanged += (_, _) =>
         {
             if (loading || AccentPicker.SelectedItem is not ActionAccent accent) return;
@@ -106,6 +107,7 @@ public partial class MainWindow
         RefreshProfiles(); LoadEditor();
         if (tray != null) tray.Text = "DeckPilot · " + destination.Name[..Math.Min(destination.Name.Length, 45)];
         StatusText.Text = "Profil actif · " + destination.Name;
+        if (previous != destination.Id) ShowProfileOverlay(destination.Name);
         return true;
     }
 }

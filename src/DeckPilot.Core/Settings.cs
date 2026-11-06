@@ -82,6 +82,7 @@ public sealed class Settings
     public string PreferredBoardDeviceId { get; set; } = "";
     public bool AutoCheckUpdates { get; set; } = true;
     public bool ReduceMotion { get; set; }
+    public ProfileOverlaySettings ProfileOverlay { get; set; } = new();
     public ThemeSettings Theme { get; set; } = new();
     public SoundboardSettings Soundboard { get; set; } = new();
     public DateTimeOffset UpdateSnoozedUntil { get; set; }
@@ -98,7 +99,7 @@ public sealed class Settings
     }
     public void Validate()
     {
-        if (Theme is null || !Theme.IsValid() || Soundboard is null || !Soundboard.IsValid() || PreferredBoardDeviceId is null || PreferredBoardDeviceId.Length > 512 || Version != 1 || LayoutColumns is not (3 or 4) || Profiles is null || Profiles.Count == 0 ||
+        if (Theme is null || !Theme.IsValid() || Soundboard is null || !Soundboard.IsValid() || ProfileOverlay is null || !ProfileOverlay.IsValid() || PreferredBoardDeviceId is null || PreferredBoardDeviceId.Length > 512 || Version != 1 || LayoutColumns is not (3 or 4) || Profiles is null || Profiles.Count == 0 ||
             Profiles.Any(p => p is null || string.IsNullOrWhiteSpace(p.Name) || p.Id == Guid.Empty ||
                 p.Buttons is null || p.Buttons.Count != 12 || p.Buttons.Any(b => b is null ||
                     !b.IsValid())) ||

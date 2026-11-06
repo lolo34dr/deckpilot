@@ -65,6 +65,8 @@ using System;
 using System.Runtime.InteropServices;
 public static class DeckPilotDragMouse {
     [DllImport("user32.dll")] public static extern uint GetDpiForWindow(IntPtr window);
+    [DllImport("user32.dll", EntryPoint="GetWindowLongW")] public static extern int GetWindowLong(IntPtr window, int index);
+    [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
     [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr window);
     [DllImport("user32.dll", SetLastError=true)] static extern bool SetPhysicalCursorPos(int x, int y);
     [DllImport("user32.dll", SetLastError=true)] static extern bool GetPhysicalCursorPos(out Point point);
@@ -303,17 +305,21 @@ try {
     }
     $list = Find-Control $picker 'InstalledApplications'
     $script:phase = 'list installed applications'
+    (Find-Control $picker 'ApplicationSearchBox').GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue('DeckPilot')
     $items = $null
     Wait-Until {
         $condition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::ListItem)
         $script:items = $list.FindAll([System.Windows.Automation.TreeScope]::Descendants, $condition)
-        $script:items.Count -gt 0
+        $script:items.Count -gt 0 -and $script:items[0].Current.Name -like 'DeckPilot*'
     } 60
     $items[0].GetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern).Select()
     Invoke-Control (Find-Control $picker 'ChooseInstalledApplication')
     Wait-Until {
-        try { $data = Read-SharedJson $settingsPath; return ![string]::IsNullOrWhiteSpace($data.Profiles[0].Buttons[0].Target) } catch { return $false }
+        try { $data = Read-SharedJson $settingsPath; return $data.Profiles[0].Buttons[0].Target -eq 'deckpilot:self' } catch { return $false }
     }
+    Invoke-Control (Find-Control $root 'TestActionButton')
+    Wait-Until { (Find-Control $root 'DeckKey01').Current.ItemStatus -eq $sentStatus }
+    Write-Host 'PASS built-in DeckPilot action: searchable without an executable path and opens the existing window'
     $script:phase = 'open firmware dialog without hardware'
     Invoke-Control (Find-Control $root 'OpenFirmware')
     $firmwareWindow = $null
@@ -486,7 +492,28 @@ try {
     if (((Read-SharedJson $settingsPath).KeyMap -join ',') -ne $originalCalibration) { throw 'Profile navigation changed calibration' }
     Select-ComboItem $root 'ProfilePicker' 'Musique et audio' $replacement.Id
     Wait-Until { (Read-SharedJson $settingsPath).ActiveProfileId -eq $templateId }
+    $script:phase = 'show the profile overlay without taking focus'
+    $overlay = $null
+    Wait-Until { $script:overlay = Find-TopLevelById $replacement.Id 'DeckPilotProfileOverlay'; $null -ne $script:overlay } 8
+    if ((Find-Control $overlay 'ProfileOverlayName').Current.Name -ne 'Musique et audio') { throw 'The overlay did not show the active profile name' }
+    $overlayHandle = [IntPtr]::new($overlay.Current.NativeWindowHandle)
+    $overlayStyle = [DeckPilotDragMouse]::GetWindowLong($overlayHandle, -20)
+    if (($overlayStyle -band 0x08000020) -ne 0x08000020 -or [DeckPilotDragMouse]::GetForegroundWindow() -eq $overlayHandle) { throw 'The overlay intercepted focus or mouse input' }
     Write-Host 'PASS profile action: a deck key changes the active profile and the selector remains synchronized'
+    $script:phase = 'save and preview a custom profile overlay position'
+    $preferences = (Find-Control $root 'ApplicationPreferences').GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern)
+    if ($preferences.Current.ExpandCollapseState -eq [System.Windows.Automation.ExpandCollapseState]::Collapsed) { $preferences.Expand() }
+    Select-ComboItem $root 'ProfileOverlayPositionPicker' 'Position personnalisée' $replacement.Id 'SidebarScroll'
+    (Find-Control $root 'ProfileOverlayXSlider').GetCurrentPattern([System.Windows.Automation.RangeValuePattern]::Pattern).SetValue(35)
+    (Find-Control $root 'ProfileOverlayYSlider').GetCurrentPattern([System.Windows.Automation.RangeValuePattern]::Pattern).SetValue(70)
+    Invoke-Control (Show-InScroll $root (Find-Control $root 'ProfileOverlayPreviewButton') 'SidebarScroll')
+    Wait-Until {
+        $saved = Read-SharedJson $settingsPath
+        $saved.ProfileOverlay.Position -eq 'Custom' -and $saved.ProfileOverlay.XPercent -eq 35 -and $saved.ProfileOverlay.YPercent -eq 70
+    }
+    Wait-Until { $script:overlay = Find-TopLevelById $replacement.Id 'DeckPilotProfileOverlay'; $null -ne $script:overlay } 8
+    if ((Find-Control $overlay 'ProfileOverlayName').Current.Name -ne 'Musique et audio') { throw 'The custom overlay preview did not show the active profile' }
+    Write-Host 'PASS profile overlay: active name, no focus capture and persistent custom placement'
     Select-ComboItem $root 'ProfileTargetPicker' 'Musique et audio' $replacement.Id
     Invoke-Control (Find-Control $root 'SaveActionButton')
     Invoke-Control (Find-Control $root 'TestActionButton')

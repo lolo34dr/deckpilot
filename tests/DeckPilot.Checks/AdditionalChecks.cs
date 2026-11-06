@@ -35,6 +35,15 @@ internal static class AdditionalChecks
             await Reject(() => { ApplicationTarget.ForAppId("bad\" /argument"); return Task.CompletedTask; });
             await Reject(() => { ApplicationTarget.GetAppId("calculator.exe"); return Task.CompletedTask; });
         });
+        await Check("DeckPilot is always available as a portable built-in application action", () => {
+            var preset = ActionSearch.Find("DeckPilot", []).Single();
+            Expect(preset.Action.Kind == ActionKind.Application && ApplicationTarget.IsDeckPilot(preset.Action.Target));
+            var catalog = ApplicationTarget.Merge([ApplicationTarget.DeckPilotApplication, new("DeckPilot", "old-install.lnk", "Menu Démarrer")]);
+            Expect(catalog.Count == 1 && catalog[0].Target == ApplicationTarget.DeckPilot);
+            var profile = new Profile(); profile.Buttons[0] = preset.Action;
+            Expect(ProfileExchange.Import(ProfileExchange.Export([profile])).Profiles[0].Buttons[0].Target == ApplicationTarget.DeckPilot);
+            return Task.CompletedTask;
+        });
         await Check("Only newer stable releases are offered, using numeric versions", () => {
             Expect(UpdateRelease.Parse(ReleaseJson(), current)?.Version == new Version(0, 2, 0));
             Expect(UpdateRelease.Parse(ReleaseJson(), new Version(0, 2, 0, 0)) == null);

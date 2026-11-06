@@ -32,6 +32,32 @@ public static class FeatureChecks
             Expect(persisted.ReduceMotion && persisted.ActiveProfile.Buttons[0].Accent == "#70A7E8");
         });
 
+        Check("Profile overlay preferences survive old settings and reject invalid positions", () =>
+        {
+            var settings = JsonSerializer.Deserialize<Settings>("{\"LayoutColumns\":4}")!;
+            settings.Validate();
+            Expect(settings.ProfileOverlay.Enabled && settings.ProfileOverlay.Position == ProfileOverlayPosition.TopRight);
+            settings.ProfileOverlay.Position = ProfileOverlayPosition.Custom;
+            settings.ProfileOverlay.XPercent = 37; settings.ProfileOverlay.YPercent = 82;
+            var saved = JsonSerializer.Deserialize<Settings>(JsonSerializer.Serialize(settings))!;
+            saved.Validate();
+            Expect(saved.ProfileOverlay.Position == ProfileOverlayPosition.Custom && saved.ProfileOverlay.XPercent == 37 && saved.ProfileOverlay.YPercent == 82);
+            saved.ProfileOverlay.XPercent = 101; Reject(saved.Validate);
+            saved.ProfileOverlay.XPercent = double.NaN; Reject(saved.Validate);
+            saved.ProfileOverlay.XPercent = 37; saved.ProfileOverlay.Position = (ProfileOverlayPosition)99; Reject(saved.Validate);
+        });
+
+        Check("Profile overlay placement honors all corners and custom positions across monitors", () =>
+        {
+            var settings = new ProfileOverlaySettings { Position = ProfileOverlayPosition.TopRight };
+            Expect(ProfileOverlayLayout.Place(-1920, 0, 1920, 1080, 350, 80, 24, settings) == (-374, 24));
+            settings.Position = ProfileOverlayPosition.BottomLeft;
+            Expect(ProfileOverlayLayout.Place(-1920, 0, 1920, 1080, 350, 80, 24, settings) == (-1896, 976));
+            settings.Position = ProfileOverlayPosition.Custom; settings.XPercent = 50; settings.YPercent = 25;
+            Expect(ProfileOverlayLayout.Place(-1920, 0, 1920, 1080, 350, 80, 24, settings) == (-1135, 262));
+            Expect(ProfileOverlayLayout.Place(0, 0, 100, 100, 150, 150, 24, settings) == (0, 0));
+        });
+
         Check("Accents validate at import, include long presses and survive detached copies", () =>
         {
             var settings = new Settings();

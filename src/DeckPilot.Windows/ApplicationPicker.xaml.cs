@@ -21,6 +21,10 @@ public partial class ApplicationPicker : Window
     public ApplicationPicker()
     {
         InitializeComponent(); DarkChrome.Attach(this);
+        view = new ListCollectionView(new[] { ApplicationTarget.DeckPilotApplication });
+        view.Filter = item => item is InstalledApplication app && app.Matches(query);
+        AppList.ItemsSource = view;
+        UpdateCount();
         Loaded += async (_, _) => { SearchBox.Focus(); Motion.Reveal(this); await LoadApplications(); };
         searchTimer.Tick += (_, _) => ApplySearch();
         Closed += (_, _) => { searchTimer.Stop(); lifetime.Cancel(); lifetime.Dispose(); };

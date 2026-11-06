@@ -28,7 +28,7 @@ public static class ApplicationCatalog
     }
     private static async Task<ApplicationCatalogResult> DiscoverAsync(CancellationToken cancellation)
     {
-        var applications = new List<InstalledApplication>();
+        var applications = new List<InstalledApplication> { ApplicationTarget.DeckPilotApplication };
         foreach (var location in new[] { Environment.SpecialFolder.StartMenu, Environment.SpecialFolder.CommonStartMenu })
             Scan(Environment.GetFolderPath(location), applications, cancellation);
         string? warning = null;

@@ -10,6 +10,9 @@ public sealed record InstalledApplication(string Name, string Target, string Sou
 public static class ApplicationTarget
 {
     private const string Prefix = "appsfolder:";
+    public const string DeckPilot = "deckpilot:self";
+    public static InstalledApplication DeckPilotApplication => new("DeckPilot", DeckPilot, "Intégré · affiche la fenêtre DeckPilot");
+    public static bool IsDeckPilot(string target) => target.Equals(DeckPilot, StringComparison.OrdinalIgnoreCase);
     public static bool IsPackaged(string target) => target.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase);
     public static string ForAppId(string appId)
     {
