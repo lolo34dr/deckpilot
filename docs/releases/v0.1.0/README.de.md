@@ -1,6 +1,6 @@
 > Dies ist eine automatische Übersetzung der vollständigen Release Notes. Das englische Original ist die Referenz.
 
-Première version de DeckPilot pour Fenster 10/11 x64.
+Première version de DeckPilot gießen Fenster 10/11 x64.
 
 - Interface sombre avec grille de 4 Lignes et 3 Colonnes.
 - Calibrage guidé 12 Boutons F13 à F24.

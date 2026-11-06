@@ -2,9 +2,9 @@
 
 DeckPilot 1.4.2 Behebt Schnittstellenkonsistenz- und Layoutprobleme.
 
-- Deutliche Hover-, Auswahl- und Tastatur-Fokus-Zustände: Tasten wachsen nicht mehr zu umgebenden Panels heran oder weisen irreführende Auswahlgrenzen auf.
+- Deutliche Schwebe-, Auswahl- und Tastatur-Fokuszustände: Tasten wachsen nicht mehr zu umgebenden Panels heran oder weisen irreführende Auswahlgrenzen auf.
 - Dunkle erweiterbare Abschnitte mit Vektor-Chevrons ersetzen die weißen Systempfeile. Header und Checkbox-Text werden in ihre Panels eingewickelt.
-- Die gesamte Seitenleiste scrollt, einschließlich Präferenzen und Kalibrierung, so dass erweiterte Abschnitte andere Steuerungen nicht abdecken können.
+- Die gesamte Seitenleiste scrollt, einschließlich Vorlieben und Kalibrierung, so dass erweiterte Abschnitte andere Steuerungen nicht abdecken können.
 - Größere, klarere Key-Captions und Sekundärtext, ein ausgewogeneres Keypad / Editor-Layout, pixelorientiertes Main-Fenster-Rendering und beschnittene Long-Profil-Namen.
 - Die Free-Key-Hilfe erklärt nun den Unterschied zwischen der normalen Verwendung von F13-F24-Tastaturen und der Kalibrierung von Positionen für DeckPilot Aktionen.
 
