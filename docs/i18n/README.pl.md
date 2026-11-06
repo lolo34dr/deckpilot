@@ -389,6 +389,17 @@ Interfejs węgla drzewnego stawia bibliotekę działania na pierwszym miejscu, o
 
 Pozostaje oprogramowanie firmowe **1.1.1**. Akceptowanie automatycznej oferty oprogramowania firmowego teraz poprawnie otwiera menedżera oprogramowania firmowego; poprzednia ochrona modalna uniemożliwiła przekazanie go. Istniejąca tożsamość oprogramowania firmowego, bicie serca, ponowne podłączenie i kontrola flash pozostają na miejscu. Nowe funkcje przestrzeni roboczej nie potrzebują błysku firmware.
 
+<a id="soundboard-return-and-on-screen-sound-notifications-219"></a>
+## Soundboard powiadomienia zwrotne i dźwiękowe na ekranie ekranu (2.1.9)
+
+W **Soundboard · micro virtuel**, enable **Entendre aussi les sons du soundboard** aby usłyszeć klipy przez słuchawki lub głośniki, jak również wirtualny mikrofon. Wybierz wyjście fizyczne i ustawić odrębną głośność zwrotu z 0 do 100%. Ten zwrot jest domyślnie wyłączony i zapisany na tym komputerze. **Tylko klipy z tablic dźwiękowych**; twój fizyczny mikrofon nigdy nie jest dodawany do wyjścia głośnika. Wirtualny mikrofon nadal wysyła twój głos i klipy do VB-CABLE.
+
+Zmiana głośności nie przerywa wirtualnego mikrofonu. Jeśli wybrany głośnik odłącza się, powrót zatrzymuje się podczas trwania wirtualnego mikrofonu. Odśwież go, odśwież listę urządzeń lub wybierz inne wyjście. Słuchawki zapobiegają akustycznemu odbieraniu klipów przez fizyczny mikrofon.
+
+Głośnik zwraca teraz używa ogłoszonego przez wybrane urządzenie formatu audio systemu Windows, w tym rozszerzalnych formatów używanych przez niektóre zestawy słuchawek USB, i wraca z odtwarzacza z napędem event, jeśli kierowca go odrzuci. Uruchomienie klipu z tablicy dźwiękowej wyświetla swoją nazwę w tym samym konfigurowalnym, kliknącym nakładce jako zmiany profilu. Preferencje i pozycja nakładki odnoszą się do obu ogłoszeń.
+
+DeckPilot Atelier pozostaje w 1.0.12 i firmware pozostaje 1.1.1. Nie jest potrzebne oprogramowanie firmware flash. Rzeczywiste routing głośników nadal zależy od urządzenia audio Windows i powinien być sprawdzany na komputerze właściciela.
+
 <a id="soundboard-speaker-return-218"></a>
 ## Soundboard powrót głośnika (2.1.8)
 

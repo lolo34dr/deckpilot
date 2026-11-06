@@ -389,6 +389,17 @@ L'interface charbon place la bibliothèque d'action en premier, sépare les cont
 
 Le firmware reste **1.1.1**. Accepter une offre de firmware automatique ouvre maintenant correctement le gestionnaire de firmware ; le garde modal précédent a empêché que la main off. L'identité firmware existante, battement du cœur, reconnect et flash contrôles restent en place.
 
+<a id="soundboard-return-and-on-screen-sound-notifications-219"></a>
+## Soundboard notifications de retour et de son à l'écran (2.1.9)
+
+En **Soundboard · micro virtuel**, activer **Entendre aussi les sons du soundboard** pour entendre des clips à travers votre casque ou haut-parleurs ainsi que le microphone virtuel. Choisissez la sortie physique et définissez le volume de retour séparé de 0 à 100%. Ce retour est désactivé par défaut et enregistré sur ce PC. Il joue **Uniquement des clips de tableau de son**; votre microphone physique n'est jamais ajouté à la sortie de l'enceinte. Le microphone virtuel envoie toujours votre voix et vos clips à VB-CABLE.
+
+Changer le volume n'interrompt pas le microphone virtuel. Si votre haut-parleur sélectionné se déconnecte, le retour s'arrête pendant que le microphone virtuel continue. Reconnectez-le, rafraîchissez la liste des appareils ou choisissez une autre sortie.
+
+Le retour de l'enceinte utilise maintenant le format audio Windows annoncé de l'appareil sélectionné, y compris les formats extensibles utilisés par certains casques USB, et recule de la lecture par événement si un pilote le rejette. Démarrage d'un clip de tableau de son affiche également son nom dans la même configuration, click-through superlay que le profil change. La préférence de superposition et la position s'appliquent aux deux avis.
+
+DeckPilot Atelier reste à 1.0.12 et le firmware reste 1.1.1. Aucun flash firmware n'est nécessaire. Le routage réel des haut-parleurs dépend toujours du périphérique audio Windows et doit être vérifié sur le PC du propriétaire.
+
 <a id="soundboard-speaker-return-218"></a>
 ## Soundboard retour de l'orateur (2.1.8)
 

@@ -389,6 +389,17 @@ La interfaz de carbón pone la biblioteca de acción primero, separa los control
 
 El firmware sigue **1.1.1**. Aceptar una oferta automática de firmware ahora abre correctamente el gestor de firmware; el anterior guardia modal impidió que la entrega. La identidad de firmware existente, el latido del corazón, la reconexión y las comprobaciones flash permanecen en su lugar.
 
+<a id="soundboard-return-and-on-screen-sound-notifications-219"></a>
+## Soundboard notificaciones de sonido de retorno y en pantalla (2.1.9)
+
+In **Soundboard · micro virtuel**, habilita **Entendre aussi les son du soundboard** para escuchar clips a través de su auricular o altavoces, así como el micrófono virtual. Elija la salida física y establezca el volumen de retorno separado de 0 a 100%. Este retorno se apaga por defecto y se guarda en este PC. Juega **sólo clips de placa sonora**; su micrófono físico nunca se añade a la salida del altavoz. El micrófono virtual todavía envía su voz y clips a VB-CABLE.
+
+Cambiar el volumen no interrumpe el micrófono virtual. Si el altavoz seleccionado se desconecta, el retorno se detiene mientras el micrófono virtual continúa. Reconectarlo, refrescar la lista de dispositivos o elegir otra salida. Los auriculares ayudan a evitar que el micrófono físico recoja clips acústicamente.
+
+El altavoz devuelve ahora utiliza el formato de audio de Windows anunciado por el dispositivo seleccionado, incluyendo formatos extensibles utilizados por algunos auriculares USB, y retrocede de la reproducción impulsada por el evento si un controlador lo rechaza. Comenzar un clip de panel de sonido también muestra su nombre en el mismo overlay configurable, click-through como cambios de perfil.
+
+DeckPilot Atelier remains at 1.0.12 y restos de firmware 1.1.1. No se necesita un flash de firmware. El routing de altavoz real todavía depende del dispositivo de audio de Windows y debe ser revisado en el PC del propietario.
+
 <a id="soundboard-speaker-return-218"></a>
 ## Soundboard retorno del orador (2.1.8)
 

@@ -389,6 +389,17 @@ L'interfaccia carbone mette in primo luogo la libreria di azione, separa i contr
 
 Il firmware rimane **1.1.1**. L'accettazione di un'offerta firmware automatico ora apre correttamente il firmware manager; la precedente guardia modale ha impedito che il handoff. L'identità del firmware esistente, battito cardiaco, ricollegamento e controlli flash rimangono in vigore.
 
+<a id="soundboard-return-and-on-screen-sound-notifications-219"></a>
+## Soundboard ritorno e notifiche audio sullo schermo (2.1.9)
+
+In **Soundboard · micro virtuel**, abilitare **Entendre aussi les children du soundboard** per ascoltare clip attraverso l'auricolare o altoparlanti, nonché il microfono virtuale. Scegliere l'output fisico e impostare il volume di ritorno separato da 0 a 100%. Questo ritorno è disattivato per impostazione predefinita e salvato su questo PC. **solo clip audio**; il vostro microfono fisico non viene mai aggiunto all'uscita dell'altoparlante. Il microfono virtuale invia ancora la vostra voce e clip a VB-CABLE.
+
+Se l'altoparlante selezionato si disconnette, il ritorno si ferma mentre il microfono virtuale continua. Ricollegalo, aggiorna l'elenco dei dispositivi, o scegli un'altra uscita. Le cuffie aiutano a impedire al microfono fisico di raccogliere clip acustica.
+
+Il ritorno dell'altoparlante utilizza ora il formato audio di Windows pubblicizzato del dispositivo selezionato, compresi i formati estesi utilizzati da alcuni auricolari USB, e rientra dalla riproduzione guidata eventi se un driver lo rifiuta.
+
+DeckPilot Atelier rimane 1.0.12 e il firmware rimane 1.1.1. Non è necessario alcun flash firmware. Il routing effettivo dell'altoparlante dipende ancora dal dispositivo audio di Windows e deve essere controllato sul PC del proprietario.
+
 <a id="soundboard-speaker-return-218"></a>
 ## Soundboard ritorno dell'altoparlante2.1.8)
 

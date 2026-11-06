@@ -120,7 +120,7 @@ Scarica **DeckPilot-Setup.exe** o aggiornamento dall'app. Vengono conservati pro
 La convalida include la compatibilità del core/navigation/import/template e l'installazione nativa di Windows, l'aggiornamento, il picker, il drag-and-drop, undo/redo, la creazione di modelli, le azioni del profilo, la cattura di scorciatoie, la modifica di appunti, il layout e minimizzare / ripristinare i controlli.
 DeckPilot 2.1.8 aggiunge un ritorno opzionale dell'altoparlante per Soundboard clip.
 
-- In **Soundboard · micro virtuel**, abilitare **Entendre aussi les children du soundboard**, scegliere un altoparlante fisico o un'uscita dell'auricolare, e impostare il suo indipendente 0–100% volume. Il ritorno è disattivato per impostazione predefinita e salvato attraverso i lanci.
+- In **Soundboard · micro virtuel**, abilitare **Entendre aussi les children du soundboard**, scegliere un altoparlante fisico o un'uscita dell'auricolare, e impostare la sua indipendente 0–100% volume. Il ritorno è disattivato per impostazione predefinita e salvato attraverso i lanci.
 - Solo le clip sonore vengono inviate a questa seconda uscita. Il microfono fisico continua ad andare al microfono virtuale, e non viene mai mescolato nel ritorno dell'altoparlante. VB-CABLE al loro volume originale.
 - Cambiare il volume di ritorno non riavvia il microfono virtuale. Un'uscita del diffusore disconnesso interrompe solo il ritorno; il microfono virtuale continua a funzionare.
 

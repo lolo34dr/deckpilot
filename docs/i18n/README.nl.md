@@ -389,6 +389,17 @@ De houtskool interface zet de actiebibliotheek op de eerste plaats, scheidt prof
 
 De firmware blijft **1.1.1**. Het accepteren van een automatisch firmware aanbod opent nu correct de firmware manager; de vorige modal guard verhinderde die overdracht. Bestaande firmware identiteit, hartslag, reconnect en flash controles blijven op zijn plaats. Nieuwe workspace functies hebben geen firmware flits nodig.
 
+<a id="soundboard-return-and-on-screen-sound-notifications-219"></a>
+## Soundboard terug- en geluidsmeldingen op het scherm (2.1.9)
+
+In **Soundboard · micro virtuel**, inschakelen **Entendre aussi les sons du soundboard** om clips te horen via uw headset of luidsprekers, evenals de virtuele microfoon. Kies de fysieke uitgang en stel het aparte retourvolume van 0 tot 100%. Deze terugkeer is standaard uitgeschakeld en opgeslagen op deze pc. Het speelt **alleen soundboardclips**; uw fysieke microfoon wordt nooit toegevoegd aan de speaker uitgang. De virtuele microfoon stuurt nog steeds uw stem en clips naar VB-CABLE.
+
+Het wijzigen van het volume onderbreekt de virtuele microfoon niet. Als de gekozen luidspreker uitschakelt, stopt de terugkeer terwijl de virtuele microfoon doorgaat. Vernieuw de lijst met apparaten of kies een andere uitgang. Hoofdtelefoons helpen voorkomen dat uw fysieke microfoon akoestisch clips oppikt.
+
+De speaker return maakt nu gebruik van de geadverteerde Windows-audioformaat van het geselecteerde apparaat, inclusief uitbreidbare formaten gebruikt door sommige USB-headsets, en valt terug van event-driven afspelen als een driver het weigert. Het starten van een soundboard clip toont ook zijn naam in dezelfde configureerbare, click-through overlay als profiel wijzigingen. De overlay voorkeur en positie zijn van toepassing op beide mededelingen.
+
+DeckPilot Atelier blijft op 1.0.12 en firmware blijft 1.1.1. Geen firmware flash is nodig. Werkelijke speaker routing is nog steeds afhankelijk van het Windows-audioapparaat en moet worden gecontroleerd op de PC van de eigenaar.
+
 <a id="soundboard-speaker-return-218"></a>
 ## Soundboard terugzending van de spreker (2.1.8)
 
