@@ -359,6 +359,12 @@ The charcoal interface puts the action library first, separates profile controls
 
 The firmware remains **1.1.1**. Accepting an automatic firmware offer now correctly opens the firmware manager; the previous modal guard prevented that handoff. Existing firmware identity, heartbeat, reconnect and flash checks remain in place. New workspace features do not need a firmware flash.
 
+## Soundboard speaker return (2.1.8)
+
+In **Soundboard · micro virtuel**, enable **Entendre aussi les sons du soundboard** to hear clips through your headset or speakers as well as the virtual microphone. Choose the physical output and set the separate return volume from 0 to 100%. This return is off by default and saved on this PC. It plays **only soundboard clips**; your physical microphone is never added to the speaker output. The virtual microphone still sends your voice and clips to VB-CABLE.
+
+Changing the volume does not interrupt the virtual microphone. If your selected speaker disconnects, the return stops while the virtual microphone continues. Reconnect it, refresh the device list, or choose another output. Headphones help prevent your physical microphone from picking up clips acoustically.
+
 ## Open DeckPilot and profile notifications (2.1.7)
 
 Under **Ouvrir une application**, choose the built-in **DeckPilot** entry or click **Affecter « Ouvrir DeckPilot »**. This action brings the existing DeckPilot window to the front; its target stays valid after an app update or reinstall. It is also available in action search.

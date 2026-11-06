@@ -253,6 +253,17 @@ try {
     Wait-Until { (Read-SharedJson $settingsPath).Soundboard.AutoStart -eq $false }
     $autoSound.Toggle()
     Wait-Until { (Read-SharedJson $settingsPath).Soundboard.AutoStart -eq $true }
+    $script:phase = 'persist soundboard-only speaker return preferences'
+    $monitor = (Find-Control $root 'SoundboardMonitorCheck').GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern)
+    if ($monitor.Current.ToggleState -ne [System.Windows.Automation.ToggleState]::Off) { throw 'The speaker return should default to off' }
+    $monitor.Toggle()
+    Wait-Until { (Read-SharedJson $settingsPath).Soundboard.MonitorEnabled -eq $true }
+    $monitorVolume = (Find-Control $root 'SoundboardMonitorVolumeSlider').GetCurrentPattern([System.Windows.Automation.RangeValuePattern]::Pattern)
+    $monitorVolume.SetValue(37)
+    Wait-Until { (Read-SharedJson $settingsPath).Soundboard.MonitorVolumePercent -eq 37 }
+    if (!(Find-Control $root 'SoundboardMonitorOutputPicker')) { throw 'The physical speaker selector is missing' }
+    $monitor.Toggle()
+    Wait-Until { (Read-SharedJson $settingsPath).Soundboard.MonitorEnabled -eq $false }
     $soundSection.Collapse()
     $script:phase = 'test collapsed advanced settings and offline action feedback'
     # Windows PowerShell 5.1 does not assume UTF-8 for scripts without a BOM.

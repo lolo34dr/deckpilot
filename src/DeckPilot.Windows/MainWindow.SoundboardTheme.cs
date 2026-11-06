@@ -30,15 +30,18 @@ public partial class MainWindow
                         string? error = soundboard.ProcessEvents();
                         SoundboardStartButton.Content = soundboard.IsRunning ? "Arrêter le micro virtuel" : "Activer le micro virtuel";
                         if (error != null) SoundboardStatus.Text = "Audio interrompu : " + error;
+                        if (!string.IsNullOrWhiteSpace(soundboard.MonitorError)) SoundboardMonitorStatus.Text = soundboard.MonitorError;
                         RefreshSoundboardClips();
                     }
                     catch (Exception ex) { SoundboardStatus.Text = "Audio indisponible : " + ex.Message; }
                 });
+                ApplySoundboardMonitorSettings();
             }
             return soundboard;
         }
     }
     private readonly DispatcherTimer soundboardRetry = new() { Interval = TimeSpan.FromSeconds(5) };
+    private readonly DispatcherTimer monitorSaveTimer = new() { Interval = TimeSpan.FromMilliseconds(300) };
     private readonly AsyncSnapshotCache<SoundboardEndpointSnapshot> soundboardDeviceCache =
         new(() => Task.Run(SoundboardEngine.DiscoverEndpoints), TimeSpan.FromSeconds(15));
     private bool soundboardRefreshing;
@@ -50,7 +53,11 @@ public partial class MainWindow
         ThemeAccentInput.Text = settings.Theme.Accent;
         ApplyTheme();
         SoundboardAutoStartCheck.IsChecked = settings.Soundboard.AutoStart;
+        SoundboardMonitorCheck.IsChecked = settings.Soundboard.MonitorEnabled;
+        SoundboardMonitorVolumeSlider.Value = settings.Soundboard.MonitorVolumePercent;
+        UpdateSoundboardMonitorStatus();
         soundboardRetry.Tick += async (_, _) => await TryAutoStartSoundboardAsync();
+        monitorSaveTimer.Tick += (_, _) => { monitorSaveTimer.Stop(); SaveSoundboardSettings(); };
         Loaded += async (_, _) =>
         {
             if (!IsOperational) return;
@@ -58,7 +65,11 @@ public partial class MainWindow
             await RefreshSoundboardDevicesAsync();
             await TryAutoStartSoundboardAsync();
         };
-        Closed += (_, _) => soundboardRetry.Stop();
+        Closed += (_, _) =>
+        {
+            soundboardRetry.Stop();
+            if (monitorSaveTimer.IsEnabled) { monitorSaveTimer.Stop(); SaveSoundboardSettings(); }
+        };
         SoundboardStatus.Text = "Recherche des périphériques audio…";
         RefreshSoundboardClips();
     }
@@ -107,13 +118,18 @@ public partial class MainWindow
             if (lifetime.IsCancellationRequested) return;
             virtualCableInput = snapshot.Outputs.FirstOrDefault(x => x.IsVirtualCable);
             var inputs = snapshot.Microphones.Where(x => !x.IsVirtualCable).ToArray();
+            var monitorOutputs = snapshot.Outputs.Where(x => !x.IsVirtualCable).ToArray();
             soundboardRefreshing = true;
             try
             {
                 SoundboardMicrophonePicker.ItemsSource = inputs;
                 SoundboardMicrophonePicker.SelectedItem = inputs.FirstOrDefault(x => x.Id == settings.Soundboard.MicrophoneId);
+                SoundboardMonitorOutputPicker.ItemsSource = monitorOutputs;
+                SoundboardMonitorOutputPicker.SelectedItem = monitorOutputs.FirstOrDefault(x => x.Id == settings.Soundboard.MonitorOutputId);
             }
             finally { soundboardRefreshing = false; }
+            UpdateSoundboardMonitorStatus();
+            ApplySoundboardMonitorSettings();
             string outputId = virtualCableInput?.Id ?? "";
             if (settings.Soundboard.VirtualOutputId != outputId)
             {
@@ -181,6 +197,7 @@ public partial class MainWindow
             if (lifetime.IsCancellationRequested || !settings.Soundboard.AutoStart || soundboard?.IsRunning == true
                 || virtualCableInput == null || SoundboardMicrophonePicker.SelectedItem is not AudioEndpoint microphone) return;
             Audio.Start(microphone.Id, virtualCableInput.Id);
+            ApplySoundboardMonitorSettings();
             SoundboardStartButton.Content = "Arrêter le micro virtuel";
             SoundboardStatus.Text = "Micro virtuel actif automatiquement · Voix et sons envoyés vers VB-CABLE.";
         }
@@ -205,6 +222,54 @@ public partial class MainWindow
         bool enable = soundboard?.IsRunning != true;
         if (SoundboardAutoStartCheck.IsChecked != enable) SoundboardAutoStartCheck.IsChecked = enable;
         else await TryAutoStartSoundboardAsync();
+    }
+    private void SoundboardMonitorChanged(object sender, RoutedEventArgs e)
+    {
+        if (loading) return;
+        settings.Soundboard.MonitorEnabled = SoundboardMonitorCheck.IsChecked == true;
+        monitorSaveTimer.Stop(); SaveSoundboardSettings();
+        UpdateSoundboardMonitorStatus();
+        ApplySoundboardMonitorSettings();
+    }
+    private void SoundboardMonitorDeviceChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (loading || soundboardRefreshing) return;
+        settings.Soundboard.MonitorOutputId = (SoundboardMonitorOutputPicker.SelectedItem as AudioEndpoint)?.Id ?? "";
+        monitorSaveTimer.Stop(); SaveSoundboardSettings();
+        UpdateSoundboardMonitorStatus();
+        ApplySoundboardMonitorSettings();
+    }
+    private void SoundboardMonitorVolumeChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (loading) return;
+        int value = (int)Math.Round(e.NewValue);
+        if (settings.Soundboard.MonitorVolumePercent == value) return;
+        settings.Soundboard.MonitorVolumePercent = value;
+        monitorSaveTimer.Stop(); monitorSaveTimer.Start();
+        ApplySoundboardMonitorSettings();
+    }
+    private void UpdateSoundboardMonitorStatus()
+    {
+        SoundboardMonitorStatus.Text = !settings.Soundboard.MonitorEnabled
+            ? "Retour coupé · Les sons restent envoyés au micro virtuel."
+            : string.IsNullOrWhiteSpace(settings.Soundboard.MonitorOutputId)
+                ? "Choisis le casque ou les haut-parleurs pour entendre les sons."
+                : SoundboardMonitorOutputPicker.SelectedItem is not AudioEndpoint
+                    ? "La sortie choisie est débranchée. Sélectionne un autre périphérique ou actualise."
+                    : "Seuls les sons du soundboard sont audibles ici ; ta voix reste dans le micro virtuel.";
+    }
+    private void ApplySoundboardMonitorSettings()
+    {
+        if (soundboard == null) return;
+        string outputId = (SoundboardMonitorOutputPicker.SelectedItem as AudioEndpoint)?.Id ?? "";
+        bool enabled = settings.Soundboard.MonitorEnabled && outputId.Length > 0;
+        try
+        {
+            soundboard.ConfigureMonitor(enabled, outputId, settings.Soundboard.MonitorVolumePercent);
+            UpdateSoundboardMonitorStatus();
+            if (!string.IsNullOrWhiteSpace(soundboard.MonitorError)) SoundboardMonitorStatus.Text = soundboard.MonitorError;
+        }
+        catch (Exception ex) { SoundboardMonitorStatus.Text = "Retour des sons indisponible : " + ex.Message; }
     }
     private void AddSoundClipClick(object sender, RoutedEventArgs e)
     {
