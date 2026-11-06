@@ -205,7 +205,13 @@
       <CheckBox x:Name="ProfileOverlayEnabledCheck" Content="Afficher le profil à l’écran"/>
       <TextBlock Text="Emplacement" Foreground="{StaticResource MutedBrush}"/>
       <ComboBox x:Name="ProfileOverlayPositionPicker" DisplayMemberPath="Name" SelectionChanged="ProfileOverlayPositionChanged"
-                AutomationProperties.Name="Emplacement de la notification"/>
+                AutomationProperties.Name="Emplacement de la notification">
+       <ComboBox.ItemContainerStyle>
+        <Style TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
+         <Setter Property="AutomationProperties.Name" Value="{Binding Name}"/>
+        </Style>
+       </ComboBox.ItemContainerStyle>
+      </ComboBox>
       <StackPanel x:Name="ProfileOverlayCustomPanel" Visibility="Collapsed">
        <DockPanel><TextBlock Text="Horizontal" Foreground="{StaticResource MutedBrush}"/><TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" Foreground="{StaticResource MutedBrush}" Text="{Binding ElementName=ProfileOverlayXSlider, Path=Value, StringFormat={}{0:0.0} %}"/></DockPanel>
        <Slider x:Name="ProfileOverlayXSlider" Minimum="0" Maximum="100" SmallChange="0.1" LargeChange="1" TickFrequency="0.1" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft" AutomationProperties.Name="Position horizontale de la notification en pourcentage"/>
