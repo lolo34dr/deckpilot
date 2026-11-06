@@ -1,5 +1,5 @@
 import unittest
-from translate import Engine, clean_prose, rebase_readme_links
+from translate import Engine, MARKER, clean_prose, rebase_readme_links, release_body
 
 class FakeEngine(Engine):
     def __init__(self):
@@ -22,6 +22,16 @@ class MarkupTests(unittest.TestCase):
         self.assertIn('```sh\nOpen `file.exe`\n```', FakeEngine().markdown(source))
 
 class DocumentationTests(unittest.TestCase):
+    def test_release_body_embeds_short_translations_and_links_complete_long_ones(self):
+        short=release_body('v2.1.7','English notes',{'fr':'Notes françaises'},1000)
+        self.assertIn('<summary>fr</summary>',short)
+        self.assertIn('Notes françaises',short)
+        long=release_body('v2.1.7','English notes',{'fr':'F'*800,'de':'D'*800},1000)
+        self.assertIn(MARKER,long)
+        self.assertIn('docs/releases/v2.1.7/README.fr.md',long)
+        self.assertIn('docs/releases/v2.1.7/README.de.md',long)
+        self.assertNotIn('F'*800,long)
+
     def test_readme_links_are_rebased(self):
         self.assertEqual(rebase_readme_links('[Atelier](docs/FACTORY.md) [License](third-party/NAudio-LICENSE.txt) [Firmware](firmware/README.md) [Web](https://example.com) [Section](#features)', 'fr'), '[Atelier](../../docs/FACTORY.md) [License](../../third-party/NAudio-LICENSE.txt) [Firmware](FIRMWARE.fr.md) [Web](https://example.com) [Section](#features)')
     def test_device_names_and_ui_labels_are_preserved(self):

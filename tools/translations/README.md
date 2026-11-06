@@ -2,7 +2,7 @@
 
 The workflow translates the entire root README, including development, limitations and historical sections, into all 12 configured languages. Code, link destinations, language navigation and exact French UI labels are retained. Stable heading IDs preserve links.
 
-Every published release is also translated. Its original English body is preserved, full translations are saved under docs/releases/<tag>, and collapsible translations are added to its GitHub release page. Tags, binaries and assets are never modified. Concurrent edits are protected. Oversized bodies fail rather than being truncated.
+Every published release is also translated. Its original English body is preserved, and full translations are saved under docs/releases/<tag>. The GitHub release page embeds them when they fit; longer releases link to every complete translation in the repository. Tags, binaries and assets are never modified. Concurrent edits are protected.
 
 Translations are automatic and labelled accordingly. English remains the reference; technical wording should be reviewed. The application UI stays French. LICENSE remains the original MIT legal text.
 
