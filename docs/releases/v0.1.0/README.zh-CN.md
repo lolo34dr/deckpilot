@@ -8,6 +8,6 @@
 - 通知区和海洋区 Windows faculticif。
 - (原始内容存档于2018-09-29) (英语). Aucun pilote ni changment du program du Leonardo.
 
-特列谢兹 **DeckPilot一、导 言1 - 2 3** 自动打印版本, ou **DeckPilot- win -x64.zip (英语).** (原始内容存档于2018-09-21). pour le filecal conflet à extraire. Aucun runtime.NET à sinder.
+特列谢茨 **DeckPilot一、导 言1 - 2 3** 自动打印版本, ou **DeckPilot- win -x64.zip (英语).** (原始内容存档于2018-09-21). pour le filecal conflet à extraire. Aucun runtime.NET à sinder.
 
 (原始内容存档于2018-09-21). Le code est compilé et les véditions automatiques sont exécutées par sce slowers. Le fonctionnement matériel et l ' interface restant à validers sur un PC Windows avec le Leonardo. les excutables ne sont pas signés.

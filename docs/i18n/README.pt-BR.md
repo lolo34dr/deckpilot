@@ -242,7 +242,7 @@ Para Windows ARM64, publicar separadamente com `-r win-arm64` e validar na máqu
 
 Com o Leonardo ligado:
 
-- Calibrar tudo 12 posições em uma ordem arbitrária F13–F24. Confirmar que as chaves duplicadas são rejeitadas e cancelar preserva o mapeamento anterior.
+- Calibrar tudo 12 posições em uma ordem arbitrária F13-F24. Confirme que as chaves duplicadas são rejeitadas e cancelar preserva o mapeamento anterior.
 - Atribua uma chave livre em um jogo e verifique se o jogo recebe normalmente.
 - Inicie um programa configurado e, em seguida, segure o botão: ele deve lançar uma vez até a liberação. Inclua caminhos contendo espaços e argumentos opcionais.
 - Teste uma pasta, um site, um atalho em uma aplicação comum e controles de mídia.
@@ -333,7 +333,7 @@ A inicialização do Windows agora mantém uma preferência explícita por usuá
 <a id="sharp-keypad-rendering-profile-recovery-and-audio-controls-161"></a>
 ## renderização de teclado afiado, recuperação de perfil e controles de áudio (1.6.1)
 
-O teclado agora renderiza em tamanhos WPF nativos em vez de escalar texto através de uma Viewbox. Efeitos de sombra pai/chave e animações de escala de texto foram removidos; menores janelas rolar em vez de diminuir o teclado. O aplicativo declara consciência de DPI por monitor e usa ícones de shell maiores do Windows para aplicativos de desktop.
+O teclado agora renderiza em tamanhos WPF nativos em vez de escalar texto através de uma Viewbox. Efeitos de sombra pai/chave e animações de escala de texto foram removidos; janelas menores rolagem em vez de encolhendo o teclado. O aplicativo declara consciência de DPI por monitor e usa ícones de shell maiores do Windows para aplicativos de desktop.
 
 **Annuler / Rétablir** restaura edições de perfil, incluindo trocas de arrastar e soltar, configurações de ação, importações e criação/deleção de perfil. 50 edits during the app session. Ctrl+Z / Ctrl+Y opera em perfis fora dos campos de texto; os campos de texto mantêm sua própria desfazer/refazer. Calibração, preferências de inicialização e ações executadas não são desfeitas.
 
@@ -371,7 +371,7 @@ A gravação de configurações idênticas verifica o arquivo atual, mas ignora 
 
 Pesquisar e escolher compartilhar um imutável catálogo de aplicativos instalados por cinco minutos (15 segundos para um resultado parcial). Os consumidores simultâneos partilham uma pesquisa; fechar um captador não cancela outro consumidor. Actualizar ignora a 'cache', e cada captador tem o seu próprio filtro/visualização. A digitalização e a análise do catálogo são executadas fora do tópico UI; a filtragem do captador é deduzida por 120 ms. A pesquisa de ação verifica novamente este cache após sua defloração e ao retornar do catador, então um catálogo atualizado também está disponível lá.
 
-Atualizações de interface de bordo agora seguir notificações de conexão em vez de acordar cada 100 ms. As notificações de desconexão ordenadas ainda cancelam as esperas pendentes. Os ganchos de teclado fazem filas de trabalho visual, enquanto a supressão e o timing do gesto permanecem síncronos. As janelas ocultas/minimizadas param as animações de feedback e usam um intervalo de votação de áudio de dez segundos em vez de dois segundos; reabrindo ou emitindo um comando de áudio solicitam um estado fresco imediatamente. As atualizações de áudio pendentes partilham um ciclo e incluem as solicitações que chegam durante uma leitura existente. Os instantâneos de áudio inalterados e pincéis congelados evitam a atribuição de UI repetidas. Os invólucros de processo devolvidos ao lançar uma aplicação são eliminados sem fechar o programa lançado.
+Atualizações de interface de bordo agora seguir notificações de conexão em vez de acordar cada 100 ms. As notificações de desconexão ordenadas ainda cancelam as esperas pendentes. Os ganchos do teclado fazem filas de trabalho visual, enquanto a supressão e o timing do gesto permanecem síncronos. As janelas ocultas/minimizadas param as animações de feedback e usam um intervalo de sondagem de áudio de dez segundos em vez de dois segundos; reabrindo ou emitindo um comando de áudio solicitam um estado fresco imediatamente. As atualizações de áudio pendentes partilham um ciclo e incluem as solicitações que chegam durante uma leitura existente. Os instantâneos de áudio inalterados e pincéis congelados evitam a atribuição de UI repetidas. Os invólucros de processo devolvidos ao lançar uma aplicação são eliminados sem fechar o programa lançado.
 
 Essas mudanças reduzem o trabalho especificado; elas não estabelecem uma porcentagem de CPU/RAM independente de máquina. A mudança de áudio de hardware nativo e o comportamento da chave física ainda requerem validação em um PC Windows com o macropad.
 
@@ -381,7 +381,7 @@ Essas mudanças reduzem o trabalho especificado; elas não estabelecem uma porce
 A interface carvão coloca a biblioteca de ação em primeiro lugar, separa controles de perfil do tamanho nativo nítido 3 × 4 teclado e configurações de ação de grupos em um cartão. Acentos de teclas distinguem suas próprias categorias; seleção, foco do teclado e feedback de ação permanecem separados. **Réduire les animations** nas preferências completa a configuração de animação do Windows. Janelas menores retêm o acesso de rolagem em vez de encolher o texto da chave.
 
 - **Modelos de perfil:** em baixo **Gérer les profils**, adicione Música e áudio, Desktop e produtividade, ou Criação. Cada modelo cria um perfil editável separado e nunca executa suas ações. Perfis existentes e calibração física são retidos. Os atalhos do teclado usam a aplicação ativa, cujas ligações podem diferir.
-- **Chaves de perfil:** atribuir **Changer de profil**, então selecione um perfil chamado ou ciclo para frente/para trás. As referências entre perfis são remapeadas ao importar um conjunto ou duplicar um perfil de autorreferência. Um destino em falta reporta um erro e pode ser substituído no editor.
+- **Chaves de perfil:** atribuir **Changer de profil**, então selecione um perfil nomeado ou ciclo para frente/para trás. As referências entre perfis são remapeadas ao importar um conjunto ou duplicar um perfil de autorreferência. Um destino em falta reporta um erro e pode ser substituído no editor.
 - **Comandos do Windows:** Utilização **Commandes Windows** para abrir configurações comuns ou Gerenciador de tarefas, ou explicitamente bloquear o PC. Os comandos vêm de uma lista fixa, sem script para entrar. A ação de bloqueio requer a assinatura de volta no Windows.
 - **Área de transferência de teclas completa:** Carregue com o botão direito numa tecla para a copiar, cortar, colar ou redefinir, incluindo a acção longa e o acento. Ctrl+C/X/V e Apagar o trabalho enquanto uma tecla do baralho tem a focagem do teclado; os campos de texto normais mantêm os seus atalhos de edição. A área de transferência da tecla fica dentro DeckPilot e está limpo ao sair. Estas edições suportam desfazer/refazer.
 - **Gravador de atalhos:** selecione uma ação do teclado e clique **Enregistrer un raccourci**. Pressione uma combinação suportada, em seguida, salvá-lo. Escape cancela; F13-F24 é reservado para o macropad durante a gravação. Combinações reservadas ao Windows ainda pode exigir os controles manuais.
@@ -429,7 +429,7 @@ DeckPilot 1.9.7 corrige a desinstalação do Atelier enquanto está em execuçã
 
 DeckPilot 1.9.8 adiciona um reset Atelier explícito e confirmado que substitui o programa de usuário do tabuleiro por um esboço vazio verificado e preserva o bootloader Caterina.
 
-Validação abrange configurações legadas, validação de sotaque, navegação de perfil e remapeamento de referência, modelos portáteis, modelo/mundo/redo nativos do Windows e mudança de perfil, gravação de atalhos, cópia/colar/reset, persistência de configurações, instalação/atualização, redimensionamento de layout e uma captura de UI real. O comportamento específico de hardware ainda requer o macropad e dispositivos de áudio em um PC Windows.
+A validação abrange configurações legadas, validação de sotaques, navegação de perfil e remapeamento de referência, modelos portáteis, modelo/mundo/redo nativo do Windows e mudança de perfil, gravação de atalhos, cópia/colar/reset, persistência de configurações, instalação/atualização, redimensionamento de layout e uma captura real de UI. O comportamento específico do hardware ainda requer o macropad e dispositivos de áudio em um PC Windows.
 
 <a id="profile-sound-files-and-workshop-safety"></a>
 ### Arquivos de som de perfil e segurança da oficina

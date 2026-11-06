@@ -1,6 +1,6 @@
 > Dit is een automatische vertaling van de volledige release notes. Het Engelse origineel is de referentie.
 
-DeckPilot 2.1.4 start de geconfigureerde virtuele microfoon automatisch met de app, inclusief achtergrond opstarten na Windows-aanmelden.
+DeckPilot 2.1.4 start de geconfigureerde virtuele microfoon automatisch met de app, inclusief achtergrondopstart na Windows-aanmelding.
 
 - Automatisch opstarten van een soundboard microfoon is standaard ingeschakeld voor bestaande en nieuwe instellingen. Het maakt gebruik van de geselecteerde fysieke microfoon en VB-CABLE; geen handmatige activering is nodig na het herstarten van de PC wanneer DeckPilot begint met Windows.
 - Als de apparaten niet klaar zijn bij het aanmelden, of als de audio stopt na het verbreken van de verbinding, DeckPilot herstart elke vijf seconden terwijl automatische activering is ingeschakeld.
@@ -41,7 +41,7 @@ Downloaden **DeckPilot-Setup.exe** of de update accepteren in DeckPilot. Windows
 
 Validatie: core checks en Windows build, installer upgrade/uninstall en native applicatie testen worden uitgevoerd voor release publicatie. Audio hardware gedrag vereist nog steeds testen op de PC van de gebruiker.
 
-DeckPilot 2.1.0 houdt de diep zwarte interface en aanpasbare kleuren, en routeert de soundboard door VB-Audio VB-CABLE automatisch. Gebruikers selecteren alleen hun fysieke microfoon; het virtuele afspeeleindpunt is vastgesteld zodat spraak en MP3/WAV-clips niet per ongeluk naar luidsprekers kunnen worden verzonden. DeckPilot installateur kan downloaden van de officiële VB-CABLE pakket, verifieer de Authenticode uitgever, en start de driver setup van de leverancier; het pakket wordt niet herverdeeld. In Discord of een spel, selecteer CABLE Output als de microfoon. Atelier blijft op versie 1.0.10.
+DeckPilot 2.1.0 houdt de diep zwarte interface en aanpasbare kleuren, en routeert de soundboard door VB-Audio VB-CABLE automatisch. Gebruikers selecteren alleen hun fysieke microfoon; het virtuele afspeeleindpunt is vastgesteld zodat spraak en MP3/WAV-clips niet per ongeluk naar luidsprekers kunnen worden verzonden. DeckPilot installateur kan downloaden van de officiële VB-CABLE pakket, controleer zijn Authenticode uitgever, en start de driver setup van de leverancier; het pakket wordt niet herverdeeld. In Discord of een spel, selecteer CABLE Output als de microfoon. Atelier blijft op versie 1.0.10.
 
 DeckPilot 1.9.11 en DeckPilot Atelier 1.0.10 voeg pre-flash hardware en firmware diagnostics, een firmware versie vergelijking, een geleide herstel actie na onderbroken brieven, sequentiële multi-board knipperen met een batch rapport, en een fysieke-position-to-F13
 

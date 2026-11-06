@@ -129,12 +129,12 @@ La calibrazione si applica a tutti i profili e può essere ripetuta dalla barra 
 
 Chiudere la finestra nasconde DeckPilot Fare doppio clic sull'icona dell'area di notifica vicino all'orologio per riaprirlo, oppure fare clic con il pulsante destro del mouse sull'icona e scegliere il comando quit per fermarlo completamente.
 
-L'avvio di Windows è abilitato per impostazione predefinita per l'utente corrente. **Lancer avec Windows**; aggiornamenti app successivi conservano tale scelta. L'installazione e i successivi lanci rinfrescano un ingresso abilitato al percorso eseguibile corrente.
+L'avvio di Windows è abilitato per impostazione predefinita per l'utente corrente. **Lancer avec Windows**; aggiornamenti app successivi conservano tale scelta. L'installazione e i successivi lanci rinfrescano un'entrata abilitata al percorso eseguibile corrente.
 
 <a id="installed-applications"></a>
 ## Applicazioni installate
 
-Il raccoglitore legge scorciatoie dai menu di avvio dell'utente corrente e a livello di sistema, quindi li integra con `Get-StartApps` risultati dal catalogo di applicazioni di Windows.
+Il raccoglitore legge scorciatoie dai menu di avvio dell'utente corrente e a livello di sistema, poi li integra con `Get-StartApps` risultati dal catalogo di applicazioni di Windows.
 
 I nomi duplicati sono raggruppati, con le voci del menu Start che prendono la priorità. Applicazioni e programmi portatili senza scorciatoie registrate possono ancora essere selezionati manualmente. Se il catalogo di Windows non è disponibile, le abbreviazioni del menu Start leggibili rimangono utilizzabili.
 
@@ -145,7 +145,7 @@ Windows lancia le scorciatoie selezionate. `shell:AppsFolder`. Gli argomenti opz
 
 Disponibile da subito **0.2.0**, i controlli automatici di aggiornamento vengono eseguiti all'avvio dopo la calibrazione, quindi ogni sei ore. Possono essere disabilitati nella barra laterale.
 
-Quando si trova un nuovo rilascio stabile GitHub, DeckPilot chiede se aggiornare. **Copie installate** scaricare e SHA-256 verifica della verifica `DeckPilot-Setup.exe`, quindi avviare l'installatore con l'avvio corrente, l'aggiornamento automatico e le preferenze di riduzione preselezionate. È possibile modificarle durante l'aggiornamento. Windows chiede l'autorizzazione dell'amministratore per aggiornare i File del programma. DeckPilot con grazia quando pronto, conserva profili e configurazione, controlla e installa il firmato VB-CABLE Se manca il driver, e rilancia l'app. Cancellare l'installatore lascia aperta l'app. Configurazione rifiuta di interrompere una sessione firmware aperta.
+Quando si trova un nuovo rilascio stabile GitHub, DeckPilot chiede se aggiornare. **Copie installate** scaricare e SHA-256 verifica della verifica `DeckPilot-Setup.exe`, quindi avviare l'installatore con l'avvio corrente, l'aggiornamento automatico e le preferenze di riduzione preselezionate. È possibile modificarle durante l'aggiornamento. Windows chiede l'autorizzazione dell'amministratore per aggiornare i file di programma. DeckPilot con grazia quando pronto, conserva profili e configurazione, controlla e installa il firmato VB-CABLE Se manca il driver, e rilancia l'app. Cancellare l'installatore lascia aperta l'app. Configurazione rifiuta di interrompere una sessione firmware aperta.
 
 **Copia portatile** conservare il meccanismo di aggiornamento esistente. Dopo la conferma, esso:
 
@@ -265,7 +265,7 @@ Con Leonardo collegato:
 
 | Sentiero | Oggetto |
 | --- | --- |
-| `src/DeckPilot.Core` | Impostazioni, stato chiave, ricerca, convalida di rilascio GitHub, download verificati e operazioni di sostituzione. |
+| `src/DeckPilot.Core` | Impostazioni, stato chiave, ricerca, convalida di rilascio di GitHub, download verificati e operazioni di sostituzione. |
 | `src/DeckPilot.Windows` | Interfaccia WPF, catalogo delle applicazioni, icone, azioni di Windows, integrazione di area di notifica e helper di aggiornamento. |
 | `tests/DeckPilot.Checks` | Controlli eseguibili senza un quadro di prova esterno. |
 | `tests/windows-update-smoke.ps1` | Aggiornamento nativo di Windows e test di fumo di applicazione-picker utilizzato da CI. |
@@ -288,7 +288,7 @@ Credito consigliato:
 
 Per la preparazione del dispositivo e i controlli di qualità dell'officina, installare il separato [DeckPilot Atelier](../../docs/FACTORY.md) strumento. Il suo installatore è pubblicato come **[DeckPilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** accanto all'applicazione principale. Può lampeggiare il firmware incluso su una tavola Leonardo/Caterina, quindi controllare brevi e lunghe presse su tutti 12 chiavi fisiche ed esportare un rapporto.
 
-DeckPilot 1.1.0 include un **Firmware du macropad…** dialogo e firmware 1.0.0 per il Pro Micro ATmega32U4 **5 V / 16 MHz**, utilizzando la configurazione Leonardo/Caterina confermata dal registro di caricamento del proprietario. Lo strumento di flashing in bundle di Windows non richiede Arduino IDE. La selezione e la conferma dei dispositivi sono obbligatori; gli aggiornamenti delle app non lampeggiano mai silenziosamente la scheda.
+DeckPilot 1.1.0 include un **Firmware du macropad…** dialogo e firmware 1.0.0 per il Pro Micro ATmega32U4 **5 V / 16 MHz**, utilizzando la configurazione Leonardo/Caterina confermata dal registro di caricamento del proprietario. Lo strumento di flashing in bundle di Windows non richiede Arduino IDE. La selezione e la conferma del dispositivo sono obbligatori; gli aggiornamenti delle app non lampeggiano mai silenziosamente la scheda.
 
 **Il proprietario ha confermato successo in-app flashing, firmware 1.0.0 identificazione e tutto 12 pulsanti sulla scheda di riferimento.** Mantenere lo schizzo originale e l'accesso a RST/GND per il recupero. [documentazione del firmware](FIRMWARE.it.md) per la compatibilità, la validazione, il recupero, i passaggi di costruzione e le licenze di terze parti. Le modalità USB di Per-button e i controlli dei media nativi non fanno parte di questa versione del firmware.
 
@@ -315,14 +315,14 @@ Scegli una chiave per modificarla. **Options avancées · fichier et arguments**
 
 Quando il macropad è scollegato, **Hors ligne** e l'accenno di accompagnamento spiegano che i profili possono ancora essere modificati e le azioni testate. La configurazione viene memorizzata sul PC e rimane disponibile durante le disconnessioni e le riconnessioni.
 
-Il menu delle aree di notifica ora passa direttamente i profili. **Ctrl+S** I file di configurazione non validi vengono supportati prima che venga utilizzata una nuova configurazione. L'installazione dell'app, le icone del menu desktop/Start, le preferenze di avvio e l'aggiornamento automatico esistente vengono mantenuti.
+Il menu delle aree di notifica ora passa direttamente i profili. **Ctrl+S** I file di configurazione non validi vengono ripristinati prima che venga utilizzata una nuova configurazione. L'installazione dell'app, le icone del menu desktop/Start, le preferenze di avvio e l'aggiornamento automatico esistente vengono mantenuti.
 
 Per gli upload manuali di Arduino IDE, **Qui. DeckPilot dal suo menu di vassoio** per liberare la porta seriale. Chiusura della finestra principale lo mantiene in esecuzione in background.
 
 <a id="spotify-action-search-and-drag-and-drop-150"></a>
 ## Spotify, ricerca azione e drag-and-drop (1.5.0)
 
-**Spotify** è separato da **Multimédia**. Il suo gioco/pausa, i comandi successivi e precedenti si rivolgono alla sessione media di Windows dell'app desktop Spotify, anche mentre un browser sta giocando a YouTube. 5Spotify deve essere aperto e avere una sessione di riproduzione disponibile; avviare una traccia una volta se necessario. Spotify in un browser non è supportato. Le sessioni Missing Spotify producono un errore, senza alcuna ricaduta sui tasti multimediali globali o su un altro lettore. DeckPilot. Windows 10 versione 2004 o più tardi, o Windows 11, è richiesto da questa costruzione.
+**Spotify** è separato da **Multimédia**. Il suo gioco/pausa, i comandi successivi e precedenti indirizzano la sessione media di Windows dell'app desktop di Spotify, anche mentre un browser sta giocando a YouTube. 5Spotify deve essere aperto e avere una sessione di riproduzione disponibile; avviare una traccia una volta se necessario. Spotify in un browser non è supportato. Le sessioni Missing Spotify producono un errore, senza alcuna ricaduta sui tasti multimediali globali o su un altro lettore. DeckPilot. Windows 10 versione 2004 o più tardi, o Windows 11, è richiesto da questa costruzione.
 
 Uso **Rechercher une action ou une application** per quesiti come `volume`, `skip`, `Spotify` L'indice installato-app carica sulla prima ricerca e viene memorizzato nella cache per cinque minuti; la selezione manuale dei file rimane disponibile. Fare clic su un risultato per configurare la chiave selezionata o trascinarla su un'altra chiave.
 
@@ -401,15 +401,15 @@ Cambiare i profili mostra una breve, click-through notifica con il nome del prof
 
 DeckPilot ora utilizza un'interfaccia nera profonda per impostazione predefinita. In **Préférences de l’application**, cambiare lo sfondo, il pannello e i colori accenti utilizzando `#RRGGBB` valori; il tuo tema viene salvato su questo PC.
 
-The **Soundboard · micro virtuel** pannello consente di selezionare il microfono fisico e clip MP3/WAV. DeckPilot esegue automaticamente il mix al VB-Audio VB-CABLE riproduzione endpoint; in Discord o un gioco, scegliere **`CABLE Output`** come il microfono. Durante l'installazione e gli aggiornamenti, DeckPilot assegni VB-CABLE scarica il pacchetto ufficiale su HTTPS e verifica l'editore di Authenticode prima di eseguire l'installatore silenzioso del driver. Ciò richiede una connessione internet e l'autorizzazione dell'amministratore. DeckPilot non fa il bundle o ridistribuisce i file VB-Audio. Se il driver manca in seguito, è possibile avviare lo stesso programma di installazione controllato dalla firma dal Soundboard pannello. Il motore audio utilizza NAudio (MIT; vedi [avviso di terze parti](../../third-party/NAudio-LICENSE.txt)). VB-CABLE è un driver Windows con licenza separata, firmato, non un componente MIT.
+The **Soundboard · micro virtuel** pannello consente di selezionare il microfono fisico e clip MP3/WAV. DeckPilot esegue automaticamente il mix al VB-Audio VB-CABLE riproduzione endpoint; in Discord o un gioco, scegliere **`CABLE Output`** come il microfono. Durante l'installazione e gli aggiornamenti, DeckPilot assegni VB-CABLE scarica il pacchetto ufficiale su HTTPS e verifica l'editore di Authenticode prima di eseguire l'installatore silenzioso del driver. Ciò richiede una connessione internet e un'autorizzazione dell'amministratore. DeckPilot non fa il bundle o ridistribuisce i file VB-Audio. Se il driver manca in seguito, è possibile avviare lo stesso programma di installazione controllato dalla firma dal Soundboard pannello. Il motore audio utilizza NAudio (MIT; vedi [avviso di terze parti](../../third-party/NAudio-LICENSE.txt)). VB-CABLE è un driver Windows con licenza separata, firmato, non un componente MIT.
 
 <a id="deckpilot-atelier-190"></a>
 ## DeckPilot Atelier (in inglese)1.9.0)
 
-Atelier ora controlla la scheda selezionata e il firmware prima di lampeggiare, confronta le versioni installate e in bundle, e offre una riprovazione verificata dopo le scritture interrotte. **Mode atelier en série...** diagnostica e lampeggia tutte le schede rilevate in modo sequenziale e può esportare un rapporto batch. 12- Test chiave verifica il fisico 01→12 il layout, registra la mappatura F13–F24 e include i risultati firmware e per-key nel report di qualità.
+Atelier ora controlla la scheda selezionata e il firmware prima di lampeggiare, confronta le versioni installate e in bundle, e offre una riprovazione verificata dopo le scritture interrotte. **Mode atelier en série...** diagnostica e lampeggia tutte le schede rilevate in modo sequenziale e può esportare un rapporto batch. 12- Test chiave verifica il fisico 01→12 il layout, registra la mappatura F13-F24 e include i risultati firmware e per-key nel report di qualità.
 
 
-Il separato **DeckPilot Atelier** L'installatore di Windows prepara nuovi macropad DIY, rileva le schede Leonardo/Caterina, convalida e lampeggia il firmware in bundle senza sovrascrivere il bootloader, quindi guida un fisico 3×4 controllo di tutti 12 pulsanti. Ogni pulsante deve passare una breve pressione e una presa di almeno 700 ms. Le registrazioni degli strumenti che il segnale F13-F24 appartiene ad ogni posizione fisica, bandiere segnali multipli o inconsistenti, e esporta un rapporto timestamped. `DeckPilot-Atelier-Setup.exe` Un bootloader Caterina deve essere già presente; lo strumento non installa un bootloader mancante.
+Il separato **DeckPilot Atelier** L'installatore di Windows prepara nuovi macropad DIY, rileva le schede Leonardo/Caterina, convalida e lampeggia il firmware in bundle senza sovrascrivere il bootloader, quindi guida un fisico 3×4 controllo di tutti 12 pulsanti. Ogni pulsante deve passare una breve pressione e una presa di almeno 700 ms. Le registrazioni degli strumenti che il segnale F13-F24 appartiene a ogni posizione fisica, bandiere segnali multipli o inconsistenti, e esporta un rapporto timestamped. `DeckPilot-Atelier-Setup.exe` un bootloader Caterina deve essere già presente; lo strumento non installa un bootloader mancante.
 
 DeckPilot Atelier controlla GitHub per l'app e aggiornamenti in bundle-firmware su startup e su richiesta.Gli aggiornamenti richiedono la conferma e l'uso del rilascio SHA-256 manifest. Firmware non è mai lampeggiato da un aggiornamento automaticamente; dopo gli aggiornamenti di Atelier, scegliere l'azione del firmware quando si è pronti a programmare la scheda collegata.
 
@@ -434,14 +434,14 @@ La validazione copre le impostazioni legacy, la convalida dell'accento, la navig
 <a id="profile-sound-files-and-workshop-safety"></a>
 ### Profilo file audio e sicurezza officina
 
-Le esportazioni di profilati includono le clip MP3/WAV di riferimento (fino a 32 MiB audio per pacchetto). Importa copia audio incorporato in DeckPilotI backup del profilo automatico utilizzano lo stesso formato; l'audio non disponibile viene registrato come mancante piuttosto che silenziosamente sostituito. Mantenere i file di origine se si supera il limite di esportazione. I file del profilo legacy rimangono supportati. Rimozione di una clip che è ancora assegnato a un'azione breve o lunga è bloccato.
+Le esportazioni di profilati includono le clip MP3/WAV di riferimento (fino a 32 MiB audio per pacchetto). Importa copia audio incorporato in DeckPilotI backup del profilo automatico utilizzano lo stesso formato; l'audio non disponibile viene registrato come mancante piuttosto che silenziosamente sostituito. Mantenere i file di origine se si supera il limite di esportazione. I file del profilo legacy rimangono supportati. Rimozione di una clip che è ancora assegnato a una breve o lunga azione è bloccata.
 
 Atelier accetta tavole che non rispondono ancora DeckPilot protocollo, mentre controlla ancora la posizione USB, Caterina bootloader e ATmega32U4 firma prima della programmazione. Ogni sessione di test inizia con i risultati vuoti, e il suo rapporto rimane associato alla scheda testata.
 
 <a id="live-microphone-latency"></a>
 ### Latenza del microfono dal vivo
 
-DeckPilot 2.1.3 processi audio dal vivo in piccoli blocchi di uscita-driven. Richiede 20 ms acquisizione e cattura del microfono dell'evento 40 ms buffer di riproduzione. La coda del microfono è legata a 100 ms e scarta le cornici complete più vecchie se le bancarelle di riproduzione; questo evita la costruzione di secondi di discorso ritardato. Queste sono le impostazioni del buffer del software, non una garanzia di latenza end-to-end misurata. VB-CABLE e l'applicazione di ricezione contribuiscono anche ritardo. Le impostazioni di isolamento vocale discord sono invariate e possono sopprimere le clip audio perché riceve il segnale misto.
+DeckPilot 2.1.3 elabora l'audio dal vivo in piccoli blocchi di uscita-driven. Richiede 20 ms acquisizione e cattura del microfono dell'evento 40 ms buffer di riproduzione. La coda del microfono è legata a 100 ms e scarta le cornici complete più vecchie se le bancarelle di riproduzione; questo evita la costruzione di secondi di discorso ritardato. Queste sono le impostazioni del buffer del software, non una garanzia di latenza end-to-end misurata. VB-CABLE e l'applicazione di ricezione contribuiscono anche ritardo. Le impostazioni di isolamento vocale discord sono invariate e possono sopprimere le clip audio perché riceve il segnale misto.
 
 <a id="automatic-virtual-microphone-startup"></a>
 ### Avvio automatico del microfono virtuale

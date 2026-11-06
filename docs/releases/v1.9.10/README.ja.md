@@ -1,6 +1,6 @@
 > 完全リリースノートの自動翻訳です。英語オリジナルは参考です。
 
-DeckPilot 1.9.10 両方を含む共有リリースを復元 DeckPilot そして、 DeckPilot アトリエ 1.0.9. どちらのアプリケーションも同じ最新の GitHub リリースを確認してください。
+DeckPilot 1.9.10 両方を含む共有リリースを復元 DeckPilot そして、 DeckPilot アトリエ 1.0.9. どちらのアプリケーションも同じ最新の GitHub リリースを再度確認します。
 
 Atelierをインストールする場合 1.0.8 別々のリリース チャネルから、取付けて下さい DeckPilot-Atelier-Setup.exe を一度このリリースから共有更新に戻します。 以前の Atelier バージョンと DeckPilot 既存の updater を使うことができます。
 

@@ -7,7 +7,7 @@ DeckPilot 2.1.5 suaviza o áudio-dispositivo atualiza e adiciona uma tela de ini
 - Mostrar o DeckPilot banner enquanto o aplicativo interativo começa. A inicialização silenciosa com o Windows fica em segundo plano.
 - Restos de atelier 1.0.11 e o firmware permanece 1.1.1.
 
-A validação inclui verificações de regressão de varredura/cache de fundo, verificações de conversão de áudio, compilações do Windows, atualização/desinstalação do instalador, splash/atualização nativa e verificação do coletor de aplicativos. O uso e latência de CPU de áudio real ainda dependem do PC e dispositivos de áudio.
+A validação inclui verificações de regressão de varredura/cache de fundo, verificações de conversão de áudio, compilações do Windows, atualização/desinstalação do instalador, splash/atualização nativa e verificação do coletor de aplicativos.
 
 DeckPilot 2.1.4 inicia automaticamente o microfone virtual configurado com o aplicativo, incluindo a inicialização de fundo após o login no Windows.
 
@@ -94,7 +94,7 @@ DeckPilot 1.8.0 adiciona um espaço de trabalho atualizado e maneiras mais rápi
 - Três modelos de perfil editáveis: Música e áudio, Desktop e produtividade e Criação.
 - Ações de perfil: mude para um perfil nomeado, o próximo ou o perfil anterior de uma chave. Os conjuntos de perfil importados mantêm seus links internos.
 - Ações do Windows: abrir configurações comuns ou Gerenciador de tarefas, ou bloquear explicitamente o PC.
-- Copiar/cortar/colar/reset chaves inteiras, incluindo longas prensas e cores, com desfazer/refazer e uma área de transferência local-aplicativo.
+- Copiar/cortar/colar/reset chaves inteiras, incluindo longas prensas e cores, com desfazer/refazer e uma área de transferência app-local.
 - Capture um atalho de teclado diretamente; Escape cancela e as teclas do macropad permanecem reservadas durante a captura.
 - Ctrl+K pesquisa de ação e um histórico desobstruído, somente de sessão do último 30 acções.
 - Corrigir o prompt de firmware automático de modo a aceitá-lo abre o gerenciador de firmware. Os gestos pendentes são cancelados através de alterações de perfil.

@@ -28,7 +28,7 @@ DeckPilot 2.1.2 y DeckPilot Atelier 1.0.11 Fija la seguridad del taller, la fiab
 - El panel de sonido libera clips terminados, actualiza indicadores de reproducción e informa de flujos de audio interrumpidos. VB-CABLE endpoints are recognized through their adapter identity.
 - Enlaces correctos traducidos README y preservar los nombres de los dispositivos técnicos durante la traducción. VB-CABLE requisito.
 
-La validación incluye cheques de regresión núcleo, pruebas de protocolo de firmware, pruebas de traducción, Windows build, DeckPilot y los controles de instalación / actualización / desinstalación de Atelier, y la interfaz nativa / actualizaciones de los cheques. El comportamiento de primera y desconexión de audio física todavía requieren el hardware del propietario. 1.1.1; no se requiere actualización de firmware.
+La validación incluye cheques de regresión núcleo, pruebas de protocolo de firmware, pruebas de traducción, Windows build, DeckPilot y Controles de instalación / actualización / desinstalación de Atelier, y comprobación de la interfaz nativa/actualización. Comportamiento físico de primera pestaña y desconexión de audio todavía requieren el hardware del propietario. 1.1.1; no se requiere actualización de firmware.
 
 DeckPilot 2.1.1 mejora la instalación y las actualizaciones:
 
@@ -86,10 +86,10 @@ DeckPilot 1.8.0 añade un espacio de trabajo refrescado y formas más rápidas d
 - Acciones de perfil: cambiar a un perfil nombrado, el siguiente o el perfil anterior de una clave. Los conjuntos de perfil importado mantienen sus enlaces internos.
 - Acciones de Windows: abrir ajustes comunes o Administrador de tareas, o bloquear explícitamente el PC.
 - Copiar/cortar/paste/reestablecer teclas completas, incluyendo largas prensas y colores, con deshacer/redo y un portapapeles plano.
-- Capturar un atajo de teclado directamente; Escapar cancela y las teclas macropadas permanecen reservadas durante la captura.
+- Capturar un acceso directo al teclado; Escapar cancela y las teclas macropadas permanecen reservadas durante la captura.
 - Ctrl+K búsqueda de acción y una historia clara y sencilla de la última sesión 30 acciones.
 - Arregla el impulso automático de firmware para aceptarlo abre el gestor de firmware. Los gestos pendientes se cancelan a través de los cambios de perfil.
 
 Descargar **DeckPilot-Setup.exe** o actualización de la aplicación. Se conservan los perfiles existentes, las preferencias de calibración y puesta en marcha. **1.1.1**; no se requiere flash para estas características.
 
-La validación incluye compatibilidad de núcleo/avigación/import/template checks e instalación nativa de Windows, actualización, picker, drag-and-drop, undo/redo, creación de plantillas, acciones de perfil, captura atajo, edición de portapapeles, diseño y minimizar/restore checks. El comportamiento de macropado físico y audio-dispositivo todavía depende del hardware Windows del propietario.
+La validación incluye compatibilidad de núcleos/navigation/import/template checks e instalación nativa de Windows, actualización, picker, drag-and-drop, undo/redo, creación de plantillas, acciones de perfil, captura atajo, edición de portapapeles, diseño y minimizar/restore checks. El comportamiento de macropado físico y audio-dispositivo todavía depende del hardware Windows del propietario.
