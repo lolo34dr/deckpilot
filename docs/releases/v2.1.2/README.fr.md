@@ -18,7 +18,7 @@ DeckPilot 2.1.1 améliore l'installation et les mises à jour:
 - Conservez le microphone physique sélectionné et demandez l'installation du microphone seulement si nécessaire.
 - Correction de l'initialisation et de la détection des installations existantes.
 
-Télécharger **DeckPilot-Setup.exe** ou accepter la mise à jour dans DeckPilot. L'approbation de l'administrateur de Windows est nécessaire. Les profils existants et l'étalonnage sont conservés. DeckPilot Atelier reste à 1.0.10 et le firmware reste à 1.1.1; les deux sont inclus dans la version partagée.
+Télécharger **DeckPilot-Setup.exe** ou accepter la mise à jour dans DeckPilot. L'approbation de l'administrateur Windows est requise. Les profils existants et l'étalonnage sont conservés. DeckPilot Atelier reste à 1.0.10 et le firmware reste à 1.1.1; les deux sont inclus dans la version partagée.
 
 Validation : contrôles de base et construction de Windows, mise à jour/désinstallation d'installateur et tests d'application native s'exécutent avant la publication de la publication.
 

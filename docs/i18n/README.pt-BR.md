@@ -275,7 +275,7 @@ Com o Leonardo conectado:
 <a id="license-and-credit"></a>
 ## Licença e crédito
 
-DeckPilot é liberado sob o **[Licença MIT](../../LICENSE)**. Você pode usá-lo, copiar, modificar e redistribuí-lo, inclusive comercialmente, desde que você mantenha os direitos autorais e avisos de licença exigidos pela licença.
+DeckPilot é liberado sob o **[Licença MIT](../../LICENSE)**. Você pode usá-lo, copiar, modificar e redistribuí-lo, inclusive comercialmente, desde que você mantenha os direitos autorais e avisos de licença exigidos pela licença. O denoiser de áudio RNNoise empacotado é um componente de terceiros separado sob sua licença tipo BSD; veja [`third-party/RNNoise/COPYING`](../../third-party/RNNoise/COPYING) e [`third-party/RNNoise/NOTICE.md`](../../third-party/RNNoise/NOTICE.md).
 
 Se você construir sobre DeckPilot, um pequeno crédito visível e um link para este repositório seriam apreciados. Este crédito adicional é opcional; manter os avisos MIT ainda é necessário.
 
@@ -389,6 +389,13 @@ A interface carvão coloca a biblioteca de ação em primeiro lugar, separa cont
 
 O firmware permanece **1.1.1**. Aceitar uma oferta de firmware automática agora abre corretamente o gerenciador de firmware; a guarda modal anterior impediu essa transferência. Identidade de firmware existente, batimento cardíaco, reconectar e verificação flash permanecem no local. Novos recursos de espaço de trabalho não precisam de um flash de firmware.
 
+<a id="microphone-noise-suppression-220"></a>
+## Supressão do ruído dos microfones (2.2.0)
+
+**Soundboard · micro virtuel** agora inclui supressão de ruído local RNNoise para o microfone físico selecionado. Activar **Filtrer le bruit du microfone** e ajustar **Intensidade**. DeckPilot filtra a voz antes de misturar em clipes de placa de som, assim os clipes permanecem inalterados e não são removidos pelo filtro de ruído. O filtro funciona para qualquer programa que use **CABLE Output** como seu microfone, incluindo jogos e aplicativos de voz-chat; programas definidos para usar o microfone físico diretamente não passam por DeckPilot.
+
+O áudio é processado localmente em DeckPilot. Não é gravado ou enviado através da rede. RNNoise trabalha em 10 ms, 48 kHz mono frames; este tamanho do frame não é uma garantia de latência de ponta a ponta, que também depende do Windows, dos dispositivos e VB-CABLE. Esta atualização não requer um flash de firmware. O componente RNNoise nativo é coberto por sua própria licença tipo BSD, notado acima.
+
 <a id="soundboard-return-and-on-screen-sound-notifications-219"></a>
 ## Soundboard Notificações de retorno e de som no ecrã (2.1.9)
 
@@ -452,7 +459,7 @@ A validação abrange configurações legadas, validação de sotaques, navegaç
 <a id="profile-sound-files-and-workshop-safety"></a>
 ### Arquivos de som de perfil e segurança da oficina
 
-Exportações de perfis incluem os clipes MP3/WAV referenciados (até 32 MiB de áudio por pacote). Importa cópia de áudio incorporado em DeckPilotA pasta de sons gerenciada e os identificadores de remapeamento sem substituir os clipes existentes. Os backups de perfil automáticos usam o mesmo formato; o áudio não disponível é gravado como faltando em vez de ser substituído silenciosamente. Mantenha os arquivos de origem se você exceder o limite de exportação. Os arquivos de perfil legados permanecem suportados. Removendo um clipe que ainda é atribuído a uma ação curta ou longa é bloqueado.
+Exportações de perfis incluem os clipes MP3/WAV referenciados (até 32 MiB de áudio por pacote). Importa cópia de áudio incorporado para DeckPilotA pasta de sons gerenciada e os identificadores de remapeamento sem substituir os clipes existentes. Os backups de perfil automáticos usam o mesmo formato; o áudio não disponível é gravado como faltando em vez de ser substituído silenciosamente. Mantenha os arquivos de origem se você exceder o limite de exportação. Os arquivos de perfil legados permanecem suportados. Removendo um clipe que ainda é atribuído a uma ação curta ou longa é bloqueado.
 
 Atelier aceita placas que ainda não respondem DeckPilot protocolo, enquanto ainda verificando a localização USB, Caterina bootloader e assinatura ATmega32U4 antes da programação. Cada sessão de teste começa com resultados vazios, e seu relatório permanece associado com a placa testada. Fechando o aplicativo durante um flash ou reset é bloqueado até a escrita e verificação terminar.
 

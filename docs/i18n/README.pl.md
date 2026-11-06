@@ -275,7 +275,7 @@ Z podłączonym Leonardo:
 <a id="license-and-credit"></a>
 ## Licencja i kredyt
 
-DeckPilot jest zwolniony na podstawie **[Licencja MIT](../../LICENSE)**. Możesz używać, kopiować, modyfikować i redystrybuować go, w tym komercyjnie, tak długo jak zachowasz prawa autorskie i licencje wymagane przez licencję.
+DeckPilot jest zwolniony na podstawie **[Licencja MIT](../../LICENSE)**. Możesz używać, kopiować, modyfikować i redystrybuować go, w tym komercyjnie, tak długo, jak długo zachowasz prawa autorskie i ogłoszenia licencyjne wymagane przez licencję. Związany denoiser RNNoise audio jest oddzielnym komponentem trzeciej strony na licencji BSD- style; patrz [`third-party/RNNoise/COPYING`](../../third-party/RNNoise/COPYING) oraz [`third-party/RNNoise/NOTICE.md`](../../third-party/RNNoise/NOTICE.md).
 
 Jeśli się na tym opierasz DeckPilotDoceniany byłby niewielki, widoczny kredyt oraz link do tego repozytorium. Ten dodatkowy kredyt jest nieobowiązkowy; utrzymanie ogłoszeń MIT jest nadal wymagane.
 
@@ -388,6 +388,13 @@ Interfejs węgla drzewnego stawia bibliotekę działania na pierwszym miejscu, o
 - **Szybki dostęp:** Ctrl + K lub przycisk Biblioteka koncentruje wyszukiwanie akcji. **Activité récente** utrzymuje ostatni 30 wysłanie / nieudana akcja w pamięci dla tej sesji, bez zapisywania argumentów programu lub ścieżki docelowe. Można ją w każdej chwili wyczyścić. Udane wysłanie nie gwarantuje zakończenia w aplikacji docelowej.
 
 Pozostaje oprogramowanie firmowe **1.1.1**. Akceptowanie automatycznej oferty oprogramowania firmowego teraz poprawnie otwiera menedżera oprogramowania firmowego; poprzednia ochrona modalna uniemożliwiła przekazanie go. Istniejąca tożsamość oprogramowania firmowego, bicie serca, ponowne podłączenie i kontrola flash pozostają na miejscu. Nowe funkcje przestrzeni roboczej nie potrzebują błysku firmware.
+
+<a id="microphone-noise-suppression-220"></a>
+## tłumienie szumów mikrofonów (2.2.0)
+
+**Soundboard · micro virtuel** teraz zawiera lokalne tłumienie hałasu RNNoise dla wybranego mikrofonu fizycznego. Włącz **Filtrer le bruit du micro** i dostosować **Intensité**. DeckPilot filtruje głos przed zmieszaniem w klipach płyt dźwiękowych, więc klipy pozostają niezmienione i nie są usuwane przez filtr hałasu. Filtr działa dla każdego programu, który wykorzystuje **CABLE Output** jako jego mikrofon, w tym gry i głośnomówiące aplikacje; programy ustawione do korzystania z mikrofonu fizycznego bezpośrednio nie przechodzą przez DeckPilot.
+
+Audio jest przetwarzane lokalnie w DeckPilot. Nie jest rejestrowane lub wysyłane przez sieć. RNNoise pracuje w 10 ms, 48 klatka mono kHz; ten rozmiar ramki nie jest gwarancją latencji na koniec, która zależy również od systemu Windows, urządzeń i VB-CABLE. Ta aktualizacja nie wymaga oprogramowania firmware flash. Native RNNoise komponent jest objęty własną licencją BSD- stylu, odnotowany powyżej.
 
 <a id="soundboard-return-and-on-screen-sound-notifications-219"></a>
 ## Soundboard powiadomienia zwrotne i dźwiękowe na ekranie ekranu (2.1.9)

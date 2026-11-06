@@ -81,7 +81,7 @@ DeckPilot 既に送信するArduino Leonardo互換のマクロパッドを構成
 <a id="install-and-launch"></a>
 ### インストールと起動
 
-1. ダウンロード **[DeckPilot-Setup.exe の設定](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** インストーラーを実行します。 Windows は、インストールする管理者権限を要求します。 **Program Files\DeckPilot**.
+1. ダウンロード **[DeckPilot-Setup.exe の設定](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** インストーラーを実行します。 Windows は、インストールする管理者権限を要求します **Program Files\DeckPilot**.
 2. インストーラを使用すると、どちらを選ぶかを選択できます DeckPilot Windows で起動し、アプリの更新を自動的に確認し、アニメーションを削減します。 スタートアップとアップデートチェックはデフォルトでオンです。 アニメーションの縮小はオフです。 また、署名のチェックも行います VB-CABLE 必要な運転者 Soundboard 欠落した場合は、自動的にインストールします。そのドライバのチェックにはインターネット接続が必要です。
 3. インストーラーは追加します DeckPilot Windows に **インストールされたアプリ** [スタート]メニューのショートカットを作成します。デスクトップのショートカットはデフォルトで選択されます。
 4. マクロパッドを接続し、開く DeckPilot ショートカットから。
@@ -275,7 +275,7 @@ Windows ARM64の場合、別々に公開します `-r win-arm64` ターゲット
 <a id="license-and-credit"></a>
 ## ライセンスとクレジット
 
-DeckPilot リリース中 **[MITライセンス](../../LICENSE)**。 ライセンスが要求する著作権およびライセンス通知を保持する限り、商用を含む、使用、コピー、変更、および再頒布することができます。
+DeckPilot リリース中 **[MITライセンス](../../LICENSE)**. あなたは、ライセンスが要求する著作権およびライセンス通知を保持する限り、商用を含む、それを使用、コピー、変更、および再配布することができます。 バンドルされたRNNoiseオーディオデノイザーは、BSDスタイルのライセンスの下で別のサードパーティのコンポーネントです。 参照 [`third-party/RNNoise/COPYING`](../../third-party/RNNoise/COPYING) そして、 [`third-party/RNNoise/NOTICE.md`](../../third-party/RNNoise/NOTICE.md).
 
 ビルドする場合 DeckPilot, 小さな可視クレジットとこのリポジトリへのリンクが認められます. この追加のクレジットはオプションです; MIT 通知を維持はまだ必要です.
 
@@ -388,6 +388,13 @@ charcoal インターフェイスは最初にアクションライブラリを�
 - **クイックアクセス:** Ctrl+K または Library ボタンは、アクション検索に焦点を合わせます。 **Activité récente** 最後まで 30 プログラムの引数やターゲットパスを保存せずに、このセッションのメモリに/failedアクションをディスパッチしました。 いつでもクリアできます。 成功したディスパッチは、ターゲットアプリで完了を保証するものではありません。
 
 ファームウェアは残っています **1.1.1**. 自動ファームウェアの提供を受け入れると、ファームウェアマネージャが正常に開きます。以前のモーダルガードは、そのハンドオフを防止しました。ファームウェアのアイデンティティ、ハートビート、再接続、フラッシュチェックを既存の場所に残します。新しいワークスペース機能はファームウェアのフラッシュを必要としません。
+
+<a id="microphone-noise-suppression-220"></a>
+## マイクロホンの騒音抑制()2.2.0)
+
+**Soundboard · micro virtuel** 現在、選択した物理マイクのローカルRNNoiseノイズ抑制を含みます。 有効 **Filtrer le bruit du マイク** 調節し、 **インテンシテ**. DeckPilot サウンドボードクリップで混ぜる前に音声をフィルタリングするので、クリップは変更されず、ノイズフィルタによって削除されません。 フィルタは、使用する任意のプログラムのために動作します。 **CABLE Output** マイクとして、ゲームや音声チャットアプリなど、物理的なマイクを直接使用するためのプログラムが通過しません。 DeckPilot.
+
+音声はローカルで処理されます DeckPilot. ネットワーク上での録画や送信は行いません。 RNNoise は、 10 ミリ秒, 48 kHzモノフレーム。このフレームサイズは、Windows、デバイスに依存するエンドツーエンドレイテンシ保証ではありません。 VB-CABLE. このアップデートはファームウェアフラッシュを必要としません。 ネイティブRNNoiseコンポーネントは、上記に記した独自のBSDスタイルのライセンスで覆われています。
 
 <a id="soundboard-return-and-on-screen-sound-notifications-219"></a>
 ## Soundboard 画面上の音声通知を返します()2.1.9)
