@@ -85,7 +85,7 @@ Die veröffentlichten Downloads beinhalten die .NET Runtime. **Sie müssen .NET 
 2. Der Installateur lässt Sie wählen, ob DeckPilot Sie beginnt mit Windows, sucht automatisch nach App-Updates und reduziert Animationen. Start- und Update-Checks sind standardmäßig aktiviert; reduzierte Animationen sind ausgeschaltet. VB-CABLE vom Fahrer geforderte Soundboard und installiert sie automatisch, falls sie fehlt.
 3. Der Installateur fügt hinzu DeckPilot für Windows **Installierte Apps** und erstellt eine Startmenü-Verknüpfung. Eine Desktop-Verknüpfung wird standardmäßig ausgewählt.
 4. Verbinden Sie Ihr Makropad und öffnen DeckPilot Aus seiner Abkürzung.
-5. Folgen Sie der Kalibrierung von links nach rechts quer **vier Spalten**dann die nächste Reihe, für **drei Reihen**Jeder Button muss eine andere F13-F24-Taste senden.
+5. Folgen Sie der Kalibrierung von links nach rechts quer **vier Spalten**dann die nächste Reihe, für **drei Reihen**Jede Taste muss eine andere F13-F24-Taste senden.
 
 Beim Upgrade von der ehemaligen 4-Zeilenlayout, DeckPilot bewahrt Profile/Aktionen und fordert eine neue Kalibrierung für die korrigierten Positionen an. `%APPDATA%\DeckPilot`Beenden Sie die alte Kopie, wenn das Setup Sie auffordert.
 
@@ -388,6 +388,17 @@ Die Holzkohle-Schnittstelle stellt die Aktionsbibliothek an die erste Stelle, tr
 - **Schnellzugriff:** Ctrl+K oder die Library-Schaltfläche fokussiert die Aktionssuche. **Activité récente** hält den letzten 30 Dispatched/Failed-Aktionen im Speicher für diese Sitzung, ohne Programmargumente oder Zielpfade zu speichern. Sie können jederzeit gelöscht werden.
 
 Die Firmware bleibt **1.1.1**. Die Annahme eines automatischen Firmware-Angebots öffnet nun den Firmware-Manager korrekt; der vorherige Modal Guard verhinderte die Übergabe. Bestehende Firmware-Identität, Herzschlag, Wiederverbindung und Flash-Checks bleiben bestehen. Neue Workspace-Funktionen benötigen keinen Firmware-Flash.
+
+<a id="soundboard-return-and-on-screen-sound-notifications-219"></a>
+## Soundboard Rücksende- und On-Screen-Tonmeldungen ()2.1.9)
+
+In **Soundboard · micro virtuel**, aktivieren **Entendre aussi les sons du soundboard** Um Clips über das Headset oder die Lautsprecher sowie das virtuelle Mikrofon zu hören, wählen Sie die physische Ausgabe und stellen Sie das separate Rückgabevolumen von 0 bis 100Diese Rückkehr ist standardmäßig ausgeschaltet und auf diesem PC gespeichert. **Nur Schallplattenclips**; Ihr physisches Mikrofon wird nie zum Lautsprecherausgang hinzugefügt. Das virtuelle Mikrofon sendet weiterhin Ihre Stimme und Clips an VB-CABLE.
+
+Das Ändern der Lautstärke unterbricht nicht das virtuelle Mikrofon. Wenn der ausgewählte Lautsprecher die Verbindung aufnimmt, stoppt die Rückgabe, während das virtuelle Mikrofon fortfährt. Schließen Sie es wieder an, aktualisieren Sie die Geräteliste oder wählen Sie einen anderen Ausgang. Kopfhörer verhindern, dass Ihr physisches Mikrofon Clips akustisch aufnimmt.
+
+Die Lautsprecherrückgabe verwendet nun das beworbene Windows-Audioformat des ausgewählten Geräts, einschließlich erweiterbarer Formate, die von einigen USB-Headsets verwendet werden, und fällt von der ereignisgesteuerten Wiedergabe zurück, wenn ein Treiber sie ablehnt. Das Starten eines Resonanzbodenclips zeigt auch seinen Namen in demselben konfigurierbaren Klick-Durch-Overlay an, wenn sich das Profil ändert. Die Overlay-Präferenz und Position gelten für beide Hinweise.
+
+DeckPilot Atelier bleibt bei 1.0.12 Firmware bleibt bestehen 1.1.1Es ist kein Firmware-Flash erforderlich. Das tatsächliche Lautsprecher-Routing hängt immer noch vom Windows-Audiogerät ab und sollte auf dem PC des Besitzers überprüft werden.
 
 <a id="soundboard-speaker-return-218"></a>
 ## Soundboard Speaker Rückkehr2.1.8)

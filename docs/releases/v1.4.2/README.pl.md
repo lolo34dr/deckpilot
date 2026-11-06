@@ -8,6 +8,6 @@ DeckPilot 1.4.2 naprawia problemy z konsystencją interfejsu i układem.
 - Większy, jaśniejszy podpisy klawiszy i tekst drugorzędny, lepiej wyważony układ klawiatury / edytora, dopasowane pixel- main- window renderowanie i przycinane długie nazwy profilu.
 - Nagłówki edytora zawijają się bez nakładania. Free- key help teraz wyjaśnia różnicę między normalnym użyciu klawiatury F13- F24 i kalibracji pozycji dla DeckPilot działania.
 
-Sprawdzanie UI systemu Windows obejmuje wysyłanie / błąd informacji zwrotnych, rozszerzone panele w 960 × 720 oraz 1280 × 1000, przewijanie do kalibracji i oddzielenie profilu / klawiatury.
+Kontrole UI systemu Windows obejmują wysyłanie / błąd informacji zwrotnych, rozszerzone panele w 960 × 720 oraz 1280 × 1000, przewijanie do kalibracji i oddzielenie profilu / klawiatury.
 
 Pobieranie **DeckPilot-Setup.exe** lub aktualizacji z aplikacji. Profile i kalibracja są zachowane. Nie jest potrzebny błysk firmware.

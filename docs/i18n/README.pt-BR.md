@@ -389,6 +389,17 @@ A interface carvão coloca a biblioteca de ação em primeiro lugar, separa cont
 
 O firmware permanece **1.1.1**. Aceitar uma oferta de firmware automática agora abre corretamente o gerenciador de firmware; a guarda modal anterior impediu essa transferência. Identidade de firmware existente, batimento cardíaco, reconectar e verificação flash permanecem no local. Novos recursos de espaço de trabalho não precisam de um flash de firmware.
 
+<a id="soundboard-return-and-on-screen-sound-notifications-219"></a>
+## Soundboard Notificações de retorno e de som no ecrã (2.1.9)
+
+In **Soundboard · micro virtuel**, habilitar **Entendre aussi les filhos du soundboard** para ouvir clipes através de seus fones de ouvido ou alto-falantes, bem como o microfone virtual. Escolha a saída física e defina o volume de retorno separado de 0 para 100%. Este retorno é desligado por padrão e salvo neste PC. **Unicamente clipes de placa de som**; seu microfone físico nunca é adicionado à saída do alto-falante. O microfone virtual ainda envia sua voz e clipes para VB-CABLE.
+
+A alteração do volume não interrompe o microfone virtual. Se o seu alto-falante seleccionado se desligar, o retorno pára enquanto o microfone virtual continua. Reconecte-o, atualize a lista do dispositivo ou escolha outra saída. Os auscultadores ajudam a impedir que o seu microfone físico apanhe clipes acusticamente.
+
+O retorno do alto-falante agora usa o formato de áudio anunciado do dispositivo selecionado para Windows, incluindo formatos extensíveis usados por alguns fones de ouvido USB, e cai de volta da reprodução orientada por um evento se um driver o rejeitar. Iniciando um clipe de placa de som também exibe seu nome na mesma sobreposição configurável, clique-através como alterações de perfil. A preferência e posição de sobreposição se aplicam a ambos os avisos.
+
+DeckPilot Atelier permanece em 1.0.12 e o firmware permanece 1.1.1. Nenhum flash de firmware é necessário. O roteamento real das colunas ainda depende do dispositivo de áudio Windows e deve ser verificado no PC do proprietário.
+
 <a id="soundboard-speaker-return-218"></a>
 ## Soundboard Retorno do orador (2.1.8)
 
@@ -441,7 +452,7 @@ A validação abrange configurações legadas, validação de sotaques, navegaç
 <a id="profile-sound-files-and-workshop-safety"></a>
 ### Arquivos de som de perfil e segurança da oficina
 
-Exportações de perfis incluem os clipes MP3/WAV referenciados (até 32 MiB de áudio por pacote). Importa cópia de áudio incorporado para DeckPilotA pasta de sons gerenciada e os identificadores de remapeamento sem substituir os clipes existentes. Os backups de perfil automáticos usam o mesmo formato; o áudio não disponível é gravado como faltando em vez de ser substituído silenciosamente. Mantenha os arquivos de origem se você exceder o limite de exportação. Os arquivos de perfil legados permanecem suportados. Removendo um clipe que ainda é atribuído a uma ação curta ou longa é bloqueado.
+Exportações de perfis incluem os clipes MP3/WAV referenciados (até 32 MiB de áudio por pacote). Importa cópia de áudio incorporado em DeckPilotA pasta de sons gerenciada e os identificadores de remapeamento sem substituir os clipes existentes. Os backups de perfil automáticos usam o mesmo formato; o áudio não disponível é gravado como faltando em vez de ser substituído silenciosamente. Mantenha os arquivos de origem se você exceder o limite de exportação. Os arquivos de perfil legados permanecem suportados. Removendo um clipe que ainda é atribuído a uma ação curta ou longa é bloqueado.
 
 Atelier aceita placas que ainda não respondem DeckPilot protocolo, enquanto ainda verificando a localização USB, Caterina bootloader e assinatura ATmega32U4 antes da programação. Cada sessão de teste começa com resultados vazios, e seu relatório permanece associado com a placa testada. Fechando o aplicativo durante um flash ou reset é bloqueado até a escrita e verificação terminar.
 
