@@ -4,12 +4,12 @@ DeckPilot 2.3.0 voegt directe OBS Studio en Streamlabs Bureaublad controles van 
 
 - Verbind met OBS via zijn WebSocket server en Streamlabs Desktop via Remote Control. DeckPilot stuurt applicatie API commando's direct in plaats van het simuleren van sneltoetsen.
 - Configureren acties voor scènes, live streaming, opname, audio dempen, bron zichtbaarheid en replay buffer. OBS ondersteunt ook Studiomodus en virtuele camerabesturingen.
-- Streaming referenties zijn beschermd voor de huidige Windows-gebruiker. Bestaande macropad firmware werkt zoals is; geen firmware update of flits is vereist.
+- Streaming referenties zijn beschermd voor de huidige Windows-gebruiker. Bestaande macropad firmware werkt zoals is; geen firmware update of flash is vereist.
 
 DeckPilot 2.2.0 voegt verstelbare, lokale microfoon lawaai onderdrukking terwijl het houden van soundboard clips onaangeroerd.
 
 - RNNoise filtert de geselecteerde fysieke microfoon voor DeckPilot mixt in soundboard clips. Clips omzeilen het filter en blijven duidelijk in de virtuele microfoon.
-- Kies een toepassing die gebruikt **CABLE Output** als de microfoon-games en spraak-chat toepassingen ontvangen zowel de gefilterde stem en soundboard mix. Apps met behulp van de fysieke microfoon direct bypass DeckPilotHet filter.
+- Kies een toepassing die gebruikt **CABLE Output** als de microfoon-games en spraak-chat toepassingen zowel ontvangen de gefilterde stem en soundboard mix. Apps met behulp van de fysieke microfoon direct bypass DeckPilotHet filter.
 - Filteren inschakelen of uitschakelen en de instelling ervan instellen 0–100% sterkte in **Soundboard · micro virtuel**. Audio verwerking blijft op deze PC; geen firmware flits is vereist.
 - De RNNoise native bibliotheek is gebouwd voor Windows x64 en ingebed in DeckPilot en zijn installatie. De BSD-stijl licentie van derden is opgenomen in de bron repository.
 
@@ -25,8 +25,8 @@ DeckPilot Atelier blijft op 1.0.12 en firmware blijft 1.1.1. Er is geen firmware
 
 DeckPilot 2.1.6 en DeckPilot Atelier 1.0.12 Atelier's firmware expliciet en realiseerbaar maken.
 
-- Verplaats de destructieve firmware wissen in ingestorte geavanceerde bewerkingen en vereisen typen `EFFACER` vóór het schrijven.
-- Leg uit dat het bord stopt met opnoemen als een toetsenbord na het wissen, laat de exacte RST/GND dubbel-reset herstel stappen zien, en houd Atelier's herstel actie beschikbaar na het wissen of een onderbroken flits.
+- Verplaats de vernietigende firmware wissen in ingestorte geavanceerde bewerkingen en vereisen typen `EFFACER` vóór het schrijven.
+- Leg uit dat het bord stopt met optellen als een toetsenbord na het wissen, laat de exacte RST/GND dubbel-reset herstel stappen zien, en houd Atelier's herstel actie beschikbaar na het wissen of een onderbroken flits.
 - Firmware blijft 1.1.1; nee DeckPilot hardware firmware verandering is vereist.
 
 Validatie omvat firmware en app controles, plus Windows UI automatisering voor de geavanceerde erase control, no-device veiligheid en RST/GND herstel begeleiding. De reset zelf vereist nog steeds de fysieke board.
@@ -38,7 +38,7 @@ DeckPilot 2.1.5 glad maakt audio-apparaat verfrist en voegt een branded opstarts
 - Toon het DeckPilot banner terwijl de interactieve app begint. Stille opstart met Windows blijft op de achtergrond.
 - Atelier blijft 1.0.11 en firmware blijft 1.1.1.
 
-Validatie omvat achtergrondscan / cache regressie controles, audio conversie controles, Windows builds, installer upgrade / uninstall, native splash / update en applicatie-picker controles. Werkelijke audio CPU gebruik en latency nog steeds afhankelijk van de PC en audio-apparaten.
+Validatie omvat achtergrondscan / cache regressie controles, audio conversie controles, Windows builds, installer upgrade / uninstall, native splash / update en applicatie-picker controles. Werkelijk audio CPU gebruik en latency nog steeds afhankelijk van de PC en audio-apparaten.
 
 DeckPilot 2.1.4 start de geconfigureerde virtuele microfoon automatisch met de app, inclusief achtergrond opstarten na Windows-aanmelding.
 
@@ -65,15 +65,15 @@ DeckPilot 2.1.2 en DeckPilot Atelier 1.0.11 fix workshop veiligheid, soundboard 
 - Elke inspectie begint met lege resultaten. Rapporten behouden de geteste board en firmware, en oude USB callbacks kunnen geen invloed hebben op een nieuwe sessie.
 - Het sluiten van Atelier tijdens firmware schrijven of verificatie wordt geblokkeerd.
 - Profiel export en automatische profiel back-ups kunnen behouden waarnaar MP3/WAV bestanden (32 MiB-audiolimiet). Importeert ingesloten clips in een beheerde map en remap korte/lange actiereferenties. Legacy-profielimporten blijven ondersteund; ontbrekende back-upaudio wordt expliciet gerapporteerd.
-- De soundboard brengt afgewerkte clips, updates afspelen indicatoren, en rapporten onderbroken audio streams. VB-CABLE eindpunten worden herkend door hun adapter identiteit.
+- De soundboard releases afgewerkte clips, updates afspelen indicatoren, en rapporten onderbroken audio streams. VB-CABLE eindpunten worden herkend door hun adapter identiteit.
 - Correct vertaald README links en behoud van technische apparaatnamen tijdens de vertaling. VB-CABLE vereiste.
 
 Validatie omvat core regressie controles, firmware protocol tests, vertaling tests, Windows build, DeckPilot en Atelier installatie / upgrade / uninstall controles, en native interface / update controles. Fysische eerste-flash en audio ontkoppelen gedrag nog steeds de hardware van de eigenaar nodig. Firmware blijft 1.1.1; geen firmware-update is vereist.
 
 DeckPilot 2.1.1 verbetert de installatie en updates:
 
-- Automatisch controleren op VB-CABLE tijdens de eerste installatie en upgrades, en het downloaden en starten van de officiële ondertekende installateur wanneer de bestuurder ontbreekt.
-- Toon Windows opstarten, automatische update controles en gereduceerde-motion voorkeuren tijdens de setup en updates, met bestaande keuzes vooraf geselecteerd en bewaard.
+- Automatisch controleren op VB-CABLE tijdens de eerste installatie en upgrades, en download en start de officiële ondertekende installateur wanneer de bestuurder ontbreekt.
+- Toon Windows opstarten, automatische update controles en gereduceerde-motion voorkeuren tijdens het instellen en updates, met bestaande keuzes vooraf geselecteerd en bewaard.
 - Bewaar de geselecteerde fysieke microfoon en verzoek microfoon setup alleen wanneer nodig.
 - Fix installateur initialisatie en detectie van bestaande installaties.
 
@@ -91,7 +91,7 @@ DeckPilot 1.9.10 herstelt gedeelde releases die beide bevatten DeckPilot en Deck
 
 Als u Atelier installeerde 1.0.8 vanaf het aparte releasekanaal, installeren DeckPilot-Atelier-Setup.exe van deze release een keer terug naar gedeelde updates. Eerdere Atelier versies en DeckPilot kan gebruik maken van hun bestaande updater.
 
-DeckPilot Atelier 1.0.7 voegt een bevestigde programma-gebied wissen dat alles leegt 28 KiB van de gebruiker flits, laat een veilige reset loop, en behoudt Caterina en EEPROM. Reset blijft uitgeschakeld totdat een fysieke board is geselecteerd.
+DeckPilot Atelier 1.0.7 voegt een bevestigde programma-gebied wissen dat alles leegt 28 KiB van gebruiker flits, laat een veilige reset loop, en behoudt Caterina en EEPROM. Reset blijft uitgeschakeld totdat een fysiek bord is geselecteerd.
 
 DeckPilot 1.9.7 herstelt Atelier verwijderen terwijl de app is geopend. Atelier 1.0.6 corrigeert ook de Windows DPI manifest, die verhinderde dat de geïnstalleerde app te starten.
 
@@ -99,7 +99,7 @@ DeckPilot 1.9.6 herstelt de Windows DPI manifest dat voorkomen DeckPilot Atelier
 
 DeckPilot 1.9.5 bevat gedetailleerde Atelier opstarten diagnostiek in de Windows release check.
 
-DeckPilot 1.9.4 verbetert de Atelier Windows opstart rooktest om toepassing crash details te rapporteren.
+DeckPilot 1.9.4 verbetert de Atelier Windows opstart rooktest om toepassing crash details te melden.
 
 DeckPilot 1.9.3 fixeert de Atelier bouwen metadata om de firmware manifest te lezen uit de gebundelde firmware archief.
 
@@ -109,7 +109,7 @@ DeckPilot 1.9.1 verbetert de Atelier installatie startup en voegt automatische a
 
 - Het installatieprogramma lanceert Atelier in de ingelogde Windows-gebruikerssessie en stopt/herstart het veilig voor upgrades.
 - Atelier controleert GitHub bij opstarten en op verzoek. Het kondigt nieuwere Atelier bouwt of gebundeld firmware, vervolgens downloadt een installateur geverifieerd tegen de gepubliceerde SHA-256 bestand.
-- Firmware wordt alleen geflitst nadat de gebruiker de flash actie kiest; een app-update schrijft nooit op zichzelf naar een aangesloten bord.
+- Firmware wordt alleen geflitst nadat de gebruiker de flash actie kiest; een app-update schrijft nooit op zichzelf naar een verbonden bord.
 
 Het Atelier installatieprogramma start ook in de ingelogde Windows-sessie van de gebruiker na een nieuwe installatie. De release workflow opent nu de geïnstalleerde app, controleert vervolgens upgrade en verwijdert terwijl het draait.
 
@@ -121,29 +121,29 @@ DeckPilot 1.9.0 voegt toe DeckPilot Atelier, een aparte Windows workshop app voo
 
 DeckPilot 1.8.0 voegt een vernieuwde werkruimte toe en snellere manieren om uw profielen te bouwen en te gebruiken.
 
-- Helderere houtskool/teale interface, actiebibliotheek eerst, knapperig 3 × 4 sleutels, sleutel accent kleuren en gereduceerde-motion voorkeur.
+- Helderere houtskool/teale interface, actiebibliotheek eerst, knapperig 3 × 4 sleutels, accentkleuren en voorkeur voor verminderde beweging.
 - Drie bewerkbare profielsjablonen: Muziek en audio, Bureaublad en productiviteit, en Creatie.
-- Profielacties: schakel over naar een benoemd profiel, het volgende of het vorige profiel van een sleutel. Geïmporteerde profielsets houden hun interne links.
+- Profielacties: schakel over naar een genoemd profiel, het volgende of het vorige profiel van een sleutel. Geïmporteerde profielsets houden hun interne links.
 - Windows-acties: open gemeenschappelijke instellingen of Taakbeheer, of vergrendel expliciet de PC.
 - Kopieer / knip / plak / reset hele toetsen, inclusief lange persen en kleuren, met undo / redo en een app-local klembord.
 - Een sneltoets direct vastleggen; Escape annuleert en macropad toetsen blijven gereserveerd tijdens het vastleggen.
 - Ctrl+K-actie zoeken en een duidelijke, sessie-alleen geschiedenis van de laatste 30 acties.
 - Repareer de automatische firmware prompt zodat het accepteert opent de firmware manager. In afwachting gebaren worden geannuleerd over profielwijzigingen.
 
-Downloaden **DeckPilot-Setup.exe** of update van de app. Bestaande profielen, kalibratie en opstartvoorkeuren worden bewaard. Firmware blijft **1.1.1**; voor deze functies is geen flits nodig.
+Downloaden **DeckPilot-Setup.exe** of update van de app. Bestaande profielen, kalibratie en opstartvoorkeuren blijven behouden. Firmware blijft **1.1.1**; voor deze functies is geen flits nodig.
 
-Validatie omvat kerncompatibiliteit/navigatie/import/template controles en native Windows-installatie, update, picker, drag-and-drop, undo/redo, sjabloon creatie, profiel acties, snelkoppeling, klembord bewerken, lay-out en minimaliseert / herstellen controles. Fysische macropad en audio-apparaat gedrag nog steeds afhankelijk van de eigenaar zijn Windows hardware.
-DeckPilot 2.1.8 voegt een optionele speaker terugkeer voor Soundboard Clips.
+Validatie omvat kerncompatibiliteit/navigatie/import/template controles en native Windows installatie, update, picker, drag-and-drop, undo/redo, sjabloon creatie, profiel acties, snelkoppeling, klembord bewerken, lay-out en minimaliseert / herstellen controles. Fysische macropad en audio-apparaat gedrag is nog steeds afhankelijk van de eigenaar Windows hardware.
+DeckPilot 2.1.8 voegt een optionele speaker return voor Soundboard Clips.
 
 - In **Soundboard · micro virtuel**, inschakelen **Entendre aussi les sons du soundboard**, kies een fysieke speaker of headset uitgang, en stel zijn onafhankelijke 0–100% volume. De terugkeer is standaard uitgeschakeld en opgeslagen bij lanceringen.
 - Alleen soundboard clips worden naar deze tweede uitgang gestuurd. De fysieke microfoon blijft naar de virtuele microfoon gaan, en wordt nooit in de speaker terug gemengd. Clips gaan nog steeds naar VB-CABLE op hun oorspronkelijke volume.
 - Het wijzigen van het retourvolume start de virtuele microfoon niet opnieuw op. Een niet aangesloten speaker uitgang stopt alleen de terugkeer; de virtuele microfoon blijft draaien. Vernieuw apparaten of kies een andere uitvoer om het te herstellen.
 
-DeckPilot Atelier blijft op 1.0.12 en firmware blijft 1.1.1. Geen firmware flash is nodig. Werkelijke speaker routing moet worden gecontroleerd op de eigenaar Windows-pc met zijn audio-apparaten.
+DeckPilot Atelier blijft op 1.0.12 en firmware blijft 1.1.1. Geen firmware flash nodig is. Werkelijke speaker routing moet worden gecontroleerd op de eigenaar Windows-pc met zijn audio-apparaten.
 
-DeckPilot 2.1.9 fixes speaker monitoring op apparaten waarvan Windows audio-formaat is uitbreidbaar, met inbegrip van een aantal USB-headsets, en voegt een soundboard overlay notificatie.
+DeckPilot 2.1.9 fixes speaker monitoring op apparaten waarvan Windows audio-formaat is uitbreidbaar, met inbegrip van een aantal USB-headsets, en voegt een soundboard overlay kennisgeving.
 
-- De speaker return houdt de geselecteerde output's exacte WASAPI mix formaat, converteert clip samples naar zijn PCM of float codering, en opnieuw zonder event-driven afspelen wanneer een driver weigert die modus.
+- De speaker terugkeer houdt de geselecteerde output's exacte WASAPI mix formaat, converteert clip samples naar zijn PCM of float codering, en opnieuw zonder event-driven afspelen wanneer een driver weigert die modus.
 - Het starten van een soundboard clip toont zijn naam in de configureerbare on-screen overlay. De bestaande profiel notificatie voorkeur, plaatsing en reduced-motion instelling controle beide notificatie types.
 - De terugkeer bevat nog steeds alleen soundboard clips; de fysieke microfoon blijft uit de speakermix en gaat verder naar de virtuele microfoon.
 

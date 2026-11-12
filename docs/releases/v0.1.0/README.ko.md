@@ -5,7 +5,7 @@
 - 공용영역 sombre avec 석쇠 de 4 lignes 외 3 콜론스.
 - 캘거리 guidé des 12 boutons F13 à F24. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 - Profils manuels et action : 터치 라이브러리, 응용 프로그램, 도시, 사이트, raccourci et multimédia.
-- Zone de notification et démarrage 윈도우 facultatif.
+- Zone de 알림 등 démarrage Windows facultatif.
 - Aucun Pilote ni changesment du 프로그램 du Leonardo.
 
 Téléchargez의 특징 **DeckPilot.exe를** 붓다 버전 autonome, ou **DeckPilot-윈-x64.zip** 부 르 dossier 완료 à extraire. Aucun runtime .NET à installer.
