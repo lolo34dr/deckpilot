@@ -2,10 +2,10 @@
 
 Applications installées, interface affinee et mises à jour automatiques.
 
-- Sélecteur d=applications avec recherche par nom : menu Démarrer et catalogue Windows/Microsoft Store. Le choix manuel d=un `.exe` Reste disponible.
+- Sélecteur d=applications avec recherche par nom : menu Démarrer et catalogue Windows/Microsoft Store. Le choix manuel d=un `.exe` reste disponible.
 - Icônes des applications lorsqu=elles sont disponibles, pictogrammes vectoriels et animations discrètes respectant les préférences Windows.
-- Recherche automatique des versions écuries sur GitHub. Une confirmation suffit pour télécharger, vérifier, installer et redemarrer.
-- Vérification SHA-256 et conservation de l'ancien exécutable jusqu'à confirmation du démarrage, avec restauration en cas d'échec.
+- Recherche automatique des versions écuries sur GitHub. Une confirmation suffit pour télécharger, vérifier, installer et redémarrer.
+- Vérification SHA256 et conservation de l'ancien exécutable jusqu'à confirmation du demarrage, avec restauration en cas d'échec.
 - Profils et calibrage existents conservés.
 
 **Depuis 0.1.x : quitter l'ancienne version près de l'horloge et remplacer l'exécutable une dernière fois.** Les mises à jour suivantes sont proposées automatiquement. Utilisez un dossier personnel modifiable pour permettre le remplacement.

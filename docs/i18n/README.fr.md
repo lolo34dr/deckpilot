@@ -15,9 +15,9 @@
 <p align="center">
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest">Télécharger la dernière version</a>
    · 
-  <a href="#getting-started">Premiers pas</a>
+  <a href="#getting-started">Commencer</a>
    · 
-  <a href="#development">Développement</a>
+  <a href="#development">et le développement</a>
 </p>
 
 <p align="center">
@@ -49,31 +49,31 @@
 
 DeckPilot configure les macropads compatibles Arduino Leonardo qui envoient déjà **F13–F24** comme entrées de clavier USB, disposées en **3 rangées de 4 touches**. L'ordre de la touche physique peut être arbitraire : un calibrage guidé cartographie chaque bouton à sa position.
 
-**Les fonctions du clavier F13–F24 n'ont pas besoin de modifications supplémentaires du pilote ou du firmware. Soundboard Le mélange nécessite la signature VB-CABLE driver audio, installé par Setup lorsque manquant.** L'interface de l'application est actuellement en français. Choisissez une langue ci-dessus pour un README complet traduit, y compris la référence technique et l'historique de la version. Les traductions sont générées automatiquement; cet original en anglais est la référence.
+**Les fonctionnalités du clavier F13–F24 n'ont pas besoin de changement supplémentaire de pilote ou de firmware. Soundboard le mélange nécessite la signature VB-CABLE driver audio, installé par Setup quand il manque.** L'interface de l'application est actuellement en français. Choisissez une langue ci-dessus pour un README complet traduit, y compris la référence technique et l'historique de la version. Les traductions sont générées automatiquement; cet original en anglais est la référence.
 
 <a id="features"></a>
 ## Caractéristiques
 
-- **Étalonnage guidé:** tout identifier 12 des boutons physiques sans recâbler votre macropad.
+- **Étalonnage guidé:** identifier tous 12 boutons physiques sans re-remorquer votre macropad.
 - **Sélecteur d’applications installées :** Rechercher Démarrer les raccourcis de menu et le catalogue d'applications Windows, y compris les entrées Microsoft Store. La sélection manuelle des fichiers reste disponible.
 - **Actions personnalisées  :** lancer des applications, ouvrir des dossiers ou des sites Web, envoyer des raccourcis et contrôler les médias.
 - **Touches libres:** Gardez F13–F24 disponible pour les raccourcis configurés directement dans un jeu ou une autre application.
 - **Profils locaux:** créer, dupliquer, renommer, supprimer et sélectionner les profils. L'étalonnage est partagé entre les profils.
 - **Profils prêts à l'emploi:** Commencez par les modèles Musique, Productivité ou Création, puis personnalisez-les. Passez à un profil spécifique, suivant ou précédent à partir d'une touche physique.
-- **Édition plus rapide :** copier/découper/coller/réinitialiser les touches complètes, enregistrer les raccourcis clavier, choisir les couleurs de l'accent touche et annuler les modifications.
-- **Outils Windows  :** ouvrir le son, l'affichage, les paramètres Bluetooth et réseau, le gestionnaire des tâches ou verrouiller la session.
-- **Interface noire compacte:** icônes vectorielles, icônes d'application là où disponibles, et animations subtiles qui respectent les préférences d'animation de Windows.
-- **Fonctionnement en arrière-plan:** garder DeckPilot dans la zone de notification, le démarrage de Windows étant activé par défaut (peut être désactivé).
+- **Édition plus rapide :** copier/découper/coller/réinitialiser les touches complètes, enregistrer les raccourcis clavier, choisir les couleurs de l'accent des touches et annuler les modifications.
+- **Outils Windows  :** ouvrir le son, l'affichage, les paramètres Bluetooth et réseau, le Gestionnaire des tâches ou verrouiller la session.
+- **Interface noire compacte:** icônes vectorielles, icônes d'application là où elles sont disponibles, et animations subtiles qui respectent les préférences d'animation de Windows.
+- **Fonctionnement en arrière-plan:** garder DeckPilot dans la zone de notification, avec le démarrage à la connexion Windows activé par défaut (peut être désactivé).
 - **Mises à jour automatiques :** approuver une nouvelle version, puis laisser DeckPilot télécharger, vérifier, remplacer et redémarrer lui-même.
 
 <a id="getting-started"></a>
-## Premiers pas
+## Commencer
 
 <a id="requirements"></a>
-### Exigences
+### Besoins
 
-- Windows 10 ou Windows 11, **x64**.
-- Un macropad compatible Arduino Leonardo 12 touches distinctes de **F13 à F24**.
+- Fenêtres 10 ou Windows 11, **x64**.
+- Un macropad compatible Arduino Leonardo envoyant 12 touches distinctes de **F13 à F24**.
 - Une connexion de données USB.
 
 Les téléchargements publiés incluent le .NET runtime. **Vous n'avez pas besoin d'installer .NET à utiliser DeckPilot.**
@@ -81,13 +81,13 @@ Les téléchargements publiés incluent le .NET runtime. **Vous n'avez pas besoi
 <a id="install-and-launch"></a>
 ### Installer et lancer
 
-1. Télécharger **[DeckPilot-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** et exécutez l'installateur. Windows demande la permission de l'administrateur d'installer dans **Program Files\DeckPilot**.
+1. Télécharger **[DeckPilot-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** et exécutez l'installateur. Windows demande la permission de l'administrateur pour installer dans **Program Files\DeckPilot**.
 2. L'installateur vous permet de choisir si DeckPilot commence par Windows, vérifie automatiquement les mises à jour de l'application et réduit les animations. Les vérifications de démarrage et de mise à jour sont effectuées par défaut; les animations réduites sont désactivées. VB-CABLE le conducteur requis par le Soundboard et l'installe automatiquement en cas de manque. Une connexion Internet est requise pour cette vérification du conducteur.
 3. L'installateur ajoute DeckPilot vers Windows **Installé des applications** et crée un raccourci de menu Démarrer. Un raccourci de bureau est sélectionné par défaut.
 4. Connectez votre macropad et ouvrez DeckPilot de son raccourci.
 5. Suivre le calibrage de gauche à droite **quatre colonnes**, puis la prochaine rangée, pour **trois lignes**. Chaque bouton doit envoyer une autre touche F13–F24.
 
-Dans le cadre de la mise à niveau 4-la disposition des lignes, DeckPilot Préserve les profils/actions et demande un nouveau calibrage pour les positions corrigées. L'installation sur une configuration portable existante préserve également les paramètres dans `%APPDATA%\DeckPilot`; quitter l'ancienne copie si l'installation vous le demande.
+Dans le cadre de la mise à niveau de la première 4-la mise en page de la ligne, DeckPilot Préserve les profils/actions et demande un nouveau calibrage pour les positions corrigées. `%APPDATA%\DeckPilot`; quitter l'ancienne copie si la configuration vous le demande.
 
 Un portable [DeckPilot.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot.exe) et [ZIP](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-win-x64.zip) Pour une utilisation portable, conservez l'exécutable dans un dossier personnel enregistrable.
 
@@ -104,14 +104,14 @@ L'exécutable à un seul fichier extrait ses dépendances groupées dans le cach
 
 | Décision | Comportement |
 | --- | --- |
-| Touche libre | Passez F13–F24 à travers normalement. Assignez-le directement dans votre jeu ou application. |
+| Touche libre | Passe F13–F24 à travers normalement. Assignez-le directement dans votre jeu ou application. |
 | Demande | Lance une application installée ou un programme ou un raccourci sélectionné manuellement. |
 | Dossier | Ouvre un dossier dans l'Explorateur Windows. |
 | Site Web | Ouvre une adresse HTTP ou HTTPS dans votre navigateur par défaut. |
 | Raccourci clavier | Envoie une combinaison de touches à la fenêtre active. |
 | Médias | Contrôle la lecture, les pistes, le volume ou la mute. |
 | Spotify | Contrôles Spotify lecture et ajuste seulement le volume de session audio de Spotify Windows. |
-| OBS / Streamlabs | Communique directement avec l’API WebSocket de l’application : scènes, live, enregistrement, replay, audio et sources. |
+| OBS / Streamlabs | Parler directement à l'API WebSocket de l'une ou l'autre application pour les scènes, la sortie en direct, l'enregistrement, le replay tampon, la mute audio et la visibilité source. |
 | Demande — DeckPilot | Affiche l'existant DeckPilot window, y compris lorsqu'il est en cours d'exécution dans la zone de notification. |
 
 Pour les actions de l'application, ouvrez le sélecteur d'application et recherchez par nom. Le sélecteur de fichier manuel reste disponible, avec des arguments optionnels de programme sous des options avancées. Entrez des arguments selon la syntaxe de l'application cible.
@@ -126,50 +126,50 @@ Ouvrez la section de gestion de profil dans la barre latérale droite pour crée
 L'étalonnage s'applique à tous les profils et peut être répété à partir de la barre latérale.
 
 <a id="background-operation"></a>
-### Fonctionnement de base
+### Fonctionnement en arrière-plan
 
-Fermeture des cache-fenêtres DeckPilot Double-cliquez sur l'icône de la zone de notification près de l'horloge pour la rouvrir, ou faites un clic droit sur l'icône et choisissez la commande de quitter pour l'arrêter complètement.
+Fermeture des cache-fenêtres DeckPilot double-cliquez sur l'icône de la zone de notification près de l'horloge pour la rouvrir, ou faites un clic droit sur l'icône et choisissez la commande quitter pour l'arrêter complètement.
 
-Le démarrage de Windows est activé par défaut pour l'utilisateur actuel. Vous pouvez le désactiver avec **Lancer avec Windows**; les mises à jour ultérieures de l'application préservent ce choix. L'installation et les lancements suivants rafraîchissent une entrée activée sur le chemin exécutable actuel.
+Le démarrage de Windows est activé par défaut pour l'utilisateur actuel. Vous pouvez le désactiver avec **Lancer avec Windows**; les mises à jour ultérieures de l'application préservent ce choix. L'installation et les lancements suivants rafraîchissent une entrée activée sur le chemin exécutable courant.
 
 <a id="installed-applications"></a>
 ## Applications installées
 
 Le sélectionneur lit les raccourcis à partir des menus de l'utilisateur actuel et de l'ensemble du système, puis les complète avec `Get-StartApps` résultats du catalogue d'applications Windows.
 
-La recherche ignore le cas et les accents. Les noms des duplicata sont regroupés, les entrées de menu Démarrer prenant la priorité. Les applications et programmes portables sans raccourcis enregistrés peuvent encore être sélectionnés manuellement. Si le catalogue Windows n'est pas disponible, les raccourcis de menu Démarrer sont lisibles.
+La recherche ignore le cas et les accents. Les noms des duplicata sont groupés, avec les entrées de menu Démarrer prenant la priorité. Les applications portables et les programmes sans raccourcis enregistrés peuvent encore être sélectionnés manuellement. Si le catalogue Windows n'est pas disponible, les raccourcis de menu Démarrer lisibles restent utilisables.
 
 Windows lance les raccourcis sélectionnés. Utilisation des entrées du catalogue `shell:AppsFolder`. Les arguments optionnels s'appliquent aux programmes et raccourcis basés sur des fichiers; ils sont cachés pour les entrées AppsFolder. Listing applications ne les lance pas.
 
 <a id="automatic-updates"></a>
 ## Mises à jour automatiques
 
-Disponible depuis **0.2.0**, les contrôles automatiques de mise à jour s'effectuent au démarrage après calibrage, puis toutes les six heures. Ils peuvent être désactivés dans la barre latérale.
+Disponible depuis **0.2.0**, les contrôles automatiques de mise à jour sont effectués au démarrage après calibrage, puis toutes les six heures. Ils peuvent être désactivés dans la barre latérale. Un contrôle manuel reste disponible.
 
-Quand une nouvelle version stable de GitHub est trouvée, DeckPilot demande s'il faut mettre à jour. **Copies installées** téléchargement et SHA-256 vérifier `DeckPilot-Setup.exe`, puis lancez l'installateur avec les préférences actuelles de démarrage, de mise à jour automatique et de réduction des mouvements présélectionnés. Vous pouvez les modifier lors de la mise à jour. Windows demande la permission de l'administrateur de mettre à jour les fichiers du programme. DeckPilot gracieusement quand prêt, conserve les profils et la configuration, vérifie et installe le signé VB-CABLE si le pilote manque, et relance l'application. L'annulation de l'installateur laisse l'application ouverte. Setup refuse d'interrompre une session firmware ouverte.
+Quand une nouvelle version stable de GitHub est trouvée, DeckPilot demande s'il faut mettre à jour. **Copies installées** téléchargement et SHA-256 vérifier `DeckPilot-Setup.exe`, puis lancez l'installateur avec les préférences actuelles de démarrage, de mise à jour automatique et de réduction des mouvements présélectionnés. Vous pouvez les modifier pendant la mise à jour. Windows demande la permission de l'administrateur pour mettre à jour les fichiers du programme. L'installateur ferme DeckPilot gracieusement quand prêt, conserve les profils et la configuration, vérifie et installe le signé VB-CABLE pilote s'il manque, et relance l'application. L'annulation de l'installateur laisse l'application ouverte. Setup refuse d'interrompre une session firmware ouverte.
 
-**Copies portatives** conserver le mécanisme de mise à jour existant. Après confirmation, il:
+**Copies portatives** conserver le mécanisme de mise à jour existant.
 
-1. Télécharge l'exécutable avec le reporting de progression et le support d'annulation.
-2. Vérifie son SHA-256 Hash contre `SHA256SUMS.txt` de la même sortie GitHub.
+1. Télécharger l'exécutable avec le reporting de progression et le support d'annulation.
+2. Vérifie son SHA-256 Hash contre `SHA256SUMS.txt` de la même sortie de GitHub.
 3. Enregistre vos paramètres et prépare l'aide à la mise à jour.
 4. Quitte, remplace l'exécutable et redémarre.
-5. Conserve l'exécutable précédent jusqu'à ce que le nouveau processus confirme l'initialisation réussie ; si le démarrage échoue, il restaure et relance la version précédente.
+5. Conserve l'exécutable précédent jusqu'à ce que le nouveau processus confirme une initialisation réussie ; si le démarrage échoue, il restaure et relance la version précédente.
 
-Le choix de mettre à jour plus tard reporte les invites automatiques pour 24 Les vérifications manuelles contournent ce report.
+Choisir de mettre à jour plus tard reporte les invites automatiques pour 24 Les contrôles manuels contournent ce report.
 
 Les téléchargements utilisent HTTPS, avec des redirections limitées aux hôtes GitHub attendus. `%LOCALAPPDATA%\DeckPilot\Updates`; les téléchargements de plus de sept jours sont nettoyés. L'entrée de démarrage de Windows continue d'utiliser le même chemin exécutable après une mise à jour.
 
-Les copies portables nécessitent un dossier personnel enregistrable. Les copies installées utilisent l'installateur pour les répertoires protégés; DeckPilot app elle-même continue à fonctionner sans droits d'administrateur.
+Les copies portables nécessitent un dossier personnel en écriture. Les copies installées utilisent l'installateur pour les répertoires protégés; DeckPilot app elle-même continue à fonctionner sans droits d'administrateur.
 
-**Mise à niveau de 0.1- Oui ?** Quitter l'ancienne version de la zone de notification et remplacer manuellement l'exécutable par la dernière version une fois. Ces anciennes versions ne contiennent pas la mise à jour. DeckPilot.
+**Mise à niveau de 0.1- Oui ?** Quitter l'ancienne version de la zone de notification et remplacer manuellement l'exécutable par la dernière version une fois. Ces anciennes versions ne contiennent pas la mise à jour. Des mises à jour ultérieures peuvent être installées depuis l'intérieur DeckPilot.
 
 <a id="repository-rename-compatibility"></a>
 ### Compatibilité du répertoire
 
-Version **1.0.1** prépare le déménagement de `lolo34dr/streamdeck-diy` à `lolo34dr/deckpilot`. Le dépôt est maintenant `lolo34dr/deckpilot`. Les vérifications de mise à jour utilisent le nouveau nom et conservent la compatibilité avec le nom original. Les téléchargements de publication sont validés en fonction de ces deux chemins de dépôt exacts.
+Version **1.0.1** prépare le déménagement de `lolo34dr/streamdeck-diy` à `lolo34dr/deckpilot`. Le dépôt est maintenant `lolo34dr/deckpilot`. Les vérifications de mise à jour utilisent le nouveau nom et conservent la compatibilité avec le nom d'origine. Les téléchargements de publication sont validés par rapport à ces deux chemins de dépôt exacts.
 
-Utilisation **1.0.1 ou plus tard** avec le dépôt renommé. 0.2.0 et 1.0.0 valider strictement les chemins d'actifs originaux et peut avoir besoin d'une mise à jour manuelle. Télécharger l'exécutable courant depuis la page des versions si une version plus ancienne ne peut pas se mettre à jour.
+Utilisation **1.0.1 ou plus tard** avec le dépôt renommé. 0.2.0 et 1.0.0 valider strictement les chemins d'actifs originaux et peut avoir besoin d'une mise à jour manuelle. Télécharger l'exécutable courant à partir de la page des versions si une version plus ancienne ne peut pas se mettre à jour.
 
 <a id="settings-and-backups"></a>
 ## Paramètres et sauvegardes
@@ -180,14 +180,14 @@ Profils et calibrage sont stockés à l'extérieur du dossier d'application:
 %APPDATA%\DeckPilot\settings.json
 ```
 
-Quitter DeckPilot avant de copier ce fichier pour sauvegarder ou restaurer votre configuration. Si un fichier de paramètres ne peut pas être lu, DeckPilot conserve une copie avec une `.backup-<date>` suffixe avant d'utiliser une configuration fraîche.
+Quitter DeckPilot avant de copier ce fichier pour sauvegarder ou restaurer votre configuration. Si un fichier de paramètres ne peut pas être lu, DeckPilot conserve une copie avec une `.backup-<date>` suffixe avant d'utiliser une nouvelle configuration.
 
-Aucun compte n'est requis. Les vérifications de mise à jour contactent GitHub et peuvent être désactivées dans l'interface.
+Aucun compte n'est nécessaire. Les vérifications de mise à jour contactent GitHub et peuvent être désactivées dans l'interface.
 
 <a id="development"></a>
-## Développement
+## et le développement
 
-Installez le **.NET 8 SDK**, version 8.0.415 ou une version plus récente compatible autorisée par `global.json`. Studio visuel 2022 avec la charge de travail de développement de bureau .NET est optionnelle.
+Installer le **.NET 8 SDK**, version 8.0.415 ou une version plus récente compatible autorisée par `global.json`. Studio visuel 2022 avec la charge de travail de développement de bureau .NET est optionnelle.
 
 Exécutez ces commandes depuis la racine du dépôt :
 
@@ -203,17 +203,17 @@ La bibliothèque centrale et la console vérifient également sous Linux. L'inte
 <a id="validation"></a>
 ### Validation
 
-La console vérifie la sortie avec un statut non zéro lors de la première affirmation ratée.
+La console vérifie la sortie avec un statut non nul lors de la première assertion ratée.
 
-- Cartographie des touches, répétitions des touches retenues, sorties, changement de profil et copie d'action.
+- Cartographie des touches, répétitions des touches retenues, libérations, changement de profil et copie d'action.
 - Validation des paramètres, persistance et migration à partir de configurations plus anciennes.
 - Recherche d'applications et traitement des cibles.
-- Sélection de la version, comptes de contrôle, téléchargements tronqués ou corrompus, redirections et annulation.
+- Sélection de la mainlevée, somme de contrôle, téléchargements tronqués ou corrompus, redirections et annulation.
 - Remplacement exécutable, conservation de sauvegarde et retour en arrière.
 
 La vérification du verrouillage des fichiers ne s'exécute que sous Windows.
 
-GitHub Actions fonctionne également `tests/windows-update-smoke.ps1` contre l'exécutable autonome. Il démarre l'aide à la mise à jour, quitte le processus d'origine, vérifie la confirmation de remplacement et de démarrage, vérifie la conservation des paramètres, puis ouvre le sélecteur d'application installé par l'intermédiaire de l'automatisation d'interface utilisateur et enregistre une sélection. Il exerce également des exécutables renommés et des chemins contenant des espaces. Ce script est réservé au compte de test GitHub Actions jetable. CI exécute également `tests/windows-installer-smoke.ps1`: installation de vrais fichiers de programme, raccourcis de menu de bureau/démarrage, démarrage par défaut, mise à jour avec l'application ouverte, conservation désactivée et désinstallation sans suppression de profils.
+GitHub Actions fonctionne également `tests/windows-update-smoke.ps1` contre l'exécutable autonome. Il démarre l'aide à la mise à jour, quitte le processus original, vérifie la confirmation de remplacement et de démarrage, vérifie la préservation des paramètres, puis ouvre le sélecteur d'application installé par l'intermédiaire de l'automatisation d'interface et enregistre une sélection. Il exerce également des exécutables rebaptisés et des chemins contenant des espaces. Ce script est réservé au compte de test GitHub Actions jetable. `tests/windows-installer-smoke.ps1`: installation de vrais fichiers de programme, raccourcis de menu de bureau/démarrage, démarrage par défaut, mise à jour avec l'application ouverte, conservation désactivée et désinstallation sans suppression de profils.
 
 <a id="publish-a-standalone-windows-folder"></a>
 ### Publier un dossier Windows autonome
@@ -223,41 +223,41 @@ dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true
 Compress-Archive -Path artifacts/win-x64/* -DestinationPath artifacts/DeckPilot-win-x64.zip -Force
 ```
 
-Distribuez l'archive complète. Le workflow de construction de Windows produit également ce paquet.
+Distribuez l'archive complète. Le workflow de construction de Windows produit également ce paquetage.
 
 <a id="publish-a-github-release"></a>
 ### Publier une version GitHub
 
-Mettre à jour la version de l'application et `.github/release-notes.md`, puis pousser une correspondance `v*` tag, comme `v1.0.0`. Le flux de travail de publication vérifie que la balise correspond à la version du projet et exécute la validation avant la publication:
+Mettre à jour la version de l'application et `.github/release-notes.md`, puis pousser une correspondance `v*` tag, tel que: `v1.0.0`. Le flux de travail de sortie vérifie que la balise correspond à la version du projet et exécute la validation avant la publication:
 
 | Télécharger | Table des matières |
 | --- | --- |
-| `DeckPilot.exe` | Auto-contenu, un seul fichier application Windows x64. |
-| `DeckPilot-win-x64.zip` | Remplir un dossier d'application autonome. |
-| `SHA256SUMS.txt` | SHA-256 Des haches pour les deux téléchargements. |
+| `DeckPilot.exe` | Auto-contenu, application Windows x64 à un seul fichier. |
+| `DeckPilot-win-x64.zip` | Dossier d'application intégré complet. |
+| `SHA256SUMS.txt` | SHA...256 Des haches pour les deux téléchargements. |
 
 Pour Windows ARM64, publier séparément avec `-r win-arm64` et valider sur la machine cible.
 
 <a id="hardware-checks-on-windows"></a>
-## Contrôle du matériel sous Windows
+## Contrôles matériels sur Windows
 
 Avec le Leonardo connecté:
 
 - Étalonnage tous 12 les positions dans une commande F13–F24 arbitraire. Confirmer que les touches dupliquées sont rejetées et annuler préserve la cartographie précédente.
-- Assignez une touche libre dans un jeu et vérifiez que le jeu le reçoit normalement.
+- Assignez une touche libre dans un jeu et vérifiez que le jeu la reçoit normalement.
 - Lancez un programme configuré, puis maintenez le bouton: il devrait lancer une fois jusqu'à la sortie. Inclure des chemins contenant des espaces et des arguments optionnels.
-- Tester un dossier, un site Web, un raccourci dans une application ordinaire, et les contrôles des médias.
-- Envoyer F13–F24 par une action de raccourci et confirmer qu'il n'y a pas de boucle de DeckPilot et mesures à prendre.
-- Créer deux profils avec des actions différentes, basculer entre eux, quitter et relancer. Les profils et l'étalonnage doivent persister.
+- Testez un dossier, un site Web, un raccourci dans une application ordinaire, et des contrôles médias.
+- Envoyer F13–F24 par une action de raccourci et confirmer qu'il n'y a pas de boucle de DeckPilot les mesures prises.
+- Créer deux profils avec des actions différentes, basculer entre eux, quitter et relancer. Les profils et l'étalonnage devraient persister.
 - Fermez la fenêtre, déclenchez une action, puis rouvrez et quittez l'icône de la zone de notification. DeckPilot les sorties, toutes les touches doivent passer normalement.
-- Activer le démarrage et le test de Windows après s'être connecté à nouveau; désactiver ensuite si non désiré.
+- Activer le démarrage et le test de Windows après s'être connecté à nouveau ; le désactiver ensuite si non désiré.
 
 <a id="current-limitations"></a>
 ## Limites actuelles
 
 - Les touches F13–F24 physiques d'un autre clavier suivent la même configuration. Les événements de clavier injectés par le logiciel sont ignorés pour empêcher les boucles d'action.
-- Certains jeux, systèmes anti-chaleur ou programmes utilisant l'entrée d'appareil direct peuvent encore recevoir des touches interceptées. Le mode touche libre reste disponible. L'écran d'enregistrement, le bureau sécurisé et d'autres sessions sont hors du contrôle de l'application.
-- Windows peut bloquer les raccourcis envoyés aux applications fonctionnant avec les privilèges de l'administrateur. DeckPilot fonctionne sans droits d'administrateur et ne contourne pas cette restriction.
+- Certains jeux, systèmes anti-chaleur ou programmes utilisant l'entrée directe de l'appareil peuvent encore recevoir des touches interceptées. Le mode touche libre reste disponible. L'écran de connexion, le bureau sécurisé et d'autres sessions sont hors du contrôle de l'application.
+- Windows peut bloquer les raccourcis envoyés aux applications fonctionnant avec des privilèges d'administrateur. DeckPilot fonctionne sans droits d'administrateur et ne contourne pas cette restriction.
 - Release Ctrl, Alt, Shift et Windows avant de déclencher une action de raccourci. Les combinaisons telles que Alt+Tab restent soumises au comportement de Windows.
 - Déconnecter la détection, les profils automatiques par jeu et un installateur signé sont des améliorations futures. Les profils sont actuellement sélectionnés manuellement.
 
@@ -266,8 +266,8 @@ Avec le Leonardo connecté:
 
 | Voie | Objet |
 | --- | --- |
-| `src/DeckPilot.Core` | Paramètres, état de la touche, recherche, validation de la version GitHub, téléchargements vérifiés et transactions de remplacement. |
-| `src/DeckPilot.Windows` | Interface WPF, catalogue d'applications, icônes, actions Windows, intégration des zones de notification et helper de mise à jour. |
+| `src/DeckPilot.Core` | Paramètres, état des touches, recherche, validation de la version de GitHub, téléchargements vérifiés et transactions de remplacement. |
+| `src/DeckPilot.Windows` | Interface WPF, catalogue d'applications, icônes, actions Windows, intégration des zones de notification et aide à la mise à jour. |
 | `tests/DeckPilot.Checks` | Contrôles exécutables sans cadre d'essai externe. |
 | `tests/windows-update-smoke.ps1` | Native Windows mise à jour et application-picker test de fumée utilisé par CI. |
 | `deckpilotlogo.png` | Logo de l'application. |
@@ -276,22 +276,22 @@ Avec le Leonardo connecté:
 <a id="license-and-credit"></a>
 ## Licence et crédit
 
-DeckPilot est libéré sous la **[Licence MIT](../../LICENSE)**. Vous pouvez l'utiliser, copier, modifier et redistribuer, y compris commercialement, tant que vous conservez les avis de droits d'auteur et de licence exigés par la licence. Le dénotant audio RNNoise groupé est un composant tiers distinct sous sa licence de style BSD; voir [`third-party/RNNoise/COPYING`](../../third-party/RNNoise/COPYING) et [`third-party/RNNoise/NOTICE.md`](../../third-party/RNNoise/NOTICE.md).
+DeckPilot est libéré sous la **[Licence MIT](../../LICENSE)**. Vous pouvez l'utiliser, copier, modifier et redistribuer, y compris commercialement, tant que vous conservez les avis de droits d'auteur et de licence exigés par la licence. Le dénocteur audio RNNoise groupé est un composant tiers distinct sous sa licence de style BSD; voir [`third-party/RNNoise/COPYING`](../../third-party/RNNoise/COPYING) et [`third-party/RNNoise/NOTICE.md`](../../third-party/RNNoise/NOTICE.md).
 
-Si vous construisez sur DeckPilot, un petit crédit visible et un lien vers ce dépôt seraient appréciés. Ce crédit supplémentaire est facultatif; la conservation des avis de MIT est toujours nécessaire.
+Si vous construisez sur DeckPilot, un petit crédit visible et un lien vers ce dépôt seraient appréciés. Ce crédit supplémentaire est facultatif; la conservation des avis MIT est toujours nécessaire.
 
-Crédit suggéré :
+Crédit proposé :
 
-> Sur la base [DeckPilot](https://github.com/lolo34dr/deckpilot) par [lolo34dr](https://github.com/lolo34dr).
+> Sur la base [DeckPilot](https://github.com/lolo34dr/deckpilot) par [Lolo34dr](https://github.com/lolo34dr).
 
 <a id="macropad-firmware-updates"></a>
 ## Mises à jour du firmware Macropad
 
-Pour la préparation de l'appareil et les contrôles de qualité de l'atelier, installer le [DeckPilot Atelier](../../docs/FACTORY.md) outil. Son installateur est publié comme **[DeckPilot- Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** Il peut clignoter le firmware inclus sur une carte Leonardo/Caterina, puis vérifier les presses courtes et longues sur tous 12 touches physiques et exporter un rapport.
+Pour la préparation de l'appareil et les contrôles de qualité de l'atelier, installer le [DeckPilot Atelier](../../docs/FACTORY.md) outil. Son installateur est publié comme **[DeckPilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** Il peut clignoter le firmware inclus sur une carte Leonardo/Caterina, puis vérifier les presses courtes et longues sur tous 12 touches physiques et exporter un rapport.
 
-DeckPilot 1.1.0 comprend: **Firmware du macropad…** dialogue et firmware 1.0.0 pour le Pro Micro ATmega32U4 **5 V/ 16 MHz**, à l'aide de la configuration Leonardo/Caterina confirmée par le journal de téléchargement du propriétaire. L'outil de flashage Windows livré ne nécessite pas Arduino IDE. La sélection et la confirmation des appareils sont obligatoires; les mises à jour de l'application ne clignotent jamais silencieusement le panneau.
+DeckPilot 1.1.0 comprend: **Firmware du macropad…** dialogue et firmware 1.0.0 pour le Pro Micro ATmega32U4 **5 V/ 16 MHz**, à l'aide de la configuration Leonardo/Caterina confirmée par le journal de téléchargement du propriétaire. L'outil de clignotement Windows livré ne nécessite pas Arduino IDE. La sélection et la confirmation des périphériques sont obligatoires; les mises à jour de l'application ne clignotent jamais silencieusement le panneau.
 
-**Le propriétaire a confirmé le succès dans l'application flashing, firmware 1.0.0 identification et tous 12 boutons sur le tableau de référence.** Gardez le croquis original et l'accès à RST/GND pour la récupération. Le clignotement du firmware ne peut pas être retourné automatiquement. Voir [firmware documentation](FIRMWARE.fr.md) pour la compatibilité, la validation, la récupération, les étapes de construction et les licences tierces. Les modes USB par bouton et les contrôles des médias natifs ne font pas partie de cette version du firmware.
+**Le propriétaire a confirmé le succès dans l'application flashing, firmware 1.0.0 identification et tous 12 boutons sur le tableau de référence.** Gardez l'esquisse originale et l'accès à RST/GND pour la récupération. Le clignotement firmware ne peut pas être retourné automatiquement. Voir [firmware documentation](FIRMWARE.fr.md) pour la compatibilité, la validation, la récupération, les étapes de construction et les licences tierces. Les modes USB par bouton et les contrôles des médias natifs ne font pas partie de cette version du firmware.
 
 <a id="building-the-windows-installer"></a>
 ### Construire l'installateur Windows
@@ -299,157 +299,158 @@ DeckPilot 1.1.0 comprend: **Firmware du macropad…** dialogue et firmware 1.0.0
 Après production `artifacts/standalone/DeckPilot.exe` avec le paquet de firmware intégré, installer Inno Setup 6 et courir `./installer/build.ps1` depuis la racine du dépôt. La sortie est `artifacts/installer/DeckPilot-Setup.exe`. CI construit et teste cet installateur avant de l'attacher à une version. L'installateur utilise un ID d'application stable afin que les versions futures mettent à niveau la même installation.
 
 <a id="connection-dashboard-and-firmware-checks-130"></a>
-## Contrôles du tableau de bord et du firmware (1.3.0)
+## Contrôles du tableau de bord et du firmware de connexion (1.3.0)
 
-Les **Votre macropad** carte affiche l'état de connexion, le firmware détecté et toute mise à jour groupée disponible. **Connexion et diagnostic** expose la sélection du jury lorsque plusieurs Leonardos sont connectés, l'état de la liaison USB en direct, le nombre de boutons physiques, les préférences de firmware-notification et un résumé diagnostique copiable. Diagnostics ne copie pas les actions de profil ou les identifiants de série USB. Le moniteur se reconnecte après le débranchement et abandonne automatiquement son port série pendant que le gestionnaire de firmware est ouvert. 1.0.0 et sans lien de diagnostic.
+Les **Votre macropad** carte affiche l'état de connexion, le firmware détecté et toute mise à jour groupée disponible. **Connexion et diagnostic** Les diagnostics ne copient pas les actions de profil ou les identifiants de série USB. Le moniteur se reconnecte après le débranchement et abandonne automatiquement son port série pendant que le gestionnaire de firmware est ouvert. Les actions clavier F13–F24 continuent à fonctionner avec le firmware 1.0.0 et sans lien de diagnostic.
 
-Les vérifications du firmware de démarrage sont activées par défaut. Après la vérification de la mise à jour de l'application et l'étalonnage sont hors du chemin, un firmware identifié plus ancien peut inviter à ouvrir l'installation; report des rappels de retard pour 24 Les versions firmware sont groupées avec les mises à jour d'applications de GitHub, plutôt que récupérées à partir d'un flux de firmware indépendant.
+Les vérifications du firmware de démarrage sont activées par défaut. Après la vérification de la mise à jour de l'application et l'étalonnage sont hors du chemin, un firmware identifié plus ancien peut inviter à ouvrir l'installation; report des rappels de retard pour 24 Les versions de firmware sont groupées avec les mises à jour d'applications de GitHub, plutôt que récupérées à partir d'un flux de firmware indépendant.
 
-Firmware **1.1.1** ajoute l'identification de session, les réponses corrélées aux battements de coeur, les messages limités et les événements physiques à l'état touche. Ces événements animent les boutons mappés et mettent à jour les diagnostics; ils n'invoquent jamais les actions une seconde fois. 1.0.0 et la procédure flash ont été confirmées par le propriétaire. [protocole et documentation de compatibilité](FIRMWARE.fr.md).
+Firmware **1.1.1** ajoute l'identification de session, les réponses corrélées aux battements cardiaques, les messages limités et les événements physiques à l'état touche. Ces événements animent les boutons mappés et mettent à jour les diagnostics; ils n'invoquent jamais les actions une deuxième fois. 1.0.0 et la procédure flash ont été confirmées par le propriétaire. [protocole et documentation de compatibilité](FIRMWARE.fr.md).
 
 <a id="keypad-interface-140"></a>
 ## Interface clavier (1.4.0)
 
-La plus grande 3 × 4 Chaque touche affiche son icône principale, son étiquette, la cartographie F13–F24 et une petite icône de type action ; les tooltips conservent l'étiquette et la position complète. Appuyez sur les commentaires, les actions en cours, l'expédition réussie et les erreurs ont des apparences distinctes, y compris des symboles plutôt que de la couleur seule.
+La plus grande 3 × 4 Chaque touche affiche son icône principale, son étiquette, sa carte F13–F24 et une petite icône de type action; les tooltips conservent l'étiquette complète et la position. Appuyez sur la rétroaction, les actions en cours, l'expédition réussie et les erreurs ont des apparences distinctes, y compris les symboles plutôt que la couleur seule. Les animations suivent la préférence d'animation Windows.
 
-Choisissez une touche pour la modifier. **Options avancées · fichier et arguments** garde les chemins d'applications manuelles et les arguments de lancement effondrés par défaut, tandis que les destinations essentielles du dossier et du site Web restent élargies. **Tester l’action** enregistre et envoie l'action sélectionnée sur le PC en cours; un indicateur de succès confirme l'expédition, pas la réalisation dans une autre application. Les raccourcis clavier ciblent la fenêtre active. Les touches F13–F24 libres n'ont aucune action de test.
+Choisissez une touche pour la modifier. **Options avancées · fichier et arguments** garde les chemins d'applications manuelles et les arguments de lancement effondrés par défaut, tandis que les destinations essentielles du dossier et du site Web restent élargies. **Tester l’action** enregistre et envoie l'action sélectionnée sur le PC en cours; un indicateur de succès confirme l'expédition, et non l'achèvement dans une autre application. Les raccourcis clavier ciblent la fenêtre active. Les touches F13–F24 libres n'ont aucune action de test.
 
-Lorsque le macropad est déconnecté, **Hors ligne** La configuration est stockée sur le PC et reste disponible tout au long des déconnexions et des reconnects. Ces améliorations d'interface fonctionnent avec le firmware existant et ne nécessitent aucun flash supplémentaire.
+Lorsque le macropad est déconnecté, **Hors ligne** La configuration est stockée sur le PC et reste disponible tout au long des déconnexions et des reconnects. Ces améliorations de l'interface fonctionnent avec le firmware existant et ne nécessitent aucun flash supplémentaire.
 
 Le menu zone de notification commute maintenant les profils directement. **Ctrl+S** Les fichiers de configuration non valides sont sauvegardés avant qu'une nouvelle configuration ne soit utilisée. L'installation de l'application, les icônes de menu de bureau/démarrage, les préférences de démarrage et l'actualisation automatique existante sont conservées.
 
-Pour les téléchargements IDE manuel Arduino, **arrêter DeckPilot à partir de son menu plateau** pour libérer le port série. La fermeture de la fenêtre principale la maintient en arrière-plan.
+Pour les téléchargements manuels Arduino IDE, **arrêter DeckPilot à partir de son menu plateau** pour libérer le port série. La fermeture de la fenêtre principale la maintient en arrière-plan.
 
 <a id="spotify-action-search-and-drag-and-drop-150"></a>
 ## Spotify, recherche d'action et glisser-déposer (1.5.0)
 
-**Spotify** est séparé de **Multimédia**. Sa lecture/pause, les commandes suivantes et précédentes adressent la session de médias de l'application Spotify de bureau, même si un navigateur est en train de jouer sur YouTube. 5% étapes, laissant le volume maître et les autres joueurs inchangés. Spotify doit être ouvert et avoir une session de lecture disponible; démarrer une piste une fois si nécessaire. Spotify dans un navigateur n'est pas pris en charge. Les sessions manquantes Spotify produisent une erreur, sans retour aux touches médias globales ou à un autre lecteur. DeckPilot. Windows 10 version 2004 ou plus tard, ou Windows 11, est requis par cette construction.
+**Spotify** est séparé de **Multimédia**. Sa lecture/pause, les commandes suivantes et précédentes s'adressent à la session de médias de l'application Spotify de bureau, même si un navigateur est en train de jouer sur YouTube. 5Spotify doit être ouvert et avoir une session de lecture disponible; démarrer une piste une fois au besoin. Spotify dans un navigateur n'est pas pris en charge. Les sessions manquantes Spotify produisent une erreur, sans retour aux touches médias globales ou à un autre lecteur. Aucune autorisation de compte Spotify, abonnement Premium ou jeton stocké est nécessaire par DeckPilot. Windows 10 version 2004 ou plus tard, ou Windows 11, est requis par cette construction.
 
 Utilisation **Rechercher une action ou une application** pour des questions telles que `volume`, `skip`, `Spotify` ou le nom d'une application installée. L'index de l'application installée se charge de la première recherche et est mis en cache pendant cinq minutes; la sélection manuelle des fichiers reste disponible. Cliquez sur un résultat pour configurer la touche sélectionnée ou la glisser sur une autre touche.
 
-## Commandes OBS Studio et Streamlabs Desktop
+<a id="obs-studio-and-streamlabs-desktop-control"></a>
+## OBS Studio et Streamlabs Contrôle de bureau
 
-Choisissez **OBS / Streamlabs** pour une touche, sélectionnez l’application et la commande, puis enregistrez. DeckPilot communique directement avec l’API WebSocket/RPC de l’application, sans simuler de raccourcis clavier. OBS propose le changement de scène, le démarrage et l’arrêt du live, l’enregistrement, la pause, le micro et le son du bureau, la visibilité des sources, le replay buffer, le mode Studio et la caméra virtuelle. Streamlabs propose le changement de scène, le live, l’enregistrement, le mute des sources audio, la visibilité des sources et le replay buffer.
+Choisir **OBS / Streamlabs** pour une touche, sélectionnez l'application cible et la commande, puis enregistrez. DeckPilot Les actions OBS comprennent la commutation de scène, le démarrage/arrêt de flux, l'enregistrement de start/stop/pause/résume, le micro ou le mute de bureau, la visibilité source, le tampon replay, le mode Studio et la caméra virtuelle. Les actions Streamlabs comprennent la commutation de scène, le flux et l'enregistrement de start/stop, le mute source-audio, la visibilité source et le tampon replay.
 
-Ces commandes utilisent les événements des boutons déjà existants et ne nécessitent aucune modification ni mise à jour du firmware.
+Ces commandes utilisent les événements de bouton macropad existants et ne nécessitent aucun changement de firmware ou reflash.
 
-Cliquez sur **Tester la connexion et récupérer les scènes** pour lire la liste des scènes de l’application choisie et vérifier sa connexion. Pour les actions audio et les sources, saisissez leur nom exact tel qu’il apparaît dans l’application. OBS demande d’activer le serveur WebSocket dans **Outils → Paramètres du serveur WebSocket** (intégré depuis OBS 28). Dans Streamlabs Desktop, activez **Paramètres → Remote Control**, puis copiez le jeton dans **Show Details**. Le mot de passe et le jeton sont protégés par Windows pour le compte utilisateur courant. L’application de streaming doit être ouverte au moment de l’action. Consultez le [guide officiel de contrôle à distance d’OBS](https://obsproject.com/kb/remote-control-guide) et la [référence de l’API Streamlabs Desktop](https://github.com/streamlabs/desktop/blob/master/docs/README.md).
+Utilisation **Tester la connexion et récupérer les scènes** pour récupérer les scènes disponibles de l'application sélectionnée. Pour les actions audio ou source, saisissez le nom exact source/entrée utilisé à l'intérieur de cette application. OBS nécessite son serveur WebSocket activé sous **Outils → Paramètres du serveur WebSocket** (OBS) 28 et plus tard l'inclure). Streamlabs Bureau nécessite **Paramètres → Télécommande** à activer; copier son jeton de **Afficher les détails**. DeckPilot stocke le mot de passe / jeton en utilisant la protection des données de niveau utilisateur de Windows. Les applications doivent être en cours d'exécution lorsqu'une action est déclenchée. [Guide de contrôle à distance OBS](https://obsproject.com/kb/remote-control-guide) et [Référence de l'API de bureau Streamlabs](https://github.com/streamlabs/desktop/blob/master/docs/README.md).
 
-Faites glisser une action à partir du catalogue ou des résultats de recherche sur une touche pour l'assigner. Faites glisser une touche configurée sur une autre pour **échange de leurs actions**; le calibrage physique reste inchangé. `.exe`, `.lnk`, `.appref-ms`, dossier ou URL HTTP(S) sur une touche. Dropping ne configure que la touche et n'exécute jamais l'action. Compléter les paramètres manquants dans l'éditeur.
+Faites glisser une action depuis le catalogue ou les résultats de recherche sur une touche pour l'assigner. Faites glisser une touche configurée sur une autre pour **échange de leurs actions**; le calibrage physique reste inchangé. `.exe`, `.lnk`, `.appref-ms`, dossier ou URL HTTP(S) sur une touche. Dropping ne configure que la touche et n'exécute jamais l'action. Compléter tous les paramètres manquants dans l'éditeur.
 
-Windows startup conserve maintenant une préférence explicite par utilisateur, répare une entrée d'exécution ou manquante, et signale que Windows startup connu désactiver les drapeaux. **Lancer avec Windows** efface le connu DeckPilot désactiver le drapeau pour l'utilisateur actuel. Les lancements d'arrière-plan restent cachés même avant l'étalonnage, et les lancements d'arrière-plan dupliqués sortent tranquillement. **Préférences de l’application**, vérifiez l'état de démarrage et réactivez l'option si Windows l'a bloquée. Une vraie connexion sur le PC de l'utilisateur reste la dernière vérification des politiques de Windows ou des restrictions spécifiques à la machine.
+Le démarrage de Windows conserve désormais une préférence explicite par utilisateur, répare une entrée d'exécution ou manquante, et signale que le démarrage connu de Windows désactive les drapeaux. **Lancer avec Windows** efface le connu DeckPilot désactiver le drapeau pour l'utilisateur actuel. Les lancements d'arrière-plan restent cachés même avant l'étalonnage, et les lancements d'arrière-plan dupliqués sortent tranquillement. **Préférences de l’application**, vérifiez l'état de démarrage et réactivez l'option si Windows l'a bloqué. Un vrai signe-out/sign-in sur le PC de l'utilisateur reste le contrôle final des politiques de Windows ou des restrictions spécifiques à la machine.
 
 <a id="sharp-keypad-rendering-profile-recovery-and-audio-controls-161"></a>
 ## Le rendu de clavier pointu, la récupération de profil et les commandes audio (1.6.1)
 
-Le clavier rend maintenant aux tailles WPF natives au lieu de mettre le texte à l'échelle via une Viewbox. Les effets d'ombre et les animations d'échelle de texte ont été supprimés; les fenêtres plus petites défilent plutôt que de rétrécir le clavier. L'application déclare la sensibilisation par moniteur DPI et utilise des icônes de shell Windows plus grandes pour les applications de bureau.
+Le clavier rend maintenant aux tailles WPF natives au lieu de mettre le texte à l'échelle à travers une boîte de vue. Les effets d'ombre parent/touche et les animations à l'échelle du texte ont été supprimés; les fenêtres plus petites défilent plutôt que de rétrécir le clavier.
 
 **Annuler / Rétablir** restaure les modifications de profil, y compris les swaps de glisser-déposer, les paramètres d'action, les importations et la création/suppression de profil. 50 édits pendant la session de l'application. Ctrl+Z / Ctrl+Y fonctionnent sur des profils en dehors des champs de texte; les champs de texte conservent leur propre undo/redo. L'étalonnage, les préférences de démarrage et les actions exécutées ne sont pas annulés.
 
-Sous **Gérer les profils**, exporter le profil actuel ou tous les profils comme `.deckpilot.json`, importer des profils en tant que nouvelles copies, ou restaurer une sauvegarde de tous les profils. Importer n'exécute jamais les actions et ne remplace jamais l'étalonnage du PC. Les profils contiennent des chemins d'action, des arguments et des identifiants d'extrémité audio, qui peuvent nécessiter un ajustement sur un autre PC.
+Sous **Gérer les profils**, exporter le profil actuel ou tous les profils comme `.deckpilot.json`Importer n'exécute jamais d'actions et ne remplace jamais l'étalonnage du PC. Les profils contiennent des chemins d'action, des arguments et des identifiants d'extrémité audio, qui peuvent nécessiter un ajustement sur un autre PC. Les formats inconnus, les fichiers surdimensionnés et les configurations de gestes mal formés sont refusés.
 
-Avant d'enregistrer les profils modifiés, DeckPilot conserve les profils précédents dans `%APPDATA%\DeckPilot\Backups` (20 Les sauvegardes de préférences ne créent pas de sauvegardes de profil. Une défaillance de sauvegarde empêche d'écraser les paramètres actuels. Restaurer remplace les profils après confirmation et peut elle-même être annulée; l'étalonnage reste inchangé.
+Avant d'enregistrer les profils modifiés, DeckPilot conserve les profils précédents dans `%APPDATA%\DeckPilot\Backups` (20 Une défaillance de sauvegarde empêche d'écraser les paramètres actuels. Restaurer remplace les profils après confirmation et peut être elle-même annulée; le calibrage reste inchangé.
 
-**Microphone Windows** La barre d'état persistante et la carte Audio Windows montrent l'état actif/muté/mixé/indisponible, mis à jour toutes les deux secondes et après les commandes de l'application. Une mise à jour multi-endpoint échouée tente de restaurer les états de mute précédents. Ces indicateurs décrivent l'état de fin de Windows, pas un commutateur matériel ou le bouton de mute propre d'une application.
+**Microphone Windows** La barre d'état persistante et la carte Audio Windows montrent un état actif/muté/mixé/indisponible, rafraîchi toutes les deux secondes et après les commandes de l'application. Une mise à jour multi-endpoint échouée tente de restaurer les états de mute précédents. Ces indicateurs décrivent l'état de fin de Windows, pas un commutateur matériel ou un bouton de mute propre à une application.
 
 **Changer de sortie audio** Une cible manquante donne une erreur sans choisir un autre périphérique. Les applications avec leur propre sortie fixe peuvent ne pas suivre la valeur par défaut de Windows. Les identifiants de fin de série importés sont affichés comme indisponibles jusqu'à ce qu'ils soient adaptés au PC actuel. Les changements de routage échoués tentent de restaurer les valeurs par défaut précédentes.
 
-Pour configurer **appui court / appui long**, d'abord choisir une action configurée, activer l'option à deux actions, sélectionner le geste à modifier et définir un seuil à partir de 200 à 3000 ms. Sans ce mode, les actions conservent le comportement immédiat de la touche vers le bas. Avec elle, les actions courtes s'exécutent à la libération avant le seuil; les actions longues s'exécutent une fois au seuil (ou à la libération si le minuteur n'a pas encore exécuté). Une action longue n'exécute jamais aussi la courte. Les touches de passage libres F13–F24 ne peuvent pas utiliser le mode de double action.
+Pour configurer **appui court / appui long**, choisissez d'abord une action configurée, activez l'option à deux actions, sélectionnez le geste à modifier et définissez un seuil à partir de 200 à 3000 ms. Sans ce mode, les actions conservent le comportement immédiat de la touche vers le bas. Avec elle, les actions courtes s'exécutent à la libération avant le seuil; les actions longues s'exécutent une fois au seuil (ou à la libération si le minuteur n'a pas encore exécuté). Une action longue n'exécute jamais aussi la courte. Les touches de passage F13–F24 libres ne peuvent pas utiliser le mode double action.
 
-Les contrôles de base couvrent les limites de répétition/release, les cales simultanées, l'annulation, l'historique du profil, l'échange/les sauvegardes et le retour audio à l'aide de faux paramètres. L'interface utilisateur Windows vérifie l'exercice réel de drag undo/redo, configurant une longue action et un seuil, les dimensions du clavier natif après le redimensionnement et l'indicateur du microphone.
+Les contrôles de base couvrent les limites de répétition/release, les cales simultanées, l'annulation, l'historique du profil/échange/retour et le retour audio à l'aide de faux paramètres. L'interface utilisateur Windows vérifie l'exercice réel de drag undo/redo, configurant une longue action et un seuil, les dimensions du clavier natif après redimensionnement et l'indicateur de microphone.
 
 <a id="search-and-ci-reliability-fixes-164"></a>
 ## Corrections de la fiabilité de la recherche et de l'IC (1.6.4)
 
-Les résultats de recherche équivalents conservent leurs boutons WPF existants. Le catalogue de l'application installée et débunce timer reporter le résultat de remplacement pendant qu'un bouton de recherche est capturé ou un glisser est en cours. Cela empêche un bouton source d'être supprimé pendant une interaction.
+Les résultats de recherche équivalents conservent leurs boutons WPF existants. Le catalogue de l'application installée et débunce timer reportent le résultat de remplacement pendant qu'un bouton de recherche est capturé ou une traînée est en cours. Ceci empêche un bouton source d'être supprimé lors d'une interaction.
 
-Le client de test utilise des coordonnées de curseur physiques pour correspondre aux limites d'automatisation de l'interface, indépendamment du DPI, se concentre avant de mesurer et scanne tous les pourcentages de défilement. Une vérification de régression vérifie également que les recherches équivalentes conservent le même bouton accessible. Les affirmations de démarrage de fond attendent le gestionnaire chargé de WPF et nécessitent cinq observations consécutives de fenêtre cachée pendant que l'application reste en vie. Les défaillances rapportent la phase, les cibles de curseur, le DPI et la géométrie du dernier défilement.
+Les contrôles de fumée Windows continuent d'effectuer des glissers de souris natifs et de valider les affectations sauvegardées, les swaps, la désactivation/redo et les deux gestes de presse. Le client test utilise des coordonnées de curseur physiques pour correspondre aux limites d'automatisation de l'interface, indépendamment du DPI, se concentre avant de mesurer et scanne tous les pourcentages de défilement. Une vérification de régression vérifie également que les recherches équivalentes préservent le même bouton accessible.
 
-Construire et libérer les workflows utilisent Node.js 24 actions. Le compilateur Arduino reste à CLI 1.2.2; CI télécharge son archive Windows avec un SHA-256 checksum. Le firmware et ses versions de la chaîne d'outils sont inchangés.
+Construire et libérer les workflows utilisent Node.js 24 Le compilateur Arduino reste à CLI 1.2.2; CI télécharge son archive Windows avec un SHA-256 checksum. Le firmware et ses versions de la chaîne d'outils sont inchangés.
 
-Les paramètres lit dans les tests Windows permettent explicitement le partage de lecture/écriture/effacement et l'analyse UTF-8 Après la fermeture du lecteur. Cela empêche le test lui-même de refuser le remplacement du fichier atomique apps. Le test d'historique maintient un ancien instantané ouvert sur trois cycles d'annulation/redo et vérifie qu'il reste intact pendant que les paramètres en direct changent.
+Les paramètres lit dans les tests Windows permettent explicitement le partage lecture/écriture/effacement et l'analyse UTF-8 Après la fermeture du lecteur. Cela empêche le test lui-même de refuser le remplacement du fichier atomique apps. Le test d'historique maintient un ancien instantané ouvert sur trois cycles de désuétude/redo et vérifie qu'il reste intact pendant que les paramètres en direct changent.
 
-Sous Windows, les fichiers de paramètres existants sont engagés avec `File.Replace` plutôt que d'écraser-mode `File.Move`. Cela prend en charge les lecteurs qui permettent la suppression tout en conservant un vieux instantané complet. La suite de base teste trois remplacements avec un lecteur tenu ouvert; Windows core vérifications s'exécutent avant la compilation du firmware et la publication de sorte que les échecs de persistance sont détectés tôt.
+Sous Windows, les fichiers de paramètres existants sont engagés avec `File.Replace` plutôt que d'écraser-mode `File.Move`. Cela prend en charge les lecteurs qui permettent la suppression tout en conservant un ancien instantané complet. La suite de base teste trois remplacements avec un lecteur tenu ouvert; Windows core checks s'exécute avant la compilation du firmware et la publication de sorte que les échecs de persistance sont détectés tôt.
 
 Un lecteur d'instantané de test peut attendre jusqu'à 500 ms pour Windows partage/verrouillage des violations pendant `ReplaceFile` commits. L'attente ne s'applique qu'à l'ouverture de l'instantané, jamais à l'exécution ou à la réexécution d'une action d'application.
 
 <a id="runtime-and-editing-optimizations-170"></a>
 ## Optimisations du temps d'exécution et de l'édition (1.7.0)
 
-Enregistrer des paramètres identiques vérifie le fichier actuel mais saute le travail de remplacement et de sauvegarde. Les modifications externes/suppression et les écritures échouées sont toujours détectées. `ButtonAction` a l'égalité de valeur (y compris la longue action); les contrôles sales de l'éditeur évitent la sérialisation de JSON. L'histoire conserve des instantanés de modèle détachés, valide de nouveaux états et évite l'analyse de JSON pendant undo/redo. 50- limite d'édition et 20 Les sauvegardes de profil restent.
+Enregistrer des paramètres identiques vérifie le fichier actuel mais saute le travail de remplacement et de sauvegarde. Les modifications externes/suppression et les écritures échouées sont toujours détectées. `ButtonAction` a l'égalité de valeur (y compris la longue action); les vérifications sales de l'éditeur évitent la sérialisation JSON. L'histoire conserve des instantanés de modèle détachés, valide de nouveaux états, et évite l'analyse JSON pendant undo/redo. 50- limite d'édition et 20 Les sauvegardes de profil restent.
 
-La recherche et le ramassage partagent un catalogue immuable d'applications installées pendant cinq minutes (15 Les consommateurs simultanés partagent un scan; la fermeture d'un sélectionneur n'annule pas un autre consommateur. Refresh contourne le cache, et chaque sélectionneur a son propre filtre/vue. La numérisation et l'analyse du catalogue s'effectuent hors du thread de l'interface utilisateur; le filtrage des sélectionneurs est débloqué par 120 ms. La recherche d'action revérifie ce cache après sa déconcentration et lors de son retour depuis le récupérateur, donc un catalogue rafraîchi y est également disponible.
+Recherche et sélection d'un catalogue immuable d'applications installées pendant cinq minutes (15 secondes pour un résultat partiel). Concurrent consommateurs partagent un scan; fermer un sélecteur n'annule pas un autre consommateur. Rafraîchir contourne le cache, et chaque sélecteur a son propre filtre / vue. Scanner et catalogue analysent s'exécuter hors du fil d'interface utilisateur; le filtrage de sélecteur est débondé par 120 ms. La recherche d'action revérifie ce cache après sa déconcentration et lorsque vous revenez du récupérateur, donc un catalogue rafraîchi y est également disponible.
 
-Les mises à jour de l'interface utilisateur suivent maintenant les notifications de connexion au lieu de se réveiller chaque 100 Les fenêtres cachées/minimisées arrêtent les animations de rétroaction et utilisent un intervalle de scrutin audio de dix secondes au lieu de deux secondes; la réouverture ou l'émission d'une commande audio demande un nouvel état immédiatement. En attendant, les mises à jour audio partagent une boucle et incluent les demandes arrivant lors d'une lecture existante. Les instantanés audio non modifiés et les pinceaux gelés évitent les allocations répétées de l'interface utilisateur. Les enveloppes de processus retournées en lançant une application sont éliminées sans fermer le programme lancé.
+Les mises à jour de l'interface utilisateur suivent maintenant les notifications de connexion au lieu de réveiller chaque 100 Les fenêtres cachées/minimisées arrêtent les animations de rétroaction et utilisent un intervalle de scrutin audio de dix secondes au lieu de deux secondes; la réouverture ou l'émission d'une commande audio demande un nouvel état immédiatement. En attendant, les mises à jour audio partagent une boucle et incluent les requêtes arrivant lors d'une lecture existante. Les instantanés audio non modifiés et les pinceaux gelés évitent les allocations répétées d'interface utilisateur. Les enveloppes de processus retournées en lançant une application sont éliminées sans fermer le programme lancé.
 
-Ces changements réduisent le travail spécifié; ils n'établissent pas un pourcentage de CPU/RAM indépendant de la machine. La commutation audio matérielle native et le comportement de touche physique nécessitent toujours une validation sur un PC Windows avec le macropad.
+Ces changements réduisent le travail spécifié; ils n'établissent pas un pourcentage de CPU/RAM indépendant de la machine. La commutation audio du matériel natif et le comportement de la touche physique nécessitent toujours une validation sur un PC Windows avec le macropad.
 
 <a id="workspace-tools-and-refreshed-interface-180"></a>
 ## Outils d'espace de travail et interface rafraîchie (1.8.0)
 
-L'interface de charbon place la bibliothèque d'action en premier, sépare les contrôles de profil de la taille native croustillante 3 × 4 clavier, et les paramètres d'action de groupes dans une carte. Les accents touches distinguent vos propres catégories; la sélection, la focalisation du clavier et la rétroaction d'action restent séparés. **Réduire les animations** dans les préférences complète le paramètre d'animation Windows. Les petites fenêtres conservent l'accès au défilement au lieu de réduire le texte de la touche.
+L'interface charbon place la bibliothèque d'action en premier, sépare les contrôles de profil de la taille native croustillante 3 × 4 clavier, et les paramètres d'action de groupes dans une carte. Les accents touches distinguent vos propres catégories; la sélection, la focalisation du clavier et la rétroaction d'action restent séparés. **Réduire les animations** dans les préférences complète le paramètre d'animation Windows. Fenêtres plus petites conservent l'accès au défilement au lieu de réduire le texte touche.
 
-- **Modèles de profil :** sous **Gérer les profils**Chaque modèle crée un profil modifiable séparé et n'exécute jamais ses actions. Les profils existants et l'étalonnage physique sont conservés. Les raccourcis clavier utilisent l'application active, dont les liaisons peuvent différer.
-- **touches du profil :** attribuer **Changer de profil**, puis sélectionnez un profil nommé ou cycle vers l'avant/vers l'arrière. Les références entre les profils sont recaptées lors de l'importation d'un jeu ou duplication d'un profil auto-référencé. Une destination manquante signale une erreur et peut être remplacée dans l'éditeur.
-- **Commandes Windows  :** utilisation **Commandes Windows** pour ouvrir les paramètres communs ou le Gestionnaire des tâches, ou verrouiller explicitement le PC. Les commandes proviennent d'une liste fixe, sans script à saisir. L'action de verrouillage nécessite de se connecter à Windows.
-- **Clipboard à touches complètes:** clic droit sur une touche pour copier, couper, coller ou réinitialiser, y compris la longue action et l'accent. Ctrl+C/X/V et Supprimer le travail alors qu'une touche de pont a une mise au point du clavier; les champs de texte ordinaires gardent leurs raccourcis d'édition. DeckPilot et est effacé à la sortie. Ces modifications supportent undo/redo.
-- **Enregistreur raccourci :** sélectionnez une action du clavier et cliquez **Enregistrer un raccourci**. Appuyez sur une combinaison prise en charge, puis enregistrez-la. Escape annule; F13–F24 est réservé au macropad pendant l'enregistrement. Les combinaisons réservées à Windows peuvent encore nécessiter les commandes manuelles.
+- **Modèles de profil :** sous **Gérer les profils**, ajouter Musique et audio, Bureau et productivité, ou Création. Chaque modèle crée un profil modifiable séparé et n'exécute jamais ses actions. Les profils existants et l'étalonnage physique sont conservés. Les raccourcis clavier utilisent l'application active, dont les liaisons peuvent différer.
+- **touches du profil :** attribuer **Changer de profil**, puis sélectionnez un profil nommé ou cycle vers l'avant/vers l'arrière. Les références entre les profils sont recaptées lors de l'importation d'un ensemble ou duplication d'un profil auto-référencé. Une destination manquante signale une erreur et peut être remplacée dans l'éditeur.
+- **Commandes Windows  :** Utilisation **Commandes Windows** pour ouvrir les paramètres communs ou le Gestionnaire des tâches, ou verrouiller explicitement le PC. Les commandes proviennent d'une liste fixe, sans script à saisir. L'action de verrouillage nécessite de se connecter à Windows.
+- **Clipboard à touches complètes:** clic droit sur une touche pour la copier, couper, coller ou la réinitialiser, y compris la longue action et l'accent. Ctrl+C/X/V et Delete fonctionnent alors qu'une touche de pont a une mise au point du clavier; les champs de texte ordinaires gardent leurs raccourcis d'édition. DeckPilot et est effacé à la sortie. Ces modifications supportent undo/redo.
+- **Enregistreur raccourci:** sélectionnez une action du clavier et cliquez **Enregistrer un raccourci**. Appuyez sur une combinaison prise en charge, puis enregistrez-la. Escape annule; F13–F24 est réservé pour le macropad pendant l'enregistrement. Les combinaisons réservées à Windows peuvent encore nécessiter les commandes manuelles.
 - **Accès rapide :** Ctrl+K ou le bouton Bibliothèque focalise la recherche d'action. **Activité récente** garde le dernier 30 les actions expédiées/écheces en mémoire pour cette session, sans stocker les arguments du programme ou les chemins cibles. Il peut être effacé à tout moment. Une expédition réussie ne garantit pas l'achèvement dans l'application cible.
 
-Le firmware reste **1.1.1**. Accepter une offre de firmware automatique ouvre maintenant correctement le gestionnaire de firmware; le garde modal précédent a empêché que la main off. L'identité du firmware existant, battement du cœur, reconnect et les contrôles flash restent en place.
+Le firmware reste **1.1.1**. Accepter une offre de firmware automatique ouvre maintenant correctement le gestionnaire de firmware ; le garde modal précédent a empêché ce handoff. L'identité du firmware existant, battement du cœur, reconnect et contrôles flash restent en place.
 
 <a id="microphone-noise-suppression-220"></a>
 ## Suppression du bruit des microphones (2.2.0)
 
-**Soundboard · micro virtuel** comprend maintenant la suppression locale du bruit RNNoise pour le microphone physique sélectionné. Activer **Filtre le bruit du microphone** et ajuster **Intensité**. DeckPilot filtre la voix avant de mélanger dans les clips de tableau sonore, de sorte que les clips restent inchangés et ne sont pas enlevés par le filtre à bruit. **CABLE Output** comme son microphone, y compris les jeux et les applications de chat vocal; les programmes configurés pour utiliser le microphone physique directement ne passent pas à travers DeckPilot.
+**Soundboard · micro virtuel** comprend maintenant la suppression locale du bruit RNNoise pour le microphone physique sélectionné. Activer **Filtre le bruit du microphone** et ajuster **Intensité**. DeckPilot filtre la voix avant de mélanger dans les clips de tableau de son, de sorte que les clips restent inchangés et ne sont pas enlevés par le filtre à bruit. **CABLE Output** comme son microphone, y compris les jeux et les applications de chat vocal; les programmes configurés pour utiliser le microphone physique directement ne passent pas par DeckPilot.
 
-L'audio est traité localement dans DeckPilot. Il n'est pas enregistré ou envoyé sur le réseau. RNNoise travaille dans 10 ms, 48 kHz mono frames; cette taille de cadre n'est pas une garantie de latence de bout en bout, qui dépend également de Windows, les appareils et VB-CABLE. Cette mise à jour ne nécessite pas de flash de firmware. Le composant natif RNNoise est couvert par sa propre licence de style BSD, mentionnée ci-dessus.
+L'audio est traité localement dans DeckPilot. Il n'est pas enregistré ou envoyé sur le réseau. RNNoise travaille dans 10 ms, 48 kHz mono frames; cette taille de cadre n'est pas une garantie de latence de bout en bout, qui dépend également de Windows, les appareils et VB-CABLE. Cette mise à jour ne nécessite pas de flash firmware. Le composant RNNoise natif est couvert par sa propre licence de style BSD, mentionnée ci-dessus.
 
 <a id="soundboard-return-and-on-screen-sound-notifications-219"></a>
-## Soundboard les notifications de retour et de son à l'écran (2.1.9)
+## Soundboard notifications de retour et de son à l'écran (2.1.9)
 
-Dans **Soundboard · micro virtuel**, activer **Entendre aussi les sons du soundboard** pour entendre des clips à travers votre casque ou haut-parleurs ainsi que le microphone virtuel. Choisissez la sortie physique et définissez le volume de retour séparé de 0 à 100%. Ce retour est désactivé par défaut et enregistré sur ce PC. Il joue **Uniquement les clips de tableau de son**; votre microphone physique n'est jamais ajouté à la sortie de l'enceinte. Le microphone virtuel envoie toujours votre voix et vos clips à VB-CABLE.
+En **Soundboard · micro virtuel**, activer **Entendre aussi les sons du soundboard** pour entendre des clips à travers votre casque ou haut-parleurs ainsi que le microphone virtuel. Choisissez la sortie physique et définissez le volume de retour séparé de 0 à 100%. Ce retour est désactivé par défaut et enregistré sur ce PC. Il joue **Uniquement des clips de tableau de son**; votre microphone physique n'est jamais ajouté à la sortie de l'enceinte. Le microphone virtuel envoie toujours votre voix et vos clips à VB-CABLE.
 
 Changer le volume n'interrompt pas le microphone virtuel. Si votre haut-parleur sélectionné se déconnecte, le retour s'arrête pendant que le microphone virtuel continue. Reconnectez-le, rafraîchissez la liste des appareils ou choisissez une autre sortie.
 
-Le haut-parleur de retour utilise maintenant le format audio Windows annoncé de l'appareil sélectionné, y compris les formats extensibles utilisés par certains casques USB, et recule de la lecture par événement si un pilote le rejette. Démarrage d'un clip de tableau de son affiche également son nom dans la même configuration, click-through superlay que le profil change. La préférence de superposition et la position s'appliquent aux deux avis.
+Le retour de l'enceinte utilise maintenant le format audio Windows annoncé de l'appareil sélectionné, y compris les formats extensibles utilisés par certains casques USB, et recule de la lecture par événement si un pilote le rejette. Démarrage d'un clip de tableau de son affiche également son nom dans la même configuration, click-through superlay que le profil change. La préférence de superposition et la position s'appliquent aux deux avis.
 
 DeckPilot Atelier reste à 1.0.12 et le firmware reste 1.1.1. Aucun flash firmware n'est nécessaire. Le routage réel des haut-parleurs dépend toujours du périphérique audio Windows et devrait être vérifié sur le PC du propriétaire.
 
 <a id="soundboard-speaker-return-218"></a>
 ## Soundboard retour de l'orateur (2.1.8)
 
-Dans **Soundboard · micro virtuel**, activer **Entendre aussi les sons du soundboard** pour entendre des clips à travers votre casque ou haut-parleurs ainsi que le microphone virtuel. Choisissez la sortie physique et définissez le volume de retour séparé de 0 à 100%. Ce retour est désactivé par défaut et enregistré sur ce PC. Il joue **Uniquement les clips de tableau de son**; votre microphone physique n'est jamais ajouté à la sortie de l'enceinte. Le microphone virtuel envoie toujours votre voix et vos clips à VB-CABLE.
+En **Soundboard · micro virtuel**, activer **Entendre aussi les sons du soundboard** pour entendre des clips à travers votre casque ou haut-parleurs ainsi que le microphone virtuel. Choisissez la sortie physique et définissez le volume de retour séparé de 0 à 100%. Ce retour est désactivé par défaut et enregistré sur ce PC. Il joue **Uniquement des clips de tableau de son**; votre microphone physique n'est jamais ajouté à la sortie de l'enceinte. Le microphone virtuel envoie toujours votre voix et vos clips à VB-CABLE.
 
 Changer le volume n'interrompt pas le microphone virtuel. Si votre haut-parleur sélectionné se déconnecte, le retour s'arrête pendant que le microphone virtuel continue. Reconnectez-le, rafraîchissez la liste des appareils ou choisissez une autre sortie.
 
 <a id="open-deckpilot-and-profile-notifications-217"></a>
 ## Ouvrir DeckPilot et les notifications de profil (2.1.7)
 
-Sous **Ouvrir une demande**, choisissez le **DeckPilot** entrée ou clic **Affectateur « Ouvrier DeckPilot »**. Cette action amène l'actuel DeckPilot window à l'avant; sa cible reste valide après une mise à jour ou une réinstallation d'application. Il est également disponible en recherche d'action.
+Sous **Ouvrir une demande**, choisissez le **DeckPilot** entrée ou clic **Affectateur « Ouvrier DeckPilot »**. Cette action amène l'actuel DeckPilot window to the front; sa cible reste valide après une mise à jour de l'application ou une réinstallation. Il est également disponible en recherche d'action.
 
-La modification des profils montre une notification brève et click-through avec le nom du profil actif. **Préférences de l’application**, vous pouvez le désactiver, choisir n'importe quel coin, ou définir une position horizontale et verticale personnalisée. **Enregistrer et prévisualiser** affiche le résultat immédiatement. La notification suit l'écran contenant l'application de premier plan et apparaît également pendant DeckPilot Il peut apparaître sur les jeux borderless/windowed; les jeux exclusifs en plein écran peuvent couvrir les superpositions normales de Windows.
+La modification des profils montre une notification brève et click-through avec le nom du profil actif. **Préférences de l’application**, vous pouvez le désactiver, choisir n'importe quel coin, ou définir une position horizontale et verticale personnalisée. **Enregistrer et prévisualiser** affiche le résultat immédiatement. La notification suit l'écran contenant l'application de premier plan et apparaît également pendant DeckPilot Il peut apparaître sur les jeux borderless/windowed; les jeux en plein écran exclusifs peuvent couvrir les superpositions normales de Windows.
 
 <a id="deckpilot-210-fixed-signed-virtual-microphone-routing"></a>
 ## DeckPilot 2.1.0: routage fixe du microphone virtuel signé
 
-DeckPilot maintenant utilise une interface noire profonde par défaut. **Préférences de l’application**, changer les couleurs d'arrière-plan, de panneau et d'accent en utilisant `#RRGGBB` valeurs; votre thème est sauvegardé sur ce PC.
+DeckPilot maintenant utilise une interface noire profonde par défaut. **Préférences de l’application**, changer les couleurs de fond, de panneau et d'accent en utilisant `#RRGGBB` valeurs ; votre thème est sauvegardé sur ce PC.
 
-Les **Soundboard · micro virtuel** panneau vous permet de sélectionner votre microphone physique et clips MP3/WAV. DeckPilot conduit automatiquement le mix vers le VB-Audio VB-CABLE fin de lecture; dans Discord ou un jeu, choisissez **`CABLE Output`** pendant l'installation et les mises à jour, DeckPilot contrôle de VB-CABLE Il télécharge le paquet officiel sur HTTPS et vérifie l'éditeur Authenticode avant d'exécuter l'installateur silencieux du pilote. Cela nécessite une connexion internet et une autorisation de l'administrateur. DeckPilot ne regroupe pas ou ne redistribue pas de fichiers VB-Audio. Si le pilote est absent plus tard, vous pouvez démarrer le même installateur vérifié par signature à partir du Soundboard panneau. Le moteur audio utilise NAudio (MIT; voir [avis de tiers](../../third-party/NAudio-LICENSE.txt)). VB-CABLE est un pilote Windows signé et sous licence séparée, pas un composant MIT.
+Les **Soundboard · micro virtuel** panneau vous permet de sélectionner votre microphone physique et clips MP3/WAV. DeckPilot conduit automatiquement le mix vers le VB-Audio VB-CABLE fin de lecture; dans Discord ou un jeu, choisissez **`CABLE Output`** pendant l'installation et les mises à jour, DeckPilot contrôle de VB-CABLE Il télécharge le paquet officiel sur HTTPS et vérifie l'éditeur Authenticode avant de lancer l'installateur silencieux du pilote. Cela nécessite une connexion internet et une autorisation de l'administrateur. DeckPilot ne regroupe pas ou ne redistribue pas les fichiers VB-Audio. Si le pilote est absent plus tard, vous pouvez démarrer le même installateur vérifié par signature à partir du Soundboard panneau. Le moteur audio utilise NAudio (MIT; voir [avis de tiers](../../third-party/NAudio-LICENSE.txt)). VB-CABLE est un pilote Windows signé sous licence séparée, pas un composant MIT.
 
 <a id="deckpilot-atelier-190"></a>
 ## DeckPilot Atelier (1.9.0)
 
-Atelier vérifie maintenant le tableau et le firmware sélectionnés avant de clignoter, compare les versions installées et groupées, et offre une réessayer vérifiée après les écritures interrompues. **Mode atelier en série...** diagnostique et clignote toutes les planches détectées séquentiellement et peut exporter un rapport de lot. 12- test touche vérifie le physique 01→12 la mise en page, enregistre la cartographie F13–F24, et inclut le firmware et les résultats par touche dans le rapport de qualité.
+Atelier vérifie maintenant la carte et le firmware sélectionnés avant de clignoter, compare les versions installées et groupées, et offre une réessayer vérifiée après les écritures interrompues. **Mode atelier en série...** diagnostique et clignote toutes les planches détectées séquentiellement et peut exporter un rapport de lot. 12- test touche vérifie le physique 01→12 la mise en page, enregistre la cartographie F13–F24 et inclut le firmware et les résultats par touche dans le rapport de qualité.
 
 
-Les **DeckPilot Atelier** L'installateur Windows prépare de nouveaux macropads bricolés. Il détecte les cartes Leonardo/Caterina, valide et clignote le firmware livré sans écraser le chargeur de démarrage, puis guide un physique 3×4 contrôle de tous 12 boutons. Chaque bouton doit passer une pression courte et une prise d'au moins 700 ms. L'outil enregistre quel signal F13–F24 appartient à chaque position physique, affiche des signaux multiples ou incohérents, et exporte un rapport horodaté. Télécharger `DeckPilot-Atelier-Setup.exe` Un bootloader Caterina doit déjà être présent; l'outil n'installe pas un bootloader manquant.
+Les **DeckPilot Atelier** L'installateur Windows prépare de nouveaux macropads bricolés. Il détecte les cartes Leonardo/Caterina, valide et clignote le firmware livré sans écraser le chargeur de démarrage, puis guide un physique 3×4 contrôle de tous 12 boutons. Chaque bouton doit passer une pression courte et une prise d'au moins 700 ms. L'outil enregistre quel signal F13–F24 appartient à chaque position physique, affiche des signaux multiples ou incohérents, et exporte un rapport horodaté. Télécharger `DeckPilot-Atelier-Setup.exe` Un bootloader Caterina doit déjà être présent ; l'outil n'installe pas un bootloader manquant.
 
-DeckPilot Atelier vérifie GitHub pour les mises à jour de l'application et de l'entreprise groupée au démarrage et sur demande. Les mises à jour nécessitent une confirmation et utilisent la version SHA-256 manifeste. Le firmware n'est jamais clignoté automatiquement par une mise à jour ; après les mises à jour d'Atelier, choisissez l'action du firmware lorsque vous êtes prêt à programmer la carte connectée.
+DeckPilot Atelier vérifie GitHub pour les mises à jour de l'application et de la firme groupée au démarrage et sur demande. Les mises à jour nécessitent une confirmation et utilisent la version SHA-256 manifeste. Le firmware n'est jamais clignoté automatiquement par une mise à jour; après les mises à jour d'Atelier, choisissez l'action du firmware lorsque vous êtes prêt à programmer la carte connectée.
 
-Atelier 1.0.7 ajoute une confirmation **Effacer le programme DeckPilot** L'action, c'est clair. 28 Zone d'application KiB avec une instruction d'arrêt sécurisée vérifiée, de sorte que la carte cesse d'agir comme un clavier tout en préservant Caterina pour la récupération et les flashs futurs. Il laisse le chargeur d'amorçage, EEPROM et les profils Windows intacts.
+Atelier 1.0.7 ajoute une confirmation **Effacer le programme DeckPilot** l'action. 28 Zone d'application KiB avec une instruction d'arrêt sécurisée vérifiée, de sorte que le tableau cesse d'agir comme un clavier tout en préservant Caterina pour la récupération et les flashs futurs. Il laisse le chargeur d'amorçage, EEPROM et les profils Windows intacts.
 
-Version 1.9.1 corrige le lancement d'Atelier après l'installation en le commençant dans la session de Windows signée. Sa mise à jour peut installer un nouveau paquet Atelier ou paquet de firmware, puis relancer l'application. Le pipeline de sortie de Windows vérifie le premier lancement, mise à jour et désinstallation pour l'installateur Atelier.
+Version 1.9.1 corrige le lancement d'Atelier après l'installation en le commençant dans la session signée de Windows. Sa mise à jour peut installer un nouveau paquet Atelier ou paquet firmware, puis relancer l'application. Le pipeline de sortie de Windows vérifie le premier lancement, mise à jour et désinstallation pour l'installateur Atelier.
 
 Version 1.9.2 améliore l'étape d'emballage de l'Atelier Windows et signale son emplacement exact de défaillance dans CI.
 
@@ -459,18 +460,18 @@ La version de l'Atelier vérifie maintenant les rapports de diagnostic de démar
 
 DeckPilot 1.9.6 corrige le manifeste DPI Windows d'Atelier afin que l'application installée lance correctement sur Windows 10 et 11.
 
-DeckPilot 1.9.7 corrige la désinstallation d'Atelier pendant qu'il est en cours d'exécution. Le test de libération de Windows vérifie également le lancement, la mise à jour en place et la désinstallation.
+DeckPilot 1.9.7 correctif désinstaller Atelier pendant qu'il est en cours d'exécution. Le test de version Windows vérifie également le lancement, la mise à jour en place et désinstaller.
 
 DeckPilot 1.9.8 ajoute une réinitialisation explicite et confirmée de l'Atelier qui remplace le programme utilisateur de la carte par un croquis vide vérifié et conserve le chargeur d'amorçage Caterina.
 
-La validation couvre les paramètres hérités, la validation de l'accent, la navigation de profil et le remappage de référence, les modèles portables, le template/undo/redo et la commutation de profil natif Windows, l'enregistrement de raccourci, la copie/colle/reset, la persistance des paramètres, l'installation/mise à jour, le redimensionnement de la mise en page et une capture réelle de l'interface utilisateur.
+La validation couvre les paramètres hérités, la validation de l'accent, la navigation de profil et le remappage de référence, les modèles portables, le template/undo/redo et le changement de profil natif Windows, l'enregistrement de raccourci, la copie/colle/reset, la persistance des paramètres, l'installation/mise à jour, le redimensionnement de la mise en page et une capture d'interface utilisateur réelle.
 
 <a id="profile-sound-files-and-workshop-safety"></a>
 ### Profil des fichiers sonores et sécurité de l'atelier
 
 Les exportations de profil incluent les clips MP3/WAV référencés (jusqu'à 32 Mio d'audio par paquet). Importe copie audio intégrée dans DeckPilotLes sauvegardes automatiques de profils utilisent le même format; l'audio non disponible est enregistré comme manquant plutôt que remplacé silencieusement. Gardez les fichiers sources si vous dépassez la limite d'exportation. Les fichiers de profils historiques restent pris en charge. La suppression d'un clip qui est toujours assigné à une action courte ou longue est bloquée.
 
-Atelier accepte les conseils qui ne répondent pas encore DeckPilot La fermeture de l'application pendant un flash ou une réinitialisation est bloquée jusqu'à la fin de l'écriture et de la vérification.
+Atelier accepte les planches qui ne répondent pas encore DeckPilot le protocole, tout en vérifiant l'emplacement USB, Caterina bootloader et ATmega32U4 signature avant la programmation. Chaque session de test commence avec des résultats vides, et son rapport reste associé à la carte testée. Fermeture de l'application pendant un flash ou réinitialisation est bloquée jusqu'à la fin de l'écriture et la vérification.
 
 <a id="live-microphone-latency"></a>
 ### Latence micro en direct
@@ -480,4 +481,4 @@ DeckPilot 2.1.3 processe l'audio en direct dans de petits blocs pilotés par la 
 <a id="automatic-virtual-microphone-startup"></a>
 ### Démarrage automatique du microphone virtuel
 
-DeckPilot 2.1.4 active automatiquement le microphone virtuel lorsque le microphone physique sélectionné et VB-CABLE sont disponibles. Cela fonctionne également en arrière-plan après l'ouverture de Windows lorsque **Démarrer avec Windows** est activé. Les périphériques manquants sont réutilisés toutes les cinq secondes. Arrêter le microphone virtuel enregistre explicitement le démarrage automatique comme désactivé; le réactiver dans le Soundboard panneau. Les clips ne sont joués que sur demande.
+DeckPilot 2.1.4 active automatiquement le microphone virtuel lorsque le microphone physique sélectionné et VB-CABLE sont disponibles. Cela fonctionne également en arrière-plan après la connexion de Windows lorsque **Démarrer avec Windows** est activé. Les périphériques manquants sont réutilisés toutes les cinq secondes. Arrêter le microphone virtuel enregistre explicitement le démarrage automatique comme désactivé; le réactiver dans le Soundboard panneau. Les clips ne sont joués que sur demande.
