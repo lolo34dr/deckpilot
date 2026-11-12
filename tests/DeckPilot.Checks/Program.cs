@@ -12,6 +12,18 @@ void Reject(Action action)
     try { action(); } catch (InvalidDataException) { return; }
     throw new Exception("Invalid data was accepted");
 }
+Check("Retired streaming controls stay readable but are absent from action search", () => {
+    Expect(!ActionSearch.IsAvailable(ActionKind.Streaming));
+    Expect(ActionSearch.KindName(ActionKind.Streaming) == "Action retirée");
+    foreach (string query in new[] { "obs", "streamlabs", "volume", "profil" })
+        Expect(ActionSearch.Find(query, []).All(p => p.Action.Kind != ActionKind.Streaming));
+    Expect(ActionSearch.Find("volume", []).Any(p => p.Action.Kind == ActionKind.Media));
+    var legacy = new Profile();
+    legacy.Buttons[0] = new() { Kind = ActionKind.Streaming, ApplicationName = "obs", Target = "scene", Arguments = "Old scene", Label = "Legacy scene" };
+    legacy.Buttons[1] = new() { Kind = ActionKind.Media, LongPressEnabled = true, LongPressAction = new() { Kind = ActionKind.Streaming, ApplicationName = "streamlabs", Target = "stream-stop" } };
+    var imported = ProfileExchange.Import(ProfileExchange.Export([legacy])).Profiles[0];
+    Expect(imported.Buttons[0] == legacy.Buttons[0] && imported.Buttons[1] == legacy.Buttons[1]);
+});
 var map = Enumerable.Range(Calibration.FirstKey, 12).Reverse().ToList();
 Check("Random physical arrangement maps every F13–F24 exactly once", () => {
     Expect(Calibration.IsValid(map));

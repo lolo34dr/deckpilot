@@ -22,7 +22,7 @@ public static class FeatureChecks
             settings.Validate();
             Expect(!settings.ReduceMotion && settings.ActiveProfile.Buttons.All(action => action.Accent == ""));
             Expect((int)ActionKind.AudioOutput == 8 && (int)ActionKind.Profile == 9 && (int)ActionKind.System == 10);
-            foreach (ActionKind kind in Enum.GetValues<ActionKind>()) Expect(!string.IsNullOrWhiteSpace(ActionSearch.KindNames[(int)kind]));
+            foreach (ActionKind kind in Enum.GetValues<ActionKind>()) Expect(!string.IsNullOrWhiteSpace(ActionSearch.KindName(kind)));
             var olderPackage = JsonNode.Parse(ProfileExchange.Export(settings.Profiles))!;
             foreach (var action in olderPackage["Profiles"]![0]!["Buttons"]!.AsArray()) action!.AsObject().Remove("Accent");
             Expect(ProfileExchange.Import(olderPackage.ToJsonString()).Profiles[0].Buttons.All(action => action.Accent == ""));

@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Interop;
 using System.Windows.Threading;
 using DeckPilot.Core;
 using Microsoft.Win32;
+using Forms = System.Windows.Forms;
 
 namespace DeckPilot.Windows;
 
@@ -54,6 +56,7 @@ public partial class MainWindow
         ThemeBackgroundInput.Text = settings.Theme.Background;
         ThemePanelInput.Text = settings.Theme.Panel;
         ThemeAccentInput.Text = settings.Theme.Accent;
+        RefreshThemeColorSwatches();
         ApplyTheme();
         SoundboardAutoStartCheck.IsChecked = settings.Soundboard.AutoStart;
         SoundboardNoiseSuppressionCheck.IsChecked = settings.Soundboard.NoiseSuppressionEnabled;
@@ -100,11 +103,69 @@ public partial class MainWindow
     }
     private void ApplyThemeClick(object sender, RoutedEventArgs e)
     {
-        var theme = new ThemeSettings { Background = ThemeBackgroundInput.Text.Trim(), Panel = ThemePanelInput.Text.Trim(), Accent = ThemeAccentInput.Text.Trim() };
-        if (!theme.IsValid()) { StatusText.Text = "Couleurs invalides : entre trois codes #RRGGBB."; return; }
+        var theme = new ThemeSettings
+        {
+            Background = ThemeBackgroundInput.Text.Trim(),
+            Panel = ThemePanelInput.Text.Trim(),
+            Accent = ThemeAccentInput.Text.Trim()
+        };
+        if (!theme.IsValid())
+        {
+            StatusText.Text = "Vérifiez les codes couleur : utilisez le format #RRGGBB, ou choisissez une couleur dans la palette.";
+            return;
+        }
         settings.Theme = theme;
         ApplyTheme(); SaveSoundboardSettings();
-        StatusText.Text = "Thème enregistré et appliqué.";
+        StatusText.Text = "Couleurs enregistrées et appliquées.";
+    }
+    private void ThemeColorCodeChanged(object sender, TextChangedEventArgs e)
+    {
+        if (loading) return;
+        RefreshThemeColorSwatches();
+    }
+    private void RefreshThemeColorSwatches()
+    {
+        UpdateThemeColorSwatch(ThemeBackgroundInput, ThemeBackgroundSwatch);
+        UpdateThemeColorSwatch(ThemePanelInput, ThemePanelSwatch);
+        UpdateThemeColorSwatch(ThemeAccentInput, ThemeAccentSwatch);
+    }
+    private static void UpdateThemeColorSwatch(TextBox input, Border swatch)
+    {
+        string value = input.Text.Trim();
+        bool valid = value.Length == 7 && value[0] == '#' && value.Skip(1).All(Uri.IsHexDigit);
+        swatch.Background = valid ? Brush(value) : Brush("#1A1C20");
+        swatch.BorderBrush = valid ? Brush("#AEB5C0") : Brush("#D98383");
+        System.Windows.Automation.AutomationProperties.SetItemStatus(input, valid ? "Code couleur valide" : "Saisissez un code comme #9B8CFF");
+    }
+    private void ChooseThemeBackgroundClick(object sender, RoutedEventArgs e) => ChooseThemeColor(ThemeBackgroundInput);
+    private void ChooseThemePanelClick(object sender, RoutedEventArgs e) => ChooseThemeColor(ThemePanelInput);
+    private void ChooseThemeAccentClick(object sender, RoutedEventArgs e) => ChooseThemeColor(ThemeAccentInput);
+    private static bool TryReadThemeColor(string value, out Color color)
+    {
+        color = Colors.Transparent;
+        if (value.Length != 7 || value[0] != '#' || !value.Skip(1).All(Uri.IsHexDigit)) return false;
+        color = (Color)ColorConverter.ConvertFromString(value)!;
+        return true;
+    }
+    private sealed class ThemeDialogOwner(IntPtr handle) : Forms.IWin32Window
+    {
+        public IntPtr Handle => handle;
+    }
+    private void ChooseThemeColor(TextBox input)
+    {
+        string defaultValue = ReferenceEquals(input, ThemeBackgroundInput) ? "#08090B"
+            : ReferenceEquals(input, ThemePanelInput) ? "#14161A" : "#9B8CFF";
+        Color current = TryReadThemeColor(input.Text.Trim(), out var parsed)
+            ? parsed
+            : (Color)ColorConverter.ConvertFromString(defaultValue)!;
+        using var dialog = new Forms.ColorDialog
+        {
+            Color = System.Drawing.Color.FromArgb(current.R, current.G, current.B),
+            AnyColor = true,
+            FullOpen = true
+        };
+        if (dialog.ShowDialog(new ThemeDialogOwner(new WindowInteropHelper(this).Handle)) != Forms.DialogResult.OK) return;
+        input.Text = $"#{dialog.Color.R:X2}{dialog.Color.G:X2}{dialog.Color.B:X2}";
     }
     private async void RefreshSoundboardDevicesClick(object sender, RoutedEventArgs e)
     {
