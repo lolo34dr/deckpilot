@@ -26,8 +26,8 @@ public static class ActionSearch
                 new ActionPreset("Profil suivant", "Passer au prochain profil du macropad", new() { Label = "Profil suivant", Kind = ActionKind.Profile, Target = "next" }),
                 new ActionPreset("Profil précédent", "Revenir au profil précédent du macropad", new() { Label = "Profil précédent", Kind = ActionKind.Profile, Target = "previous" })
             })
-            .Concat(StreamingActionCatalog.All.Select(command => new ActionPreset(command.ProviderName + " — " + command.Name, command.Details,
-                new() { Kind = ActionKind.Streaming, Label = command.Name, Target = command.Id, ApplicationName = command.ProviderId })))
+            .Concat(StreamingActionCatalog.All.Select(preset => new ActionPreset(preset.ProviderName + " — " + preset.Command.Name, preset.Command.Details,
+                new() { Kind = ActionKind.Streaming, Label = preset.Command.Name, Target = preset.Command.Id, ApplicationName = preset.ProviderId })))
             .Where(p => p.Matches(query));
         var apps = new[] { ApplicationTarget.DeckPilotApplication }.Concat(applications).DistinctBy(a => a.Name, StringComparer.OrdinalIgnoreCase)
             .Where(a => a.Matches(query)).Select(a => new ActionPreset(a.Name, "Application · " + a.Source,
