@@ -51,6 +51,13 @@ public partial class MainWindow
         }
         if (action.Kind == ActionKind.Profile) action.Target = (ProfileTargetPicker.SelectedItem as ProfileDestination)?.Id ?? action.Target;
         if (action.Kind == ActionKind.System) action.Target = (SystemCommandPicker.SelectedItem as SystemActionPreset)?.Id ?? action.Target;
+        if (action.Kind == ActionKind.Streaming && StreamingCommandPicker.SelectedItem is StreamingCommand command)
+        {
+            action.ApplicationName = StreamingProviderId;
+            action.Target = command.Id;
+            action.Arguments = command.NeedsTarget ? StreamingTargetPicker.Text.Trim() : "";
+            if (string.IsNullOrWhiteSpace(action.Label)) action.Label = command.Name;
+        }
         if (editingLong) root.LongPressAction = action.CopyBasic();
         root.LongPressEnabled = LongPressCheck.IsChecked == true;
         root.LongPressMilliseconds = (int)Math.Round(LongPressThreshold.Value);

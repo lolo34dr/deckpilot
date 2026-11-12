@@ -7,7 +7,7 @@ public sealed record ActionPreset(string Name, string Details, ButtonAction Acti
 
 public static class ActionSearch
 {
-    public static readonly string[] KindNames = ["Touche libre", "Ouvrir une application", "Ouvrir un dossier", "Ouvrir un site web", "Raccourci clavier", "Multimédia", "Spotify", "Microphone Windows", "Changer de sortie audio", "Changer de profil", "Commandes Windows", "Soundboard"];
+    public static readonly string[] KindNames = ["Touche libre", "Ouvrir une application", "Ouvrir un dossier", "Ouvrir un site web", "Raccourci clavier", "Multimédia", "Spotify", "Microphone Windows", "Changer de sortie audio", "Changer de profil", "Commandes Windows", "Soundboard", "OBS / Streamlabs"];
     public static IReadOnlyList<ActionPreset> Find(string query, IEnumerable<InstalledApplication> applications)
     {
         if (string.IsNullOrWhiteSpace(query)) return [];
@@ -26,6 +26,8 @@ public static class ActionSearch
                 new ActionPreset("Profil suivant", "Passer au prochain profil du macropad", new() { Label = "Profil suivant", Kind = ActionKind.Profile, Target = "next" }),
                 new ActionPreset("Profil précédent", "Revenir au profil précédent du macropad", new() { Label = "Profil précédent", Kind = ActionKind.Profile, Target = "previous" })
             })
+            .Concat(StreamingActionCatalog.All.Select(command => new ActionPreset(command.ProviderName + " — " + command.Name, command.Details,
+                new() { Kind = ActionKind.Streaming, Label = command.Name, Target = command.Id, ApplicationName = command.ProviderId })))
             .Where(p => p.Matches(query));
         var apps = new[] { ApplicationTarget.DeckPilotApplication }.Concat(applications).DistinctBy(a => a.Name, StringComparer.OrdinalIgnoreCase)
             .Where(a => a.Matches(query)).Select(a => new ActionPreset(a.Name, "Application · " + a.Source,

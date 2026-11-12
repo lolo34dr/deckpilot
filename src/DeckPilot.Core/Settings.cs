@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace DeckPilot.Core;
 
-public enum ActionKind { Passthrough, Application, Folder, Website, Shortcut, Media, Spotify, Microphone, AudioOutput, Profile, System, Soundboard }
+public enum ActionKind { Passthrough, Application, Folder, Website, Shortcut, Media, Spotify, Microphone, AudioOutput, Profile, System, Soundboard, Streaming }
 public sealed record ButtonAction
 {
     public string Label { get; set; } = "";
@@ -35,9 +35,14 @@ public sealed record ButtonAction
     public bool IsValid(bool nested = false) => Enum.IsDefined(Kind) && Label != null && Target != null && Arguments != null && ApplicationName != null
         && ActionAppearance.IsValidAccent(Accent)
         && LongPressMilliseconds is >= 200 and <= 3000
+        && (Kind != ActionKind.Streaming || IsValidStreamingAction())
         && (!nested || (!LongPressEnabled && LongPressAction == null))
         && (LongPressAction == null || LongPressAction.IsValid(true))
         && (!LongPressEnabled || (!nested && Kind != ActionKind.Passthrough && LongPressAction is { Kind: not ActionKind.Passthrough }));
+    private bool IsValidStreamingAction()
+    {
+        return StreamingActionCatalog.Find(ApplicationName, Target) != null && Arguments.Length <= 512;
+    }
 }
 public sealed class Profile
 {
@@ -81,6 +86,19 @@ public sealed class SoundboardSettings
         && NoiseSuppressionStrengthPercent is >= 0 and <= 100 && MonitorVolumePercent is >= 0 and <= 100
         && Clips != null && Clips.Count <= 48 && Clips.All(c => c != null && c.Id != Guid.Empty && c.Name is { Length: > 0 and <= 64 } && c.FilePath is { Length: > 0 and <= 4096 } && (c.FilePath.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) || c.FilePath.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))) && Clips.Select(c => c.Id).Distinct().Count() == Clips.Count;
 }
+public sealed class StreamingConnections
+{
+    public string ObsHost { get; set; } = "127.0.0.1";
+    public int ObsPort { get; set; } = 4455;
+    public string ObsPasswordProtected { get; set; } = "";
+    public string StreamlabsHost { get; set; } = "127.0.0.1";
+    public int StreamlabsPort { get; set; } = 59650;
+    public string StreamlabsTokenProtected { get; set; } = "";
+    public bool IsValid() => IsHost(ObsHost) && ObsPort is > 0 and <= 65535 && ObsPasswordProtected != null && ObsPasswordProtected.Length <= 8192
+        && IsHost(StreamlabsHost) && StreamlabsPort is > 0 and <= 65535 && StreamlabsTokenProtected != null && StreamlabsTokenProtected.Length <= 8192;
+    private static bool IsHost(string value) => value != null && value.Length is > 0 and <= 253 && !value.Any(char.IsWhiteSpace)
+        && Uri.CheckHostName(value) is (UriHostNameType.Dns or UriHostNameType.IPv4 or UriHostNameType.IPv6);
+}
 public sealed class Settings
 {
     public int Version { get; set; } = 1;
@@ -93,6 +111,7 @@ public sealed class Settings
     public ProfileOverlaySettings ProfileOverlay { get; set; } = new();
     public ThemeSettings Theme { get; set; } = new();
     public SoundboardSettings Soundboard { get; set; } = new();
+    public StreamingConnections Streaming { get; set; } = new();
     public DateTimeOffset UpdateSnoozedUntil { get; set; }
     public List<int> KeyMap { get; set; } = [];
     public List<Profile> Profiles { get; set; } = [new()];
@@ -107,7 +126,7 @@ public sealed class Settings
     }
     public void Validate()
     {
-        if (Theme is null || !Theme.IsValid() || Soundboard is null || !Soundboard.IsValid() || ProfileOverlay is null || !ProfileOverlay.IsValid() || PreferredBoardDeviceId is null || PreferredBoardDeviceId.Length > 512 || Version != 1 || LayoutColumns is not (3 or 4) || Profiles is null || Profiles.Count == 0 ||
+        if (Theme is null || !Theme.IsValid() || Soundboard is null || !Soundboard.IsValid() || Streaming is null || !Streaming.IsValid() || ProfileOverlay is null || !ProfileOverlay.IsValid() || PreferredBoardDeviceId is null || PreferredBoardDeviceId.Length > 512 || Version != 1 || LayoutColumns is not (3 or 4) || Profiles is null || Profiles.Count == 0 ||
             Profiles.Any(p => p is null || string.IsNullOrWhiteSpace(p.Name) || p.Id == Guid.Empty ||
                 p.Buttons is null || p.Buttons.Count != 12 || p.Buttons.Any(b => b is null ||
                     !b.IsValid())) ||

@@ -8,7 +8,7 @@
     <NoWarn>$(NoWarn);WFAC010</NoWarn>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets/DeckPilot.ico</ApplicationIcon>
-    <AssemblyName>DeckPilot</AssemblyName><Version>2.2.0</Version>
+    <AssemblyName>DeckPilot</AssemblyName><Version>2.3.0</Version>
   </PropertyGroup>
   <ItemGroup>
     <Resource Include="../../deckpilotlogo.png" Link="Assets/DeckPilot.png" />
@@ -19,6 +19,7 @@
   <ItemGroup>
     <PackageReference Include="System.IO.Ports" Version="8.0.0" />
     <PackageReference Include="System.Management" Version="8.0.0" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
     <PackageReference Include="NAudio" Version="2.2.1" />
     <EmbeddedResource Include="../../artifacts/firmware/DeckPilot-firmware.zip" LogicalName="DeckPilot.FirmwareBundle.zip" Condition="Exists('../../artifacts/firmware/DeckPilot-firmware.zip')" />
   </ItemGroup>
