@@ -118,30 +118,6 @@
         <TextBlock Text="Commande Spotify" Foreground="{StaticResource MutedBrush}"/>
         <ComboBox x:Name="SpotifyPicker" DisplayMemberPath="Name" AutomationProperties.Name="Commande Spotify"/>
        </StackPanel>
-       <StackPanel x:Name="StreamingPanel" Visibility="Collapsed" Margin="0,0,0,8">
-        <TextBlock Text="Application de streaming" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
-        <ComboBox x:Name="StreamingProviderPicker" SelectionChanged="StreamingProviderChanged" AutomationProperties.Name="Application de streaming" Margin="0,4,0,8"/>
-        <TextBlock Text="Commande" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
-        <ComboBox x:Name="StreamingCommandPicker" DisplayMemberPath="Name" SelectionChanged="StreamingCommandChanged" AutomationProperties.Name="Commande OBS ou Streamlabs" Margin="0,4,0,8"/>
-        <TextBlock x:Name="StreamingTargetLabel" Text="Scène ou source" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
-        <ComboBox x:Name="StreamingTargetPicker" IsEditable="True" IsTextSearchEnabled="True" AutomationProperties.Name="Scène ou source à cibler" Margin="0,4,0,4"/>
-        <Button x:Name="RefreshStreamingTargetsButton" Content="Tester la connexion et récupérer les scènes" Click="RefreshStreamingTargetsClick" HorizontalAlignment="Left" Margin="0,0,0,10" Padding="10,5"/>
-        <Border Background="#16181D" BorderBrush="#30313A" BorderThickness="1" CornerRadius="8" Padding="10" Margin="0,0,0,6">
-         <StackPanel>
-          <TextBlock x:Name="StreamingConnectionTitle" Text="Connexion OBS" FontWeight="SemiBold" Margin="0,0,0,5"/>
-          <TextBlock Text="Adresse" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
-          <TextBox x:Name="StreamingHostEditor" Text="127.0.0.1" AutomationProperties.Name="Adresse du serveur de streaming" Margin="0,3,0,6"/>
-          <TextBlock Text="Port" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
-          <TextBox x:Name="StreamingPortEditor" Text="4455" AutomationProperties.Name="Port du serveur de streaming" Margin="0,3,0,6"/>
-          <TextBlock x:Name="StreamingSecretLabel" Text="Mot de passe WebSocket" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
-          <PasswordBox x:Name="StreamingSecretEditor" AutomationProperties.Name="Mot de passe ou jeton de streaming" Margin="0,3,0,4"/>
-          <TextBlock x:Name="StreamingSecretStatus" Text="Le secret est conservé protégé dans les réglages Windows." Foreground="{StaticResource MutedBrush}" FontSize="10" TextWrapping="Wrap" Margin="0,0,0,5"/>
-          <TextBlock x:Name="StreamingConnectionHelp" TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}" FontSize="10"/>
-          <Button Content="Effacer le secret enregistré" Click="ClearStreamingSecretClick" HorizontalAlignment="Left" Margin="0,5,0,0" Padding="8,4"/>
-         </StackPanel>
-        </Border>
-        <TextBlock x:Name="StreamingStatus" Text="OBS ou Streamlabs doit être ouvert sur cet ordinateur." Foreground="{StaticResource MutedBrush}" FontSize="10" TextWrapping="Wrap"/>
-       </StackPanel>
        <StackPanel x:Name="SoundboardActionPanel" Visibility="Collapsed">
         <TextBlock Text="Son à jouer sur cette touche" Foreground="{StaticResource MutedBrush}"/>
         <ComboBox x:Name="SoundboardClipPicker" DisplayMemberPath="Name" AutomationProperties.Name="Son du soundboard"/>
@@ -164,17 +140,63 @@
    </Grid>
    </ScrollViewer>
    <Border Grid.Column="1" Background="{DynamicResource PanelBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1,0,0,0" Padding="18,22,14,16">
-    <ScrollViewer x:Name="SidebarScroll" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,0,6,0">
-     <StackPanel>
-       <TextBlock Text="Bibliothèque d’actions" FontSize="16" FontWeight="SemiBold"/>
-       <TextBlock Text="Cliquez pour configurer, glissez pour affecter." Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,7,0,8"/>
-       <TextBlock Text="Rechercher" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
+    <Grid>
+     <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+     <StackPanel Grid.Row="0" Margin="0,0,0,12">
+      <TextBlock Text="Panneau de contrôle" FontSize="18" FontWeight="SemiBold"/>
+      <TextBlock Text="Retrouvez chaque commande dans son onglet." Foreground="{StaticResource MutedBrush}" FontSize="12" TextWrapping="Wrap" Margin="0,6,0,0"/>
+     </StackPanel>
+     <TabControl x:Name="ControlTabs" Grid.Row="1" Background="Transparent" BorderThickness="0" AutomationProperties.Name="Sections du panneau de contrôle">
+      <TabControl.Resources>
+       <Style TargetType="{x:Type TabItem}">
+        <Setter Property="MinHeight" Value="38"/>
+        <Setter Property="Padding" Value="9,7"/>
+        <Setter Property="Margin" Value="0,0,5,8"/>
+        <Setter Property="Background" Value="#1A1C20"/>
+        <Setter Property="Foreground" Value="{StaticResource MutedBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="FocusVisualStyle" Value="{StaticResource KeyboardFocus}"/>
+        <Setter Property="Template">
+         <Setter.Value>
+          <ControlTemplate TargetType="{x:Type TabItem}">
+           <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+            <ContentPresenter ContentSource="Header" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center" RecognizesAccessKey="True"/>
+           </Border>
+          </ControlTemplate>
+         </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+         <Trigger Property="IsSelected" Value="True">
+          <Setter Property="Background" Value="{DynamicResource CardBrush}"/>
+          <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+          <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+          <Setter Property="FontWeight" Value="SemiBold"/>
+         </Trigger>
+        </Style.Triggers>
+       </Style>
+      </TabControl.Resources>
+      <TabItem x:Name="ActionsTab" Header="Actions" AutomationProperties.Name="Actions disponibles">
+       <ScrollViewer x:Name="SidebarScroll" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,4,6,8">
+        <StackPanel>
+         <TextBlock Text="Que voulez-vous faire ?" FontSize="15" FontWeight="SemiBold" Margin="0,2,0,4"/>
+         <TextBlock Text="Cliquez pour configurer ou faites glisser une action sur une touche." Foreground="{StaticResource MutedBrush}" FontSize="12" TextWrapping="Wrap" Margin="0,0,0,10"/>
+         <TextBlock Text="Actions disponibles" FontWeight="SemiBold" Margin="0,0,0,4"/>
+       <TextBlock Text="Rechercher une action" Foreground="{StaticResource MutedBrush}" FontSize="12"/>
        <TextBox x:Name="ActionSearchBox" TextChanged="ActionSearchChanged" AutomationProperties.Name="Rechercher une action ou une application" ToolTip="Exemples : volume, Spotify, Discord ou le nom d’une application."/>
-       <TextBlock x:Name="ActionSearchStatus" Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,8"/>
+       <TextBlock x:Name="ActionSearchStatus" Foreground="{StaticResource MutedBrush}" FontSize="12" TextWrapping="Wrap" Margin="0,0,0,8"/>
        <StackPanel x:Name="ActionCatalog"/>
        <StackPanel x:Name="ActionSearchResults" Visibility="Collapsed"/>
-       <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,18,0,16"/>
-       <Border Background="{DynamicResource CardBrush}" BorderBrush="#30313A" BorderThickness="1" CornerRadius="10" Padding="12" Margin="0,0,0,14">
+        </StackPanel>
+       </ScrollViewer>
+      </TabItem>
+      <TabItem x:Name="DeviceTab" Header="Appareil" AutomationProperties.Name="État de l’appareil">
+       <ScrollViewer x:Name="DeviceScroll" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,4,6,8">
+        <StackPanel>
+         <TextBlock Text="État et commandes" FontSize="15" FontWeight="SemiBold" Margin="0,2,0,4"/>
+         <TextBlock Text="Connexion du macropad et réglages audio." Foreground="{StaticResource MutedBrush}" FontSize="12" TextWrapping="Wrap" Margin="0,0,0,10"/>
+         <Border Background="{DynamicResource CardBrush}" BorderBrush="#30313A" BorderThickness="1" CornerRadius="10" Padding="12" Margin="0,0,0,14">
         <StackPanel>
          <TextBlock Text="Votre macropad" FontWeight="SemiBold" Margin="0,0,0,8"/>
          <TextBlock x:Name="BoardConnectionStatus" Text="Recherche du macropad…" TextWrapping="Wrap" MaxHeight="40" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" Foreground="#B8B6C4" AutomationProperties.AutomationId="BoardConnectionStatus"/>
@@ -198,64 +220,7 @@
          <TextBlock x:Name="CurrentAudioOutput" Text="Lecture de la sortie audio…" Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap"/>
         </StackPanel>
        </Border>
-       <Expander x:Name="ProfilesExpander" Foreground="#D2D2D2" Header="Gérer les profils" IsExpanded="False">
-        <StackPanel Margin="0,12,0,0">
-         <TextBlock Text="Nom du profil" Foreground="{StaticResource MutedBrush}"/>
-         <TextBox x:Name="ProfileName" MaxLength="60" ToolTip="Nom du profil à créer ou nouveau nom du profil actif" AutomationProperties.Name="Nom du profil"/>
-         <WrapPanel><Button Content="Créer" Click="CreateProfile"/><Button Content="Dupliquer" Click="DuplicateProfile"/><Button Content="Renommer" Click="RenameProfile"/><Button Content="Supprimer" Click="DeleteProfile"/></WrapPanel>
-         <WrapPanel><Button x:Name="ImportProfilesButton" Content="Importer…" Click="ImportProfilesClick"/><Button x:Name="ExportProfileButton" Content="Exporter ce profil…" Click="ExportProfileClick"/></WrapPanel>
-         <Button x:Name="ExportAllProfilesButton" Content="Exporter tous les profils…" Click="ExportAllProfilesClick" HorizontalAlignment="Left"/>
-         <Button x:Name="RestoreProfilesButton" Content="Restaurer une sauvegarde…" Click="RestoreProfilesClick" HorizontalAlignment="Left"/>
-         <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,12,0,12"/>
-         <TextBlock Text="Partir d’un modèle" FontWeight="SemiBold"/>
-         <TextBlock Text="Ajoute un nouveau profil prêt à personnaliser." Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,5,0,2"/>
-         <ComboBox x:Name="ProfileTemplatePicker" DisplayMemberPath="Name" AutomationProperties.Name="Modèle de profil"/>
-         <Button x:Name="AddTemplateButton" Content="Ajouter le modèle" Click="AddTemplateClick" HorizontalAlignment="Left"/>
-         <TextBlock Text="20 sauvegardes automatiques des profils, avant chaque modification enregistrée. Le calibrage reste sur ce PC." TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
-        </StackPanel>
-       </Expander>
-
-      <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,16,0,12"/>
-      <Expander x:Name="PreferencesExpander" Header="Préférences de l’application" Foreground="#C7C5D1" IsExpanded="False" AutomationProperties.AutomationId="ApplicationPreferences">
-       <StackPanel Margin="0,10,0,0">
-      <TextBlock Text="Apparence" FontWeight="SemiBold" Margin="0,0,0,4"/>
-      <TextBlock Text="Fond · #RRGGBB" Foreground="{StaticResource MutedBrush}"/><TextBox x:Name="ThemeBackgroundInput" MaxLength="7"/>
-      <TextBlock Text="Panneaux · #RRGGBB" Foreground="{StaticResource MutedBrush}"/><TextBox x:Name="ThemePanelInput" MaxLength="7"/>
-      <TextBlock Text="Accent · #RRGGBB" Foreground="{StaticResource MutedBrush}"/><TextBox x:Name="ThemeAccentInput" MaxLength="7"/>
-      <Button Content="Appliquer le thème" Click="ApplyThemeClick" HorizontalAlignment="Left"/>
-      <CheckBox x:Name="ReduceMotionCheck" Content="Réduire les animations" Checked="ReduceMotionChanged" Unchecked="ReduceMotionChanged"/>
-      <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,8,0,12"/>
-      <TextBlock Text="Notifications de profil et de sons" FontWeight="SemiBold" Margin="0,0,0,4"/>
-      <CheckBox x:Name="ProfileOverlayEnabledCheck" Content="Afficher le profil et les sons à l’écran"/>
-      <TextBlock Text="Emplacement" Foreground="{StaticResource MutedBrush}"/>
-      <ComboBox x:Name="ProfileOverlayPositionPicker" DisplayMemberPath="Name" SelectionChanged="ProfileOverlayPositionChanged"
-                AutomationProperties.Name="Emplacement de la notification">
-       <ComboBox.ItemContainerStyle>
-        <Style TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
-         <Setter Property="AutomationProperties.Name" Value="{Binding Name}"/>
-        </Style>
-       </ComboBox.ItemContainerStyle>
-      </ComboBox>
-      <StackPanel x:Name="ProfileOverlayCustomPanel" Visibility="Collapsed">
-       <DockPanel><TextBlock Text="Horizontal" Foreground="{StaticResource MutedBrush}"/><TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" Foreground="{StaticResource MutedBrush}" Text="{Binding ElementName=ProfileOverlayXSlider, Path=Value, StringFormat={}{0:0.0} %}"/></DockPanel>
-       <Slider x:Name="ProfileOverlayXSlider" Minimum="0" Maximum="100" SmallChange="0.1" LargeChange="1" TickFrequency="0.1" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft" AutomationProperties.Name="Position horizontale de la notification en pourcentage"/>
-       <DockPanel Margin="0,8,0,0"><TextBlock Text="Vertical" Foreground="{StaticResource MutedBrush}"/><TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" Foreground="{StaticResource MutedBrush}" Text="{Binding ElementName=ProfileOverlayYSlider, Path=Value, StringFormat={}{0:0.0} %}"/></DockPanel>
-       <Slider x:Name="ProfileOverlayYSlider" Minimum="0" Maximum="100" SmallChange="0.1" LargeChange="1" TickFrequency="0.1" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft" AutomationProperties.Name="Position verticale de la notification en pourcentage"/>
-      </StackPanel>
-      <Button x:Name="ProfileOverlayPreviewButton" AutomationProperties.AutomationId="ProfileOverlayPreviewButton" Content="Enregistrer et prévisualiser" Click="SaveProfileOverlayClick" HorizontalAlignment="Left" Margin="0,6,0,6"/>
-      <TextBlock x:Name="ProfileOverlayHint" Text="Le profil actif ou le son joué s’affiche sur l’écran utilisé, y compris sur les jeux en fenêtre ou sans bordure. Le plein écran exclusif peut masquer la notification." Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,8"/>
-      <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,8,0,12"/>
-      <TextBlock Text="Mises à jour" FontWeight="SemiBold" Margin="0,0,0,6"/>
-      <CheckBox x:Name="AutoUpdateCheck" Content="Rechercher automatiquement" Click="AutoUpdateClick"/>
-      <TextBlock x:Name="UpdateStatus" Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,8"/>
-      <Button x:Name="UpdateCheckButton" Content="Vérifier maintenant" Click="CheckUpdateClick" HorizontalAlignment="Left"/>
-      <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,10,0,12"/>
-      <CheckBox x:Name="StartupCheck" Content="Lancer avec Windows" Click="StartupClick"/>
-      <TextBlock x:Name="StartupStatus" Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,10"/>
-       </StackPanel>
-      </Expander>
-      <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,12,0,12"/>
-      <Expander x:Name="SoundboardExpander" Header="Soundboard · micro virtuel" Margin="0,0,0,8">
+         <Expander x:Name="SoundboardExpander" Header="Soundboard · micro virtuel" Margin="0,0,0,8">
        <StackPanel Margin="0,8,0,0">
         <TextBlock Text="Choisis ton micro physique. DeckPilot envoie la voix et les sons vers VB-CABLE. Dans Discord ou le jeu, choisis CABLE Output comme microphone." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,0,0,8"/>
         <TextBlock Text="Microphone physique"/><ComboBox x:Name="SoundboardMicrophonePicker" DisplayMemberPath="Name" SelectionChanged="SoundboardDevicesChanged"/>
@@ -302,10 +267,96 @@
        </StackPanel>
       </Expander>
       <Button x:Name="CalibrateButton" Content="Calibrer les touches" Click="CalibrateClick" HorizontalAlignment="Left"/>
-      <TextBlock Text="Fermer la fenêtre garde DeckPilot actif près de l’horloge." Foreground="#BDBCC6" FontSize="11" TextWrapping="Wrap" Margin="0,8,0,0"/>
+        </StackPanel>
+       </ScrollViewer>
+      </TabItem>
+      <TabItem x:Name="SettingsTab" Header="Réglages" AutomationProperties.Name="Réglages et profils">
+       <ScrollViewer x:Name="SettingsScroll" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,4,6,8">
+        <StackPanel>
+         <TextBlock Text="Personnalisez DeckPilot" FontSize="15" FontWeight="SemiBold" Margin="0,2,0,4"/>
+         <TextBlock Text="Apparence, profils, notifications et démarrage." Foreground="{StaticResource MutedBrush}" FontSize="12" TextWrapping="Wrap" Margin="0,0,0,10"/>
+         <Expander x:Name="ProfilesExpander" Foreground="#D2D2D2" Header="Gérer les profils" IsExpanded="False">
+        <StackPanel Margin="0,12,0,0">
+         <TextBlock Text="Nom du profil" Foreground="{StaticResource MutedBrush}"/>
+         <TextBox x:Name="ProfileName" MaxLength="60" ToolTip="Nom du profil à créer ou nouveau nom du profil actif" AutomationProperties.Name="Nom du profil"/>
+         <WrapPanel><Button Content="Créer" Click="CreateProfile"/><Button Content="Dupliquer" Click="DuplicateProfile"/><Button Content="Renommer" Click="RenameProfile"/><Button Content="Supprimer" Click="DeleteProfile"/></WrapPanel>
+         <WrapPanel><Button x:Name="ImportProfilesButton" Content="Importer…" Click="ImportProfilesClick"/><Button x:Name="ExportProfileButton" Content="Exporter ce profil…" Click="ExportProfileClick"/></WrapPanel>
+         <Button x:Name="ExportAllProfilesButton" Content="Exporter tous les profils…" Click="ExportAllProfilesClick" HorizontalAlignment="Left"/>
+         <Button x:Name="RestoreProfilesButton" Content="Restaurer une sauvegarde…" Click="RestoreProfilesClick" HorizontalAlignment="Left"/>
+         <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,12,0,12"/>
+         <TextBlock Text="Partir d’un modèle" FontWeight="SemiBold"/>
+         <TextBlock Text="Ajoute un nouveau profil prêt à personnaliser." Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,5,0,2"/>
+         <ComboBox x:Name="ProfileTemplatePicker" DisplayMemberPath="Name" AutomationProperties.Name="Modèle de profil"/>
+         <Button x:Name="AddTemplateButton" Content="Ajouter le modèle" Click="AddTemplateClick" HorizontalAlignment="Left"/>
+         <TextBlock Text="20 sauvegardes automatiques des profils, avant chaque modification enregistrée. Le calibrage reste sur ce PC." TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
+        </StackPanel>
+       </Expander>
 
-     </StackPanel>
-    </ScrollViewer>
+      <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,16,0,12"/>
+      <Expander x:Name="PreferencesExpander" Header="Réglages de l’application" Foreground="#C7C5D1" IsExpanded="False" AutomationProperties.AutomationId="ApplicationPreferences">
+       <StackPanel Margin="0,10,0,0">
+      <TextBlock Text="Apparence" FontWeight="SemiBold" Margin="0,0,0,4"/>
+      <TextBlock Text="Choisissez précisément chaque couleur, avec le sélecteur ou son code." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+      <TextBlock Text="Fond de l’application" Foreground="{StaticResource MutedBrush}" FontSize="12"/>
+      <Grid Margin="0,3,0,8">
+       <Grid.ColumnDefinitions><ColumnDefinition Width="26"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+       <Border x:Name="ThemeBackgroundSwatch" Width="20" Height="20" CornerRadius="4" BorderBrush="#AEB5C0" BorderThickness="1" VerticalAlignment="Center"/>
+       <TextBox x:Name="ThemeBackgroundInput" Grid.Column="1" MaxLength="7" Margin="6,0,6,0" TextChanged="ThemeColorCodeChanged" AutomationProperties.Name="Code couleur du fond"/>
+       <Button x:Name="ThemeBackgroundPaletteButton" Grid.Column="2" Content="Palette…" Click="ChooseThemeBackgroundClick" ToolTip="Choisir une couleur précise dans la palette Windows" AutomationProperties.Name="Choisir la couleur du fond"/>
+      </Grid>
+      <TextBlock Text="Panneaux" Foreground="{StaticResource MutedBrush}" FontSize="12"/>
+      <Grid Margin="0,3,0,8">
+       <Grid.ColumnDefinitions><ColumnDefinition Width="26"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+       <Border x:Name="ThemePanelSwatch" Width="20" Height="20" CornerRadius="4" BorderBrush="#AEB5C0" BorderThickness="1" VerticalAlignment="Center"/>
+       <TextBox x:Name="ThemePanelInput" Grid.Column="1" MaxLength="7" Margin="6,0,6,0" TextChanged="ThemeColorCodeChanged" AutomationProperties.Name="Code couleur des panneaux"/>
+       <Button x:Name="ThemePanelPaletteButton" Grid.Column="2" Content="Palette…" Click="ChooseThemePanelClick" ToolTip="Choisir une couleur précise dans la palette Windows" AutomationProperties.Name="Choisir la couleur des panneaux"/>
+      </Grid>
+      <TextBlock Text="Couleur d’accent" Foreground="{StaticResource MutedBrush}" FontSize="12"/>
+      <Grid Margin="0,3,0,8">
+       <Grid.ColumnDefinitions><ColumnDefinition Width="26"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+       <Border x:Name="ThemeAccentSwatch" Width="20" Height="20" CornerRadius="4" BorderBrush="#AEB5C0" BorderThickness="1" VerticalAlignment="Center"/>
+       <TextBox x:Name="ThemeAccentInput" Grid.Column="1" MaxLength="7" Margin="6,0,6,0" TextChanged="ThemeColorCodeChanged" AutomationProperties.Name="Code couleur de l’accent"/>
+       <Button x:Name="ThemeAccentPaletteButton" Grid.Column="2" Content="Palette…" Click="ChooseThemeAccentClick" ToolTip="Choisir une couleur précise dans la palette Windows" AutomationProperties.Name="Choisir la couleur d’accent"/>
+      </Grid>
+      <Button x:Name="ApplyThemeButton" Content="Appliquer les couleurs" Click="ApplyThemeClick" HorizontalAlignment="Left" Margin="0,2,0,4"/>
+      <CheckBox x:Name="ReduceMotionCheck" Content="Réduire les animations" Checked="ReduceMotionChanged" Unchecked="ReduceMotionChanged"/>
+      <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,8,0,12"/>
+      <TextBlock Text="Notifications de profil et de sons" FontWeight="SemiBold" Margin="0,0,0,4"/>
+      <CheckBox x:Name="ProfileOverlayEnabledCheck" Content="Afficher le profil et les sons à l’écran"/>
+      <TextBlock Text="Emplacement" Foreground="{StaticResource MutedBrush}"/>
+      <ComboBox x:Name="ProfileOverlayPositionPicker" DisplayMemberPath="Name" SelectionChanged="ProfileOverlayPositionChanged"
+                AutomationProperties.Name="Emplacement de la notification">
+       <ComboBox.ItemContainerStyle>
+        <Style TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
+         <Setter Property="AutomationProperties.Name" Value="{Binding Name}"/>
+        </Style>
+       </ComboBox.ItemContainerStyle>
+      </ComboBox>
+      <StackPanel x:Name="ProfileOverlayCustomPanel" Visibility="Collapsed">
+       <DockPanel><TextBlock Text="Horizontal" Foreground="{StaticResource MutedBrush}"/><TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" Foreground="{StaticResource MutedBrush}" Text="{Binding ElementName=ProfileOverlayXSlider, Path=Value, StringFormat={}{0:0.0} %}"/></DockPanel>
+       <Slider x:Name="ProfileOverlayXSlider" Minimum="0" Maximum="100" SmallChange="0.1" LargeChange="1" TickFrequency="0.1" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft" AutomationProperties.Name="Position horizontale de la notification en pourcentage"/>
+       <DockPanel Margin="0,8,0,0"><TextBlock Text="Vertical" Foreground="{StaticResource MutedBrush}"/><TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" Foreground="{StaticResource MutedBrush}" Text="{Binding ElementName=ProfileOverlayYSlider, Path=Value, StringFormat={}{0:0.0} %}"/></DockPanel>
+       <Slider x:Name="ProfileOverlayYSlider" Minimum="0" Maximum="100" SmallChange="0.1" LargeChange="1" TickFrequency="0.1" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft" AutomationProperties.Name="Position verticale de la notification en pourcentage"/>
+      </StackPanel>
+      <Button x:Name="ProfileOverlayPreviewButton" AutomationProperties.AutomationId="ProfileOverlayPreviewButton" Content="Enregistrer et prévisualiser" Click="SaveProfileOverlayClick" HorizontalAlignment="Left" Margin="0,6,0,6"/>
+      <TextBlock x:Name="ProfileOverlayHint" Text="Le profil actif ou le son joué s’affiche sur l’écran utilisé, y compris sur les jeux en fenêtre ou sans bordure. Le plein écran exclusif peut masquer la notification." Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,8"/>
+      <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,8,0,12"/>
+      <TextBlock Text="Mises à jour" FontWeight="SemiBold" Margin="0,0,0,6"/>
+      <CheckBox x:Name="AutoUpdateCheck" Content="Rechercher automatiquement" Click="AutoUpdateClick"/>
+      <TextBlock x:Name="UpdateStatus" Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,8"/>
+      <Button x:Name="UpdateCheckButton" Content="Vérifier maintenant" Click="CheckUpdateClick" HorizontalAlignment="Left"/>
+      <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,10,0,12"/>
+      <CheckBox x:Name="StartupCheck" Content="Lancer avec Windows" Click="StartupClick"/>
+      <TextBlock x:Name="StartupStatus" Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,10"/>
+       </StackPanel>
+      </Expander>
+      <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Margin="0,12,0,12"/>
+         <TextBlock Text="Fermer la fenêtre garde DeckPilot actif près de l’horloge." Foreground="#BDBCC6" FontSize="11" TextWrapping="Wrap" Margin="0,8,0,0"/>
+        </StackPanel>
+       </ScrollViewer>
+      </TabItem>
+     </TabControl>
+    </Grid>
    </Border>
   </Grid>
   <Border Grid.Row="1" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Background="{DynamicResource PanelBrush}" Padding="16,0">

@@ -58,6 +58,13 @@ function Find-Control($Root, [string]$Id) {
     $condition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::AutomationIdProperty, $Id)
     return $Root.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
 }
+function Select-ControlPanel($Root, [string]$Id) {
+    $tab = Find-Control $Root $Id
+    if (!$tab) { throw "Control panel tab is missing: $Id" }
+    $selection = $tab.GetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern)
+    $selection.Select()
+    Wait-Until { $selection.Current.IsSelected }
+}
 function Find-TopLevelById([int]$ProcessId, [string]$Id) {
     $processCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ProcessIdProperty, $ProcessId)
     $idCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::AutomationIdProperty, $Id)
@@ -258,6 +265,7 @@ try {
     if ($rowCount -ne 3 -or $columnCount -ne 4) { throw 'The rendered keypad must contain three rows of four keys' }
     $positions = @($deckButtons | ForEach-Object { $_.Current.Name })
     if (!($positions -like 'Ligne 1, colonne 4*') -or !($positions -like 'Ligne 3, colonne 4*') -or ($positions -like 'Ligne 4,*')) { throw 'Deck layout must have three rows and four columns' }
+    Select-ControlPanel $root 'DeviceTab'
     $script:phase = 'check connection dashboard without a physical board'
     $connection = Find-Control $root 'BoardConnectionStatus'
     if (!$connection) { throw 'Connection dashboard is missing' }
@@ -331,6 +339,8 @@ try {
     $firmwareCheck = Find-Control $root 'AutoFirmwareCheck'
     if ($firmwareCheck.GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern).Current.ToggleState -ne [System.Windows.Automation.ToggleState]::On) { throw 'Firmware checking should default to enabled' }
     $details.GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern).Collapse()
+    Select-ControlPanel $root 'ActionsTab'
+    if (Find-ButtonLike $root 'OBS / Streamlabs') { throw 'The retired streaming action is still offered' }
     $applicationAction = $root.FindFirst([System.Windows.Automation.TreeScope]::Descendants,
         ([System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::NameProperty, 'Ouvrir une application')))
     $script:phase = 'select application action'
@@ -364,6 +374,7 @@ try {
     Invoke-Control (Find-Control $root 'TestActionButton')
     Wait-Until { (Find-Control $root 'DeckKey01').Current.ItemStatus -eq $sentStatus }
     Write-Host 'PASS built-in DeckPilot action: searchable without an executable path and opens the existing window'
+    Select-ControlPanel $root 'DeviceTab'
     $script:phase = 'open firmware dialog without hardware'
     Invoke-Control (Find-Control $root 'OpenFirmware')
     $firmwareWindow = $null
@@ -393,6 +404,7 @@ try {
     Invoke-Control (Find-Control $firmwareWindow 'CloseButton')
     Wait-Until { !(Test-Path $firmwareStage) }
     Write-Host 'PASS firmware dialog: embedded tools and image validated, flash disabled without a selected board, temporary files cleaned'
+    Select-ControlPanel $root 'ActionsTab'
     $script:phase = 'search and drag dedicated Spotify actions'
     $sidebarPattern = (Find-Control $root 'SidebarScroll').GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern)
     if ($sidebarPattern.Current.VerticallyScrollable) { $sidebarPattern.SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 0) }
@@ -477,7 +489,8 @@ try {
     if ($backups.Count -eq 0 -or $backups.Count -gt 20) { throw 'Automatic profile backup retention is not active' }
     Write-Host 'PASS action tools: volume search, Spotify-specific preset drag, swapping keys without recalibration, installed app search and assignment'
     $script:phase = 'resize with all sidebar sections expanded'
-    foreach ($id in @('BoardDiagnosticExpander', 'ProfilesExpander', 'ApplicationPreferences')) {
+    Select-ControlPanel $root 'DeviceTab'
+    foreach ($id in @('BoardDiagnosticExpander', 'SoundboardExpander')) {
         (Find-Control $root $id).GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern).Expand()
     }
     $transform = $root.GetCurrentPattern([System.Windows.Automation.TransformPattern]::Pattern)
@@ -485,7 +498,7 @@ try {
         $transform.Resize($size[0], $size[1])
         $deckScroll = (Find-Control $root 'DeckEditorScroll').GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern)
         if ($deckScroll.Current.VerticallyScrollable) { $deckScroll.SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 0) }
-        $sidebar = (Find-Control $root 'SidebarScroll').GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern)
+        $sidebar = (Find-Control $root 'DeviceScroll').GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern)
         Wait-Until { $sidebar.Current.VerticallyScrollable }
         $sidebar.SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 100)
         Wait-Until { !(Find-Control $root 'CalibrateButton').Current.IsOffscreen }
@@ -509,9 +522,13 @@ try {
     Wait-Until { (Find-Control $root 'HeaderMicrophoneStatus').Current.Name -notlike '*lecture*' }
     if ((Read-SharedJson $settingsPath | ConvertTo-Json -Depth 15 -Compress) -cne $settingsBeforeMinimize) { throw 'Window activity modified the saved configuration' }
     Write-Host 'PASS window activity: minimize/restore preserves settings and keeps the audio indicator available'
+    Select-ControlPanel $root 'SettingsTab'
+    foreach ($id in @('ProfilesExpander', 'ApplicationPreferences')) {
+        (Find-Control $root $id).GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern).Expand()
+    }
     $script:phase = 'add a complete profile template and preserve calibration'
     $originalCalibration = (Read-SharedJson $settingsPath).KeyMap -join ','
-    Select-ComboItem $root 'ProfileTemplatePicker' 'Musique et audio' $replacement.Id 'SidebarScroll'
+    Select-ComboItem $root 'ProfileTemplatePicker' 'Musique et audio' $replacement.Id 'SettingsScroll'
     Invoke-Control (Find-Control $root 'AddTemplateButton')
     Wait-Until { (Read-SharedJson $settingsPath).Profiles.Count -eq 2 }
     $templateState = Read-SharedJson $settingsPath
@@ -544,13 +561,36 @@ try {
     $overlayStyle = [DeckPilotDragMouse]::GetWindowLong($overlayHandle, -20)
     if (($overlayStyle -band 0x08000020) -ne 0x08000020 -or [DeckPilotDragMouse]::GetForegroundWindow() -eq $overlayHandle) { throw 'The overlay intercepted focus or mouse input' }
     Write-Host 'PASS profile action: a deck key changes the active profile and the selector remains synchronized'
+    $script:phase = 'validate exact colour selection and native palette cancellation'
+    $background = (Find-Control $root 'ThemeBackgroundInput').GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern)
+    $originalBackground = (Read-SharedJson $settingsPath).Theme.Background
+    $background.SetValue('#ZZZZZZ')
+    Invoke-Control (Find-Control $root 'ApplyThemeButton')
+    Wait-Until { (Find-Control $root 'StatusText').Current.Name -like '*#RRGGBB*' }
+    if ((Read-SharedJson $settingsPath).Theme.Background -ne $originalBackground) { throw 'Invalid colour changed saved settings' }
+    $background.SetValue('#123456')
+    Invoke-Control (Find-Control $root 'ApplyThemeButton')
+    Wait-Until { (Read-SharedJson $settingsPath).Theme.Background -eq '#123456' }
+    $background.SetValue($originalBackground)
+    Invoke-Control (Find-Control $root 'ApplyThemeButton')
+    Wait-Until { (Read-SharedJson $settingsPath).Theme.Background -eq $originalBackground }
+    Invoke-Control (Show-InScroll $root (Find-Control $root 'ThemeBackgroundPaletteButton') 'SettingsScroll')
+    $paletteCondition = [System.Windows.Automation.AndCondition]::new(
+        [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ProcessIdProperty, $replacement.Id),
+        [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ClassNameProperty, '#32770'))
+    $palette = $null
+    Wait-Until { $script:palette = [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $paletteCondition); $null -ne $script:palette }
+    Invoke-Control (Find-Control $palette '2')
+    Wait-Until { $null -eq [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $paletteCondition) }
+    if ($background.Current.Value -ne $originalBackground -or (Read-SharedJson $settingsPath).Theme.Background -ne $originalBackground) { throw 'Cancelling the palette changed the colour' }
+    Write-Host 'PASS custom colours: precise value persists, invalid code is rejected and cancelling the native picker preserves settings'
     $script:phase = 'save and preview a custom profile overlay position'
     $preferences = (Find-Control $root 'ApplicationPreferences').GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern)
     if ($preferences.Current.ExpandCollapseState -eq [System.Windows.Automation.ExpandCollapseState]::Collapsed) { $preferences.Expand() }
-    Select-ComboItem $root 'ProfileOverlayPositionPicker' 'Position personnalisée' $replacement.Id 'SidebarScroll'
+    Select-ComboItem $root 'ProfileOverlayPositionPicker' 'Position personnalisée' $replacement.Id 'SettingsScroll'
     (Find-Control $root 'ProfileOverlayXSlider').GetCurrentPattern([System.Windows.Automation.RangeValuePattern]::Pattern).SetValue(35)
     (Find-Control $root 'ProfileOverlayYSlider').GetCurrentPattern([System.Windows.Automation.RangeValuePattern]::Pattern).SetValue(70)
-    Invoke-Control (Show-InScroll $root (Find-Control $root 'ProfileOverlayPreviewButton') 'SidebarScroll')
+    Invoke-Control (Show-InScroll $root (Find-Control $root 'ProfileOverlayPreviewButton') 'SettingsScroll')
     Wait-Until {
         $saved = Read-SharedJson $settingsPath
         $saved.ProfileOverlay.Position -eq 'Custom' -and $saved.ProfileOverlay.XPercent -eq 35 -and $saved.ProfileOverlay.YPercent -eq 70
@@ -581,6 +621,7 @@ try {
     if ($accentSelection.Count -ne 1 -or $accentSelection[0].Current.Name -ne 'Bleu') { throw 'The accent picker lost its saved selection' }
     Write-Host 'PASS key appearance: accent persists and reloads when returning to the key'
 
+    Select-ControlPanel $root 'ActionsTab'
     $script:phase = 'record a shortcut without running it'
     Invoke-Control (Find-Control $root 'DeckKey04')
     Invoke-Control (Find-ButtonLike $root 'Raccourci clavier')
@@ -644,14 +685,15 @@ try {
     if (((Read-SharedJson $settingsPath).KeyMap -join ',') -ne $originalCalibration) { throw 'Editing key actions changed calibration' }
     Write-Host 'PASS key clipboard: keyboard copy/paste, reset and undo preserve the source and calibration'
 
+    Select-ControlPanel $root 'SettingsTab'
     $script:phase = 'persist reduced motion preference'
-    $motionCheck = Show-InScroll $root (Find-Control $root 'ReduceMotionCheck') 'SidebarScroll'
+    $motionCheck = Show-InScroll $root (Find-Control $root 'ReduceMotionCheck') 'SettingsScroll'
     $motionCheck.GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern).Toggle()
     Wait-Until { (Read-SharedJson $settingsPath).ReduceMotion -eq $true }
     Write-Host 'PASS preferences: reduced motion setting is persisted'
 
     $script:phase = 'duplicate a profile with the maximum name length'
-    $profileNameEditor = Show-InScroll $root (Find-Control $root 'ProfileName') 'SidebarScroll'
+    $profileNameEditor = Show-InScroll $root (Find-Control $root 'ProfileName') 'SettingsScroll'
     $profileNameEditor.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue(('P' * 60))
     Invoke-Control (Find-ButtonLike $root 'Dupliquer')
     Wait-Until { (Read-SharedJson $settingsPath).Profiles.Count -eq 3 }
@@ -662,6 +704,11 @@ try {
     Wait-Until { (Read-SharedJson $settingsPath).Profiles.Count -eq 2 }
     Write-Host 'PASS profile duplication: the maximum-length name remains valid and can be undone'
 
+    Select-ControlPanel $root 'DeviceTab'
+    foreach ($id in @('BoardDiagnosticExpander', 'SoundboardExpander', 'ActivityExpander')) {
+        (Find-Control $root $id).GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern).Collapse()
+    }
+    Select-ControlPanel $root 'SettingsTab'
     $script:phase = 'capture the actual Windows interface'
     foreach ($id in @('BoardDiagnosticExpander', 'ProfilesExpander', 'ApplicationPreferences', 'ActivityExpander')) {
         $section = Find-Control $root $id
@@ -670,10 +717,11 @@ try {
     # Leave a clean, populated profile visible instead of the test configuration.
     $profilesSection = (Find-Control $root 'ProfilesExpander').GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern)
     $profilesSection.Expand()
-    Select-ComboItem $root 'ProfileTemplatePicker' 'Musique et audio' $replacement.Id 'SidebarScroll'
+    Select-ComboItem $root 'ProfileTemplatePicker' 'Musique et audio' $replacement.Id 'SettingsScroll'
     Invoke-Control (Find-Control $root 'AddTemplateButton')
     Wait-Until { (Read-SharedJson $settingsPath).Profiles.Count -eq 3 }
     $profilesSection.Collapse()
+    Select-ControlPanel $root 'ActionsTab'
     Invoke-Control (Find-Control $root 'DeckKey02')
     $screen = [System.Windows.Forms.Screen]::PrimaryScreen.WorkingArea
     $transform.Resize([Math]::Max(960, [Math]::Min(1180, $screen.Width)), [Math]::Max(720, [Math]::Min(900, $screen.Height)))

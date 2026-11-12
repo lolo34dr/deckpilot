@@ -7,11 +7,14 @@ public sealed record ActionPreset(string Name, string Details, ButtonAction Acti
 
 public static class ActionSearch
 {
-    public static readonly string[] KindNames = ["Touche libre", "Ouvrir une application", "Ouvrir un dossier", "Ouvrir un site web", "Raccourci clavier", "Multimédia", "Spotify", "Microphone Windows", "Changer de sortie audio", "Changer de profil", "Commandes Windows", "Soundboard", "OBS / Streamlabs"];
+    public static readonly string[] KindNames = ["Touche libre", "Ouvrir une application", "Ouvrir un dossier", "Ouvrir un site web", "Raccourci clavier", "Multimédia", "Spotify", "Microphone Windows", "Changer de sortie audio", "Changer de profil", "Commandes Windows", "Soundboard"];
+    // Streaming remains a reserved value so 2.3 profiles stay readable.
+    public static bool IsAvailable(ActionKind kind) => (uint)kind < KindNames.Length;
+    public static string KindName(ActionKind kind) => IsAvailable(kind) ? KindNames[(int)kind] : "Action retirée";
     public static IReadOnlyList<ActionPreset> Find(string query, IEnumerable<InstalledApplication> applications)
     {
         if (string.IsNullOrWhiteSpace(query)) return [];
-        var results = Enum.GetValues<ActionKind>().Select(k => new ActionPreset(KindNames[(int)k], "Configurer une action", new() { Kind = k, Key = k is ActionKind.Media or ActionKind.Spotify ? 0xB3 : 0x41 }));
+        var results = Enum.GetValues<ActionKind>().Where(IsAvailable).Select(k => new ActionPreset(KindNames[(int)k], "Configurer une action", new() { Kind = k, Key = k is ActionKind.Media or ActionKind.Spotify ? 0xB3 : 0x41 }));
         var commands = new[] { ("Lecture / pause", 0xB3, "play pause musique"), ("Piste suivante", 0xB0, "suivant skip next musique"), ("Piste précédente", 0xB1, "précédent previous musique"), ("Volume +", 0xAF, "augmenter son volume"), ("Volume −", 0xAE, "baisser son volume"), ("Muet", 0xAD, "mute couper son volume") };
         var spotifyCommands = commands.Take(3).Concat(new[]
         {
@@ -26,8 +29,6 @@ public static class ActionSearch
                 new ActionPreset("Profil suivant", "Passer au prochain profil du macropad", new() { Label = "Profil suivant", Kind = ActionKind.Profile, Target = "next" }),
                 new ActionPreset("Profil précédent", "Revenir au profil précédent du macropad", new() { Label = "Profil précédent", Kind = ActionKind.Profile, Target = "previous" })
             })
-            .Concat(StreamingActionCatalog.All.Select(preset => new ActionPreset(preset.ProviderName + " — " + preset.Command.Name, preset.Command.Details,
-                new() { Kind = ActionKind.Streaming, Label = preset.Command.Name, Target = preset.Command.Id, ApplicationName = preset.ProviderId })))
             .Where(p => p.Matches(query));
         var apps = new[] { ApplicationTarget.DeckPilotApplication }.Concat(applications).DistinctBy(a => a.Name, StringComparer.OrdinalIgnoreCase)
             .Where(a => a.Matches(query)).Select(a => new ActionPreset(a.Name, "Application · " + a.Source,

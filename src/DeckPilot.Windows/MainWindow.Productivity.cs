@@ -181,6 +181,7 @@ public partial class MainWindow
     {
         if (calibrating || firmwareOpen) return;
         CancelShortcutRecording();
+        ControlTabs.SelectedIndex = 0;
         ActionSearchBox.BringIntoView();
         ActionSearchBox.Focus();
         ActionSearchBox.SelectAll();
