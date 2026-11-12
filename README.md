@@ -104,6 +104,7 @@ The single-file executable extracts its bundled dependencies into the user's .NE
 | Keyboard shortcut | Sends a key combination to the active window. |
 | Media | Controls playback, tracks, volume, or mute. |
 | Spotify | Controls Spotify playback and adjusts only Spotify's Windows audio-session volume. |
+| OBS / Streamlabs | Talks directly to either application's WebSocket API for scenes, live output, recording, replay buffer, audio mute and source visibility. |
 | Application — DeckPilot | Shows the existing DeckPilot window, including when it is running in the notification area. |
 
 For application actions, open the application picker and search by name. The manual file selector remains available, with optional program arguments under advanced options. Enter arguments according to the target application's syntax.
@@ -299,6 +300,14 @@ For manual Arduino IDE uploads, **quit DeckPilot from its tray menu** to free th
 **Spotify** is separate from **Multimédia**. Its play/pause, next and previous commands address the Spotify desktop app's Windows media session, even while a browser is playing YouTube. Spotify volume +/− adjusts Spotify's Windows audio session in 5% steps, leaving the master volume and other players unchanged. Spotify must be open and have an available playback session; start a track once if necessary. Spotify in a browser is not supported. Missing Spotify sessions produce an error, with no fallback to global media keys or another player. No Spotify account authorization, Premium subscription or stored token is needed by DeckPilot. Windows 10 version 2004 or later, or Windows 11, is required by this build.
 
 Use **Rechercher une action ou une application** for queries such as `volume`, `skip`, `Spotify` or an installed app's name. The installed-app index loads on the first search and is cached for five minutes; manual file selection remains available. Click a result to configure the selected key or drag it onto another key.
+
+## OBS Studio and Streamlabs Desktop control
+
+Choose **OBS / Streamlabs** for a key, select the target application and command, then save. DeckPilot connects to the application's local WebSocket/RPC interface; it does not send keyboard shortcuts. OBS actions include scene switching, stream start/stop, recording start/stop/pause/resume, microphone or desktop-audio mute, source visibility, replay buffer, Studio Mode and virtual camera. Streamlabs actions include scene switching, stream and recording start/stop, source-audio mute, source visibility and replay buffer.
+
+These controls use the existing macropad button events and require no firmware change or reflash.
+
+Use **Tester la connexion et récupérer les scènes** to fetch the available scenes from the selected application. For audio or source actions, enter the exact source/input name used inside that application. OBS requires its WebSocket server enabled under **Tools → WebSocket Server Settings** (OBS 28 and later include it). Streamlabs Desktop requires **Settings → Remote Control** to be enabled; copy its token from **Show Details**. DeckPilot stores the password/token using Windows user-level data protection. The applications must be running when an action is triggered. See the official [OBS remote-control guide](https://obsproject.com/kb/remote-control-guide) and [Streamlabs Desktop API reference](https://github.com/streamlabs/desktop/blob/master/docs/README.md).
 
 Drag an action from the catalog or search results onto a key to assign it. Drag one configured key onto another to **swap their actions**; the physical calibration stays unchanged. You can also drop one `.exe`, `.lnk`, `.appref-ms`, folder or HTTP(S) URL onto a key. Dropping only configures the key and never executes the action. Complete any missing settings in the editor.
 

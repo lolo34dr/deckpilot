@@ -118,6 +118,30 @@
         <TextBlock Text="Commande Spotify" Foreground="{StaticResource MutedBrush}"/>
         <ComboBox x:Name="SpotifyPicker" DisplayMemberPath="Name" AutomationProperties.Name="Commande Spotify"/>
        </StackPanel>
+       <StackPanel x:Name="StreamingPanel" Visibility="Collapsed" Margin="0,0,0,8">
+        <TextBlock Text="Application de streaming" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
+        <ComboBox x:Name="StreamingProviderPicker" SelectionChanged="StreamingProviderChanged" AutomationProperties.Name="Application de streaming" Margin="0,4,0,8"/>
+        <TextBlock Text="Commande" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
+        <ComboBox x:Name="StreamingCommandPicker" DisplayMemberPath="Name" SelectionChanged="StreamingCommandChanged" AutomationProperties.Name="Commande OBS ou Streamlabs" Margin="0,4,0,8"/>
+        <TextBlock x:Name="StreamingTargetLabel" Text="Scène ou source" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
+        <ComboBox x:Name="StreamingTargetPicker" IsEditable="True" IsTextSearchEnabled="True" AutomationProperties.Name="Scène ou source à cibler" Margin="0,4,0,4"/>
+        <Button x:Name="RefreshStreamingTargetsButton" Content="Tester la connexion et récupérer les scènes" Click="RefreshStreamingTargetsClick" HorizontalAlignment="Left" Margin="0,0,0,10" Padding="10,5"/>
+        <Border Background="#16181D" BorderBrush="#30313A" BorderThickness="1" CornerRadius="8" Padding="10" Margin="0,0,0,6">
+         <StackPanel>
+          <TextBlock x:Name="StreamingConnectionTitle" Text="Connexion OBS" FontWeight="SemiBold" Margin="0,0,0,5"/>
+          <TextBlock Text="Adresse" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
+          <TextBox x:Name="StreamingHostEditor" Text="127.0.0.1" AutomationProperties.Name="Adresse du serveur de streaming" Margin="0,3,0,6"/>
+          <TextBlock Text="Port" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
+          <TextBox x:Name="StreamingPortEditor" Text="4455" AutomationProperties.Name="Port du serveur de streaming" Margin="0,3,0,6"/>
+          <TextBlock x:Name="StreamingSecretLabel" Text="Mot de passe WebSocket" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
+          <PasswordBox x:Name="StreamingSecretEditor" AutomationProperties.Name="Mot de passe ou jeton de streaming" Margin="0,3,0,4"/>
+          <TextBlock x:Name="StreamingSecretStatus" Text="Le secret est conservé protégé dans les réglages Windows." Foreground="{StaticResource MutedBrush}" FontSize="10" TextWrapping="Wrap" Margin="0,0,0,5"/>
+          <TextBlock x:Name="StreamingConnectionHelp" TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}" FontSize="10"/>
+          <Button Content="Effacer le secret enregistré" Click="ClearStreamingSecretClick" HorizontalAlignment="Left" Margin="0,5,0,0" Padding="8,4"/>
+         </StackPanel>
+        </Border>
+        <TextBlock x:Name="StreamingStatus" Text="OBS ou Streamlabs doit être ouvert sur cet ordinateur." Foreground="{StaticResource MutedBrush}" FontSize="10" TextWrapping="Wrap"/>
+       </StackPanel>
        <StackPanel x:Name="SoundboardActionPanel" Visibility="Collapsed">
         <TextBlock Text="Son à jouer sur cette touche" Foreground="{StaticResource MutedBrush}"/>
         <ComboBox x:Name="SoundboardClipPicker" DisplayMemberPath="Name" AutomationProperties.Name="Son du soundboard"/>

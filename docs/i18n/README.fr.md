@@ -111,7 +111,8 @@ L'exécutable à un seul fichier extrait ses dépendances groupées dans le cach
 | Raccourci clavier | Envoie une combinaison de touches à la fenêtre active. |
 | Médias | Contrôle la lecture, les pistes, le volume ou la mute. |
 | Spotify | Contrôles Spotify lecture et ajuste seulement le volume de session audio de Spotify Windows. |
-| Demande — DeckPilot | Affiche l'existant DeckPilot fenêtre, y compris quand elle est en cours d'exécution dans la zone de notification. |
+| OBS / Streamlabs | Communique directement avec l’API WebSocket de l’application : scènes, live, enregistrement, replay, audio et sources. |
+| Demande — DeckPilot | Affiche l'existant DeckPilot window, y compris lorsqu'il est en cours d'exécution dans la zone de notification. |
 
 Pour les actions de l'application, ouvrez le sélecteur d'application et recherchez par nom. Le sélecteur de fichier manuel reste disponible, avec des arguments optionnels de programme sous des options avancées. Entrez des arguments selon la syntaxe de l'application cible.
 
@@ -325,6 +326,14 @@ Pour les téléchargements IDE manuel Arduino, **arrêter DeckPilot à partir de
 **Spotify** est séparé de **Multimédia**. Sa lecture/pause, les commandes suivantes et précédentes adressent la session de médias de l'application Spotify de bureau, même si un navigateur est en train de jouer sur YouTube. 5% étapes, laissant le volume maître et les autres joueurs inchangés. Spotify doit être ouvert et avoir une session de lecture disponible; démarrer une piste une fois si nécessaire. Spotify dans un navigateur n'est pas pris en charge. Les sessions manquantes Spotify produisent une erreur, sans retour aux touches médias globales ou à un autre lecteur. DeckPilot. Windows 10 version 2004 ou plus tard, ou Windows 11, est requis par cette construction.
 
 Utilisation **Rechercher une action ou une application** pour des questions telles que `volume`, `skip`, `Spotify` ou le nom d'une application installée. L'index de l'application installée se charge de la première recherche et est mis en cache pendant cinq minutes; la sélection manuelle des fichiers reste disponible. Cliquez sur un résultat pour configurer la touche sélectionnée ou la glisser sur une autre touche.
+
+## Commandes OBS Studio et Streamlabs Desktop
+
+Choisissez **OBS / Streamlabs** pour une touche, sélectionnez l’application et la commande, puis enregistrez. DeckPilot communique directement avec l’API WebSocket/RPC de l’application, sans simuler de raccourcis clavier. OBS propose le changement de scène, le démarrage et l’arrêt du live, l’enregistrement, la pause, le micro et le son du bureau, la visibilité des sources, le replay buffer, le mode Studio et la caméra virtuelle. Streamlabs propose le changement de scène, le live, l’enregistrement, le mute des sources audio, la visibilité des sources et le replay buffer.
+
+Ces commandes utilisent les événements des boutons déjà existants et ne nécessitent aucune modification ni mise à jour du firmware.
+
+Cliquez sur **Tester la connexion et récupérer les scènes** pour lire la liste des scènes de l’application choisie et vérifier sa connexion. Pour les actions audio et les sources, saisissez leur nom exact tel qu’il apparaît dans l’application. OBS demande d’activer le serveur WebSocket dans **Outils → Paramètres du serveur WebSocket** (intégré depuis OBS 28). Dans Streamlabs Desktop, activez **Paramètres → Remote Control**, puis copiez le jeton dans **Show Details**. Le mot de passe et le jeton sont protégés par Windows pour le compte utilisateur courant. L’application de streaming doit être ouverte au moment de l’action. Consultez le [guide officiel de contrôle à distance d’OBS](https://obsproject.com/kb/remote-control-guide) et la [référence de l’API Streamlabs Desktop](https://github.com/streamlabs/desktop/blob/master/docs/README.md).
 
 Faites glisser une action à partir du catalogue ou des résultats de recherche sur une touche pour l'assigner. Faites glisser une touche configurée sur une autre pour **échange de leurs actions**; le calibrage physique reste inchangé. `.exe`, `.lnk`, `.appref-ms`, dossier ou URL HTTP(S) sur une touche. Dropping ne configure que la touche et n'exécute jamais l'action. Compléter les paramètres manquants dans l'éditeur.
 
