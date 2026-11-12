@@ -5,7 +5,7 @@ Applications installées, interface affinée et mises à jour automatiques.
 - Sélecteur d’applications avec recherche par nom : menu Démarrer et catalogue Windows/Microsoft Store. Le choix manuel d’un `.exe` استريحوا من المسؤولية.
 - Icônes des applications lorsqu’elles sont disponibles, pictogrammes vectoriels and animations discrètes respectant les préférences Windows.
 - Recherche automatique des versions stables sur GitHub. Une confirmation suffit pour télécharger, vérifier, installer et redémarrer.
-- Vérification SHA-256 " )٣( المرجع نفسه، المرفق.
+- Vérification SHA-256 " )٢( " )٢٧( Avec restauration en cas d’échec.
 - Profils et calibrage existants conservés.
 
 **Depuis 0.1' ١٠ ' الاستقالة من النسخة " 2 " " " " من النص الإنكليزي " " " " و " منافذ " " " " .** Les mises à jour suivantes seront proposées automatiquement. Utilisez un dossier personnel modifiable pour permettre le remplacement.

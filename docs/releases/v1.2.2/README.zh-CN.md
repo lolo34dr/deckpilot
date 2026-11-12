@@ -6,4 +6,4 @@ DeckPilot 现在在Windows上显示自己的标志,而不是通用应用程序�
 - 安装器和Windows uninstall条目使用项目标志.
 - 桌面和启动菜单快捷键明确引用已安装 DeckPilot 图标,包括升级。
 
-下载 **DeckPilot-Setup.exe(英语:Setup.** 并安装在现有版本上。保存配置文件、校准和启动首选项。firmware 1.0.0 不变;不需要硬件闪存。
+下载 **DeckPilot-Setup.exe(英语:Setup.** 并安装在现有版本上。保存配置文件、校准和启动偏好。firmware 1.0.0 不变;不需要硬件闪存。

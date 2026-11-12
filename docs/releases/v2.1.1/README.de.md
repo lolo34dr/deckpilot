@@ -1,6 +1,6 @@
 > Dies ist eine automatische Übersetzung der vollständigen Release Notes. Das englische Original ist die Referenz.
 
-DeckPilot 2.1.1 Verbessert Installation und Updates:
+DeckPilot 2.1.1 verbessert die Installation und Updates:
 
 - Automatische Überprüfung für VB-CABLE bei der ersten Installation und Upgrades, und laden Sie den offiziell signierten Installateur herunter und starten Sie ihn, wenn der Fahrer fehlt.
 - Windows-Start, automatische Update-Checks und reduzierte Bewegungseinstellungen während der Einrichtung und Updates anzeigen, wobei vorhandene Optionen vorgewählt und beibehalten werden.
