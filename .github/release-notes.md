@@ -1,3 +1,7 @@
+DeckPilot 2.4.1 corrects the control panel tabs so their full outlines remain visible and their widths stay aligned when the window is resized.
+
+No firmware update or flash is required.
+
 DeckPilot 2.4.0 reorganizes the control panel and adds exact colour selection.
 
 - Use the **Actions**, **Appareil** and **Réglages** tabs to find key actions, device/audio controls and preferences.

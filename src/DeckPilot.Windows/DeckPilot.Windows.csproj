@@ -8,7 +8,7 @@
     <NoWarn>$(NoWarn);WFAC010</NoWarn>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets/DeckPilot.ico</ApplicationIcon>
-    <AssemblyName>DeckPilot</AssemblyName><Version>2.4.0</Version>
+    <AssemblyName>DeckPilot</AssemblyName><Version>2.4.1</Version>
   </PropertyGroup>
   <ItemGroup>
     <Resource Include="../../deckpilotlogo.png" Link="Assets/DeckPilot.png" />
