@@ -9,7 +9,7 @@
 
 <p align="center">
   Een Windows metgezel voor uw 12-Key DIY macropad.<br>
-  Configureer uw sleutels, start toepassingen, controlemedia en schakelprofielen.
+  Configureer uw sleutels, start toepassingen, besturingsmedia en schakelprofielen.
 </p>
 
 <p align="center">
@@ -49,12 +49,12 @@
 
 DeckPilot configureert Arduino Leonardo-compatibele macropads die al verzenden **F13/F24** als USB-toetsenbord ingangen, gerangschikt in **3 rijen van 4 sleutels**. De fysieke sleutel orde kan willekeurig zijn: een geleide kalibratie kaarten elke knop in zijn positie.
 
-**De functies van het F13.F24 toetsenbord behoeven geen extra driver of firmware. Soundboard mengen vereist de ondertekende VB-CABLE audio-driver, geïnstalleerd door Setup bij ontbreken.** De toepassingsinterface is momenteel in het Frans. Kies een taal hierboven voor een volledig vertaald README, inclusief de technische referentie en versiegeschiedenis. Vertalingen worden automatisch gegenereerd; dit Engelse origineel is de referentie.
+**De functies van het F13.F24 toetsenbord behoeven geen extra driver of firmware. Soundboard menging vereist de ondertekende VB-CABLE audio-driver, geïnstalleerd door Setup bij ontbreken.** De toepassingsinterface is momenteel in het Frans. Kies een taal hierboven voor een volledig vertaald README, inclusief de technische referentie en versiegeschiedenis. Vertalingen worden automatisch gegenereerd; dit Engelse origineel is de referentie.
 
 <a id="features"></a>
 ## Functies
 
-- **Geleidende kalibratie:** alles te identificeren 12 fysieke knoppen zonder uw macropad opnieuw te draaien.
+- **Begeleide kalibratie:** alles te identificeren 12 fysieke knoppen zonder uw macropad opnieuw te bedrading.
 - **Geïnstalleerde applicatiepicker:** zoeken Start menu snelkoppelingen en de Windows-applicatiecatalogus, inclusief Microsoft Store-items. Handmatige bestandsselectie blijft beschikbaar.
 - **Aangepaste acties:** start toepassingen, open mappen of websites, stuur snelkoppelingen en controlemedia.
 - **Vrije toetsen:** houden F13_F24 beschikbaar voor snelkoppelingen die direct in een spel of een andere toepassing zijn geconfigureerd.
@@ -72,7 +72,7 @@ DeckPilot configureert Arduino Leonardo-compatibele macropads die al verzenden *
 <a id="requirements"></a>
 ### Vereisten
 
-- Vensters 10 of Vensters 11, **x64**.
+- Vensters 10 of vensters 11, **x64**.
 - Een Arduino Leonardo-compatibele macropad verzenden 12 verschillende sleutels van **F13 tot F24**.
 - Een USB-dataverbinding.
 
@@ -82,14 +82,14 @@ De gepubliceerde downloads omvatten de .NET runtime. **U hoeft .NET niet te inst
 ### Installeren en starten
 
 1. Downloaden **[DeckPilot-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** en voer het installatieprogramma uit. Windows vraagt om toestemming van de beheerder om te installeren in **Program Files\DeckPilot**.
-2. Met het installatiesysteem kunt u kiezen of DeckPilot begint met Windows, controleert automatisch op updates van de app, en vermindert animaties. Opstarten en update controles zijn standaard aan; verminderde animaties zijn uitgeschakeld. Het controleert ook voor de ondertekende VB-CABLE bestuurder vereist door de Soundboard en installeert het automatisch als het ontbreekt. Een internetverbinding is vereist voor die driver check.
+2. Met het installatiesysteem kunt u kiezen of DeckPilot begint met Windows, controleert automatisch op updates van de app en vermindert animaties. Opstarten en update controles zijn standaard aan; verminderde animaties zijn uitgeschakeld. Het controleert ook voor de ondertekende VB-CABLE bestuurder vereist door de Soundboard en installeert het automatisch als het ontbreekt. Een internetverbinding is vereist voor die driver check.
 3. Het installatieprogramma voegt DeckPilot naar Windows **Geïnstalleerde apps** en maakt een sneltoets voor het menu Start aan. Standaard wordt een sneltoets voor het bureaublad geselecteerd.
 4. Verbind uw macropad en open DeckPilot van de kortere weg.
 5. Volg kalibratie van links naar rechts over **vier kolommen**, dan de volgende rij, voor **drie rijen**Elke knop moet een andere F13.F24 sleutel sturen.
 
-Bij het upgraden van de eerste 4-rijindeling, DeckPilot behoudt profielen/acties en vraagt om een nieuwe kalibratie voor de gecorrigeerde posities. Het installeren over een bestaande draagbare setup behoudt ook de instellingen in `%APPDATA%\DeckPilot`; stop de oude kopie als de setup je vraagt.
+Bij het upgraden van de eerste 4-rijindeling, DeckPilot behoudt profielen/acties en vraagt om een nieuwe kalibratie voor de gecorrigeerde posities. Het installeren over een bestaande draagbare setup behoudt ook de instellingen in `%APPDATA%\DeckPilot`; stop de oude kopie als de setup u vraagt om.
 
-Een draagbaar [DeckPilot.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot.exe) en [ZIP](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-win-x64.zip) Blijf beschikbaar voor compatibiliteit. Voor draagbaar gebruik, houd het uitvoerbare bestand in een beschrijfbare persoonlijke map.
+Een draagbaar [DeckPilot.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot.exe) en [ZIP](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-win-x64.zip) beschikbaar blijven voor compatibiliteit. Voor draagbaar gebruik, houd het uitvoerbare bestand in een beschrijfbare persoonlijke map.
 
 Verwijderen van Windows **Geïnstalleerde apps**. Uninstallation verwijdert het programma en de snelkoppelingen, met behoud van persoonlijke profielen, zodat een later opnieuw te installeren kan hergebruiken.
 
@@ -134,7 +134,7 @@ Windows opstarten is standaard ingeschakeld voor de huidige gebruiker. U kunt he
 <a id="installed-applications"></a>
 ## Geïnstalleerde toepassingen
 
-De picker leest snelkoppelingen van de huidige gebruiker en systeembrede Start menu's, dan vult ze met `Get-StartApps` resultaten van de Windows-applicatiecatalogus.
+De picker leest snelkoppelingen van de huidige gebruiker en systeembrede Start menu's, dan vult ze met `Get-StartApps` resultaten uit de Windows-applicatiecatalogus.
 
 Zoeken negeert geval en accenten. Dubbele namen worden gegroepeerd, met menu-items Start die prioriteit hebben. Draagbare toepassingen en programma's zonder geregistreerde snelkoppelingen kunnen nog steeds handmatig worden geselecteerd. Als de Windows-catalogus niet beschikbaar is, blijven leesbare menu-sneltoetsen bruikbaar.
 
@@ -145,13 +145,13 @@ Windows start de geselecteerde sneltoetsen. Catalogusitems gebruiken `shell:Apps
 
 Beschikbaar sinds **0.2.0**, automatische update controles worden uitgevoerd bij het opstarten na kalibratie, dan elke zes uur. Ze kunnen worden uitgeschakeld in de zijbalk. Een handmatige controle blijft beschikbaar.
 
-Wanneer een nieuwere stabielere GitHub release wordt gevonden, DeckPilot vraagt of het moet worden bijgewerkt. **Geïnstalleerde kopieën** downloaden en SHA-256 verifiëren `DeckPilot-Setup.exe`, start dan het installatieprogramma met de huidige opstart-, automatische-update- en reduced-motion voorkeuren voorgeselecteerd. U kunt ze wijzigen tijdens de update. Windows vraagt om toestemming van de beheerder voor het bijwerken van programmabestanden. Het installatieprogramma sluit DeckPilot elegant wanneer klaar, behoudt profielen en configuratie, controleert en installeert de ondertekende VB-CABLE stuurprogramma indien ontbreken, en start de app opnieuw op. Annuleren van het installatieprogramma laat de app open. Setup weigert een open firmwaresessie te onderbreken.
+Wanneer een nieuwere stabielere GitHub release wordt gevonden, DeckPilot vraagt of het moet worden bijgewerkt. **Geïnstalleerde kopieën** downloaden en SHA-256 verifiëren `DeckPilot-Setup.exe`, start vervolgens het installatieprogramma met de huidige opstart-, automatische-update- en reduced-motion voorkeuren voorgeselecteerd. U kunt ze wijzigen tijdens de update. Windows vraagt om toestemming van de beheerder voor het bijwerken van programmabestanden. Het installatieprogramma sluit DeckPilot elegant wanneer klaar, behoudt profielen en configuratie, controleert en installeert de ondertekende VB-CABLE stuurprogramma indien ontbreken, en start de app opnieuw op. Het annuleren van het installatieprogramma laat de app open. Het instellen weigert een open firmwaresessie te onderbreken.
 
 **Draagbare kopieën** het bestaande updatemechanisme te behouden. Na bevestiging:
 
 1. Downloadt het uitvoerbare bestand met voortgangsrapportage en annuleringsondersteuning.
 2. Controleert zijn SHA-256 hash tegen `SHA256SUMS.txt` van dezelfde GitHub release.
-3. Bewaart uw instellingen en bereidt de update helper voor.
+3. Bewaart uw instellingen en bereidt de update-helper voor.
 4. Exits, vervangt het uitvoerbare bestand, en herstart.
 5. Houdt het vorige uitvoerbare bestand totdat het nieuwe proces een succesvolle initialisatie bevestigt; als het opstarten mislukt, herstelt en herstart de vorige versie.
 
@@ -202,17 +202,17 @@ De core library en console controles draaien ook op Linux. De WPF interface en W
 <a id="validation"></a>
 ### Validatie
 
-De console controleert de exit met een non-zero status bij de eerste mislukte bewering. Ze omvatten:
+De console controleert de exit met een non-zero status op de eerste mislukte bewering. Ze hebben betrekking op:
 
 - Key mapping, key-key herhaalt, releases, profiel switching, en actie kopiëren.
 - Instellingen validatie, persistentie en migratie van oudere configuraties.
 - Toepassing zoeken en doelafhandeling.
-- Loslaten selectie, checksums, afgekapt of beschadigde downloads, omleidingen, en annulering.
+- Vrijgave selectie, controlesums, afgeknotte of beschadigde downloads, omleidingen, en annulering.
 - Uitvoerbare vervanging, back-up behoud, en terugrol.
 
 De file-lock check draait alleen op Windows.
 
-GitHub-acties draaien ook `tests/windows-update-smoke.ps1` tegen het standalone uitvoerbare bestand. Het start de update-helper, sluit het oorspronkelijke proces af, controleert de vervanging en opstartbevestiging, controleert de instellingen voor bewaring, opent vervolgens de geïnstalleerde applicatiepicker via UI Automation en slaat een selectie op. Het gebruikt ook hernoemde uitvoerbare bestanden en paden met spaties. Dit script is gereserveerd voor het wegwerp GitHub Acties testaccount. CI draait ook `tests/windows-installer-smoke.ps1`: Real Program Files installatie, desktop / Start menu snelkoppelingen, standaard opstarten, upgrade met de app open, disabled-startup behoud, en de installatie zonder het verwijderen van profielen.
+GitHub-acties draaien ook `tests/windows-update-smoke.ps1` tegen het standalone uitvoerbare bestand. Het start de update-helper, verlaat het oorspronkelijke proces, controleert vervanging en opstartbevestiging, controleert de instellingen voor bewaring, opent vervolgens de geïnstalleerde toepassingspicker via UI Automation en slaat een selectie op. Het oefent ook hernoemde uitvoerbare bestanden en paden die spaties bevatten. Dit script is gereserveerd voor het wegwerp GitHub Acties testaccount. CI draait ook `tests/windows-installer-smoke.ps1`: Real Program Files installatie, desktop / Start menu snelkoppelingen, standaard opstarten, upgrade met de app open, disabled-startup behoud, en de installatie zonder het verwijderen van profielen.
 
 <a id="publish-a-standalone-windows-folder"></a>
 ### Publiceer een standalone Windows-map
@@ -244,7 +244,7 @@ Met de Leonardo verbonden:
 
 - Alles kalibreren 12 posities in een willekeurige F13/F24-volgorde. Bevestig dubbele sleutels worden afgewezen en annuleren behoudt de vorige mapping.
 - Geef een gratis sleutel in een spel en controleer of het spel het normaal ontvangt.
-- Start een geconfigureerd programma en houd vervolgens de knop ingedrukt: het moet eenmaal gestart worden totdat het programma vrijgegeven is. Inclusief paden met spaties en optionele argumenten.
+- Start een geconfigureerd programma en houd vervolgens de knop ingedrukt: het moet eenmaal gestart worden totdat het is vrijgegeven. Inclusief paden met spaties en optionele argumenten.
 - Test een map, een website, een snelkoppeling in een gewone toepassing en mediabesturing.
 - Stuur F13_F24 door een snelkoppeling en bevestig dat er geen lus van DeckPilot acties.
 - Maak twee profielen met verschillende acties, schakel tussen hen, stop, en herstart. Profielen en kalibratie moeten blijven bestaan.
@@ -288,19 +288,19 @@ Voorgesteld krediet:
 
 Voor de voorbereiding van het apparaat en de kwaliteitscontrole van de werkplaats, installeer de afzonderlijke [DeckPilot Atelier](../../docs/FACTORY.md) hulpmiddel. Het installatieprogramma wordt gepubliceerd als **[DeckPilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** naast de belangrijkste toepassing. Het kan knipperen van de meegeleverde firmware naar een Leonardo / Caterina bord, dan controleren korte en lange persen op alle 12 fysieke sleutels en export van een rapport.
 
-DeckPilot 1.1.0 bevat a **Firmware du macropad…** dialoogvenster en firmware 1.0.0 voor de Pro Micro ATmega32U4 **5 V / 16 MHz**, met behulp van de Leonardo / Caterina configuratie bevestigd door de eigenaar upload log. De gebundelde Windows knipperende tool vereist geen Arduino IDE. Apparaat selectie en bevestiging zijn verplicht; app-updates nooit stil knipperen het bord. Bestaande F13.F24 mappen, profielen en kalibratie blijven compatibel.
+DeckPilot 1.1.0 bevat a **Firmware du macropad…** dialoogvenster en firmware 1.0.0 voor de Pro Micro ATmega32U4 **5 V / 16 MHz**, met behulp van de Leonardo / Caterina configuratie bevestigd door de eigenaar upload log. De gebundelde Windows knipperende tool vereist geen Arduino IDE. Apparaat selectie en bevestiging zijn verplicht; app-updates nooit stil flitsen het bord. Bestaande F13.F24 mappings, profielen en kalibratie blijven compatibel.
 
 **De eigenaar heeft bevestigd succesvolle in-app knipperen, firmware 1.0.0 identificatie en alle 12 knoppen op het referentiebord.** Houd de originele schets en toegang tot RST/GND voor herstel. Firmware knipperen kan niet automatisch worden teruggerold. [firmware documentatie](FIRMWARE.nl.md) voor compatibiliteit, validatie, herstel, bouwstappen en licenties van derden. Per-knop USB modes en native media controls maken geen deel uit van deze firmware release.
 
 <a id="building-the-windows-installer"></a>
 ### Bouwen van de Windows installatie
 
-Na het produceren `artifacts/standalone/DeckPilot.exe` met de ingebouwde firmware bundel, Installeer Inno Setup 6 en rennen `./installer/build.ps1` van de root van de repository. `artifacts/installer/DeckPilot-Setup.exe`. CI bouwt en test dit installatieprogramma alvorens het aan een release te bevestigen. Het installatieprogramma maakt gebruik van een stabiele applicatie ID zodat toekomstige versies dezelfde installatie upgraden.
+Na het produceren `artifacts/standalone/DeckPilot.exe` met de ingebouwde firmware bundel, Installeer Inno Setup 6 en rennen `./installer/build.ps1` van de repository root. De uitvoer is `artifacts/installer/DeckPilot-Setup.exe`. CI bouwt en test dit installatieprogramma alvorens het aan een release te bevestigen. Het installatieprogramma maakt gebruik van een stabiele applicatie ID zodat toekomstige versies dezelfde installatie upgraden.
 
 <a id="connection-dashboard-and-firmware-checks-130"></a>
 ## Controles van het dashboard en de firmware van de aansluiting (1.3.0)
 
-De **Votre macropad** kaart toont de verbindingsstatus, de gedetecteerde firmware en elke beschikbare gebundelde update. **Connexion et diagnostic** onthult board selectie wanneer verschillende Leonardo's zijn aangesloten, de live USB-link status, fysieke knop telt, firmware-notificatie voorkeuren en een copyable diagnostische samenvatting. Diagnostics kopiëren geen profiel acties of USB seriële identificaties. De monitor reconnecteert na het uitpluggen en geeft zijn seriële poort automatisch terwijl de firmware manager is geopend. F13.F24 toetsenbord acties blijven werken met firmware 1.0.0 en zonder de diagnose link.
+De **Votre macropad** kaart toont de verbindingsstatus, de gedetecteerde firmware en elke beschikbare gebundelde update. **Connexion et diagnostic** onthult board selectie wanneer verschillende Leonardo's zijn aangesloten, de live USB-link status, fysieke knop telt, firmware-notificatie voorkeuren en een copyable kenmerkende samenvatting. Diagnostics kopiëren geen profiel acties of USB-serie-identificaties. De monitor herkoppelt na het uitpluggen en geeft de seriële poort automatisch terwijl de firmware manager is geopend. F13 1.0.0 en zonder de diagnose link.
 
 Opstart firmware controles zijn standaard ingeschakeld. Nadat de app update controle en kalibratie zijn uit de weg, een oudere geïdentificeerde firmware kan vragen om de installatie te openen; Uitstel vertragingen herinneringen voor 24 Uren. Onbekende boards en meerdere niet-geselecteerde kandidaten worden niet automatisch flitsen. Firmware releases worden gebundeld met app-updates van GitHub, in plaats van opgehaald uit een onafhankelijke firmware-feed.
 
@@ -315,55 +315,55 @@ Kies een sleutel om het te bewerken. **Options avancées · fichier et arguments
 
 Wanneer het macropad wordt afgesloten, **Hors ligne** en de bijbehorende hint legt uit dat profielen nog steeds bewerkt kunnen worden en acties getest kunnen worden. Configuratie wordt opgeslagen op de PC en blijft beschikbaar tijdens het verbreken en opnieuw verbinden. Deze verbeteringen van de interface werken met de bestaande firmware en vereisen geen extra flits.
 
-Het menu notificatie-gebied schakelt nu de profielen direct over. **Ctrl+S** slaat de huidige knopconfiguratie op. Ongeldige configuratiebestanden worden geback-upt voordat een nieuwe configuratie wordt gebruikt. App-installatie, desktop/Startmenupictogrammen, opstartvoorkeuren en de bestaande automatische update worden behouden.
+Het menu notificatie-gebied schakelt nu de profielen direct over. **Ctrl+S** slaat de huidige knopconfiguratie op. Ongeldige configuratiebestanden worden geback-upt voordat een nieuwe configuratie wordt gebruikt. App-installatie, desktop/Startmenupictogrammen, opstartvoorkeuren en de bestaande automatische update worden bewaard.
 
 Voor handmatige Arduino IDE-uploads, **stoppen DeckPilot uit het tray-menu** om de seriële poort vrij te maken. Het sluiten van het hoofdvenster houdt het draaiend op de achtergrond.
 
 <a id="spotify-action-search-and-drag-and-drop-150"></a>
-## Spotify, actie zoeken en slepen (1.5.0)
+## Spotify, actie zoeken en slepen en neerzetten (1.5.0)
 
 **Spotify** is gescheiden van **Multimédia**. Zijn afspelen/pauzeren, volgende en vorige commando's adres van de Spotify desktop app's Windows media sessie, zelfs terwijl een browser YouTube speelt. Spotify volume +/− past Spotify's Windows audio sessie in 5% stappen, waardoor het hoofdvolume en andere spelers ongewijzigd blijven. Spotify moet geopend zijn en een beschikbare afspeelsessie hebben; start een track eenmaal indien nodig. Spotify in een browser wordt niet ondersteund. Ontbrekende Spotify-sessies produceren een foutmelding, zonder terugval naar globale mediatoetsen of een andere speler. Geen Spotify-accountvergunning, Premium-abonnement of opgeslagen token is nodig door DeckPilot. Ramen 10 versie 2004 of later, of vensters 11, is vereist door deze bouw.
 
-Gebruik **Rechercher une action ou une application** voor vragen zoals `volume`, `skip`, `Spotify` of de naam van een geïnstalleerde app. De geïnstalleerde-app index laadt op de eerste zoekopdracht en wordt gedurende vijf minuten gecached; handmatige bestandsselectie blijft beschikbaar. Klik op een resultaat om de geselecteerde sleutel te configureren of sleep het naar een andere sleutel.
+Gebruik **Rechercher une action ou une application** voor vragen zoals `volume`, `skip`, `Spotify` of de naam van een geïnstalleerde app. De geïnstalleerde-app index laadt bij de eerste zoekopdracht en wordt gedurende vijf minuten gecached; handmatige bestandsselectie blijft beschikbaar. Klik op een resultaat om de geselecteerde sleutel te configureren of sleep deze naar een andere sleutel.
 
 <a id="control-panel-and-exact-colours-240"></a>
 ## Controlepaneel en exacte kleuren (2.4.0)
 
-Het rechter paneel heeft drie tabbladen: **Acties** voor het toewijzen van sleutels, **Appareil** voor het macropad en audio, en **Réglagesworld.kgm** voor profielen en voorkeuren. Het toetsenbord en de editor aan de linkerkant behouden hun layout en de originele vector pictogrammen en DeckPilot logo.
+Het rechter paneel heeft drie tabbladen: **Acties** voor het toewijzen van sleutels, **Appareil** voor het macropad en audio, en **Réglages** voor profielen en voorkeuren. Het toetsenbord en de editor aan de linkerkant behouden hun layout en de originele vector pictogrammen en DeckPilot logo.
 
 Onder **Réglages → Réglages de l**, gebruik **Palet...** om een exacte achtergrond-, paneel- of accentkleur te kiezen met de Windows-kleurkiezer. `#RRGGBB` veld en aangrenzende swatch tonen de geselecteerde waarde. **Appliquer les couleurs** valideert en bespaart de drie kleuren; het annuleren van de picker houdt de huidige waarde.
 
 De OBS/Streamlabs controle integratie is verwijderd. 2.3 profielen blijven leesbaar en houden hun opgeslagen acties, maar gepensioneerde streaming acties niet uitvoeren. Selecteer een vervangende actie uit de bibliotheek om deze sleutels opnieuw te toewijzen. Andere acties, profielen en kalibratie zijn bewaard gebleven. Er is geen firmware flits nodig.
 
-Sleep een actie uit de catalogus of zoekresultaten naar een sleutel om deze toe te wijzen. Sleep een geconfigureerde sleutel naar een andere **ruilen van hun acties**; de fysieke kalibratie blijft onveranderd. U kunt er ook één laten vallen `.exe`, `.lnk`, `.appref-ms`, map of HTTP(S) URL op een sleutel. Dropping configureert alleen de sleutel en voert nooit de actie uit. Voltooi alle ontbrekende instellingen in de editor.
+Sleep een actie uit de catalogus of zoekresultaten naar een sleutel om deze toe te wijzen. Sleep een geconfigureerde sleutel naar een andere **ruilen van hun acties**; de fysieke kalibratie blijft onveranderd. U kunt er ook één laten vallen `.exe`, `.lnk`, `.appref-ms`, map of HTTP(S) URL op een sleutel. Droping configureert alleen de sleutel en voert nooit de actie uit. Voltooi alle ontbrekende instellingen in de editor.
 
 Windows opstarten houdt nu een expliciete voorkeur per gebruiker, reparaties van een oude of ontbrekende Run ingang, en rapporten bekend Windows opstarten uitschakelen vlaggen. Normaal start respect Windows uitschakelen; expliciet inschakelen **Lancer avec Windows** ontruimt het bekende DeckPilot de vlag voor de huidige gebruiker uitschakelen. Achtergrondstarten blijven verborgen, zelfs voor de kalibratie, en dupliceert achtergrondstarten stil. Na het bijwerken, open **Préférences de l’application**, controleer de opstartstatus en reactiveer de optie als Windows geblokkeerd. Een echte aanmelding / sign-in op de pc van de gebruiker blijft de laatste controle voor het beleid van Windows of machine-specifieke beperkingen.
 
 <a id="sharp-keypad-rendering-profile-recovery-and-audio-controls-161"></a>
 ## Scherpe toetsenbordweergave, profielherstel en audiobesturing (1.6.1)
 
-Het toetsenbord rendert nu in native WPF-formaten in plaats van tekst te schalen via een Viewbox. Ouder/toets schaduw effecten en tekstschaal animaties werden verwijderd; kleinere vensters scrollen in plaats van het toetsenbord te verkleinen. De app verklaart per-monitor DPI bewustzijn en gebruikt grotere Windows shell pictogrammen voor desktop toepassingen.
+Het toetsenbord rendert nu in native WPF-formaten in plaats van tekst te schalen door een Viewbox. Ouder/toets schaduw effecten en tekstschaal animaties werden verwijderd; kleinere vensters scrollen in plaats van het toetsenbord te verkleinen. De app verklaart per-monitor DPI bewustzijn en gebruikt grotere Windows shell pictogrammen voor desktop toepassingen.
 
-**Annuler / Rétablir** herstelt profielbewerkingen, waaronder drag-and-drop swaps, actie-instellingen, import en profielaanmaak/deletie. Geschiedenis houdt 50 bewerken tijdens de appsessie. Ctrl+Z / Ctrl+Y werkt op profielen buiten tekstvelden; tekstvelden behouden hun eigen undo/redo. Kalibratie, opstartvoorkeuren en uitgevoerde acties worden niet ongedaan gemaakt.
+**Annuler / Rétablir** herstelt profielbewerkingen, met inbegrip van drag-and-drop swaps, actie-instellingen, import en profielaanmaak/deletie. 50 bewerken tijdens de appsessie. Ctrl+Z / Ctrl+Y werkt op profielen buiten tekstvelden; tekstvelden behouden hun eigen undo/redo. Kalibratie, opstartvoorkeuren en uitgevoerde acties worden niet ongedaan gemaakt.
 
-Onder **Gérer les profils**, exporteer het huidige profiel of alle profielen als `.deckpilot.json`, profielen importeren als nieuwe kopieën, of een back-up van alle profielen herstellen. Importeren voert nooit acties uit en vervangt nooit de kalibratie van de PC. Profielen bevatten actiepaden, argumenten en audio-eindpunt-ID's, die mogelijk moeten worden aangepast op een andere pc. Onbekende formaten, oversized bestanden en misvormde gebarenconfiguraties worden geweigerd.
+Onder **Gérer les profils**, exporteer het huidige profiel of alle profielen als `.deckpilot.json`, profielen importeren als nieuwe kopieën, of een back-up van alle profielen herstellen. Importeren voert nooit acties uit en vervangt nooit de kalibratie van de PC. Profielen bevatten actiepaden, argumenten en audio-eindpunt ID's, die mogelijk moeten worden aangepast op een andere PC. Onbekende formaten, oversized bestanden en misvormde gebarenconfiguraties worden geweigerd.
 
 Voor het opslaan van gewijzigde profielen, DeckPilot houdt de vorige profielen in `%APPDATA%\DeckPilot\Backups` (20 versies, inhoud-gededupliceerd). Voorkeur-alleen opslaan maakt geen profielback-ups aan. Een back-upfout voorkomt het overschrijven van de huidige instellingen. Herstellen vervangt profielen na bevestiging en kan zelf ongedaan worden gemaakt; kalibratie blijft ongewijzigd.
 
 **Microphone Windows** schakelt mute aan op alle huidige Windows-eindpunten. De statusbalk en de Audio Windows-kaart tonen actieve/gemuteerde/gemengde/niet-beschikbare status, elke twee seconden en na de commando's van de app. Een mislukte multi-endpoint-update probeert vorige mute-toestanden te herstellen. Deze indicatoren beschrijven de status van Windows-eindpunt, niet een hardware-switch of de eigen mute-knop van een toepassing.
 
-**Changer de sortie audio** alternatieven tussen twee geselecteerde, aangesloten uitvoerapparaten, voor Windows-console, multimedia- en communicatiestandaarden. Een ontbrekende doelstelling geeft een fout zonder een ander apparaat te kiezen. Toepassingen met hun eigen vaste uitvoer kunnen niet volgen de standaard Windows. Geïmporteerde endpoint-ID's worden getoond als niet beschikbaar totdat aangepast aan de huidige PC. Foute routing-wijzigingen proberen de vorige standaardwaarden te herstellen.
+**Changer de sortie audio** alternatieven tussen twee geselecteerde, aangesloten uitvoerapparaten, voor Windows-console, multimedia- en communicatiestandaarden. Een ontbrekende doelstelling geeft een fout zonder een ander apparaat te kiezen. Toepassingen met hun eigen vaste uitvoer volgen mogelijk niet de standaarduitvoer van Windows. Geïmporteerde endpoint-ID's worden getoond als niet beschikbaar totdat aangepast aan de huidige PC. Foute routing-wijzigingen proberen de vorige standaardwaarden te herstellen.
 
-Instellen **appui court / appui long**, kies eerst een geconfigureerde actie, activeer de optie twee-actie, selecteer het gebaar om te bewerken en stel een drempel in 200 tot 3000 ms. Zonder deze modus behouden de acties onmiddellijk key-down gedrag. Met het, korte acties lopen op release voor de drempel; lange acties lopen eenmaal op de drempel (of bij release als de timer nog niet is uitgevoerd). Een lange actie loopt nooit ook de korte. Gratis F13.F24 passthrough sleutels kunnen geen dual-action modus gebruiken. In afwachting van gebaren worden geannuleerd op profiel / configuratie wijzigingen, kalibratie, firmware operaties, sessie wijzigingen en schorsing. Geen firmware flits is nodig; de bestaande key-down / key-up rapporten leveren de gebaren.
+Instellen **appui court / appui long**, kies eerst een geconfigureerde actie, activeer de optie twee-acties, selecteer het gebaar om te bewerken en stel een drempel in 200 tot 3000 ms. Zonder deze modus behouden de acties onmiddellijk key-down gedrag. Met het, korte acties lopen op release voor de drempel; lange acties lopen eenmaal op de drempel (of bij release als de timer nog niet is uitgevoerd). Een lange actie loopt nooit ook de korte. Vrije F13.F24 passthrough sleutels kunnen geen dual-action modus gebruiken. In afwachting van gebaren worden geannuleerd op profiel / configuratie wijzigingen, kalibratie, firmware operaties, sessie wijzigingen en schorsing. Geen firmware flits is nodig; de bestaande key-down / key-up rapporten leveren de gebaren.
 
-Core controles hebben betrekking op repeat/release grenzen, gelijktijdige houders, annulering, profiel geschiedenis / exchange/backups en audio rollback met behulp van nep-eindpunten. Windows UI controleert de uitoefening van de werkelijke drag undo / redo, het configureren van een lange actie en drempel, native keypad afmetingen na grootte en de microfoon indicator. Werkelijke microfoon drivers, headset / speaker schakelen en fysieke holds nog steeds nodig validatie op de eigenaar PC.
+Core controles hebben betrekking op repeat/release grenzen, gelijktijdige houders, annulering, profiel geschiedenis / exchange/backups en audio rollback met behulp van nep-eindpunten. Windows UI controleert de uitoefening van werkelijke drag undo / redo, het configureren van een lange actie en drempel, native keypad afmetingen na het wijzigen en de microfoon indicator. Werkelijke microfoon drivers, headset / speaker schakelen en fysieke holds nog steeds nodig validatie op de eigenaar PC.
 
 <a id="search-and-ci-reliability-fixes-164"></a>
 ## Repareren van de betrouwbaarheid van zoekopdrachten en CI's (1.6.4)
 
 Equivalente zoekresultaten houden hun bestaande WPF-knoppen. De geïnstalleerde-app-catalogus en debounce timer uitstel resultaatvervanging terwijl een zoekknop wordt gevangen of een slepen is bezig. Dit voorkomt dat een bronknop wordt verwijderd tijdens een interactie.
 
-Windows rook controles blijven uitvoeren native muis slepen en valideren opgeslagen opdrachten, swaps, undo/redo en beide pers gebaren. De testclient maakt gebruik van fysieke cursor coördinaten aan UI Automation grenzen ongeacht DPI, richt zich voor het meten, en scant alle scroll percentages. Een regressie controle controleert ook dat gelijkwaardige zoekopdrachten behouden dezelfde toegankelijke knop. Achtergrond-startup beweringen wachten op WPF's geladen handler en vereisen vijf opeenvolgende verborgen-venster observaties terwijl de app blijft leven. Falen melden de fase, cursor doelstellingen, DPI en laatste scroll geometrie.
+Windows rook controles blijven uitvoeren native muis slepen en valideren opgeslagen opdrachten, swaps, undo/redo en beide pers gebaren. De testclient maakt gebruik van fysieke cursor coördinaten aan UI Automation grenzen ongeacht DPI, richt zich voor het meten, en scant alle scroll percentages. Een regressiecontrole controleert ook dat gelijkwaardige zoekopdrachten dezelfde toegankelijke knop behouden. Achtergrond-startup beweringen wachten op WPF's Loaded handler en vereisen vijf opeenvolgende verborgen-venster observaties terwijl de app blijft leven. Falen melden de fase, cursor doelen, DPI en laatste scroll geometrie.
 
 Bouwen en loslaten workflows gebruiken Node.js 24 De Arduino compiler blijft bij CLI 1.2.2; CI downloadt het Windows-archief met een gepinde SHA-256 checksum. De firmware en de toolchain versies zijn ongewijzigd.
 
@@ -376,27 +376,27 @@ Een test snapshot lezer kan wachten tot 500 ms voor Windows delen/vergrendelen s
 <a id="runtime-and-editing-optimizations-170"></a>
 ## Optimalisaties tijdens de runtime en de bewerking (1.7.0)
 
-Het opslaan van identieke instellingen controleert het huidige bestand, maar slaat vervanging en back-up werk over. Externe bewerkingen/deletie en mislukte schrijven worden nog steeds gedetecteerd. `ButtonAction` heeft waarde gelijkheid (met inbegrip van de lange actie); editor vuile controles vermijden JSON-serialisatie. Geschiedenis houdt losse model snapshots, valideert nieuwe staten, en voorkomt JSON parsing tijdens undo/redo. 50-editlimiet en 20 profiel back-ups blijven.
+Het opslaan van identieke instellingen controleert het huidige bestand, maar slaat vervanging en back-upwerk over. Externe bewerkingen/deletie en mislukte schrijven worden nog steeds gedetecteerd. `ButtonAction` heeft waarde gelijkheid (met inbegrip van de lange actie); editor vuile controles vermijden JSON-serialisatie. Geschiedenis houdt losse model snapshots, valideert nieuwe staten, en voorkomt JSON parsen tijdens undo/redo. 50-editlimiet en 20 profiel back-ups blijven.
 
-Zoeken en picker delen een onveranderlijke geïnstalleerd-app catalogus voor vijf minuten (15 seconden voor een gedeeltelijk resultaat). Gelijktijdige gebruikers delen een scan; sluiten van een picker annuleert geen andere consument. Vernieuwt omzeilt de cache, en elke picker heeft zijn eigen filter/view. Scanning en catalogus parsing lopen uit de UI-draad; picker filtering wordt gedebounced door 120 ms. Actie zoeken hercheckt deze cache na het debounce en bij terugkeer van de picker, dus er is ook een vernieuwde catalogus beschikbaar.
+Zoeken en picker delen een onveranderlijke geïnstalleerd-app catalogus voor vijf minuten (15 seconden voor een gedeeltelijk resultaat). Gelijktijdige gebruikers delen een scan; sluiten van een picker annuleert geen andere consument. Vernieuwt omzeilt de cache, en elke picker heeft zijn eigen filter/view. Scanning en catalogus parsing lopen uit de UI thread; picker filtering wordt gedebounced door 120 ms. Actie zoeken hercheckt deze cache na het debounce en bij terugkeer van de picker, dus een vernieuwde catalogus is er ook beschikbaar.
 
-Bestuur UI-updates nu volgen verbinding meldingen in plaats van elke wakker te maken 100 ms. Verborgen/geminimaliseerde vensters stoppen feedback animaties en gebruiken een tien-seconde audio polling interval in plaats van twee seconden; heropenen of uitgeven van een audio commando verzoekt verse staat onmiddellijk. In afwachting van audio refreshes delen een lus en omvatten verzoeken die tijdens een bestaande lezing arriveren. Ongewijzigde audio snapshots en bevroren penselen voorkomen herhaalde UI-toewijzingen. Proceswrappers die worden teruggestuurd door het starten van een app worden verwijderd zonder het gestarte programma te sluiten.
+Bord UI updates nu volgen verbinding meldingen in plaats van elke wakker te maken 100 ms. Verborgen/geminimaliseerde vensters stoppen feedback animaties en gebruiken een tien-seconde audio polling interval in plaats van twee seconden; heropenen of uitgeven van een audio commando vraagt verse staat onmiddellijk. In afwachting van audio refreshes delen een lus en omvatten verzoeken die tijdens een bestaande lezing arriveren. Ongewijzigde audio snapshots en bevroren penselen voorkomen herhaalde UI-toewijzingen. Proceswrappers die worden teruggestuurd door het starten van een app worden verwijderd zonder het gestarte programma te sluiten.
 
 Deze wijzigingen verminderen gespecificeerd werk; ze niet het vaststellen van een machine-onafhankelijke CPU / RAM percentage. Native hardware audio switching en fysieke sleutel gedrag vereisen nog steeds validatie op een Windows-pc met het macropad.
 
 <a id="workspace-tools-and-refreshed-interface-180"></a>
 ## Werkbladgereedschappen en vernieuwde interface (1.8.0)
 
-De houtskool interface zet de actiebibliotheek op de eerste plaats, scheidt profielbesturingen van de scherpe native-size 3 × 4 Keypad, en groepen actie instellingen in een kaart. Belangrijkste accenten onderscheiden uw eigen categorieën; selectie, toetsenbord focus en actie feedback blijven gescheiden. **Réduire les animations** in voorkeuren vult de Windows-animatie-instelling aan. Kleinere vensters behouden schuiftoegang in plaats van krimpende sleuteltekst.
+De houtskool interface zet de actiebibliotheek op de eerste plaats, scheidt profielbesturingen van de knapperige native-size 3 × 4 Keypad, en groepen actie instellingen in een kaart. Belangrijkste accenten onderscheiden uw eigen categorieën; selectie, toetsenbord focus en actie feedback blijven gescheiden. **Réduire les animations** in voorkeuren vult de Windows-animatie-instelling aan. Kleinere vensters behouden schuiftoegang in plaats van krimpende sleuteltekst.
 
-- **Profielsjablonen:** onder **Gérer les profils**, voeg Muziek en audio, Desktop en productiviteit, of Creatie. Elk sjabloon maakt een apart bewerkbaar profiel en voert nooit zijn acties uit. Bestaande profielen en fysieke kalibratie worden behouden. Sneltoetsen gebruiken de actieve toepassing, waarvan de bindingen kunnen verschillen.
+- **Profielsjablonen:** onder **Gérer les profils**, voeg Muziek en audio, Desktop en productiviteit, of Creatie. Elk sjabloon maakt een apart bewerkbaar profiel en voert nooit de acties uit. Bestaande profielen en fysieke kalibratie worden behouden. Sneltoetsen gebruiken de actieve toepassing, waarvan de bindingen kunnen verschillen.
 - **Profieltoetsen:** toewijzen **Changer de profil**, selecteer dan een genoemd profiel of fiets vooruit/terug. Verwijzingen tussen profielen worden omgelijnd bij het importeren van een set of het dupliceren van een zelfverwijzingsprofiel. Een ontbrekende bestemming meldt een fout en kan worden vervangen in de editor.
-- **Windows-opdrachten:** gebruik **Commandes Windows** om gemeenschappelijke instellingen of taakbeheer te openen, of de PC expliciet te vergrendelen. Commando's komen uit een vaste lijst, zonder script om in te voeren. De vergrendelingsactie vereist dat u zich weer aanmeldt bij Windows.
+- **Windows-opdrachten:** gebruik **Commandes Windows** om gemeenschappelijke instellingen of taakbeheer te openen, of de PC expliciet te vergrendelen. Opdrachten komen uit een vaste lijst, zonder script om in te voeren. De vergrendelingsactie vereist dat u zich weer aanmeldt bij Windows.
 - **Volledig klembord:** Klik met de rechtermuisknop op een toets om deze te kopiëren, knippen, plakken of resetten, inclusief de lange actie en accent. Ctrl+C/X/V en Verwijder werk terwijl een dektoets de toetsenbordfocus heeft; gewone tekstvelden houden hun bewerkende sneltoetsen. Het sleutel klembord blijft binnen DeckPilot en is gewist bij afsluiten. Deze bewerkingen ondersteunen ongedaan maken/herstellen.
-- **Sneltoets:** selecteer een toetsenbord actie en klik **Enregistrer un raccourci**. Druk op een ondersteunde combinatie, sla hem dan op. Escape annuleert; F13.F24 is gereserveerd voor het macropad tijdens het opnemen. Windows-gereserveerde combinaties kunnen nog steeds de handmatige bediening vereisen.
-- **Snelle toegang:** Ctrl+K of de knop Bibliotheek richt actie zoeken. **Activité récente** houdt de laatste 30 Verzonden/vervalste acties in het geheugen voor deze sessie, zonder programmaargumenten of doelpaden op te slaan. Het kan op elk moment worden gewist. Een succesvolle verzending garandeert geen voltooiing in de doelapp.
+- **Sneltoets:** selecteer een toetsenbord actie en klik **Enregistrer un raccourci**. Druk op een ondersteunde combinatie, sla het dan op. Escape annuleert; F13.F24 is gereserveerd voor het macropad tijdens het opnemen. Windows-gereserveerde combinaties kunnen nog steeds de handmatige bediening vereisen.
+- **Snelle toegang:** Ctrl+K of de knop Bibliotheek richt actie zoeken. **Activité récente** houdt de laatste 30 Verzonden/vervallen acties in geheugen voor deze sessie, zonder programmaargumenten of doelpaden op te slaan. Het kan op elk moment worden gewist. Een succesvolle verzending garandeert geen voltooiing in de doelapp.
 
-De firmware blijft **1.1.1**. Het accepteren van een automatisch firmware aanbod opent nu correct de firmware manager; de vorige modal guard verhinderde die overdracht. Bestaande firmware identiteit, hartslag, reconnect en flash controles blijven op zijn plaats. Nieuwe werkruimte functies hebben geen firmware flits nodig.
+De firmware blijft **1.1.1**. Het accepteren van een automatisch firmware aanbod opent nu correct de firmware manager; de vorige modal guard verhinderde die overdracht. Bestaande firmware identiteit, hartslag, reconnect en flash controles blijven op zijn plaats. Nieuwe workspace functies hebben geen firmware flits nodig.
 
 <a id="microphone-noise-suppression-220"></a>
 ## Microfoongeluidsonderdrukking (2.2.0)
@@ -408,18 +408,18 @@ Audio wordt lokaal verwerkt in DeckPilot. Het wordt niet opgenomen of verzonden 
 <a id="soundboard-return-and-on-screen-sound-notifications-219"></a>
 ## Soundboard terug- en geluidsmeldingen op het scherm (2.1.9)
 
-In **Soundboard · micro virtuel**, inschakelen **Entendre aussi les sons du soundboard** om clips te horen via uw headset of luidsprekers, evenals de virtuele microfoon. Kies de fysieke uitgang en stel het afzonderlijke return volume van 0 tot 100%. Deze terugkeer is standaard uitgeschakeld en opgeslagen op deze pc. Het speelt **alleen soundboardclips**; uw fysieke microfoon wordt nooit toegevoegd aan de speaker uitgang. De virtuele microfoon stuurt nog steeds uw stem en clips naar VB-CABLE.
+In **Soundboard · micro virtuel**, inschakelen **Entendre aussi les sons du soundboard** om clips te horen via uw headset of luidsprekers, evenals de virtuele microfoon. Kies de fysieke uitgang en stel het aparte retourvolume van 0 tot 100%. Deze terugkeer is standaard uitgeschakeld en opgeslagen op deze pc. Het speelt **alleen soundboardclips**; uw fysieke microfoon wordt nooit toegevoegd aan de speaker uitgang. De virtuele microfoon stuurt nog steeds uw stem en clips naar VB-CABLE.
 
 Het wijzigen van het volume onderbreekt de virtuele microfoon niet. Als de gekozen luidspreker uitschakelt, stopt de terugkeer terwijl de virtuele microfoon doorgaat. Vernieuw de lijst met apparaten of kies een andere uitgang. Hoofdtelefoons helpen voorkomen dat uw fysieke microfoon akoestisch clips oppikt.
 
 De speaker return maakt nu gebruik van de geadverteerde Windows-audioformaat van het geselecteerde apparaat, inclusief uitbreidbare formaten gebruikt door sommige USB-headsets, en valt terug van event-driven afspelen als een driver het weigert. Het starten van een soundboard clip toont ook zijn naam in dezelfde configureerbare, click-through overlay als profiel wijzigingen. De overlay voorkeur en positie zijn van toepassing op beide mededelingen.
 
-DeckPilot Atelier blijft op 1.0.12 en firmware blijft 1.1.1. Geen firmware flash is nodig. Werkelijke speaker routing is nog steeds afhankelijk van het Windows audio-apparaat en moet worden gecontroleerd op de eigenaar PC.
+DeckPilot Atelier blijft op 1.0.12 en firmware blijft 1.1.1. Geen firmware flash is nodig. Werkelijke speaker routing is nog steeds afhankelijk van het Windows-audioapparaat en moet worden gecontroleerd op de PC van de eigenaar.
 
 <a id="soundboard-speaker-return-218"></a>
 ## Soundboard terugzending van de spreker (2.1.8)
 
-In **Soundboard · micro virtuel**, inschakelen **Entendre aussi les sons du soundboard** om clips te horen via uw headset of luidsprekers, evenals de virtuele microfoon. Kies de fysieke uitgang en stel het afzonderlijke return volume van 0 tot 100%. Deze terugkeer is standaard uitgeschakeld en opgeslagen op deze pc. Het speelt **alleen soundboardclips**; uw fysieke microfoon wordt nooit toegevoegd aan de speaker uitgang. De virtuele microfoon stuurt nog steeds uw stem en clips naar VB-CABLE.
+In **Soundboard · micro virtuel**, inschakelen **Entendre aussi les sons du soundboard** om clips te horen via uw headset of luidsprekers, evenals de virtuele microfoon. Kies de fysieke uitgang en stel het aparte retourvolume van 0 tot 100%. Deze terugkeer is standaard uitgeschakeld en opgeslagen op deze pc. Het speelt **alleen soundboardclips**; uw fysieke microfoon wordt nooit toegevoegd aan de speaker uitgang. De virtuele microfoon stuurt nog steeds uw stem en clips naar VB-CABLE.
 
 Het wijzigen van het volume onderbreekt de virtuele microfoon niet. Als de gekozen luidspreker uitschakelt, stopt de terugkeer terwijl de virtuele microfoon doorgaat. Vernieuw de lijst met apparaten of kies een andere uitgang. Hoofdtelefoons helpen voorkomen dat uw fysieke microfoon akoestisch clips oppikt.
 
@@ -433,7 +433,7 @@ Het wijzigen van profielen toont een korte, click-through melding met de actieve
 <a id="deckpilot-210-fixed-signed-virtual-microphone-routing"></a>
 ## DeckPilot 2.1.0: vaste gesigneerde virtuele microfoonrouting
 
-DeckPilot gebruikt nu standaard een diepzwarte interface. In **Préférences de l’application**, verander de achtergrond, paneel en accent kleuren met behulp van `#RRGGBB` waarden; uw thema wordt opgeslagen op deze PC.
+DeckPilot gebruikt nu standaard een diepzwarte interface. **Préférences de l’application**, verander de achtergrond, paneel en accent kleuren met behulp van `#RRGGBB` waarden; uw thema wordt opgeslagen op deze PC.
 
 De **Soundboard · micro virtuel** paneel kunt u uw fysieke microfoon en MP3/WAV-clips te selecteren. DeckPilot automatisch routeert de mix naar de VB-audio VB-CABLE afspeeleindpunt; kies in Discord of een spel **`CABLE Output`** als microfoon. Tijdens installatie en updates, DeckPilot controles voor VB-CABLE en installeert het wanneer het ontbreekt. Het downloadt het officiële pakket via HTTPS en controleert de Authenticode uitgever voordat het stil installatieprogramma van de bestuurder draait. Dit vereist een internetverbinding en toestemming van de beheerder. DeckPilot bundelt of herdistribueert geen VB-audio-bestanden. Als het stuurprogramma later ontbreekt, kunt u dezelfde signature-gecheckte installatie starten vanuit de Soundboard paneel. De audio-engine gebruikt NAudio (MIT; zie [Kennisgeving van derden](../../third-party/NAudio-LICENSE.txt)). VB-CABLE is een afzonderlijk gelicentieerde, gesigneerde Windows-driver, geen MIT-component.
 
@@ -443,13 +443,13 @@ De **Soundboard · micro virtuel** paneel kunt u uw fysieke microfoon en MP3/WAV
 Atelier controleert nu de geselecteerde board en firmware voor het knipperen, vergelijkt geïnstalleerde en gebundelde versies, en biedt een geverifieerde retry na onderbroken schrijven. **Mode atelier en série...** diagnoses en knippert alle gedetecteerde boards achtereenvolgens en kan exporteren een batch rapport. 12-key test controleert de fysieke 01→12 lay-out, registreert de F13.F24 mapping, en bevat firmware en per-sleutel resultaten in het kwaliteitsrapport.
 
 
-De afzonderlijke **DeckPilot Atelier** Windows installatie bereidt nieuwe DIY macropads. Het detecteert Leonardo / Caterina boards, valideert en knippert de gebundelde firmware zonder het overschrijven van de bootloader, dan leidt een fysieke 3×4 controle van alles 12 knoppen. Elke knop moet een korte druk en een greep van ten minste 700 ms. De tool records die F13_F24 signaal behoort tot elke fysieke positie, vlaggen meerdere of inconsistente signalen, en exporteert een tijdstempel rapport. `DeckPilot-Atelier-Setup.exe` van de releases pagina. Er moet al een Caterina bootloader aanwezig zijn; het gereedschap installeert geen ontbrekende bootloader.
+De afzonderlijke **DeckPilot Atelier** Windows installatie bereidt nieuwe DIY macropads. Het detecteert Leonardo / Caterina boards, valideert en knippert de gebundelde firmware zonder het overschrijven van de bootloader, dan leidt een fysieke 3×4 controle van alles 12 knoppen. Elke knop moet een korte druk en een greep van ten minste 700 ms. De tool records die F13_F24 signaal behoort tot elke fysieke positie, vlaggen meerdere of inconsistente signalen, en exporteert een getimed rapport. `DeckPilot-Atelier-Setup.exe` van de releases pagina. Een Caterina bootloader moet al aanwezig zijn; het gereedschap installeert geen ontbrekende bootloader.
 
-DeckPilot Atelier controleert GitHub voor app en gebundeld-firmware-updates bij het opstarten en op verzoek. Updates vereisen bevestiging en gebruik de release SHA-256 manifest. Firmware wordt nooit automatisch geflitst door een update; na Atelier updates, kies de firmware actie wanneer u klaar bent om het aangesloten bord te programmeren.
+DeckPilot Atelier controleert GitHub voor app en gebundeld-firmware updates bij het opstarten en op verzoek. Updates vereisen bevestiging en gebruik de release SHA-256 manifest. Firmware wordt nooit automatisch geflitst door een update; na Atelier updates, kies de firmware actie wanneer u klaar bent om het aangesloten bord te programmeren.
 
 Atelier 1.0.7 voegt een bevestigde **Programma Effacer le DeckPilot** De Commissie is van mening dat de door de Lid-Staten in het kader van de interne markt genomen maatregelen moeten worden genomen. 28 KiB toepassingsgebied met een geverifieerde veilige stop instructie, zodat het bord stopt met werken als een toetsenbord terwijl het behoud van Caterina voor herstel en toekomstige knipperen. Het laat de bootloader, EEPROM en Windows profielen onaangetast.
 
-Versie 1.9.1 Repareert de lancering van Atelier na installatie door het te starten in de ingelogde Windows-sessie. De updater kan een nieuwere Atelier pakket of firmware bundel installeren, dan herstart de app. De Windows release pipeline controleert eerst starten, upgraden en verwijderen voor het Atelier installatieprogramma.
+Versie 1.9.1 Repareert de lancering van Atelier na installatie door het te starten in de ingelogde Windows-sessie. De updater kan een nieuwere Atelier pakket of firmware bundel installeren, vervolgens de app opnieuw opstarten. De Windows release pipeline controleert eerst starten, upgraden en verwijderen voor het Atelier installatieprogramma.
 
 Versie 1.9.2 verbetert de Atelier Windows verpakking stap en rapporteert de exacte storing locatie in CI.
 
@@ -457,25 +457,25 @@ Versie 1.9.3 corrigeert hoe het Windows-pakket de meegeleverde firmwareversie le
 
 De Atelier release check nu meldt het opstarten van diagnostiek als Windows het geïnstalleerde venster niet opent.
 
-DeckPilot 1.9.6 fixes Atelier's Windows DPI manifest, zodat de geïnstalleerde toepassing correct start op Windows 10 en 11.
+DeckPilot 1.9.6 fixes Atelier's Windows DPI manifest, zodat de geïnstalleerde applicatie correct start op Windows 10 en 11.
 
 DeckPilot 1.9.7 repareert het verwijderen van Atelier terwijl het wordt uitgevoerd. De Windows release test controleert ook de lancering, update in-place en uninstall.
 
 DeckPilot 1.9.8 voegt een expliciete, bevestigde Atelier reset toe die het gebruikersprogramma van het bord vervangt door een geverifieerde lege schets en de Caterina bootloader bewaart.
 
-Validatie omvat legacy-instellingen, accentvalidatie, profielnavigatie en remapping, draagbare sjablonen, native Windows template/undo/redo en profiel switching, snelkoppelingsopname, kopieer/plakken/reset, instellingen persistentie, installatie/update, lay-out formaat en een werkelijke UI-opname. Hardware-specifiek gedrag vereist nog steeds het macropad en audio-apparaten op een Windows-pc.
+Validatie omvat legacy-instellingen, accentvalidatie, profielnavigatie en remapping, draagbare sjablonen, native Windows sjabloon/undo/redo en profielswitching, snelkoppelingsopname, kopieer/plakken/reset, instellingen persistentie, installatie/update, layout-indeling en een werkelijke UI-opname. Hardware-specifiek gedrag vereist nog steeds het macropad en audio-apparaten op een Windows-pc.
 
 <a id="profile-sound-files-and-workshop-safety"></a>
 ### Profiel geluidsbestanden en veiligheid van de werkplaats
 
-Profielexport omvat de referentie MP3/WAV-clips (tot 32 MiB van audio per pakket). Importeert kopie ingebed audio in DeckPilotSounds managed Sounds map and remap identifiers zonder bestaande clips te vervangen. Automatische profielback-ups gebruiken hetzelfde formaat; niet-beschikbare audio wordt opgenomen als ontbrekend in plaats van stilletjes vervangen. Bewaar de bronbestanden als u de exportlimiet overschrijdt. Legacy profielbestanden blijven ondersteund. Het verwijderen van een clip die nog steeds is toegewezen aan een korte of lange actie wordt geblokkeerd.
+Profielexport omvat de referentie MP3/WAV-clips (tot 32 MiB van audio per pakket). Importeert kopie ingebed audio in DeckPilotSounds managed Sounds map and remap identifiers zonder bestaande clips te vervangen. Automatische profielback-ups gebruiken hetzelfde formaat; niet-beschikbare audio wordt opgenomen als ontbrekend in plaats van stil vervangen. Bewaar de bronbestanden als u de exportlimiet overschrijdt. Legacy profielbestanden blijven ondersteund. Verwijderen van een clip die nog steeds is toegewezen aan een korte of lange actie wordt geblokkeerd.
 
-Atelier accepteert boards die nog niet beantwoorden de DeckPilot protocol, terwijl nog steeds het controleren van de USB-locatie, Caterina bootloader en ATmega32U4 handtekening voor het programmeren. Elke testsessie begint met lege resultaten, en het rapport blijft geassocieerd met de geteste board. Het sluiten van de applicatie tijdens een flitser of reset wordt geblokkeerd totdat schrijven en verificatie voltooid.
+Atelier accepteert boards die nog niet beantwoorden de DeckPilot protocol, terwijl nog steeds het controleren van de USB-locatie, Caterina bootloader en ATmega32U4 handtekening voor het programmeren. Elke testsessie begint met lege resultaten, en het rapport blijft geassocieerd met de geteste board. Het sluiten van de applicatie tijdens een flitser of reset wordt geblokkeerd totdat het schrijven en verificatie voltooid.
 
 <a id="live-microphone-latency"></a>
 ### Live microfoonlatentie
 
-DeckPilot 2.1.3 processen live audio in kleine, output-gedreven blokken. 20 ms event-driven microfoonopname en 40 ms afspeelbuffers. De microfoonwachtrij is begrensd aan 100 ms en gooit oudere complete frames weg als het afspelen stilstaat; dit voorkomt het opbouwen van seconden van vertraagde spraak. Dit zijn softwarebufferinstellingen, geen gemeten end-to-end latency garantie. Windows, de microfoon, VB-CABLE en de ontvangende app ook vertragen. Discord stem isolatie instellingen zijn onveranderd en kan soundboard clips onderdrukken omdat het ontvangt het gemengde signaal.
+DeckPilot 2.1.3 processen live audio in kleine, output-gedreven blokken. 20 ms event-driven microfoonopname en 40 ms afspeelbuffers. De microfoonwachtrij is begrensd aan 100 ms en gooit oudere complete frames weg als het afspelen stilstaat; dit voorkomt het opbouwen van seconden van vertraagde spraak. Dit zijn softwarebufferinstellingen, geen gemeten end-to-end latency garantie. Windows, de microfoon, VB-CABLE en de ontvangende app ook bij te dragen vertraging. Discord stem isolatie instellingen zijn onveranderd en kunnen soundboard clips onderdrukken omdat het ontvangt het gemengde signaal.
 
 <a id="automatic-virtual-microphone-startup"></a>
 ### Automatische virtuele microfoon opstarten

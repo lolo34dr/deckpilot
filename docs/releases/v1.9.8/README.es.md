@@ -1,8 +1,8 @@
 > Esta es una traducción automática de las notas de liberación completas. El original inglés es la referencia.
 
-DeckPilot Atelier 1.0.7 añade una era confirmada del programa-área que aclara todo 28 KiB de flash de usuario, deja un bucle de reset seguro, y conserva Caterina y EEPROM. Reiniciar permanece deshabilitado hasta que se selecciona una tabla física.
+DeckPilot Atelier 1.0.7 añade una era confirmada del programa-área que aclara todo 28 KiB de flash de usuario, deja un bucle de reset seguro, y conserva Caterina y EEPROM. Reiniciar permanece deshabilitado hasta que se selecciona una junta física.
 
-DeckPilot 1.9.7 fija Atelier desinstalar mientras la aplicación está abierta. Atelier 1.0.6 también corrige su manifiesto de Windows DPI, que impidió que la aplicación instalada iniciara.
+DeckPilot 1.9.7 fija Atelier desinstalar mientras la aplicación está abierta. Atelier 1.0.6 también corrige su manifiesto DPI de Windows, que impidió que la aplicación instalada iniciara.
 
 DeckPilot 1.9.6 fija el manifiesto DPI de Windows que previno DeckPilot Atelier desde la apertura después de la instalación.
 
@@ -37,7 +37,7 @@ DeckPilot 1.8.0 añade un espacio de trabajo refrescado y formas más rápidas d
 - Copiar/cortar/paste/reestablecer teclas completas, incluyendo largas prensas y colores, con deshacer/redo y un portapapeles plano.
 - Capturar un atajo de teclado directamente; Escapar cancela y las teclas macropadas permanecen reservadas durante la captura.
 - Ctrl+K búsqueda de acción y una historia clara y sencilla de la última sesión 30 acciones.
-- Arregla el impulso automático de firmware para aceptarlo abre el gestor de firmware. Los gestos pendientes se cancelan en los cambios de perfil.
+- Arregla el impulso automático de firmware para aceptarlo abre el gestor de firmware. Los gestos de espera se cancelan a través de los cambios de perfil.
 
 Descargar **DeckPilot-Setup.exe** o actualización de la aplicación. Se conservan los perfiles existentes, las preferencias de calibración y puesta en marcha. **1.1.1**; no se requiere flash para estas características.
 
