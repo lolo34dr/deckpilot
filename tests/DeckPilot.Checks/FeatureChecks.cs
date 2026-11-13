@@ -63,7 +63,7 @@ public static class FeatureChecks
             var settings = new Settings();
             var action = new ButtonAction
             {
-                Kind = ActionKind.Media, Key = 0xB3, Accent = "#70a7e8", LongPressEnabled = true,
+                Kind = ActionKind.Media, Key = 0xB3, Accent = "#12a4e6", LongPressEnabled = true,
                 LongPressAction = new() { Kind = ActionKind.Microphone, Accent = "#DF8898" }
             };
             settings.ActiveProfile.Buttons[0] = action;
@@ -73,7 +73,7 @@ public static class FeatureChecks
             copy.Accent = "#AD91E8"; Expect(copy != action);
             var roundTrip = ProfileExchange.Import(ProfileExchange.Export(settings.Profiles)).Profiles[0].Buttons[0];
             Expect(roundTrip == action);
-            foreach (string? invalid in new[] { "#000000", "red", "#70A7E800", "url(file)", null })
+            foreach (string? invalid in new[] { "#GG0000", "#123", "red", "#70A7E800", "url(file)", null })
             {
                 action.LongPressAction!.Accent = invalid!;
                 Reject(settings.Validate);

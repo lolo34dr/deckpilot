@@ -62,10 +62,6 @@ public partial class MainWindow : Window
     public MainWindow(bool startInBackground = false)
     {
         InitializeComponent();
-        // Fit the first window to the usable desktop; smaller windows scroll the native-size keypad.
-        Width = Math.Min(Width, SystemParameters.WorkArea.Width);
-        Height = Math.Min(Height, SystemParameters.WorkArea.Height);
-        MinWidth = Math.Min(MinWidth, Width); MinHeight = Math.Min(MinHeight, Height);
         SourceInitialized += (_, _) => EnableDarkTitleBar();
         try { settings = store.Load(); }
         catch (Exception ex) when (ex is IOException or InvalidDataException or UnauthorizedAccessException or System.Text.Json.JsonException)
@@ -81,6 +77,7 @@ public partial class MainWindow : Window
                 }
             }
         }
+        RestoreWindowPlacement();
         layoutChanged = settings.MigrateLayout();
         InitializeThemeAndSoundboard();
         InitializeProfileTools();
@@ -160,7 +157,7 @@ public partial class MainWindow : Window
             var row = new StackPanel { Orientation = Orientation.Horizontal };
             row.Children.Add(new Image { Source = VectorIcons.ForKind((ActionKind)i), Width = 18, Height = 18, Margin = new Thickness(0, 0, 12, 0), VerticalAlignment = VerticalAlignment.Center });
             row.Children.Add(new TextBlock { Text = ActionNames[i], VerticalAlignment = VerticalAlignment.Center, FontSize = 13 });
-            var button = new Button { Content = row, HorizontalContentAlignment = HorizontalAlignment.Stretch, Padding = new Thickness(10, 12, 8, 12), Margin = new Thickness(0, 0, 0, 3) };
+            var button = new Button { Content = row, HorizontalContentAlignment = HorizontalAlignment.Stretch, Style = (Style)FindResource("ActionLibraryRow") };
             button.Click += (_, _) => { if (Environment.TickCount64 < ignoreClickUntil) return; if (editingLong && index == 0) { ReportError("Choisissez une action configurée pour l’appui long."); return; } bool changed = ActionPicker.SelectedIndex != index; ActionPicker.SelectedIndex = index; if (changed && (ActionKind)index is ActionKind.Media or ActionKind.Spotify) { MediaPicker.SelectedIndex = 0; SpotifyPicker.SelectedIndex = 0; } SaveEditor(); };
             System.Windows.Automation.AutomationProperties.SetName(button, ActionNames[i]);
             ActionCatalog.Children.Add(button); actionButtons.Add(button);
@@ -183,6 +180,46 @@ public partial class MainWindow : Window
         brush.Freeze(); Palette.Add(color, brush); return brush;
     }
     private bool IsInterfaceActive => IsVisible && WindowState != WindowState.Minimized;
+    private void RestoreWindowPlacement()
+    {
+        var workArea = SystemParameters.WorkArea;
+        MinWidth = Math.Min(MinWidth, workArea.Width);
+        MinHeight = Math.Min(MinHeight, workArea.Height);
+        Width = Math.Clamp(settings.WindowPlacement.Width, MinWidth, workArea.Width);
+        Height = Math.Clamp(settings.WindowPlacement.Height, MinHeight, workArea.Height);
+        if (settings.WindowPlacement.Left is double left && settings.WindowPlacement.Top is double top)
+        {
+            var saved = new Rect(left, top, Width, Height);
+            var desktop = new Rect(SystemParameters.VirtualScreenLeft, SystemParameters.VirtualScreenTop,
+                SystemParameters.VirtualScreenWidth, SystemParameters.VirtualScreenHeight);
+            var visible = Rect.Intersect(saved, desktop);
+            if (!visible.IsEmpty && visible.Width >= Math.Min(120, Width) && visible.Height >= Math.Min(80, Height))
+            {
+                WindowStartupLocation = WindowStartupLocation.Manual;
+                Left = left; Top = top;
+                return;
+            }
+        }
+        WindowStartupLocation = WindowStartupLocation.CenterScreen;
+    }
+
+    private void SaveWindowPlacement()
+    {
+        if (WindowState != WindowState.Normal || ActualWidth <= 0 || ActualHeight <= 0) return;
+        var previous = settings.WindowPlacement;
+        settings.WindowPlacement = new WindowPlacementSettings
+        {
+            Left = Left, Top = Top,
+            Width = Math.Clamp(Width, 400, 20000), Height = Math.Clamp(Height, 400, 20000)
+        };
+        try { store.Save(settings); }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException)
+        {
+            settings.WindowPlacement = previous;
+            StatusText.Text = "Taille de la fenêtre non enregistrée : " + ex.Message;
+        }
+    }
+
     private bool feedbackQueued;
     private void QueueFeedback()
     {
@@ -346,8 +383,9 @@ public partial class MainWindow : Window
         EditorActionTitle.Text = ActionPicker.SelectedIndex < 0 ? "Action retirée" : ActionSearch.KindName(kind);
         for (int i = 0; i < actionButtons.Count; i++)
         {
-            actionButtons[i].Background = Brush(i == (int)kind ? "#29203B" : "#1B2025");
-            actionButtons[i].BorderBrush = Brush(i == (int)kind ? "#8871B8" : "#1B2025");
+            actionButtons[i].Background = i == (int)kind ? Brush("#292336") : Brushes.Transparent;
+            actionButtons[i].BorderBrush = i == (int)kind ? (Brush)FindResource("AccentBrush") : (Brush)FindResource("LineBrush");
+            actionButtons[i].BorderThickness = i == (int)kind ? new Thickness(3, 0, 0, 0) : new Thickness(0, 0, 0, 1);
         }
         ApplicationPanel.Visibility = kind == ActionKind.Application ? Visibility.Visible : Visibility.Collapsed;
         AdvancedOptionsExpander.Visibility = kind is ActionKind.Application or ActionKind.Folder or ActionKind.Website ? Visibility.Visible : Visibility.Collapsed;
@@ -615,6 +653,7 @@ public partial class MainWindow : Window
     private void WindowClosing(object? sender, CancelEventArgs e)
     {
         if (firmwareOpen) { e.Cancel = true; return; }
+        SaveWindowPlacement();
         SaveEditor();
         if (!quitting)
         {

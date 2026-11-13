@@ -181,6 +181,7 @@ public partial class MainWindow
         }
         refreshSearchAfterDrag = false;
         string query = ActionSearchBox.Text.Trim(); bool searching = query.Length > 0;
+        ActionSearchStatus.Visibility = searching ? Visibility.Visible : Visibility.Collapsed;
         ActionCatalog.Visibility = searching ? Visibility.Collapsed : Visibility.Visible;
         ActionSearchResults.Visibility = searching ? Visibility.Visible : Visibility.Collapsed;
         if (!searching) { ActionSearchResults.Children.Clear(); renderedSearchResults = ""; ActionSearchStatus.Text = "Actions ou applications · Glissez-les sur une touche."; return; }
