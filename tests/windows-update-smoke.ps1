@@ -65,6 +65,16 @@ function Select-ControlPanel($Root, [string]$Id) {
     $selection.Select()
     Wait-Until { $selection.Current.IsSelected }
 }
+function Assert-ControlPanelHeaders($Root) {
+    $scale = [DeckPilotDragMouse]::GetDpiForWindow($replacement.MainWindowHandle) / 96.0
+    $headers = @('ActionsTab', 'DeviceTab', 'SettingsTab') | ForEach-Object { (Find-Control $Root $_).Current.BoundingRectangle }
+    $first = $headers[0]
+    foreach ($bounds in $headers) {
+        if ($bounds.Width / $scale -lt 70 -or $bounds.Height / $scale -lt 39) { throw 'A control panel tab is too small or clipped' }
+        if ([Math]::Abs($bounds.Width - $first.Width) -gt 2 * $scale -or [Math]::Abs($bounds.Top - $first.Top) -gt $scale -or [Math]::Abs($bounds.Bottom - $first.Bottom) -gt $scale) { throw 'Control panel tabs must share one aligned row with equal widths' }
+        if ($bounds.Right -gt $Root.Current.BoundingRectangle.Right -or $bounds.Bottom -gt $Root.Current.BoundingRectangle.Bottom) { throw 'A control panel tab overflows the window' }
+    }
+}
 function Find-TopLevelById([int]$ProcessId, [string]$Id) {
     $processCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ProcessIdProperty, $ProcessId)
     $idCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::AutomationIdProperty, $Id)
@@ -265,6 +275,7 @@ try {
     if ($rowCount -ne 3 -or $columnCount -ne 4) { throw 'The rendered keypad must contain three rows of four keys' }
     $positions = @($deckButtons | ForEach-Object { $_.Current.Name })
     if (!($positions -like 'Ligne 1, colonne 4*') -or !($positions -like 'Ligne 3, colonne 4*') -or ($positions -like 'Ligne 4,*')) { throw 'Deck layout must have three rows and four columns' }
+    Assert-ControlPanelHeaders $root
     Select-ControlPanel $root 'DeviceTab'
     $script:phase = 'check connection dashboard without a physical board'
     $connection = Find-Control $root 'BoardConnectionStatus'
@@ -496,6 +507,8 @@ try {
     $transform = $root.GetCurrentPattern([System.Windows.Automation.TransformPattern]::Pattern)
     foreach ($size in @(@(960,720), @(1280,1000))) {
         $transform.Resize($size[0], $size[1])
+        Start-Sleep -Milliseconds 200
+        Assert-ControlPanelHeaders $root
         $deckScroll = (Find-Control $root 'DeckEditorScroll').GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern)
         if ($deckScroll.Current.VerticallyScrollable) { $deckScroll.SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 0) }
         $sidebar = (Find-Control $root 'DeviceScroll').GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern)
