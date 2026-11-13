@@ -62,10 +62,6 @@ public partial class MainWindow : Window
     public MainWindow(bool startInBackground = false)
     {
         InitializeComponent();
-        // Fit the first window to the usable desktop; smaller windows scroll the native-size keypad.
-        Width = Math.Min(Width, SystemParameters.WorkArea.Width);
-        Height = Math.Min(Height, SystemParameters.WorkArea.Height);
-        MinWidth = Math.Min(MinWidth, Width); MinHeight = Math.Min(MinHeight, Height);
         SourceInitialized += (_, _) => EnableDarkTitleBar();
         try { settings = store.Load(); }
         catch (Exception ex) when (ex is IOException or InvalidDataException or UnauthorizedAccessException or System.Text.Json.JsonException)
@@ -81,6 +77,7 @@ public partial class MainWindow : Window
                 }
             }
         }
+        RestoreWindowPlacement();
         layoutChanged = settings.MigrateLayout();
         InitializeThemeAndSoundboard();
         InitializeProfileTools();
@@ -183,6 +180,46 @@ public partial class MainWindow : Window
         brush.Freeze(); Palette.Add(color, brush); return brush;
     }
     private bool IsInterfaceActive => IsVisible && WindowState != WindowState.Minimized;
+    private void RestoreWindowPlacement()
+    {
+        var workArea = SystemParameters.WorkArea;
+        MinWidth = Math.Min(MinWidth, workArea.Width);
+        MinHeight = Math.Min(MinHeight, workArea.Height);
+        Width = Math.Clamp(settings.WindowPlacement.Width, MinWidth, workArea.Width);
+        Height = Math.Clamp(settings.WindowPlacement.Height, MinHeight, workArea.Height);
+        if (settings.WindowPlacement.Left is double left && settings.WindowPlacement.Top is double top)
+        {
+            var saved = new Rect(left, top, Width, Height);
+            var desktop = new Rect(SystemParameters.VirtualScreenLeft, SystemParameters.VirtualScreenTop,
+                SystemParameters.VirtualScreenWidth, SystemParameters.VirtualScreenHeight);
+            var visible = Rect.Intersect(saved, desktop);
+            if (!visible.IsEmpty && visible.Width >= Math.Min(120, Width) && visible.Height >= Math.Min(80, Height))
+            {
+                WindowStartupLocation = WindowStartupLocation.Manual;
+                Left = left; Top = top;
+                return;
+            }
+        }
+        WindowStartupLocation = WindowStartupLocation.CenterScreen;
+    }
+
+    private void SaveWindowPlacement()
+    {
+        if (WindowState != WindowState.Normal || ActualWidth <= 0 || ActualHeight <= 0) return;
+        var previous = settings.WindowPlacement;
+        settings.WindowPlacement = new WindowPlacementSettings
+        {
+            Left = Left, Top = Top,
+            Width = Math.Clamp(Width, 400, 20000), Height = Math.Clamp(Height, 400, 20000)
+        };
+        try { store.Save(settings); }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException)
+        {
+            settings.WindowPlacement = previous;
+            StatusText.Text = "Taille de la fenêtre non enregistrée : " + ex.Message;
+        }
+    }
+
     private bool feedbackQueued;
     private void QueueFeedback()
     {
@@ -616,6 +653,7 @@ public partial class MainWindow : Window
     private void WindowClosing(object? sender, CancelEventArgs e)
     {
         if (firmwareOpen) { e.Cancel = true; return; }
+        SaveWindowPlacement();
         SaveEditor();
         if (!quitting)
         {

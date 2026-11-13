@@ -45,6 +45,19 @@ Check("Version 2 theme and soundboard preferences validate without breaking old 
     prefs.Theme.Accent = "#AABBCC";
     prefs.Soundboard.Clips[0].FilePath = "sound.exe"; Reject(prefs.Validate);
 });
+Check("Window size and position persist with safe defaults and validation", () => {
+    var settings = new Settings(); settings.Validate();
+    Expect(settings.WindowPlacement.Width == 1180 && settings.WindowPlacement.Height == 900
+        && settings.WindowPlacement.Left == null && settings.WindowPlacement.Top == null);
+    settings.WindowPlacement = new() { Width = 1024, Height = 768, Left = 80, Top = 45 };
+    var restored = JsonSerializer.Deserialize<Settings>(JsonSerializer.Serialize(settings))!;
+    restored.Validate();
+    Expect(restored.WindowPlacement.Width == 1024 && restored.WindowPlacement.Height == 768
+        && restored.WindowPlacement.Left == 80 && restored.WindowPlacement.Top == 45);
+    restored.WindowPlacement.Top = null; Reject(restored.Validate);
+    restored.WindowPlacement = new() { Width = double.NaN, Height = 768 };
+    Reject(restored.Validate);
+});
 Check("Soundboard monitor preferences persist separately from the virtual microphone", () => {
     var prefs = new Settings();
     Expect(!prefs.Soundboard.MonitorEnabled && prefs.Soundboard.MonitorOutputId == "" && prefs.Soundboard.MonitorVolumePercent == 50);

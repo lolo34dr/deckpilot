@@ -83,8 +83,12 @@
         <StackPanel Margin="0,0,12,0">
          <TextBlock x:Name="SelectedTitle" FontSize="16" FontWeight="SemiBold"/>
          <TextBlock x:Name="SelectedKey" TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}" Margin="0,5,0,0"/>
+         <TextBlock x:Name="EditorActionTitle" MaxWidth="175" TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}" FontSize="12" Margin="0,3,0,0"/>
         </StackPanel>
-        <Border Grid.Column="1" Background="#23232C" CornerRadius="5" Padding="8,5" HorizontalAlignment="Right" VerticalAlignment="Top"><TextBlock x:Name="EditorActionTitle" MaxWidth="175" TextWrapping="Wrap" Foreground="#C5C0DC" FontSize="11"/></Border>
+        <WrapPanel Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right">
+         <Button x:Name="TestActionButton" Content="Tester" Click="TestActionClick" Padding="12,6" AutomationProperties.AutomationId="TestActionButton" ToolTip="Enregistre et exécute cette action sur ce PC, même sans la carte."/>
+         <Button x:Name="SaveActionButton" Style="{StaticResource EditorSaveButton}" Content="Enregistrer" Click="SaveClick" Padding="14,6" ToolTip="Les changements sont aussi enregistrés en changeant de touche ou de profil."/>
+        </WrapPanel>
        </Grid>
        <ComboBox x:Name="ActionPicker" Visibility="Collapsed" SelectionChanged="ActionChanged"/>
        <Grid>
@@ -159,10 +163,6 @@
         <Slider x:Name="LongPressThreshold" Minimum="200" Maximum="3000" Value="600" TickFrequency="50" IsSnapToTickEnabled="True" SmallChange="50" LargeChange="200" Width="260" HorizontalAlignment="Left" Margin="0,8,0,8" AutomationProperties.Name="Seuil d’appui long en millisecondes"/>
        </StackPanel>
        <TextBlock x:Name="ActionHelp" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,0,0,12"/>
-       <WrapPanel HorizontalAlignment="Right">
-        <Button x:Name="TestActionButton" Content="Tester" Click="TestActionClick" Padding="16,7" AutomationProperties.AutomationId="TestActionButton" ToolTip="Enregistre et exécute cette action sur ce PC, même sans la carte."/>
-        <Button x:Name="SaveActionButton" Style="{StaticResource EditorSaveButton}" Content="Enregistrer" Click="SaveClick" Padding="18,7" ToolTip="Les changements sont aussi enregistrés en changeant de touche ou de profil."/>
-       </WrapPanel>
        <TextBlock x:Name="ActionExecutionStatus" Text="" Foreground="#B4B2BE" TextWrapping="Wrap" FontSize="11" Margin="0,3,0,0" AutomationProperties.AutomationId="ActionExecutionStatus"/>
       </StackPanel>
     </Border>

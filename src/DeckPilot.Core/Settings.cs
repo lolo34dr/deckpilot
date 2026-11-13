@@ -99,6 +99,18 @@ public sealed class StreamingConnections
     private static bool IsHost(string value) => value != null && value.Length is > 0 and <= 253 && !value.Any(char.IsWhiteSpace)
         && Uri.CheckHostName(value) is (UriHostNameType.Dns or UriHostNameType.IPv4 or UriHostNameType.IPv6);
 }
+public sealed class WindowPlacementSettings
+{
+    public double Width { get; set; } = 1180;
+    public double Height { get; set; } = 900;
+    public double? Left { get; set; }
+    public double? Top { get; set; }
+    public bool IsValid() => double.IsFinite(Width) && Width is >= 400 and <= 20000
+        && double.IsFinite(Height) && Height is >= 400 and <= 20000
+        && (Left == null) == (Top == null)
+        && (Left == null || (double.IsFinite(Left.Value) && Left.Value is >= -100000 and <= 100000
+            && double.IsFinite(Top!.Value) && Top.Value is >= -100000 and <= 100000));
+}
 public sealed class Settings
 {
     public int Version { get; set; } = 1;
@@ -112,6 +124,7 @@ public sealed class Settings
     public ThemeSettings Theme { get; set; } = new();
     public SoundboardSettings Soundboard { get; set; } = new();
     public StreamingConnections Streaming { get; set; } = new();
+    public WindowPlacementSettings WindowPlacement { get; set; } = new();
     public DateTimeOffset UpdateSnoozedUntil { get; set; }
     public List<int> KeyMap { get; set; } = [];
     public List<Profile> Profiles { get; set; } = [new()];
@@ -126,7 +139,7 @@ public sealed class Settings
     }
     public void Validate()
     {
-        if (Theme is null || !Theme.IsValid() || Soundboard is null || !Soundboard.IsValid() || Streaming is null || !Streaming.IsValid() || ProfileOverlay is null || !ProfileOverlay.IsValid() || PreferredBoardDeviceId is null || PreferredBoardDeviceId.Length > 512 || Version != 1 || LayoutColumns is not (3 or 4) || Profiles is null || Profiles.Count == 0 ||
+        if (Theme is null || !Theme.IsValid() || Soundboard is null || !Soundboard.IsValid() || Streaming is null || !Streaming.IsValid() || ProfileOverlay is null || !ProfileOverlay.IsValid() || WindowPlacement is null || !WindowPlacement.IsValid() || PreferredBoardDeviceId is null || PreferredBoardDeviceId.Length > 512 || Version != 1 || LayoutColumns is not (3 or 4) || Profiles is null || Profiles.Count == 0 ||
             Profiles.Any(p => p is null || string.IsNullOrWhiteSpace(p.Name) || p.Id == Guid.Empty ||
                 p.Buttons is null || p.Buttons.Count != 12 || p.Buttons.Any(b => b is null ||
                     !b.IsValid())) ||
