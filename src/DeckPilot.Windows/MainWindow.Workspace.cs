@@ -38,7 +38,7 @@ public partial class MainWindow
 
     private void PopulateWorkspaceEditor(ButtonAction action)
     {
-        AccentPicker.SelectedItem = ActionAppearance.Accents.FirstOrDefault(c => c.Value.Equals(settings.ActiveProfile.Buttons[selected].Accent, StringComparison.OrdinalIgnoreCase)) ?? ActionAppearance.Accents[0];
+        SetKeyColor(settings.ActiveProfile.Buttons[selected].Accent);
         var destinations = new[] { new ProfileDestination("Profil suivant", "next"), new ProfileDestination("Profil précédent", "previous") }
             .Concat(settings.Profiles.Select(p => new ProfileDestination(p.Name, p.Id.ToString()))).ToList();
         string destination = action.Kind == ActionKind.Profile && action.Target.Length > 0 ? action.Target : "next";
@@ -48,6 +48,27 @@ public partial class MainWindow
         ProfileTargetPicker.SelectedItem = destinations.First(d => d.Id.Equals(destination, StringComparison.OrdinalIgnoreCase));
         SystemCommandPicker.SelectedItem = SystemActions.All.FirstOrDefault(c => c.Id == action.Target);
         if (action.Kind != ActionKind.System || action.Target.Length == 0) SystemCommandPicker.SelectedIndex = 0;
+    }
+
+    private void SetKeyColor(string value)
+    {
+        var choices = ActionAppearance.Accents.ToList();
+        var choice = choices.FirstOrDefault(c => c.Value.Equals(value, StringComparison.OrdinalIgnoreCase));
+        if (choice == null) { choice = new ActionAccent(value, "Personnalisée"); choices.Add(choice); }
+        AccentPicker.ItemsSource = choices;
+        AccentPicker.SelectedItem = choice;
+    }
+
+    private void ChooseKeyColorClick(object sender, RoutedEventArgs e)
+    {
+        var value = (AccentPicker.SelectedItem as ActionAccent)?.Value ?? "";
+        var current = TryReadThemeColor(value, out var parsed) ? parsed : (Color)ColorConverter.ConvertFromString("#AD91E8")!;
+        using var dialog = new System.Windows.Forms.ColorDialog
+        {
+            Color = System.Drawing.Color.FromArgb(current.R, current.G, current.B), AnyColor = true, FullOpen = true
+        };
+        if (dialog.ShowDialog(new ThemeDialogOwner(new System.Windows.Interop.WindowInteropHelper(this).Handle)) != System.Windows.Forms.DialogResult.OK) return;
+        SetKeyColor($"#{dialog.Color.R:X2}{dialog.Color.G:X2}{dialog.Color.B:X2}");
     }
 
     private void RefreshProfileSummary()

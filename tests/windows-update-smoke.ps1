@@ -736,6 +736,10 @@ try {
     $profilesSection.Collapse()
     Select-ControlPanel $root 'ActionsTab'
     Invoke-Control (Find-Control $root 'DeckKey02')
+    if (Get-Command Set-DisplayResolution -ErrorAction SilentlyContinue) {
+        try { Set-DisplayResolution -Width 1440 -Height 1080 -Force -ErrorAction Stop | Out-Null }
+        catch { Write-Host 'Using the current Windows display size for native screenshots.' }
+    }
     $screen = [System.Windows.Forms.Screen]::PrimaryScreen.WorkingArea
     $transform.Resize([Math]::Max(960, [Math]::Min(1180, $screen.Width)), [Math]::Max(720, [Math]::Min(900, $screen.Height)))
     $transform.Move($screen.Left, $screen.Top)
@@ -756,6 +760,18 @@ try {
     }
     finally { $graphics.Dispose(); $bitmap.Dispose() }
     Write-Host 'PASS screenshot: actual running application captured to artifacts/ui/DeckPilot.png'
+    # A second native capture makes the editor reviewable on smaller hosted desktops.
+    $editorScroll = (Find-Control $root 'DeckEditorScroll').GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern)
+    if ($editorScroll.Current.VerticallyScrollable) { $editorScroll.SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 100) }
+    Start-Sleep -Milliseconds 500
+    $bitmap = [System.Drawing.Bitmap]::new([int]$bounds.Width, [int]$bounds.Height)
+    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+    try {
+        $graphics.CopyFromScreen([int]$bounds.Left, [int]$bounds.Top, 0, 0, $bitmap.Size)
+        $bitmap.Save((Join-Path $captureFolder 'DeckPilot-editor.png'), [System.Drawing.Imaging.ImageFormat]::Png)
+    }
+    finally { $graphics.Dispose(); $bitmap.Dispose() }
+
     $script:smokePassed = $true
     Write-Host 'PASS Windows UI and installed apps: twelve keys, vector templates, application catalog and persisted selection'
 }
