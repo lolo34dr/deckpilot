@@ -5,7 +5,7 @@ DeckPilot 1.4.2 corregge la consistenza dell'interfaccia e i problemi di layout.
 - Distinct hover, la selezione e gli stati di messa a fuoco della tastiera. I pulsanti non crescono più nei pannelli circostanti o mostrano confini di selezione fuorvianti.
 - Sezioni espandibili scure con chevron vettoriali sostituiscono le frecce del sistema bianco. Intestazioni e casella di controllo avvolgono il testo all'interno dei loro pannelli.
 - L'intera barra laterale scorre, comprese le preferenze e la calibrazione, quindi le sezioni espanse non possono coprire altri controlli.
-- Più grandi, più chiare didascalie chiave e testo secondario, un layout migliore bilanciato tastiera / editor, pixel-allineato main-window rendering e clip di nomi di profilo lunghi.
+- Più grandi, più chiare didascalie chiave e testo secondario, un layout migliore bilanciato tastiera / editor, pixel-allineed main-window rendering e clipped nomi di lungo profilo.
 - Le intestazioni dell'editor si avvolgeranno senza sovrapposizioni. L'aiuto gratuito spiega ora la differenza tra l'uso normale della tastiera F13-F24 e le posizioni di calibrazione per DeckPilot azioni.
 
 Controlli dell'interfaccia utente di Windows copre l'azione di spedizione / feedback dell'error, i pannelli espansi a 960 × 720 e 1280 × 1000, scorrendo alla calibrazione e alla separazione del profilo/tastiera.

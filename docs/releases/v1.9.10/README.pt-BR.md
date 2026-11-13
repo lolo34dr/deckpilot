@@ -12,7 +12,7 @@ DeckPilot 1.9.6 corrige o manifesto de DPI do Windows que impediu DeckPilot Atel
 
 DeckPilot 1.9.5 inclui diagnósticos detalhados de inicialização do Atelier na verificação de lançamento do Windows.
 
-DeckPilot 1.9.4 melhora o teste de fumaça de inicialização do Atelier Windows para reportar detalhes de falha de aplicação.
+DeckPilot 1.9.4 melhora o teste de fumaça de inicialização do Atelier Windows para relatar detalhes de falha de aplicação.
 
 DeckPilot 1.9.3 corrige os metadados de compilação do Atelier para ler o manifesto de firmware a partir do arquivo de firmware empacotado.
 
@@ -21,7 +21,7 @@ DeckPilot 1.9.2 corrige a etapa de liberação da embalagem do Atelier e melhora
 DeckPilot 1.9.1 melhora a inicialização do instalador Atelier e adiciona verificações automáticas de atualização de aplicativo e firmware.
 
 - O instalador lança o Atelier na sessão de usuário do Windows iniciada e para/reinicia com segurança para atualizações.
-- O Atelier verifica o GitHub na inicialização e sob demanda. Anuncia novas construções do Atelier ou firmware empacotado, então baixa um instalador verificado contra o SHA-256 Arquivo.
+- O Atelier verifica o GitHub na inicialização e sob demanda. Ele anuncia novas construções do Atelier ou firmware empacotado, então baixa um instalador verificado contra o SHA-256 Arquivo.
 - Firmware só é flashed depois que o usuário escolhe a ação flash; uma atualização de aplicativo nunca escreve para um tabuleiro conectado por conta própria.
 
 O instalador do Atelier também lança na sessão do Windows do usuário iniciada após uma nova instalação. O fluxo de trabalho de lançamento agora abre o aplicativo instalado, então verifica a atualização e desinstala enquanto ele está em execução.
@@ -34,15 +34,15 @@ DeckPilot 1.9.0 adds DeckPilot Atelier, um aplicativo de oficina do Windows sepa
 
 DeckPilot 1.8.0 adiciona um espaço de trabalho atualizado e maneiras mais rápidas de construir e usar seus perfis.
 
-- Limpar a interface carvão/leal, biblioteca de ação primeiro, crocante 3 × 4 chaves, cores de acento-chave e preferência de movimento reduzido.
+- Limpar a interface carvão/leal, biblioteca de ação primeiro, crocante 3 × 4 chaves, cores de acento chave e preferência de movimento reduzido.
 - Três modelos de perfil editáveis: Música e áudio, Desktop e produtividade e Criação.
 - Ações de perfil: mude para um perfil nomeado, o próximo ou o perfil anterior a partir de uma chave. Os conjuntos de perfil importados mantêm seus links internos.
 - Ações do Windows: abrir configurações comuns ou Gerenciador de tarefas, ou explicitamente bloquear o PC.
-- Copiar/cortar/colar/repor chaves inteiras, incluindo longas prensas e cores, com desfazer/refazer e uma área de transferência local do aplicativo.
+- Copiar/cortar/colar/repor teclas inteiras, incluindo longas prensas e cores, com desfazer/refazer e uma área de transferência local do aplicativo.
 - Capture um atalho de teclado diretamente; Escape cancela e as teclas do macropad permanecem reservadas durante a captura.
 - Pesquisa de ação Ctrl+K e um histórico clearable, somente de sessão do último 30 acções.
-- Corrigir o prompt de firmware automático de modo a aceitá- lo abre o gerenciador de firmware. Os gestos pendentes são cancelados através de mudanças de perfil.
+- Corrigir o prompt de firmware automático de modo a aceitá- lo abre o gerenciador de firmware. Os gestos pendentes são cancelados através de alterações de perfil.
 
 Baixar **DeckPilot- Setup.exe** ou atualização do aplicativo. Perfis existentes, calibração e preferências de inicialização são preservadas. Firmware permanece **1.1.1**; nenhum flash é necessário para essas características.
 
-A validação inclui verificações de compatibilidade/navegação/importação/template do núcleo e instalação nativa do Windows, atualização, picker, arrastar e soltar, desfazer/refazer, criação de modelo, ações de perfil, captura de atalhos, edição de área de transferência, layout e minimização/restauração de verificações. O comportamento físico do macropad e do dispositivo de áudio ainda depende do hardware do proprietário do Windows.
+A validação inclui verificações de compatibilidade/navegação/importação/template do núcleo e instalação nativa do Windows, atualização, picador, arrastar e soltar, desfazer/refazer, criação de modelo, ações de perfil, captura de atalhos, edição da área de transferência, layout e minimização/restauração de verificações. O comportamento físico do macropad e do dispositivo de áudio ainda depende do hardware do proprietário do Windows.

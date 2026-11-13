@@ -20,11 +20,11 @@ DeckPilot 1.9.2 fixe l'étape de l'emballage de l'Atelier et améliore son diagn
 
 DeckPilot 1.9.1 améliore le démarrage de l'installateur Atelier et ajoute des contrôles automatiques de mise à jour de l'application et du firmware.
 
-- L'installateur lance Atelier dans la session utilisateur de Windows signée et s'arrête/restarts en toute sécurité pour les mises à niveau.
+- L'installateur lance Atelier dans la session d'utilisateur Windows signée et arrête/restarts en toute sécurité pour les mises à niveau.
 - Atelier vérifie GitHub au démarrage et à la demande. Il annonce un nouveau Atelier construit ou livré firmware, puis télécharge un installateur vérifié par rapport à la publication SHA-256 fichier.
 - Le firmware n'est clignoté qu'après que l'utilisateur ait choisi l'action flash; une mise à jour de l'application n'écrit jamais à une carte connectée seule.
 
-L'installateur Atelier lance également dans la session Windows de l'utilisateur signé après une nouvelle installation. Le flux de travail de sortie ouvre maintenant l'application installée, puis vérifie la mise à jour et désinstalle pendant qu'elle fonctionne.
+L'installateur Atelier lance également dans la session Windows de l'utilisateur signé après une nouvelle installation. Le flux de travail de sortie ouvre maintenant l'application installée, puis vérifie la mise à jour et désinstalle pendant qu'elle est en cours d'exécution.
 
 DeckPilot 1.9.0 ajoute DeckPilot Atelier, une application d'atelier Windows séparée pour clignoter de nouveaux macropads et vérifier tous 12 les touches.
 
@@ -35,7 +35,7 @@ DeckPilot 1.9.0 ajoute DeckPilot Atelier, une application d'atelier Windows sép
 DeckPilot 1.8.0 ajoute un espace de travail rafraîchi et des façons plus rapides de construire et d'utiliser vos profils.
 
 - Interface charbon/thé, bibliothèque d'action d'abord, croustillante 3 × 4 les touches, les couleurs de l'accent touche et la préférence pour les mouvements réduits.
-- Trois modèles de profil modifiables : Musique et audio, Bureau et productivité, et Création.
+- Trois modèles de profil modifiables: Musique et audio, Bureau et productivité, et Création.
 - Actions de profil : passer à un profil nommé, le profil suivant ou le profil précédent à partir d'une touche. Les ensembles de profil importés conservent leurs liens internes.
 - Actions Windows : ouvrez les paramètres communs ou le Gestionnaire des tâches, ou verrouillez explicitement le PC.
 - Copier/découper/coller/réinitialiser les touches entières, y compris les longues presses et les couleurs, avec un dédo/redo et un presse-papiers local.
@@ -45,4 +45,4 @@ DeckPilot 1.8.0 ajoute un espace de travail rafraîchi et des façons plus rapid
 
 Télécharger **DeckPilot-Setup.exe** ou mise à jour depuis l'application. Les profils existants, les préférences de calibrage et de démarrage sont préservés. **1.1.1**; aucun flash n'est requis pour ces caractéristiques.
 
-La validation inclut les contrôles de compatibilité/navigation/importation/template et l'installation native Windows, mise à jour, sélectionneur, glisser-déposer, défaire/refaire, création de modèles, actions de profil, capture de raccourcis, édition de presse-papiers, mise en page et contrôle de minimis/restauration.
+La validation inclut les contrôles de compatibilité/navigation/importation/template et l'installation native de Windows, mise à jour, sélectionneur, glisser-déposer, défaire/refaire, création de gabarits, actions de profil, capture de raccourcis, édition de presse-papiers, mise en page et contrôle de minimis/restauration.
