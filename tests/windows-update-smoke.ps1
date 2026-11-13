@@ -736,10 +736,6 @@ try {
     $profilesSection.Collapse()
     Select-ControlPanel $root 'ActionsTab'
     Invoke-Control (Find-Control $root 'DeckKey02')
-    if (Get-Command Set-DisplayResolution -ErrorAction SilentlyContinue) {
-        try { Set-DisplayResolution -Width 1440 -Height 1080 -Force -ErrorAction Stop | Out-Null }
-        catch { Write-Host 'Using the current Windows display size for native screenshots.' }
-    }
     $screen = [System.Windows.Forms.Screen]::PrimaryScreen.WorkingArea
     $transform.Resize([Math]::Max(960, [Math]::Min(1180, $screen.Width)), [Math]::Max(720, [Math]::Min(900, $screen.Height)))
     $transform.Move($screen.Left, $screen.Top)
