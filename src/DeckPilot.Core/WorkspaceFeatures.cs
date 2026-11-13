@@ -14,7 +14,7 @@ public static class ActionAppearance
         new ActionAccent("#DF8898", "Rose")
     });
 
-    public static bool IsValidAccent(string? value) => value != null && Accents.Any(a => string.Equals(a.Value, value, StringComparison.OrdinalIgnoreCase));
+    public static bool IsValidAccent(string? value) => value != null && (value.Length == 0 || (value.Length == 7 && value[0] == '#' && value.Skip(1).All(Uri.IsHexDigit)));
 }
 
 public static class ProfileNavigation
