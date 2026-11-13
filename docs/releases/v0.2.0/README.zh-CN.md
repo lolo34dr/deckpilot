@@ -1,15 +1,15 @@
-> 这是完整发行笔记的自动翻译,英文原文为参考文献.
+> 这是完整发行注释的自动翻译,英文正本是参考.
 
-应用程序安装,接口 affinée et mises à jour automatiques.
+应用程序安装,接口 affine et miss à jour自動相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相接相相接相接相接相接相接相接相接相接相接相接相接相接相相接相接相接相接相接相接相接相相接相接相相相相接相相接相接相相相接相接相接相相相相接相接相接相相相接相接相相相相相相相相相相相相相接相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相
 
-- Séelector d ' applications avec Research par nom:菜单Démarrer et course Windows/Microsoft Store. Le chix manuel d ' un (中文(中国大陆) ). `.exe` {\fn黑体\fs22\bord1\shad0\3aHBE\4aH00\fscx67\fscy66\2cHFFFFFF\3cH808080}别责无旁贷 {\fn黑体\fs22\bord1\shad0\3aHBE\4aH00\fscx67\fscy66\2cHFFFFFF\3cH808080}别这样
-- Icônes des applications lorsqu 'elle sont disponsible, pictogrammes victoriels 和动画 distrètes respectant les préférences Windows. 中国植物物种信息数据库.
-- 在 GitHub 上进行自动版本稳定研究。 Une confirmit pour télécharmer, vérifer, sidner 和 redémarrer.
-- 变形SHA -256 (c) 保护可执行的生效、恢复和重新确认。
+- Sélector d ' sapplications avec rechest par nom:菜单Démarrer et course Windows/微软存储器。 `.exe` {\fn黑体\fs22\bord1\shad0\3aHBE\4aH00\fscx67\fscy66\2cHFFFFFF\3cH808080}别失职了 {\fn黑体\fs22\bord1\shad0\3aHBE\4aH00\fscx67\fscy66\2cHFFFFFF\3cH808080}我
+- Icônes des applications lorsqu ' s sont unpositions, pictogrammes victoriels 和动画 Discrètes respect les préférences Windows. 中国植物物种信息数据库.
+- 在 GitHub 上对版本的自動相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相關相相關相關相關相關相關相相關相關相關相關相關相關相關相關相相關相關相關相關相關相相關相關相關相相相相關相相相相相相關相相相相相相相相關相關相關相相關相關相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相相
+- 变形SHA -256 以及保护可执行的海洋权、恢复权。
 - 专业和校准存在保护机构。
 
-**德普尔语Name 0.1.x: 退出 ancienne 版本 près de l ' horloge 和 remplacez l ' executive une dernière fois manuellement.** (原始内容存档于2018-09-29). Les misses à jour suvantes seront proposées automition. Utiliezz un file position position supermetre le replacement. [永久失效連結] (中文(中国大陆) ).
+**德普尔 0.1.x: 退出l ' ancienne版本 près de l ' horloge 和 remplacez l ' executive une dernière fois manuellement.** (原始内容存档于2013-10-12). Les misses à jour survantes seront proposées automique. Utilisez un file special persons impostable profile profession. Utilisez un profile profile prometre le reposition.
 
-泰莱谢茨 **DeckPilotưμ㼯A** 将版本自动化, ou **DeckPilot- win -x64.zip (英语).** 倒入 profile 文件夹。 Windows 10/11 x64; aucun runtime.NET à 安装器.
+特列谢兹 **DeckPilot一、导 言1 - 2 3** 自动打印版本, ou **DeckPilot- win -x64.zip (英语).** 倒入 profile 文件夹。 Windows 10/11 x64; aucun runtime.NET à sistor.
 
-Avant 出版物:汇编、记录和收费测试、Windows和重置/重置应用测试,Le Leonardo et les jeux restent à vicier sur votre PC. Les executorables ne sont pas signés。
+Avant 出版物:《汇编、记录和收费测试》,《Windows》和《重置/重置应用测试》,《Le Leonardo et les jeux restent à victor sur votre PC. Les executorables ne sont pas signés。
