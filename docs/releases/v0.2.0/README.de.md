@@ -10,6 +10,6 @@ Applications installées, interface affinée et mises à jour automatiques.
 
 **Depuis 0.1.x : quittez l’ancienne version près de l’horloge et remplacez l’exécutable une dernière fois manuellement.** Les mises à jour suivantes seront proposées automatiquement.
 
-Téléchargez **DeckPilot.exe** pour la version autonome, ou **DeckPilot-win-x64.zip** pour le dossier fulllet. Windows 10/11 x64 ; aucun runtime .NET à installer.
+Téléchargez **DeckPilot.exe** pour la version autonome, ou **DeckPilot-win-x64.zip** pour le dossier full. Windows 10/11 x64 ; aucun runtime .NET à installer.
 
 Avant publication : compilation, tests de logique et de téléchargement, contrôle du verrouillage Windows et test natif de remplacement/redémarrage avec sélection d’une application. Le Leonardo et les jeux restent à valider sur votre PC. Les exécutables ne sont pas signés.

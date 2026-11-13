@@ -4,13 +4,13 @@ DeckPilot 1.9.0 더 보기 DeckPilot Atelier, 새로운 Macropads를 번쩍이�
 
 - 레오나르도 / Pro Micro ATmega32U4 보드에 포함된 펌웨어를 Caterina bootloader로 설치하십시오.
 - 모든 물리적 키에 대한 짧은 압박과 긴 압박 검사를 실행하고, F13–F24 매핑을 기록하고, 품질 관리 보고서를 저장하십시오.
-- 지원하다 **DeckPilot-Atelier-Setup.exe에** 이 릴리스에서. 원래 DeckPilot 설정 및 펌웨어는 별도로 유지됩니다.
+- 지원하다 **DeckPilot-Atelier-Setup.exe를 설치** 이 릴리스에서. 원래 DeckPilot 설정 및 펌웨어는 별도로 유지됩니다.
 
 DeckPilot 1.8.0 새로 고침된 작업 공간과 더 빠른 방법을 추가하여 프로필을 작성하고 사용합니다.
 
 - Clearer charcoal/teal 공용영역, 활동 도서관 첫째로, crisp 3 × 4 키, 키 악센트 색상 및 감소 모션 선호도.
 - 3개의 편집 가능한 단면도 템플렛: 음악과 오디오, 탁상용 및 생산력 및 창조.
-- 프로필 작업: 이름 프로필로 전환, 다음 또는 키에서 이전 프로필. 가져온된 프로필 세트는 내부 링크를 유지.
+- 프로필 작업: 이름 프로필로 전환, 다음 또는 키에서 이전 프로필. 가져온된 프로필 세트는 내부 링크를 유지합니다.
 - Windows 작업: 일반적인 설정 또는 작업 관리자를 열고, 또는 명시적으로 PC를 잠그십시오.
 - Copy/cut/paste/reset 전체 키, 긴 압박과 색상을 포함하여, undo/redo와 app-local clipboard.
 - 키보드 단축키를 직접 캡처하십시오. 취소 및 매크로 패드 키가 캡처 중에 남아 있습니다.

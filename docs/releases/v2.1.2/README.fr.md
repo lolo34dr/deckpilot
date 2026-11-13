@@ -1,15 +1,15 @@
 > Il s'agit d'une traduction automatique des notes de sortie complètes. L'original anglais est la référence.
 
-DeckPilot 2.1.2 et DeckPilot Atelier 1.0.11 fixer la sécurité de l'atelier, la fiabilité de la carte sonore et les sons de profil portables.
+DeckPilot 2.1.2 et DeckPilot Atelier 1.0.11 fixer la sécurité de l'atelier, la fiabilité du tableau de bord et les sons de profil portables.
 
 - Atelier peut préparer des planches Leonardo/Caterina qui ne répondent pas encore DeckPilot protocole; les défaillances série arrêtent toujours le clignotement et l'emplacement USB, le chargeur d'amorçage et la signature MCU restent vérifiés.
-- Chaque inspection commence par des résultats vides. Les rapports conservent la carte et le firmware testés, et les callbacks USB inexistants ne peuvent pas affecter une nouvelle session.
+- Chaque inspection commence par des résultats vides. Les rapports conservent la carte et le firmware testés, et les callbacks USB bloqués ne peuvent pas affecter une nouvelle session.
 - Fermeture Atelier pendant l'écriture ou la vérification du firmware est bloqué.
-- Les exportations de profils et les sauvegardes de profils automatiques peuvent conserver les fichiers MP3/WAV référencés (32 Importation de clips intégrés dans un dossier géré et remap des références d'action courte/longue. Les importations de profil historique restent prises en charge; l'audio de sauvegarde manquant est signalé explicitement.
+- Les exportations de profils et les sauvegardes automatiques de profils peuvent conserver les fichiers MP3/WAV référencés (32 Importation de clips intégrés dans un dossier géré et remap des références d'action courte/longue. Les importations de profil historique restent prises en charge; l'audio de sauvegarde manquant est signalé explicitement.
 - Le soundboard publie des clips finis, met à jour les indicateurs de lecture, et des rapports interrompus des flux audio. VB-CABLE Les paramètres sont reconnus par leur identité d'adaptateur.
-- Corriger les liens README traduits et conserver les noms d'appareils techniques pendant la traduction. VB-CABLE obligatoire.
+- Corriger les liens README traduits et préserver les noms d'appareils techniques pendant la traduction. VB-CABLE obligatoire.
 
-La validation comprend les contrôles de régression de base, les tests de protocole firmware, les tests de traduction, la construction de Windows, DeckPilot et Vérifications d'installation/mise à niveau/désinstallation de l'atelier, et vérifications d'interface/mise à jour natives. Le comportement de déconnexion physique du premier flash et de l'audio nécessite toujours le matériel du propriétaire. 1.1.1; aucune mise à jour du firmware n'est requise.
+La validation comprend les contrôles de régression de base, les tests de protocole firmware, les tests de traduction, la construction de Windows, DeckPilot et Vérifications d'installation/mise à niveau/désinstallation de l'atelier, et vérifications de l'interface/mise à jour natives. Le comportement physique de déconnexion du premier flash et de l'audio nécessite toujours le matériel du propriétaire. 1.1.1; aucune mise à jour du firmware n'est requise.
 
 DeckPilot 2.1.1 améliore l'installation et les mises à jour:
 
@@ -24,7 +24,7 @@ Validation : contrôles de base et construction de Windows, mise à jour/désins
 
 DeckPilot 2.1.0 garde l'interface noire profonde et les couleurs personnalisables, et conduit le tableau de son à travers VB-Audio VB-CABLE automatiquement. Les utilisateurs ne sélectionnent que leur microphone physique; le paramètre de lecture virtuelle est corrigé de sorte que la voix et les clips MP3/WAV ne peuvent pas être accidentellement envoyés aux haut-parleurs. DeckPilot installateur peut télécharger le officiel VB-CABLE paquet, vérifier son éditeur Authenticode, et lancer la configuration du pilote du fournisseur; le paquet n'est pas redistribué. Dans Discord ou un jeu, sélectionnez CABLE Output comme le microphone. Atelier reste en version 1.0.10.
 
-DeckPilot 1.9.11 et DeckPilot Atelier 1.0.10 ajouter des diagnostics de matériel et de firmware pré-flash, une comparaison de version firmware, une action de récupération guidée après des écritures interrompues, un clignotement séquentiel multi-board avec un rapport de lot, et une vérification de la mise en page physique-position-à-F13–F24 dans chaque rapport de contrôle de touche.
+DeckPilot 1.9.11 et DeckPilot Atelier 1.0.10 ajouter des diagnostics de matériel et de firmware pré-flash, une comparaison de version firmware, une action de récupération guidée après des écritures interrompues, un clignotement séquentiel multi-board avec un rapport de batch, et une vérification de la mise en page physique-position-à-F13–F24 dans chaque rapport de contrôle de touche.
 
 DeckPilot 1.9.11 inclut la même mise à jour Atelier dans la version d'installation partagée.
 
@@ -48,11 +48,11 @@ DeckPilot 1.9.2 fixe l'étape de l'emballage de l'Atelier et améliore son diagn
 
 DeckPilot 1.9.1 améliore le démarrage de l'installateur Atelier et ajoute des contrôles automatiques de mise à jour de l'application et du firmware.
 
-- L'installateur lance Atelier dans la session utilisateur de Windows signée et s'arrête/restarts en toute sécurité pour les mises à niveau.
+- L'installateur lance Atelier dans la session d'utilisateur Windows signée et arrête/restarts en toute sécurité pour les mises à niveau.
 - Atelier vérifie GitHub au démarrage et à la demande. Il annonce un nouveau Atelier construit ou livré firmware, puis télécharge un installateur vérifié par rapport à la publication SHA-256 fichier.
 - Le firmware n'est clignoté qu'après que l'utilisateur ait choisi l'action flash; une mise à jour de l'application n'écrit jamais à une carte connectée seule.
 
-L'installateur Atelier lance également dans la session Windows de l'utilisateur signé après une nouvelle installation. Le flux de travail de sortie ouvre maintenant l'application installée, puis vérifie la mise à jour et désinstalle pendant qu'elle fonctionne.
+L'installateur Atelier lance également dans la session Windows de l'utilisateur signé après une nouvelle installation. Le flux de travail de sortie ouvre maintenant l'application installée, puis vérifie la mise à jour et désinstalle pendant qu'elle est en cours d'exécution.
 
 DeckPilot 1.9.0 ajoute DeckPilot Atelier, une application d'atelier Windows séparée pour clignoter de nouveaux macropads et vérifier tous 12 les touches.
 
@@ -63,7 +63,7 @@ DeckPilot 1.9.0 ajoute DeckPilot Atelier, une application d'atelier Windows sép
 DeckPilot 1.8.0 ajoute un espace de travail rafraîchi et des façons plus rapides de construire et d'utiliser vos profils.
 
 - Interface charbon/thé, bibliothèque d'action d'abord, croustillante 3 × 4 les touches, les couleurs de l'accent touche et la préférence pour les mouvements réduits.
-- Trois modèles de profil modifiables : Musique et audio, Bureau et productivité, et Création.
+- Trois modèles de profil modifiables: Musique et audio, Bureau et productivité, et Création.
 - Actions de profil : passer à un profil nommé, le profil suivant ou le profil précédent à partir d'une touche. Les ensembles de profil importés conservent leurs liens internes.
 - Actions Windows : ouvrez les paramètres communs ou le Gestionnaire des tâches, ou verrouillez explicitement le PC.
 - Copier/découper/coller/réinitialiser les touches entières, y compris les longues presses et les couleurs, avec un dédo/redo et un presse-papiers local.
@@ -73,4 +73,4 @@ DeckPilot 1.8.0 ajoute un espace de travail rafraîchi et des façons plus rapid
 
 Télécharger **DeckPilot-Setup.exe** ou mise à jour depuis l'application. Les profils existants, les préférences de calibrage et de démarrage sont préservés. **1.1.1**; aucun flash n'est requis pour ces caractéristiques.
 
-La validation inclut les contrôles de compatibilité/navigation/importation/template et l'installation native Windows, mise à jour, sélectionneur, glisser-déposer, défaire/refaire, création de modèles, actions de profil, capture de raccourcis, édition de presse-papiers, mise en page et contrôle de minimis/restauration.
+La validation inclut les contrôles de compatibilité/navigation/importation/template et l'installation native de Windows, mise à jour, sélectionneur, glisser-déposer, défaire/refaire, création de gabarits, actions de profil, capture de raccourcis, édition de presse-papiers, mise en page et contrôle de minimis/restauration.

@@ -6,7 +6,7 @@ DeckPilot 1.9.6 herstelt de Windows DPI manifest dat voorkomen DeckPilot Atelier
 
 DeckPilot 1.9.5 bevat gedetailleerde Atelier opstarten diagnostiek in de Windows release check.
 
-DeckPilot 1.9.4 verbetert de Atelier Windows opstart rooktest om toepassing crash details te melden.
+DeckPilot 1.9.4 verbetert de Atelier Windows opstart rooktest om toepassing crash details te rapporteren.
 
 DeckPilot 1.9.3 fixeert de Atelier bouwen metadata om de firmware manifest te lezen uit de gebundelde firmware archief.
 
@@ -16,7 +16,7 @@ DeckPilot 1.9.1 verbetert de Atelier installatie startup en voegt automatische a
 
 - Het installatieprogramma lanceert Atelier in de ingelogde Windows-gebruikerssessie en stopt/herstart het veilig voor upgrades.
 - Atelier controleert GitHub bij opstarten en op verzoek. Het kondigt nieuwere Atelier bouwt of gebundeld firmware, vervolgens downloadt een installateur geverifieerd tegen de gepubliceerde SHA-256 bestand.
-- Firmware wordt alleen geflitst nadat de gebruiker de flash actie kiest; een app-update schrijft nooit op zichzelf naar een verbonden bord.
+- Firmware wordt alleen geflitst nadat de gebruiker de flash actie kiest; een app-update schrijft nooit op zichzelf naar een aangesloten bord.
 
 Het Atelier installatieprogramma start ook in de ingelogde Windows-sessie van de gebruiker na een nieuwe installatie. De release workflow opent nu de geïnstalleerde app, controleert vervolgens upgrade en verwijdert terwijl het draait.
 
@@ -28,15 +28,15 @@ DeckPilot 1.9.0 voegt toe DeckPilot Atelier, een aparte Windows workshop app voo
 
 DeckPilot 1.8.0 voegt een vernieuwde werkruimte toe en snellere manieren om uw profielen te bouwen en te gebruiken.
 
-- Helderere houtskool/teale interface, actiebibliotheek eerst, knapperig 3 × 4 sleutels, accentkleuren en voorkeur voor verminderde beweging.
+- Helderere houtskool/teale interface, actiebibliotheek eerst, knapperig 3 × 4 sleutels, sleutel accent kleuren en gereduceerde-motion voorkeur.
 - Drie bewerkbare profielsjablonen: Muziek en audio, Bureaublad en productiviteit, en Creatie.
-- Profielacties: schakel over naar een genoemd profiel, het volgende of het vorige profiel van een sleutel. Geïmporteerde profielsets houden hun interne links.
+- Profielacties: schakel over naar een benoemd profiel, het volgende of het vorige profiel van een sleutel. Geïmporteerde profielsets houden hun interne links.
 - Windows-acties: open gemeenschappelijke instellingen of Taakbeheer, of vergrendel expliciet de PC.
 - Kopieer / knip / plak / reset hele toetsen, inclusief lange persen en kleuren, met undo / redo en een app-local klembord.
 - Een sneltoets direct vastleggen; Escape annuleert en macropad toetsen blijven gereserveerd tijdens het vastleggen.
 - Ctrl+K-actie zoeken en een duidelijke, sessie-alleen geschiedenis van de laatste 30 acties.
 - Repareer de automatische firmware prompt zodat het accepteert opent de firmware manager. In afwachting gebaren worden geannuleerd over profielwijzigingen.
 
-Downloaden **DeckPilot-Setup.exe** of update van de app. Bestaande profielen, kalibratie en opstartvoorkeuren blijven behouden. Firmware blijft **1.1.1**; voor deze functies is geen flits nodig.
+Downloaden **DeckPilot-Setup.exe** of update van de app. Bestaande profielen, kalibratie en opstartvoorkeuren worden bewaard. Firmware blijft **1.1.1**; voor deze functies is geen flits nodig.
 
-Validatie omvat kerncompatibiliteit/navigatie/import/template controles en native Windows installatie, update, picker, drag-and-drop, undo/redo, sjabloon creatie, profiel acties, snelkoppeling, klembord bewerken, lay-out en minimaliseert / herstellen controles. Fysische macropad en audio-apparaat gedrag is nog steeds afhankelijk van de eigenaar Windows hardware.
+Validatie omvat kerncompatibiliteit/navigatie/import/template controles en native Windows-installatie, update, picker, drag-and-drop, undo/redo, sjabloon creatie, profiel acties, snelkoppeling, klembord bewerken, lay-out en minimaliseert / herstellen controles. Fysische macropad en audio-apparaat gedrag nog steeds afhankelijk van de eigenaar zijn Windows hardware.

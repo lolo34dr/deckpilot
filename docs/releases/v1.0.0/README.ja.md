@@ -1,6 +1,6 @@
 > 完全リリースノートの自動翻訳です。英語オリジナルは参考です。
 
-バージョン 1.0.0 publiée の独特はテスターの la mise を jour automatique depuis 注ぎます 0.2.0.
+バージョン 1.0.0 publiée の独特はテスターの la mise を jour の automatique depuis 注ぎます 0.2.0.
 
 Aucun 変更 fonctionnel ni visuel. Seul le numéro de version de l’application 変更 ; les profils et le calibrage sont conservés.
 
