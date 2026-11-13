@@ -59,11 +59,23 @@ jobs:
       - name: Verify native update and application picker
         shell: powershell
         run: ./tests/windows-update-smoke.ps1 -Executable artifacts/standalone/DeckPilot.exe
+      - name: Export native preview for design review
+        if: always() && startsWith(github.ref, 'refs/heads/design/')
+        shell: pwsh
+        run: |
+          foreach ($name in @('DeckPilot', 'DeckPilot-editor')) {
+            if (!(Test-Path "artifacts/ui/$name.png")) { continue }
+            $encoded = [Convert]::ToBase64String([IO.File]::ReadAllBytes("artifacts/ui/$name.png"))
+            for ($offset = 0; $offset -lt $encoded.Length; $offset += 4096) {
+              Write-Output ("DECKPILOT_PREVIEW_${name}=" + $encoded.Substring($offset, [Math]::Min(4096, $encoded.Length - $offset)))
+            }
+          }
       - name: Save the native interface capture
+        if: always()
         uses: actions/upload-artifact@v6
         with:
           name: DeckPilot-interface
-          path: artifacts/ui/DeckPilot.png
+          path: artifacts/ui/*.png
           if-no-files-found: error
       - shell: pwsh
         run: Compress-Archive -Path artifacts/win-x64/* -DestinationPath artifacts/DeckPilot-win-x64.zip
