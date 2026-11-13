@@ -1,6 +1,6 @@
 > Esta es una traducción automática de las notas de liberación completas. El original inglés es la referencia.
 
-Première version de DeckPilot para Windows 10/11 x64.
+Première version de DeckPilot Verter Windows 10/11 x64.
 
 - Interface sombre avec grille de 4 lignes et 3 Coroneles.
 - Calibrage guidé des 12 boutons F13 à F24.

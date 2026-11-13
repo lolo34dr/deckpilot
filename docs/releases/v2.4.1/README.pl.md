@@ -1,6 +1,6 @@
 > Jest to automatyczne tłumaczenie kompletnych notatek wydania. Angielski oryginał jest punktem odniesienia.
 
-DeckPilot 2.4.1 koryguje zakładki panelu sterowania, tak aby ich pełne zarysy pozostały widoczne, a ich szerokość ustawiona jest przy zmianie rozmiaru okna.
+DeckPilot 2.4.1 koryguje karty panelu sterowania tak, aby ich pełne zarysy pozostawały widoczne, a ich szerokość pozostawała wyrównana przy zmianie rozmiaru okna.
 
 Nie jest wymagana aktualizacja oprogramowania firmowego ani flash.
 
@@ -8,22 +8,22 @@ DeckPilot 2.4.0 reorganizuje panel sterujący i dodaje dokładny wybór kolorów
 
 - Użyj **Działania**, **Appareil** oraz **Réglages** zakładki, aby znaleźć kluczowe działania, sterowniki urządzeń / audio i preferencje.
 - Zachowaj istniejący układ klawiatury / edytora lewej ręki, DeckPilot logo i monochromatyczne piktogramy wektorowe.
-- Wybierz kolor tła, panelu i akcentu z **Paleta...**, podgląd ich wartości i pobrań, a następnie stosować je. Windows picker obsługuje niestandardowe kolory; nie jest wymagany motyw preset.
+- Wybierz kolor tła, panelu i akcentu z **Paleta...**, podgląd ich wartości i pobrań, a następnie zastosowanie ich. Windows picker obsługuje niestandardowe kolory; nie jest wymagany motyw preset.
 - Usuń OSS / Integracja kontroli strumieni. Istniejące 2.3 profile pozostają czytelne, a ich wycofane działania są zachowane, ale nie mogą wykonać. Przypisz te klucze z biblioteki akcji.
 - Zachowaj inne profile, działania i fizyczną kalibrację. 1.1.1 i Atelier pozostaje 1.0.12; nie jest potrzebny błysk firmware.
 
 DeckPilot 2.3.0 dodaje bezpośrednie sterowniki OBS Studio i Streampalters Desktop z przycisków macropad.
 
 - Podłącz się do OBS poprzez serwer WebSocket i Streampalters Desktop poprzez zdalne sterowanie. DeckPilot wysyła polecenia API bezpośrednio zamiast symulowania skrótów klawiszowych.
-- Konfiguracja akcji dla scen, streaming na żywo, nagrywanie, wyciszanie dźwięku, wizualizacja źródła i bufor powtórzeń.
-- Funkcje Streaming są chronione przez obecnego użytkownika systemu Windows. Istniejące oprogramowanie firmowe makropad działa tak, jak jest; nie jest wymagana aktualizacja oprogramowania firmowego ani flash.
+- Konfiguracja akcji dla scen, streaming na żywo, nagrywanie, wyciszanie dźwięku, wizualizacja źródła i bufor odtwarzania.
+- Funkcje Streaming są chronione dla obecnego użytkownika systemu Windows. Istniejące oprogramowanie firmowe makropad działa tak, jak jest; nie jest wymagana aktualizacja oprogramowania firmowego ani flash.
 
 DeckPilot 2.2.0 dodaje regulowane, lokalne tłumienie szumów mikrofonu przy jednoczesnym zachowaniu klipów dźwiękowych nietkniętych.
 
-- RNNoise filtruje wybrany fizyczny mikrofon przed DeckPilot Miesza się w klipach płyt dźwiękowych. Klapy omijają filtr i pozostają jasne w wirtualnym mikrofonie.
-- Wybierz dowolną aplikację, która używa **CABLE Output** jak jego mikrofon - gry i programy głosowe-chat otrzymują filtrowany głos i mix soundboard. Aplikacje za pomocą mikrofonu fizycznego bezpośrednio bajpas DeckPilotFiltr.
+- RNNoise filtruje wybrany mikrofon fizyczny przed DeckPilot Miesza się w klipach płyt dźwiękowych. Klapy omijają filtr i pozostają jasne w wirtualnym mikrofonie.
+- Wybierz dowolną aplikację, która wykorzystuje **CABLE Output** jak jego mikrofon - gry i programy głosowe-chat otrzymują filtrowany głos i mix soundboard. Aplikacje za pomocą mikrofonu fizycznego bezpośrednio bajpas DeckPilotFiltr.
 - Włącz lub wyłączyć filtrowanie i ustawić jego 0–100% mocy w **Soundboard · micro virtuel**. Przetwarzanie dźwięku pozostaje na tym komputerze PC; nie jest wymagany błysk firmware.
-- Native biblioteki RNNoise jest zbudowany dla Windows x64 i wbudowany w DeckPilot i jego instalatorem. Jego licencja w stylu BSD- strona trzecia jest zawarta w repozytorium źródłowym.
+- Native biblioteki RNNoise jest zbudowany dla Windows x64 i wbudowany w DeckPilot i jego instalatora. Jego licencja w stylu BSD- strona trzecia jest zawarta w repozytorium źródłowym.
 
 W przypadku 10 ms RNNoise rozmiar ramki nie gwarantuje latencji end-to@-@ end. Windows, urządzenia audio i VB-CABLE również mają wpływ na opóźnienie. Sprawdzić jakość mikrofonu i opóźnienie z planowanym ustawieniem.
 
@@ -35,10 +35,10 @@ DeckPilot 2.1.7 dodaje Spotify-only volume actions, built- in action to open Dec
 
 DeckPilot Atelier pozostaje w 1.0.12 i firmware pozostaje 1.1.1. Do tych działań nie jest potrzebny żaden błysk firmware.
 
-DeckPilot 2.1.6 oraz DeckPilot Atelier 1.0.12 sprawiają, że oprogramowanie Atelier usuwa wyraźne i odzyskiwalne.
+DeckPilot 2.1.6 oraz DeckPilot Atelier 1.0.12 sprawić, że oprogramowanie Atelier wymaże wyraźnie i do odzyskania.
 
 - Przenieś destrukcyjne oprogramowanie firmware do zawalonych zaawansowanych operacji i wymagają maszynopisania `EFFACER` przed napisaniem.
-- Wyjaśnij, że plansza przestaje wymawiać się jako klawiatura po wykasowaniu, pokazać dokładne RST / GND dwukrotnie zresetowane kroki odzyskiwania, i zachować Atelier działania odzyskiwania dostępne po usuwaniu lub przerywany błysk.
+- Wyjaśnij, że deska przestaje wymawiać się jako klawiatura po wykasowaniu, pokazać dokładne RST / GND dwukrotnie zresetowane kroki odzyskiwania, i zachować Atelier działania odzyskiwania dostępne po usuwaniu lub przerywany błysk.
 - Pozostaje oprogramowanie firmowe 1.1.1; nie DeckPilot wymagana jest zmiana oprogramowania sprzętowego.
 
 Walidacja obejmuje sprawdzanie oprogramowania firmowego i aplikacji, oraz automatykę UI systemu Windows dla zaawansowanej kontroli skasowania, bezpieczeństwo nieurządzeń i wskazówki RST / GND odzyskiwania. Sam reset wymaga jeszcze fizycznej płyty.
@@ -50,7 +50,7 @@ DeckPilot 2.1.5 wygładza urządzenie audio- odświeża i dodaje markowy ekran s
 - Pokaż DeckPilot baner podczas uruchamiania interaktywnej aplikacji. Cichy startup z systemem Windows pozostaje w tle.
 - Pozostałości atelier 1.0.11 i firmware pozostaje 1.1.1.
 
-Walidacja obejmuje sprawdzanie tła / regresji pamięci podręcznej, sprawdzanie konwersji audio, tworzenie systemu Windows, uaktualnianie / usuwanie instalacji, sprawdzanie natywnego plusku / aktualizacji oraz wybieranie aplikacji. Rzeczywiste wykorzystanie procesora audio i opóźnienie nadal zależy od komputera PC i urządzeń audio.
+Walidacja obejmuje sprawdzanie tła / regresji pamięci podręcznej, sprawdzanie konwersji audio, tworzenie systemu Windows, uaktualnianie / odświeżanie instalatora, sprawdzanie natywnego plusku / aktualizacji i wybieranie aplikacji. Rzeczywiste wykorzystanie procesora audio i opóźnienia nadal zależą od komputera PC i urządzeń audio.
 
 DeckPilot 2.1.4 automatycznie uruchamia skonfigurowany wirtualny mikrofon za pomocą aplikacji, włączając w to uruchomienie tła po zalogowaniu się systemu Windows.
 
@@ -59,17 +59,17 @@ DeckPilot 2.1.4 automatycznie uruchamia skonfigurowany wirtualny mikrofon za pom
 - Wyraźne zatrzymanie wyłącza i zapisuje preferencje automatic- start; włączyć go ponownie z Soundboard panel lub przycisk aktywacji. Klipy audio nigdy nie są odtwarzane automatycznie.
 - Pozostałości atelier 1.0.11 i firmware pozostaje 1.1.1.
 
-Walidacja zawiera ustawienia migracji / kontroli przejazdu oraz natywną kontrolę UI systemu Windows dla utrzymujących się preferencji automatycznego uruchamiania, plus istniejące kontrole audio i instalatora. Fizyczne urządzenie uruchamianie / ponowne połączenie nadal zależy od sprzętu właściciela.
+Walidacja zawiera ustawienia migracji / kontroli przejazdu oraz natywną kontrolę UI systemu Windows dla utrzymujących się preferencji automatycznego uruchamiania, plus istniejące kontrole audio i instalatora. Fizyczne urządzenie uruchamianie / ponowne podłączenie nadal zależy od sprzętu właściciela.
 
 DeckPilot 2.1.3 redukuje opóźnienie mikrofonu na płycie dźwiękowej i usuwa jednosekundowe bloki konwersji z ścieżki audio na żywo.
 
-- Do mikrofonu i klipów dźwiękowych użyj wyrzutni, z małymi blokami; dopasowanie liczby próbek całkowicie się przełączyło.
+- Do mikrofonu i klipów dźwiękowych użyj wyrzutni, z małymi blokami; dopasowanie liczby prób całkowicie się przełączyło.
 - Prośba o wywołanie zdarzenia 20 s wychwytywanie i 40 ms zamiast poprzednich buforów odtwarzania 100 Ustawienia ms. Rzeczywiste opóźnienie zależy od systemu Windows, urządzeń audio i VB-CABLE.
 - Związany mikrofon buforujący do 100 ms i zachować ostatnie kompletne ramki po playback stall zamiast kolejki starej mowy. Krótkie podbiegi dodać tylko ciszę wymaganą przez bieżący odczyt.
 - Obsługa mono, stereo, multikanałowych i rozszerzalnych wejść PCM / float bez Media Foundation jeden-drugi read- forward.
 - Zachować przetwarzanie i routing Discord bez zmian. 1.0.11 i firmware pozostaje 1.1.1.
 
-Walidacja obejmuje kontrole regresji dla resemplingu wielkości bloku, konwersji kanału, rozszerzone formaty, nieprzerwany odzysk, nadmiar świeżości, jednoczesne wychwytywanie / odtwarzanie i zakończenie klipu, wraz z istniejącym instalatorem systemu Windows i testów aplikacji. Nie ma danych na temat opóźnienia sprzętowego; sprawdź poprawę z mikrofonem i sterownikiem audio.
+Walidacja obejmuje kontrole regresji dla resemplingu wielkości bloku, konwersji kanału, rozszerzone formaty, nieprzerwany odzysk, nadmiar świeżości, jednoczesne wychwytywanie / odtwarzanie i zakończenie klipu, obok istniejącego instalatora systemu Windows i testów aplikacji. Nie ma danych dotyczących opóźnienia sprzętowego; sprawdź poprawność za pomocą mikrofonu i sterownika audio.
 
 DeckPilot 2.1.2 oraz DeckPilot Atelier 1.0.11 naprawić bezpieczeństwo warsztatu, niezawodność płyt dźwiękowych i przenośne dźwięki profilowe.
 
@@ -93,9 +93,9 @@ Pobieranie **DeckPilot-Setup.exe** lub zaakceptować aktualizację w DeckPilot. 
 
 Walidacja: sprawdzanie rdzenia i budowa systemu Windows, modernizacja / dezaktywowanie instalatora i testy aplikacji rodzimej uruchomić przed publikacją. Zachowanie sprzętu audio nadal wymaga testowania na komputerze użytkownika.
 
-DeckPilot 2.1.0 utrzymuje głęboki czarny interfejs i dostosowane kolory, i trasy płyty dźwiękowej przez VB- Audio VB-CABLE automatycznie. Użytkownicy wybierają tylko swój fizyczny mikrofon; wirtualny punkt końcowy odtwarzania jest ustawiony tak, że głos i klipy MP3 / WAV nie mogą być przypadkowo wysyłane do głośników. DeckPilot instalator może pobrać oficjalny VB-CABLE pakiet, zweryfikuj jego wydawcę Authenticode i uruchom konfigurację sterownika sprzedawcy; pakiet nie jest redystrybuowany. CABLE Output jak mikrofon. Atelier pozostaje w wersji 1.0.10.
+DeckPilot 2.1.0 utrzymuje głęboki czarny interfejs i dostosowane kolory, i trasy płyty dźwiękowej przez VB- Audio VB-CABLE automatycznie. Użytkownicy wybierają tylko swój fizyczny mikrofon; wirtualny punkt końcowy odtwarzania jest ustawiony tak, że głos i klipy MP3 / WAV nie mogą być przypadkowo wysłane do głośników. DeckPilot instalator może pobrać oficjalny VB-CABLE pakiet, zweryfikuj jego wydawcę Authenticode i uruchom konfigurację sterownika sprzedawcy; pakiet nie jest redystrybuowany. CABLE Output jak mikrofon. Atelier pozostaje w wersji 1.0.10.
 
-DeckPilot 1.9.11 oraz DeckPilot Atelier 1.0.10 Dodać sprzęt przedbłyskowy i diagnostykę oprogramowania firmowego, porównanie wersji firmware, akcję odzyskiwania po przerwaniu pisania, sekwencyjne wielopłytowe migotanie z raportem wsadowym oraz kontrolę układu fizycznego-pozycjonowania-do-F13-F24 w każdym raporcie sterowania kluczami.
+DeckPilot 1.9.11 oraz DeckPilot Atelier 1.0.10 Dodać sprzęt przedbłyskowy i diagnostykę oprogramowania firmowego, porównanie wersji firmware, akcję odzyskiwania po przerwaniu pisania, sekwencyjne wielopłytowe migotanie z raportem wsadowym oraz kontrolę układu fizycznego-pozycjonowania-do-F13-F24 w każdym raporcie sterowania klawiszami.
 
 DeckPilot 1.9.11 zawiera tę samą aktualizację Atelier w wydaniu współdzielonego instalatora.
 
@@ -120,8 +120,8 @@ DeckPilot 1.9.2 naprawia etap pakowania uwalniającego Atelier i poprawia jego d
 DeckPilot 1.9.1 Poprawia uruchomienie instalatora Atelier i dodaje automatyczne sprawdzanie aktualizacji aplikacji i oprogramowania firmowego.
 
 - Instalator uruchamia Atelier w sesji użytkownika systemu Windows i bezpiecznie zatrzymuje / ponownie uruchamia go do aktualizacji.
-- Atelier sprawdza GitHub na starcie i na żądanie. ogłasza nowsze Atelier buduje lub splecione firmware, a następnie pobiera instalatora zweryfikowane w stosunku do opublikowanych SHA-256 Plik.
-- Oprogramowanie firmowe jest wyświetlane dopiero po wybraniu przez użytkownika akcji flash; aktualizacja aplikacji nigdy nie pisze do podłączonej płyty samodzielnie.
+- Atelier sprawdza GitHub na starcie i na żądanie. Ogłasza nowsze Atelier buduje lub splecione firmware, a następnie pobiera instalatora zweryfikowanego w stosunku do opublikowanego SHA-256 Plik.
+- Oprogramowanie firmowe jest wyświetlane dopiero po wybraniu przez użytkownika akcji flash; aktualizacja aplikacji nigdy nie zapisuje się do podłączonej planszy na własną rękę.
 
 Instalator Atelier uruchamia również w sesji Windows Signed- in użytkownika po świeżej instalacji. Przebieg pracy wydania otwiera zainstalowaną aplikację, a następnie weryfikuje aktualizację i odblokowuje podczas jej uruchamiania.
 
@@ -133,7 +133,7 @@ DeckPilot 1.9.0 dodaje DeckPilot Atelier, osobna aplikacja warsztatowa Windows d
 
 DeckPilot 1.8.0 dodaje odświeżone miejsce pracy i szybsze sposoby budowania i korzystania z profili.
 
-- Interfejs z węglem / herbatą, najpierw biblioteka akcji, chrupiące 3 × 4 klawisze, kolory akcent i skrócone preferencje ruchu.
+- Interfejs z węglem / herbatą, najpierw biblioteka akcji, chrupiące 3 × 4 klawisze, kolory akcentów i skrócone preferencje ruchu.
 - Trzy edytowalne szablony profilu: Muzyka i audio, Desktop i produktywność, i Tworzenie.
 - Działania profilowe: przełącz na nazwany profil, następny lub poprzedni profil z klucza. Importowane zestawy profili zachowują swoje wewnętrzne linki.
 - Działania Windows: otwórz wspólne ustawienia lub Task Manager, lub wyraźnie zablokuj komputer.
@@ -156,7 +156,7 @@ DeckPilot Atelier pozostaje w 1.0.12 i firmware pozostaje 1.1.1. Nie jest potrze
 DeckPilot 2.1.9 Naprawia monitoring głośników na urządzeniach, których format audio z systemem Windows jest rozszerzony, w tym niektórych zestawów słuchawkowych USB, i dodaje powiadomienie o nakładaniu płyty dźwiękowej.
 
 - Głośnik zwraca zachowuje dokładny format mix WASAPI wybranego wyjścia, konwertuje próbki klipów do jego PCM lub kodowania float, a następnie ponownie próbuje odtwarzać bez zdarzenia, gdy kierowca odrzuca ten tryb.
-- Uruchomienie klipu z tablicą dźwiękową pokazuje swoją nazwę w konfigurowalnym nakładce na ekranie. Istniejące preferencje powiadamiania o profilu, umieszczanie i redukcja ustawienia ruchu obu typów powiadomień.
+- Uruchomienie klipu z tablicą dźwiękową pokazuje swoją nazwę w konfigurowalnym nakładce na ekranie. Istniejące preferencje zgłoszenia profilu, umiejscowienie i redukcja ustawienia ruchu obu typów powiadomień.
 - Powrót nadal zawiera tylko klipy soundboard; fizyczny mikrofon pozostaje poza głośnikiem mix i kontynuuje do wirtualnego mikrofonu.
 
 DeckPilot Atelier pozostaje w 1.0.12 i firmware pozostaje 1.1.1. Nie jest potrzebne oprogramowanie firmware flash. Kompatybilność głośnika musi być nadal sprawdzona z rzeczywistym urządzeniem audio właściciela systemu Windows.

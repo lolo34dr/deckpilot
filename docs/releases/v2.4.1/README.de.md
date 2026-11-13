@@ -8,7 +8,7 @@ DeckPilot 2.4.0 reorganisiert das Bedienfeld und fügt eine exakte Farbauswahl h
 
 - Verwenden Sie die **Aktionen**, **Appareil** und **Réglagen** Tabs zum Auffinden von Schlüsselaktionen, Geräte-/Audiosteuerungen und Präferenzen.
 - Behalten Sie das vorhandene linke Tastatur-/Editor-Layout bei, DeckPilot Logo- und monochrome Vektorpiktogramme.
-- Wählen Sie genaue Hintergrund-, Panel- und Akzentfarben mit **Palette...**Der Windows-Picker unterstützt benutzerdefinierte Farben; es ist kein voreingestelltes Thema erforderlich.
+- Wählen Sie die genauen Hintergrund-, Panel- und Akzentfarben mit **Palette...**Der Windows-Picker unterstützt benutzerdefinierte Farben; es ist kein voreingestelltes Thema erforderlich.
 - Die Integration der OBS/Streamlabs-Steuerung entfernen. 2.3 Profile bleiben lesbar, und ihre ausgeschiedenen Aktionen bleiben erhalten, können aber nicht ausgeführt werden.
 - Bewahren Sie andere Profile, Aktionen und physische Kalibrierung auf. Firmware bleibt 1.1.1 Atelier bleibt 1.0.12Es wird kein Firmware-Flash benötigt.
 
@@ -82,7 +82,7 @@ DeckPilot 2.1.2 und DeckPilot Atelier 1.0.11 fixe Werkstattsicherheit, Resonanzb
 
 Validierung umfasst Kernregressionsüberprüfungen, Firmware-Protokolltests, Übersetzungstests, Windows-Build, DeckPilot und Atelier-Installations-/Upgrade-/Deinstallations-Prüfungen und native Schnittstellen-/Update-Prüfungen. Physisches First-Flash- und Audio-Disconnect-Verhalten erfordert weiterhin die Hardware des Besitzers. Firmware bleibt bestehen 1.1.1Es ist kein Firmware-Update erforderlich.
 
-DeckPilot 2.1.1 Verbessert Installation und Updates:
+DeckPilot 2.1.1 verbessert die Installation und Updates:
 
 - Automatische Überprüfung für VB-CABLE bei der ersten Installation und Upgrades, und laden Sie den offiziell signierten Installateur herunter und starten Sie ihn, wenn der Fahrer fehlt.
 - Windows-Start, automatische Update-Checks und reduzierte Bewegungseinstellungen während der Einrichtung und Updates anzeigen, wobei vorhandene Optionen vorgewählt und beibehalten werden.
@@ -149,7 +149,7 @@ DeckPilot 2.1.8 Fügt einen optionalen Speaker zurück für Soundboard Clips.
 
 - In **Soundboard · micro virtuel**, aktivieren **Entendre aussi les sons du soundboard**Wählen Sie einen physischen Lautsprecher- oder Headset-Ausgang und setzen Sie seine unabhängige 0–100Volumenprozent. Die Rendite ist standardmäßig ausgeschaltet und über Starts hinweg gespeichert.
 - An diesen zweiten Ausgang werden nur Soundboard-Clips gesendet. Das physische Mikrofon geht weiter zum virtuellen Mikrofon und wird nie in die Lautsprecherrückgabe gemischt. VB-CABLE in ihrem ursprünglichen Volumen.
-- Durch Ändern der Rückgabelautstärke wird das virtuelle Mikrofon nicht neu gestartet. Ein abgetrennter Lautsprecherausgang stoppt nur die Rückgabe; das virtuelle Mikrofon läuft weiter. Geräte auffrischen oder einen anderen Ausgang auswählen, um es wiederherzustellen.
+- Durch Ändern der Rückgabelautstärke wird das virtuelle Mikrofon nicht neu gestartet. Ein getrennter Lautsprecherausgang stoppt nur die Rückgabe; das virtuelle Mikrofon läuft weiter. Geräte auffrischen oder einen anderen Ausgang auswählen, um es wiederherzustellen.
 
 DeckPilot Atelier bleibt bei 1.0.12 Firmware bleibt bestehen 1.1.1. Es ist kein Firmware-Flash erforderlich. Das tatsächliche Lautsprecher-Routing sollte auf dem Windows-PC des Besitzers mit seinen Audiogeräten überprüft werden.
 

@@ -11,4 +11,4 @@ Les profils et le calibrage 존재하는ants sont conservés. Quittez l'ancienne
 
 Téléchargez의 특징 **DeckPilot.exe를** 붓다 버전 autonome, ou **DeckPilot-윈-x64.zip** 부 르 dossier 완료 à extraire. 윈도우 10/11 x64, aucun 런타임 .NET à 설치 프로그램.
 
-La 편집 Windows 외 les 16 vérifications automatiques sont exécutées avant 간행물. Le rendu à l’écran et le matériel restent à valider sur votre PC Windows. Les exécutables ne sont pas signéés.
+La 편집 Windows 외 les 16 vérifications automatiques sont exécutées avant 간행물. Le rendu à l'écran et le matériel restent à valider sur votre PC Windows. Les exécutables ne sont pas signéés.

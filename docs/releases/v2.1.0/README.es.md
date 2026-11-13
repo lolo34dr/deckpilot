@@ -1,8 +1,8 @@
 > Esta es una traducción automática de las notas de liberación completas. El original inglés es la referencia.
 
-DeckPilot 2.1.0 mantiene la profunda interfaz negra y colores personalizables, y recorre la tabla de sonar a través de VB-Audio VB-CABLE automáticamente. Los usuarios seleccionan sólo su micrófono físico; el punto final de reproducción virtual se fija por lo que los clips MP3/WAV no se pueden enviar accidentalmente a los altavoces. DeckPilot instalador puede descargar el oficial VB-CABLE paquete, verificar su editor de Authenticode, y lanzar la configuración del controlador del proveedor; el paquete no se redistribuye. En Discord o un juego, seleccione CABLE Output como el micrófono. Atelier permanece en versión 1.0.10.
+DeckPilot 2.1.0 mantiene la profunda interfaz negra y colores personalizables, y recorre la tabla de sonar a través de VB-Audio VB-CABLE automáticamente. Los usuarios seleccionan sólo su micrófono físico; el punto final de reproducción virtual se fija por lo que los clips MP3/WAV no se pueden enviar accidentalmente a los altavoces. DeckPilot instalador puede descargar el oficial VB-CABLE paquete, verifique su editor de Authenticode, y lanzar la configuración del controlador del proveedor; el paquete no se redistribuye. En Discord o un juego, seleccione CABLE Output como el micrófono. Atelier permanece en versión 1.0.10.
 
-DeckPilot 1.9.11 y DeckPilot Atelier 1.0.10 Agregue el hardware y el diagnóstico de firmware previos al combate, una comparación de la versión de firmware, una acción de recuperación guiada después de los escritos interrumpidos, el flash secuencial multi-board con un informe de lote, y un control físico-posición-a-F13–F24 en cada informe de control clave.
+DeckPilot 1.9.11 y DeckPilot Atelier 1.0.10 Agregue el hardware y el diagnóstico de firmware previos al combate, una comparación de la versión de firmware, una acción de recuperación guiada después de los escritos interrumpidos, el flash secuencial multi-board con un informe de lote, y un cheque de diseño físico-posición-a-F13–F24 en cada informe de control clave.
 
 DeckPilot 1.9.11 incluye la misma actualización de Atelier en la versión compartida del instalador.
 
@@ -10,9 +10,9 @@ DeckPilot 1.9.10 restaura las liberaciones compartidas que contienen ambos DeckP
 
 Si instalas Atelier 1.0.8 desde el canal de liberación separado, instalar DeckPilot-Atelier-Setup.exe de esta versión una vez para volver a las actualizaciones compartidas. DeckPilot puede utilizar su actualizador existente.
 
-DeckPilot Atelier 1.0.7 añade una era confirmada del programa-área que aclara todo 28 KiB de flash de usuario, deja un bucle de reset seguro, y conserva Caterina y EEPROM. Reiniciar permanece deshabilitado hasta que se selecciona una tabla física.
+DeckPilot Atelier 1.0.7 añade una era confirmada del programa-área que aclara todo 28 KiB de flash de usuario, deja un bucle de reset seguro, y conserva Caterina y EEPROM. Reiniciar permanece deshabilitado hasta que se selecciona una junta física.
 
-DeckPilot 1.9.7 fija Atelier desinstalar mientras la aplicación está abierta. Atelier 1.0.6 también corrige su manifiesto de Windows DPI, que impidió que la aplicación instalada iniciara.
+DeckPilot 1.9.7 fija Atelier desinstalar mientras la aplicación está abierta. Atelier 1.0.6 también corrige su manifiesto DPI de Windows, que impidió que la aplicación instalada iniciara.
 
 DeckPilot 1.9.6 fija el manifiesto DPI de Windows que previno DeckPilot Atelier desde la apertura después de la instalación.
 
@@ -47,7 +47,7 @@ DeckPilot 1.8.0 añade un espacio de trabajo refrescado y formas más rápidas d
 - Copiar/cortar/paste/reestablecer teclas completas, incluyendo largas prensas y colores, con deshacer/redo y un portapapeles plano.
 - Capturar un atajo de teclado directamente; Escapar cancela y las teclas macropadas permanecen reservadas durante la captura.
 - Ctrl+K búsqueda de acción y una historia clara y sencilla de la última sesión 30 acciones.
-- Arregla el impulso automático de firmware para aceptarlo abre el gestor de firmware. Los gestos pendientes se cancelan en los cambios de perfil.
+- Arregla el impulso automático de firmware para aceptarlo abre el gestor de firmware. Los gestos de espera se cancelan a través de los cambios de perfil.
 
 Descargar **DeckPilot-Setup.exe** o actualización de la aplicación. Se conservan los perfiles existentes, las preferencias de calibración y puesta en marcha. **1.1.1**; no se requiere flash para estas características.
 
