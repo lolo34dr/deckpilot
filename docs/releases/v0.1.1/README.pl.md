@@ -2,7 +2,7 @@
 
 Interface plus sobre pour DeckPilot, increée de la disposition Stream Deck.
 
-- Palette anthracite et gris, typographie plus compacte et supresja du grand texte d 'accueil.
+- Palette antracite et gris, typographie plus compacte et supresja du grand texte d 'accueil.
 - Grille de 4 × 3 touches avec pictogrammes et bordure de sélection discrète.
 - Choix des actions à droite et réglages de la touche sous la grille.
 - Gestion des profils dans un panneau responsible; calibrage et barre de titre aspertis au thème sombre.

@@ -39,4 +39,4 @@ DeckPilot 1.8.0 adiciona um espaço de trabalho atualizado e maneiras mais rápi
 
 Transferir **DeckPilot- Setup.exe** ou atualização do aplicativo. Perfis existentes, calibração e preferências de inicialização são preservadas. Firmware permanece **1.1.1**; nenhum flash é necessário para essas características.
 
-A validação inclui as verificações de compatibilidade/navegação/importação/template do núcleo e a instalação nativa do Windows, atualização, picker, arrastar e soltar, desfazer/refazer, criação de modelo, ações de perfil, captura de atalhos, edição da área de transferência, layout e minimização/restore. O comportamento físico do macropad e do dispositivo de áudio ainda depende do hardware do proprietário do Windows.
+A validação inclui as verificações de compatibilidade/navegação/importação/template e instalação nativa do Windows, atualização, picador, arrastar e soltar, desfazer/refazer, criação de modelo, ações de perfil, captura de atalhos, edição de área de transferência, layout e minimização/restore. O comportamento físico do macropad e do dispositivo de áudio ainda depende do hardware do proprietário do Windows.

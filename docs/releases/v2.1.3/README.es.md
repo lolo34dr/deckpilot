@@ -19,7 +19,7 @@ DeckPilot 2.1.2 y DeckPilot Atelier 1.0.11 Fija la seguridad del taller, la fiab
 - El panel de sonido libera clips terminados, actualiza indicadores de reproducción e informa de flujos de audio interrumpidos. VB-CABLE endpoints are recognized through their adapter identity.
 - Enlaces correctos traducidos README y preservar los nombres de los dispositivos técnicos durante la traducción. VB-CABLE requisito.
 
-La validación incluye cheques de regresión núcleo, pruebas de protocolo de firmware, pruebas de traducción, Windows build, DeckPilot y los controles de instalación / actualización / desinstalación de Atelier, y la interfaz nativa / actualizaciones de los cheques. La primera pestaña física y el comportamiento de desconexión de audio todavía requieren el hardware del propietario. 1.1.1; no se requiere actualización de firmware.
+La validación incluye cheques de regresión núcleo, pruebas de protocolo de firmware, pruebas de traducción, Windows build, DeckPilot y Controles de instalación / actualización / desinstalación de Atelier, y comprobación de la interfaz nativa/actualización. Comportamiento físico de primera pestaña y desconexión de audio todavía requieren el hardware del propietario. 1.1.1; no se requiere actualización de firmware.
 
 DeckPilot 2.1.1 mejora la instalación y las actualizaciones:
 
@@ -30,7 +30,7 @@ DeckPilot 2.1.1 mejora la instalación y las actualizaciones:
 
 Descargar **DeckPilot-Setup.exe** o aceptar la actualización en DeckPilot. Se requiere la aprobación del administrador de Windows. Se conservan los perfiles existentes y la calibración. DeckPilot Atelier remains at 1.0.10 and firmware remains at 1.1.1; ambos se incluyen en la versión compartida.
 
-Validación: controles de núcleo y Windows build, actualización del instalador / desinstalación y pruebas de aplicaciones nativas se ejecutan antes de la publicación de la publicación.
+Validación: cheques de núcleo y Windows construyen, actualización del instalador / desinstalación y pruebas de aplicaciones nativas se ejecutan antes de la publicación de la publicación.
 
 DeckPilot 2.1.0 mantiene la profunda interfaz negra y colores personalizables, y recorre el tablero de sonido a través de VB-Audio VB-CABLE automáticamente. Los usuarios seleccionan sólo su micrófono físico; el punto final de reproducción virtual se fija por lo que los clips MP3/WAV no se pueden enviar accidentalmente a los altavoces. DeckPilot instalador puede descargar el oficial VB-CABLE paquete, verifique su editor de Authenticode, y lanzar la configuración del controlador del proveedor; el paquete no se redistribuye. En discordia o un juego, seleccione CABLE Output como el micrófono. Atelier permanece en versión 1.0.10.
 
@@ -59,7 +59,7 @@ DeckPilot 1.9.2 fija el paso de embalaje de liberación de Atelier y mejora su d
 DeckPilot 1.9.1 mejora la puesta en marcha del instalador Atelier y añade controles automáticos de actualización de aplicaciones y firmware.
 
 - El instalador lanza Atelier en la sesión de usuario de Windows firmada y detiene/restringe de forma segura para las actualizaciones.
-- Atelier comprueba GitHub sobre la puesta en marcha y bajo demanda. Anuncia el nuevo Atelier construye o firmware agrupado, luego descarga un instalador verificado contra el publicado SHA-256 archivo.
+- Atelier comprueba GitHub sobre la puesta en marcha y bajo demanda. anuncia el nuevo Atelier construye o firmware empaquetado, luego descarga un instalador verificado contra el publicado SHA-256 archivo.
 - Firmware sólo se flashiza después de que el usuario elija la acción flash; una actualización de la aplicación nunca escribe a una tabla conectada por su cuenta.
 
 El instalador Atelier también se lanza en la sesión de Windows del usuario firmado después de una instalación fresca. El flujo de trabajo de lanzamiento ahora abre la aplicación instalada, luego verifica la actualización y desinstalación mientras se está ejecutando.

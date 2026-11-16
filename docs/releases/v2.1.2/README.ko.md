@@ -20,7 +20,7 @@ DeckPilot 2.1.1 설치 및 업데이트 개선:
 
 지원하다 **DeckPilot-설정.exe** 또는 업데이트 수락 DeckPilot. Windows 관리자 승인이 필요합니다. 기존 프로파일 및 교정이 보존됩니다. DeckPilot Atelier가 남아 있습니다. 1.0.10 펌웨어가 남아 있습니다. 1.1.1; 둘 다 공유된 방출에서 포함됩니다.
 
-유효성: 핵심 검사 및 Windows 건축, 설치자 upgrade/uninstall 및 기본 신청 시험은 풀어 놓기 전에 실행합니다. 오디오 기계설비 행동은 아직도 사용자의 PC에 시험을 요구합니다.
+유효성: 핵심 검사 및 Windows 건축, 설치자 upgrade/uninstall 및 기본 신청 시험은 풀어 놓기 전에 실행합니다. 오디오 하드웨어 행동은 아직도 사용자의 PC에 시험을 요구합니다.
 
 DeckPilot 2.1.0 딥 블랙 인터페이스와 사용자 정의 색상을 유지하고 VB-Audio를 통해 사운드 보드를 루트 VB-CABLE 자동적으로. 사용자는 그들의 육체적인 마이크만 선정합니다; 사실상 재생 엔드포인트는 조정합니다 그래서 음성과 MP3/WAV 클립은 스피커에 실수로 보내질 수 없습니다. DeckPilot installer는 공식을 다운로드 할 수 있습니다 VB-CABLE 패키지는 Authenticode 게시자를 확인하고 공급업체의 드라이버 설정을 실행합니다. 패키지는 redistributed가 아닙니다. Discord 또는 게임에서, 선택 CABLE Output 마이크로서. Atelier는 버전에 남아 있습니다. 1.0.10.
 
@@ -58,7 +58,7 @@ DeckPilot 1.9.0 더 보기 DeckPilot Atelier, 새로운 Macropads를 번쩍이�
 
 - 레오나르도 / Pro Micro ATmega32U4 보드에 포함된 펌웨어를 Caterina bootloader로 설치하십시오.
 - 모든 물리적 키를 위한 짧은 압박과 긴 압박 체크를 실행하고, 그것의 F13–F24 매핑을 기록하고, 품질 관리 보고를 저장하십시오.
-- 지원하다 **DeckPilot-Atelier-Setup.exe를 설치** 이 릴리스에서. 원래 DeckPilot 설정 및 펌웨어는 별도로 사용할 수 있습니다.
+- 지원하다 **DeckPilot-Atelier-Setup.exe에** 이 릴리스에서. 원래 DeckPilot 설정 및 펌웨어는 별도로 사용할 수 있습니다.
 
 DeckPilot 1.8.0 새로 고침된 작업 공간과 더 빠른 방법을 추가하여 프로필을 작성하고 사용합니다.
 

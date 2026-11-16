@@ -8,7 +8,7 @@ DeckPilot 2.1.3 réduit la latence du microphone de la carte son et supprime les
 - Prise en charge des entrées PCM/float mono, stéréo, multicanaux et Windows extensibles sans la Fondation des médias une seconde de lecture à l'avance.
 - Garder le traitement et le routage des discords inchangés. 1.0.11 et le firmware reste 1.1.1.
 
-La validation comprend des contrôles de régression pour le rééchantillonnage de la taille des blocs, la conversion des canaux, les formats extensibles, la récupération d'underrun, la fraîcheur de débordement, la capture / playback simultanée et l'achèvement des clips, ainsi que les tests d'installation et d'application Windows existants.
+La validation comprend des contrôles de régression pour le rééchantillonnage de la taille des blocs, la conversion des canaux, les formats extensibles, la récupération d'underrun, la fraîcheur de débordement, la capture/playback simultanée et l'achèvement des clips, ainsi que les tests d'installation et d'application Windows existants.
 
 DeckPilot 2.1.2 et DeckPilot Atelier 1.0.11 fixer la sécurité de l'atelier, la fiabilité de la carte sonore et les sons de profil portables.
 

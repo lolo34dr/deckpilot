@@ -8,7 +8,7 @@
 - 变形SHA -256 以及保护可执行的海洋权、恢复权。
 - 专业和校准存在保护机构。
 
-**德普尔 0.1.x: 退出l ' ancienne版本 près de l ' horloge 和 remplacez l ' executive une dernière fois manuellement.** (原始内容存档于2013-10-12). Les misses à jour survantes seront proposées automique. Utilisez un file special persons impostable profile profession. Utilisez un profile profile prometre le reposition.
+**德普尔 0.1.x: 退出l ' ancienne版本 près de l ' horloge 和 remplacez l ' executive une dernière fois manuellement.** (原始内容存档于2013-10-12). Les misses à jour survantes seront proposées automique. Utilisez un file special persons impostable profile profession. Utilisez un profile profile programmetre le reposition.
 
 特列谢兹 **DeckPilot一、导 言1 - 2 3** 自动打印版本, ou **DeckPilot- win -x64.zip (英语).** 倒入 profile 文件夹。 Windows 10/11 x64; aucun runtime.NET à sistor.
 

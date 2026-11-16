@@ -7,17 +7,17 @@ DeckPilot 2.1.4 startet das konfigurierte virtuelle Mikrofon automatisch mit der
 - Ein expliziter Stop deaktiviert und speichert die Automatik-Start-Präferenz; aktivieren Sie sie erneut aus dem Soundboard Schaltfläche oder Aktivierungsschaltfläche. Audioclips werden nie automatisch abgespielt.
 - Atelier bleibt bestehen 1.0.11 Firmware bleibt bestehen 1.1.1.
 
-Die Validierung umfasst Einstellungen Migration / Round-Trip-Checks und eine native Windows-Benutzeroberflächenüberprüfung für die anhaltende automatische Starteinstellung sowie die vorhandenen Audio- und Installationsüberprüfungen. Der Start / die Wiederverbindung des physischen Geräts hängt immer noch von der Hardware des Besitzers ab.
+Die Validierung umfasst Einstellungen Migration / Round-Trip-Checks und eine native Windows-Benutzeroberflächenüberprüfung für die anhaltende automatische Starteinstellung sowie die vorhandenen Audio- und Installer-Checks. Der Start / die Wiederverbindung des physischen Geräts hängt immer noch von der Hardware des Besitzers ab.
 
 DeckPilot 2.1.3 Reduziert die Resonanzbodenmikrofonlatenz und entfernt die 1-Sekunden-Konvertierungsblöcke aus dem Live-Audiopfad.
 
 - Verwenden Sie Output-driven, Small-Block-Resampling für das Mikrofon und Sound-Clips; Matching Sample Rates Bypass Resampling vollständig.
 - Request ereignisgesteuert 20 ms-Erfassung und 40 ms-Wiedergabepuffer anstelle der vorherigen 100 ms-Einstellungen. Die tatsächliche Latenz hängt von Windows, den Audiogeräten und VB-CABLE.
-- Gebundene Mikrofonpufferung 100 Kurze Unterläufe fügen nur die Stille hinzu, die von der aktuellen Lektüre gefordert wird.
+- Gebundene Mikrofonpufferung 100 Kurze Unterläufe fügen nur die von der aktuellen Lektüre geforderte Stille hinzu.
 - Unterstützen Sie Mono-, Stereo-, Multichannel- und Windows-erweiterbare PCM/Float-Eingänge ohne die Media Foundation-Einsekunden-Lesevorgabe.
 - Discord-Verarbeitung und Routing unverändert lassen. Atelier bleibt 1.0.11 Firmware bleibt bestehen 1.1.1.
 
-Die Validierung umfasst Regressionsüberprüfungen für das Resampling von Blockgrößen, Kanalkonvertierung, erweiterbare Formate, Underrun-Wiederherstellung, Überlauffrische, gleichzeitige Aufnahme/Wiedergabe und Clip-Vervollständigung neben den vorhandenen Windows-Installationsprogramm- und Anwendungstests. Es wird keine Hardware-Latenzzahl beansprucht; Überprüfen Sie die Verbesserung mit Ihrem Mikrofon und Audiotreiber.
+Die Validierung umfasst Regressionsüberprüfungen für das Resampling von Blockgrößen, Kanalkonvertierung, erweiterbare Formate, Underrun-Wiederherstellung, Überlauffrische, gleichzeitige Aufnahme / Wiedergabe und Clip-Vervollständigung neben den vorhandenen Windows-Installationsprogramm- und Anwendungstests. Es wird keine Hardware-Latenzzahl beansprucht; Überprüfen Sie die Verbesserung mit Ihrem Mikrofon und Audiotreiber.
 
 DeckPilot 2.1.2 und DeckPilot Atelier 1.0.11 fixe Werkstattsicherheit, Resonanzbodenzuverlässigkeit und tragbare Profilgeräusche
 

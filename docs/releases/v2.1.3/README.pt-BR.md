@@ -8,7 +8,7 @@ DeckPilot 2.1.3 reduz a latência do microfone da placa de som e remove os bloco
 - Suporte entradas mono, estéreo, multicanal e Windows extensíveis PCM/float sem a Media Foundation um segundo lido para a frente.
 - Mantenha o processamento e roteamento da Discord inalterados. 1.0.11 e o firmware permanece 1.1.1.
 
-Validação inclui verificações de regressão para reamostrar tamanhos de blocos, conversão de canal, formatos extensíveis, recuperação de underrun, frescura de transbordamento, captura concorrente / playback e conclusão do clipe, juntamente com o instalador Windows existente e testes de aplicação. Nenhuma figura de latência de hardware é reivindicada; verifique a melhoria com seu microfone e driver de áudio.
+Validação inclui verificações de regressão para reamostrar tamanhos de blocos, conversão de canal, formatos extensíveis, recuperação de underrun, frescura de transbordamento, captura concorrente / playback e conclusão do clipe, juntamente com o instalador Windows existente e testes de aplicação. Nenhuma figura de latência de hardware é reivindicada; verifique a melhoria com o seu microfone e driver de áudio.
 
 DeckPilot 2.1.2 e DeckPilot Atelier 1.0.11 corrigir a segurança da oficina, confiabilidade da placa de som e sons de perfil portáteis.
 
@@ -83,4 +83,4 @@ DeckPilot 1.8.0 adiciona um espaço de trabalho atualizado e maneiras mais rápi
 
 Transferir **DeckPilot- Setup.exe** ou atualização do aplicativo. Perfis existentes, calibração e preferências de inicialização são preservadas. Firmware permanece **1.1.1**; nenhum flash é necessário para essas características.
 
-A validação inclui as verificações de compatibilidade/navegação/importação/template do núcleo e a instalação nativa do Windows, atualização, picker, arrastar e soltar, desfazer/refazer, criação de modelo, ações de perfil, captura de atalhos, edição da área de transferência, layout e minimização/restore. O comportamento físico do macropad e do dispositivo de áudio ainda depende do hardware do proprietário do Windows.
+A validação inclui as verificações de compatibilidade/navegação/importação/template e instalação nativa do Windows, atualização, picador, arrastar e soltar, desfazer/refazer, criação de modelo, ações de perfil, captura de atalhos, edição de área de transferência, layout e minimização/restore. O comportamento físico do macropad e do dispositivo de áudio ainda depende do hardware do proprietário do Windows.

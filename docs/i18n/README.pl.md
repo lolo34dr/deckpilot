@@ -91,7 +91,7 @@ Podczas modernizacji od pierwszego 4- układ wiersza, DeckPilot zachowuje profil
 
 Przenośny [DeckPilot.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot.exe) oraz [ZIP](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-win-x64.zip) pozostają dostępne dla kompatybilności. Do użytku przenośnego, przechowywać wykonywalny w osobnym folderze do zapisu.
 
-Odinstaluj z systemu Windows **Instalowane aplikacje**. Deinstalacja usuwa program i jego skróty, zachowując profile osobiste tak, aby później można je ponownie zainstalować.
+Odinstaluj z systemu Windows **Instalowane aplikacje**. Deinstalacja usuwa program i jego skróty, zachowując profile osobiste, aby później można je ponownie zainstalować.
 
 Pojedynczy plik wykonywalny pobiera swoje powiązane zależności do pamięci podręcznej .NET użytkownika przy pierwszym uruchomieniu, co może potrwać nieco dłużej. Opublikowane pliki wykonywalne są obecnie niepodpisane, więc Windows może wyświetlić ostrzeżenie SmartScreen.
 
@@ -159,7 +159,7 @@ Wybór do aktualizacji późniejsze pocztówki automatyczne prompts dla 24 Kontr
 
 Pliki do pobrania używają HTTPS, z przekierowaniem ograniczonym do oczekiwanych hostów GitHub. Pliki tymczasowe są przechowywane w `%LOCALAPPDATA%\DeckPilot\Updates`; pliki do pobrania starsze niż siedem dni są czyszczone. Wpis startowy systemu Windows nadal używa tej samej ścieżki wykonywalnej po aktualizacji.
 
-Kopie przenośne wymagają zapisu osobistego folderu. Zainstalowane kopie używają instalatora dla chronionych katalogów; DeckPilot sama aplikacja nadal działa bez praw administratora.
+Kopie przenośne wymagają zapisanego folderu osobistego. Zainstalowane kopie używają instalatora dla chronionych katalogów; DeckPilot sama aplikacja nadal działa bez praw administratora.
 
 **Aktualizacja z 0.1.x?** Zakończ starą wersję z obszaru powiadomienia i ręcznie zastąp wykonywalny najnowszym wydaniem raz. Te starsze wersje nie zawierają updater. Późniejsze aktualizacje mogą być zainstalowane z wewnątrz DeckPilot.
 
@@ -288,9 +288,9 @@ Proponowany kredyt:
 
 Dla przygotowania urządzenia i kontroli jakości warsztatu, zainstalować oddzielny [DeckPilot Atelier](../../docs/FACTORY.md) narzędzie. Jego instalator jest publikowany jako **[DeckPilot-Atelier- Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** obok aplikacji głównej. Może wyświetlić dołączone oprogramowanie firmowe na desce Leonardo / Caterina, a następnie sprawdzić krótkie i długie prasy na wszystkich 12 klucze fizyczne i eksportować raport.
 
-DeckPilot 1.1.0 zawiera **Firmware du macropad…** okno dialogowe i oprogramowanie firmowe 1.0.0 dla Pro Micro ATmega32U4 **5 V / 16 MHz**, przy użyciu konfiguracji Leonardo / Caterina potwierdzonej przez właściciela dziennika wysyłania. Narzędzie do migania w pakiecie Windows nie wymaga Arduino IDE. Wybór urządzenia i potwierdzenie są obowiązkowe; aktualizacje aplikacji nigdy po cichu nie świecą planszą. Istniejące mappingi, profile i kalibracja F13- F24 pozostają kompatybilne.
+DeckPilot 1.1.0 zawiera **Firmware du macropad…** okno dialogowe i oprogramowanie firmowe 1.0.0 dla Pro Micro ATmega32U4 **5 V / 16 MHz**, przy użyciu konfiguracji Leonardo / Caterina potwierdzonej przez właściciela dziennika wysyłania. Złączone narzędzie do migania Windows nie wymaga Arduino IDE. Wybór urządzenia i potwierdzenie są obowiązkowe; aktualizacje aplikacji nigdy po cichu nie świecą planszą. Istniejące mappingi F13- F24, profile i kalibracja pozostają kompatybilne.
 
-**Właściciel potwierdził udaną migawkę w aplikacji, oprogramowanie firmowe 1.0.0 identyfikacja i wszystkie 12 przyciski na tablicy odniesienia.** Zachowaj oryginalny szkic i dostęp do RST / GND do odzysku. Nie można automatycznie obracać migawki firmware. Zobacz [dokumentacja firmware](FIRMWARE.pl.md) dla kompatybilności, walidacji, odzyskiwania, budowania kroków i licencji trzeciej strony. Przyciski Per- tryby USB i natywnych kontroli mediów nie są częścią tej wersji oprogramowania firmowego.
+**Właściciel potwierdził udaną migawkę w aplikacji, firmware 1.0.0 identyfikacja i wszystkie 12 przyciski na tablicy odniesienia.** Zachowaj oryginalny szkic i dostęp do RST / GND do odzysku. Nie można automatycznie obracać migawki firmware. Zobacz [dokumentacja firmware](FIRMWARE.pl.md) dla kompatybilności, walidacji, odzyskiwania, budowania kroków i licencji trzeciej strony. Przyciski Per- tryby USB i natywnych kontroli mediów nie są częścią tej wersji oprogramowania firmowego.
 
 <a id="building-the-windows-installer"></a>
 ### Budowa instalatora systemu Windows
@@ -313,7 +313,7 @@ Im większy 3 × 4 klawiatura śledzi fizyczną obudowę i czarne nasadki klawis
 
 Wybierz klucz do edycji. **Options avancées · fichier et arguments** utrzymuje ręczne ścieżki aplikacji i argumenty startowe zawalone domyślnie, podczas gdy podstawowe foldery i cele strony internetowej pozostają rozszerzone. **Tester l’action** zapisuje i wysyła wybrane działanie na bieżącym komputerze PC; wskaźnik sukcesu potwierdza wysyłkę, a nie ukończenie wewnątrz innej aplikacji. Skróty klawiszowe mają na celu aktywne okno. Wolne klawisze F13- F24 nie mają działania testowego.
 
-Kiedy makropad jest odłączony, **Hors ligne** i towarzysząca podpowiedź wyjaśnia, że profile mogą być wciąż edytowane i testowane. Konfiguracja jest przechowywana na komputerze PC i pozostaje dostępna przez cały czas rozłączania i ponownego łączenia. Te usprawnienia interfejsu działają z istniejącym oprogramowaniem firmowym i nie wymagają dodatkowego błysku.
+Kiedy makropad jest odłączony, **Hors ligne** i towarzysząca podpowiedź wyjaśnia, że profile mogą być nadal edytowane i testowane. Konfiguracja jest przechowywana na komputerze PC i pozostaje dostępna przez cały czas rozłączania i ponownego łączenia. Te usprawnienia interfejsu działają z istniejącym oprogramowaniem firmowym i nie wymagają dodatkowego błysku.
 
 Menu obszaru zgłoszeniowego włącza teraz bezpośrednio profile. **Ctrl + S** Zapisuje bieżącą konfigurację przycisku. Nieprawidłowe pliki konfiguracyjne są kopiowane zanim zostanie użyta świeża konfiguracja. Instalacja aplikacji, ikony menu desktop / Start, preferencje startowe i istniejący automatyczny updater są zatrzymywane.
 
@@ -342,7 +342,7 @@ Uruchomienie systemu Windows utrzymuje teraz wyraźną preferencję dla użytkow
 <a id="sharp-keypad-rendering-profile-recovery-and-audio-controls-161"></a>
 ## Redukcja klawiatury Sharp, odzysk profilu i sterowanie dźwiękiem (1.6.1)
 
-Klawiatura renderuje teraz na natywnych rozmiarach WPF zamiast skalowania tekstu przez Viewbox. Efekty cieni rodzicielskiej / kluczowej oraz animacje skali tekstu zostały usunięte; mniejsze okna przewijają się raczej niż kurczą klawiaturę. Aplikacja deklaruje świadomość DPI monitora i używa większych ikon powłoki systemu Windows do aplikacji na pulpicie.
+Klawiatura renderuje teraz na natywnych rozmiarach WPF zamiast skalowania tekstu przez Viewbox. Efekty cieni rodzicielskiej / kluczowej oraz animacje skali tekstu zostały usunięte; mniejsze okna przewijają się raczej niż kurczą klawiaturę. Aplikacja deklaruje świadomość DPI monitora i wykorzystuje większe ikony powłoki systemu Windows do aplikacji na pulpicie.
 
 **Annuler / Rétablir** Przywraca edycje profili, w tym swapy drag- and- drop, ustawienia akcji, import i tworzenie / usuwanie profilu. Historia utrzymuje 50 edytuje podczas sesji aplikacji. Ctrl + Z / Ctrl + Y działa na profilach poza polami tekstowymi; pola tekstowe zachowują swoje własne cofnięcie / redo. Kalibracja, preferencje startowe i wykonywane działania nie są cofane.
 
@@ -354,7 +354,7 @@ Przed zapisaniem zmienionych profili, DeckPilot utrzymuje poprzednie profile w `
 
 **Changer de sortie audio** Zastępuje dwa wybrane, połączone urządzenia wyjściowe, dla konsoli Windows, multimediów i komunikacji domyślnych. Brak celu daje błąd bez wyboru innego urządzenia. Aplikacje z ich własnym wyjściem stacjonarnym nie mogą być zgodne z domyślnym Windows. Importowane identyfikatory punktów końcowych są wyświetlane jako niedostępne do czasu dostosowania do obecnego komputera PC. Nie powiodła się próba zmiany trasy przywracania poprzednich domyślnych.
 
-Konfigurowanie **appui court / appui long**, najpierw wybierz skonfigurowane działanie, włącz opcję działania dwa, wybierz gest do edycji i ustawić próg z 200 do 3000 MS. Bez tego trybu działania zachowują natychmiastowe zachowanie klawisza. Z nim krótkie akcje przebiegają po zwolnieniu przed progiem; długie akcje przebiegają raz na progu (lub po zwolnieniu, jeśli zegar jeszcze nie działa). Długa akcja nigdy nie uruchamia się także w krótkim. Wolne klawisze F13- F24 nie mogą używać trybu dual- action. Oczekiwane gesty są anulowane na zmianie profilu / konfiguracji, kalibracji, operacji firmware, zmian sesji i zawieszenia. Nie jest potrzebne oprogramowanie firmware flash; istniejący key- down / key- up raporty klawiatury dostarczają gestów.
+Konfigurowanie **appui court / appui long**, najpierw wybierz skonfigurowane działanie, włącz opcję działania dwa, wybierz gest do edycji i ustawić próg z 200 do 3000 ms. Bez tego trybu działania zachowują natychmiastowe zachowanie klawisza. Z nim krótkie akcje przebiegają po zwolnieniu przed progiem; długie akcje przebiegają raz na progu (lub po zwolnieniu, jeśli zegar jeszcze nie działa). Długa akcja nigdy nie działa także na krótki. Wolne klawisze F13- F24 nie mogą używać trybu dual- action. Oczekiwane gesty są anulowane na temat zmian profilu / konfiguracji, kalibracji, operacji firmware, zmian sesji i zawieszenia. Nie jest potrzebne oprogramowanie firmware flash; istniejące raporty klawiatury-dół / key- up dostarczają gestów.
 
 Kontrole podstawowe obejmują granice powtarzania / zwalniania, jednoczesne przytrzymywanie, anulowanie, historię profilu / wymiana / kopie zapasowe i wrzuty audio przy użyciu fałszywych punktów końcowych. Sprawdzanie UI systemu Windows wykonuje rzeczywiste przeciążenie cofania / redo, konfigurując długie działanie i próg, native keypad wymiary po zmianie rozmiaru i wskaźnik mikrofonu. Rzeczywiste sterowniki mikrofonu, headset / głośnik przełączanie i uchwyty fizyczne nadal wymagają walidacji na komputerze właściciela.
 
@@ -369,7 +369,7 @@ Zbuduj i wydaj Workflows za pomocą Node.js 24 działania. Kompilator Arduino po
 
 Ustawienia odczytywane w testach Windows wyraźnie pozwalają odczytywać / pisać / usuwać udostępnianie i parse UTF-8 po zamknięciu czytnika. To zapobiega temu, że test sam w sobie odmawia wymiany plików atomowych aplikacji. Test historyczny utrzymuje stare zdjęcie otwarte w trzech cyklach cofania / ponownego wykonania i sprawdza, czy pozostaje nienaruszony podczas zmiany ustawień na żywo.
 
-W systemie Windows istniejące pliki konfiguracyjne są oddane `File.Replace` a nie tryb nadpisarski `File.Move`Wspiera to czytniki, które pozwalają na usuwanie przy zachowaniu kompletnego starego migawki. Podstawowy apartament testuje trzy zastępstwa z czytnikiem utrzymywanym w otwartym; Kontrola rdzenia systemu Windows działa przed kompilacją oprogramowania firmowego i publikacją, tak więc błędy trwałości są wykrywane wcześnie.
+W systemie Windows istniejące pliki konfiguracyjne są oddane `File.Replace` zamiast trybu nadpisarskiego `File.Move`Wspiera to czytniki, które pozwalają na usuwanie przy zachowaniu kompletnego starego migawki. Podstawowy apartament testuje trzy zastępstwa z czytnikiem utrzymywanym w otwartym; Kontrola rdzenia systemu Windows działa przed kompilacją oprogramowania firmowego i publikacją, tak więc błędy trwałości są wykrywane wcześnie.
 
 Czytnik migawek testowych może czekać aż 500 ms dla Windows udostępniania / naruszenia blokady podczas `ReplaceFile` commits. Czekanie dotyczy tylko otwarcia migawki, nigdy nie wykonywania lub ponownego wykonania działania aplikacji. Inne błędy, źle ukształtowany JSON i trwałe zamki pozostają niepowodzeniem.
 
@@ -390,10 +390,10 @@ Zmiany te zmniejszają określoną pracę; nie tworzą niezależnej od maszyn wa
 Interfejs węglowy stawia bibliotekę działania na pierwszym miejscu, oddziela kontrolę profilu od chrupiącej native- size 3 × 4 klawiatura i grupy ustawień akcji w karcie. Kluczowe akcenty wyróżniają własne kategorie; wybór, ostrość klawiatury i informacje zwrotne akcji pozostają oddzielone. **Réduire les animations** w preferencjach uzupełnia ustawienia animacji systemu Windows. Mniejsze okna zachowują dostęp do przewijania zamiast kurczenia się tekstu klucza.
 
 - **Szablony profilu:** poniżej **Gérer les profils**, Dodaj muzykę i dźwięk, pulpit i wydajność, lub Tworzenie. Każdy szablon tworzy osobny edytowalny profil i nigdy nie wykonuje swoich działań. Istniejące profile i kalibracja fizyczna są zachowane. Skróty klawiszowe używają aktywnej aplikacji, której wiązania mogą się różnić.
-- **Klucze profilu:** przypisz **Changer de profil**, następnie wybierz nazwany profil lub cykl do przodu / do tyłu. Referencje pomiędzy profilami są remapped podczas importowania zestawu lub powielanie profilu samoodsyłającego. Brak miejsca docelowego zgłasza błąd i może być zastąpiony w edytorze.
+- **Klucze profilu:** przypisywanie **Changer de profil**, następnie wybierz nazwany profil lub cykl do przodu / do tyłu. Referencje pomiędzy profilami są remapped podczas importowania zestawu lub powielanie profilu samoodsyłającego. Brak miejsca docelowego zgłasza błąd i może być zastąpiony w edytorze.
 - **Polecenia Windows:** do stosowania **Commandes Windows** aby otworzyć wspólne ustawienia lub Task Manager, lub wyraźnie zablokować komputer PC. Polecenia pochodzą ze stałej listy, bez skryptu do wprowadzenia. Akcja blokady wymaga podpisanie z powrotem do systemu Windows.
 - **Komplete- klucz schowka:** ctrl + C / X / V i Delete pracy, podczas gdy klawisz pokładowy ma ostrość klawiatury; zwykłe pola tekstowe utrzymują swoje skróty edycji. Klawisz schowka pozostaje wewnątrz DeckPilot i jest oczyszczony przy wyjściu. Te edytuje wsparcie cofnij / redo.
-- **Rejestrator skrótów:** wybierz akcję klawiatury i kliknij **Enregistrer un raccourci**. Naciśnij wspieraną kombinację, a następnie zapisać go. Anulowanie ucieczki; F13- F24 jest zarezerwowane dla makro pad podczas nagrywania.
+- **Rejestrator skrótów:** wybierz akcję klawiatury i kliknij **Enregistrer un raccourci**. Naciśnij wspieraną kombinację, a następnie zapisać go. Anulowanie ucieczki; F13- F24 jest zarezerwowany dla makro pad podczas nagrywania.
 - **Szybki dostęp:** Ctrl + K lub przycisk Biblioteka skupia wyszukiwanie akcji. **Activité récente** utrzymuje ostatni 30 wysłanie / nieudana akcja w pamięci dla tej sesji, bez zapisywania argumentów programu lub ścieżek docelowych. Można ją w każdej chwili wyczyścić. Udane wysłanie nie gwarantuje zakończenia w aplikacji docelowej.
 
 Oprogramowanie firmowe pozostaje **1.1.1**. Akceptowanie automatycznej oferty oprogramowania firmowego teraz poprawnie otwiera menedżera oprogramowania firmowego; poprzednia ochrona modalna uniemożliwiła przekazanie go. Istniejąca tożsamość oprogramowania firmowego, bicie serca, ponowne podłączenie i kontrola flash pozostają na miejscu. Nowe funkcje przestrzeni roboczej nie potrzebują błysku firmware.
@@ -468,7 +468,7 @@ Walidacja obejmuje istniejące ustawienia, walidację akcentu, nawigację profil
 <a id="profile-sound-files-and-workshop-safety"></a>
 ### Profilowe pliki dźwiękowe i bezpieczeństwo warsztatu
 
-Eksport profili obejmuje wymienione klipy MP3 / WAV (do 32 MiB audio na pakiet). Import kopii wbudowany audio do DeckPilotjest zarządzany folder Sounds i identyfikatory remap bez wymiany istniejących klipów. Automatyczne kopie zapasowe profilu używają tego samego formatu; niedostępny dźwięk jest rejestrowany jako brakuje, a nie po cichu zastąpiony. Zachowaj pliki źródłowe, jeśli przekroczysz limit eksportu. Pliki profilu Legacy pozostają obsługiwane. Usuwanie klipu, który jest nadal przypisany do krótkiej lub długiej akcji jest zablokowane.
+Eksport profili obejmuje wymienione klipy MP3 / WAV (do 32 MiB audio na pakiet). Import kopii wbudowany audio do DeckPilotjest zarządzany folder Sounds i identyfikatory remap bez wymiany istniejących klipów. Automatyczne kopie zapasowe profilu używają tego samego formatu; niedostępny dźwięk jest rejestrowany jako brakuje, a nie po cichu zastąpiony. Zachowaj pliki źródłowe, jeśli przekroczysz limit eksportu. Pliki profilu Legacy pozostają obsługiwane. Usuwanie klipu, który jest nadal przypisany do akcji krótkiej lub długiej jest zablokowane.
 
 Atelier akceptuje deski, które nie odpowiadają jeszcze na DeckPilot protokół, podczas sprawdzania lokalizacji USB, Caterina bootloader i ATmega32U4 podpis przed programowaniem. Każda sesja testowa zaczyna się od pustych wyników, a jej raport pozostaje związany z testowaną planszą. Zamknięcie aplikacji podczas flash lub reset jest zablokowane aż do zakończenia pisania i weryfikacji.
 

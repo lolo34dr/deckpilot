@@ -3,14 +3,14 @@
 <a id="deckpilot-firmware"></a>
 # DeckPilot Firmware
 
-Nur für die getestete Hardware-Konfiguration: **Pro Micro ATmega32U4 5 V / 16 MHz**, unter Verwendung der **Arduino Leonardo** Boardprofil und ein **Caterina / AVR109** USB-C beschreibt den Stecker, nicht die Board-Kompatibilität. Die ursprüngliche Skizze des Besitzers wurde erfolgreich mit dem 1200-baud reset und AVR109 bei 57600 baud. Der Besitzer hat auch erfolgreiches In-App-Flashing, Firmware bestätigt 1.0.0 Identifizierung und Funktionsweise aller 12 Knöpfe auf dieser Referenztafel.
+Nur für die getestete Hardware-Konfiguration: **Pro Micro ATmega32U4 5 V / 16 MHz**, unter Verwendung der **Arduino Leonardo** Boardprofil und ein **Caterina / AVR109** USB-C beschreibt den Stecker, nicht die Board-Kompatibilität. Die ursprüngliche Skizze des Besitzers wurde erfolgreich mit dem 1200-baud reset und AVR109 bei 57600 baud. Der Besitzer hat auch erfolgreiche In-App-Flashing, Firmware bestätigt 1.0.0 Identifizierung und Funktionsweise aller 12 Knöpfe auf dieser Referenztafel.
 
 <a id="wiring-and-behavior"></a>
 ## Verdrahtung und Verhalten
 
 Jeder Schalter verbindet einen Pin mit GND. Interne Klimmzüge sind aktiviert. Pins **2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15, 16** Senden **F13 bis F24** in dieser Reihenfolge. Eine stabile 30 ms debounce behandelt das Drücken und Loslassen unabhängig. Tastaturverhalten, Windows-seitige Profile und Kalibrierung bleiben kompatibel; USB-Tastaturrollover bleibt durch Arduinos Tastaturbibliothek eingeschränkt. Die Firmware führt noch keine USB-Modi per Taste oder native Mediensteuerung ein.
 
-Stift **1** Der USB-Kern kann weiterhin den Bootloader-Eintrag unterstützen, VCC nicht mit GND verbinden.
+Stift **1** Der USB-Kern kann weiterhin den Bootloader-Eintrag unterstützen. Schließen Sie VCC nicht an GND an.
 
 Die aktuelle USB CDC Serial Interface Antworten `DECKPILOT?\n` bei 115200 Baud mit:
 
@@ -28,13 +28,13 @@ Für den normalen Tastaturbetrieb ist keine serielle Verbindung erforderlich. Di
 3. Offen **Firmware du macropad…**, wählen Sie das richtige Gerät und bestätigen Sie die Platine und die Verdrahtung. eine nicht identifizierte Originalskizze kann nur nach ausdrücklicher Bestätigung installiert werden.
 4. Bestätigen Sie die Installation und lassen Sie das USB-Kabel bis zum Abschluss angeschlossen. DeckPilot während der Firmware-Dialog geöffnet ist; gewöhnliche F13-F24-Ereignisse erreichen immer noch Windows.
 
-Die Firmware und Windows AVRDUDE 8.0 werden in der veröffentlichten App gebündelt. Keine Arduino IDE oder separate Treiberinstallation wird durchgeführt von DeckPilot. Windows muss bereits den seriellen USB-Anschluss des Boards freilegen, wie es beim erfolgreichen Upload des Besitzers der Fall war. Neue Firmware-Versionen werden mit App-Updates von GitHub geliefert; die Aktualisierung der App erfolgt **nicht** automatisches Flashen von Hardware. Jeder Blitz muss bestätigt werden.
+Die Firmware und Windows AVRDUDE 8.0 werden in der veröffentlichten App gebündelt. Keine Arduino IDE oder separate Treiberinstallation wird durchgeführt von DeckPilot. Windows muss bereits den seriellen USB-Anschluss des Boards freilegen, wie es beim erfolgreichen Upload des Besitzers der Fall war. Neue Firmware-Versionen werden mit App-Updates von GitHub geliefert; die Aktualisierung der App funktioniert **nicht** automatisches Flashen von Hardware. Jeder Blitz muss bestätigt werden.
 
 DeckPilot Atelier hält **Effacer le firmware de la carte** bei zusammengebrochenen fortgeschrittenen Vorgängen. `EFFACER`, klärt alle 28 KiB der Anwendung Flash mit einer verifizierten Reset-Schleife, und stoppt F13-F24 und normale USB-Enumeration. Caterina bleibt verfügbar, aber die Karte erscheint nicht wieder in Atelier, bis sie manuell in den Bootloader-Modus gebracht wird. Halten Sie sie verbunden, kurz verbinden **RST** bis **GND zweimal schnell**, wählen Sie dann den temporären Arduino Leonardo / Bootloader COM-Port aus und verwenden Sie die Wiederherstellungsaktion von Atelier, um sie neu zu installieren DeckPilotAtelier zeigt diese Anweisungen an und hält die Wiederherstellung nach dem Löschen oder einem unterbrochenen Blitz aktiviert. Bootloader und EEPROM bleiben erhalten; dies ist keine vollständige Löschung des Chips. Profildaten bleiben auf dem PC.
 
 DeckPilot prüft SHA-256Intel HEX zeichnet Prüfsummen, Reset-Vektor-Präsenz, Überlappungen und die **28672-byte** Anwendungsgrenze vor dem Reset. Es entspricht dem physischen USB-Standort über Laufzeit- und Bootloader-Ports, verwendet AVR109 bei 57600 baud, erfordert die Schreibverifizierung von AVRDUDE, überprüft dann die Identität und Version der laufenden Firmware. Es werden keine Sicherungen, EEPROM oder der Bootloader geschrieben. `2341:8036` / `2A03:8036` und Caterina `2341:0036` / `2A03:0036` Wenn Windows keine passende physische Verbindung bereitstellen kann, wird das Blinken blockiert, anstatt einen Port zu erraten.
 
-Blinken ist nicht atomar: Eine Kabeltrennung oder Stromausfall kann die Firmware der Anwendung unvollständig machen. Es gibt keine automatische Firmware-Backup oder Rollback. **Arduino Leonardo**. Je nach Bootloader des Boards kann ein kurzzeitiges zweimaliges Anschließen von RST an GND einen temporären Bootloader-Port freilegen; Uploaden während dieser Port verfügbar ist. Ein beschädigter Bootloader benötigt ISP-Hardware und kann nicht mit diesem USB-Updater repariert werden. Schreiben Sie keine andere Board- oder Clock-Variante.
+Blinken ist nicht atomar: Eine Kabeltrennung oder Stromausfall kann die Firmware der Anwendung unvollständig machen. Es gibt keine automatische Firmware-Backup oder Rollback. **Arduino Leonardo**. Je nach Bootloader des Boards kann ein kurzzeitiges zweimaliges Anschließen von RST an GND einen temporären Bootloader-Port freilegen; Uploaden während dieser Port verfügbar ist. Ein beschädigter Bootloader benötigt ISP-Hardware und kann nicht mit diesem USB-Updater repariert werden. Schreiben Sie kein anderes Board oder eine andere Clock-Variante.
 
 Das letzte abgeschlossene AVRDUDE-Log der Haupt-App wird unter `%LOCALAPPDATA%\DeckPilot\Firmware\last-flash.log`Atelier installiert und setzt die Logs ein `%LOCALAPPDATA%\DeckPilotFactory\last-flash.log` und `last-reset.log`.
 
@@ -56,9 +56,9 @@ Das Original 12-Button Skizze wurde von David Madison angepasst **Stream Billig*
 <a id="firmware-111-and-usb-protocol-2"></a>
 ## Firmware 1.1.1 und USB-Protokoll 2
 
-Firmware 1.1.1 fügt einen schreibgeschützten Diagnoselink hinzu, während das gleiche F13-F24-Tastatur-Mapping und -Pin beibehalten wird1 Startup Failsafe. **Der physische Test des Besitzers deckte die Firmware ab 1.0.0Firmware 1.1.1 hat automatisierte Protokolltests und einen AVR-Build, benötigt aber immer noch seinen ersten Test auf der eigentlichen Platine.** Profile und Kalibrierung bleiben auf dem PC und müssen für dieses Firmware-Update nicht neu erstellt werden.
+Firmware 1.1.1 fügt einen schreibgeschützten Diagnoselink hinzu, während das gleiche F13-F24-Tastatur-Mapping und PIN-1 Startup Failsafe. **Der physische Test des Besitzers deckte die Firmware ab 1.0.0Firmware 1.1.1 hat automatisierte Protokolltests und einen AVR-Build, benötigt aber immer noch seinen ersten Test auf der eigentlichen Platine.** Profile und Kalibrierung bleiben auf dem PC und müssen für dieses Firmware-Update nicht neu erstellt werden.
 
-Die neue App identifiziert die angeschlossene Karte, hält ihren seriellen Port offen, verbindet sich nach dem Ausstecken wieder und überprüft ihre Firmware-Version beim Start und nach der Wiederverbindung. Firmware-Updates werden mit App-Releases geliefert: Start-Checks vergleichen die angeschlossene Firmware mit dem validierten Bundle in der installierten App. App-Update-Checks erhalten immer noch neuere Releases von GitHub. Es gibt keinen separaten Firmware-Download-Kanal.
+Die neue App identifiziert die angeschlossene Karte, hält ihren seriellen Port offen, verbindet sich nach dem Ausstecken wieder und überprüft ihre Firmware-Version beim Start und nach dem Wiederanschluss. Firmware-Updates werden mit App-Releases geliefert: Start-Checks vergleichen die angeschlossene Firmware mit dem validierten Bundle in der installierten App. App-Update-Checks erhalten immer noch neuere Releases von GitHub. Es gibt keinen separaten Firmware-Download-Kanal.
 
 Eine ältere erkannte Firmware fordert einmal pro App-Sitzung mit einem 24Benachrichtigungen können deaktiviert werden unter: **Connexion et diagnostic**Unbekannte Arduino-Skizzen, getrennte Geräte und mehrdeutige Mehrkartenauswahlen lösen keine automatischen Blink- oder Aktualisierungsaufforderungen aus. Die Firmware-Installation erfordert immer eine Bestätigung. Das Öffnen des Firmware-Managers setzt den Monitor aus und wartet auf die Freigabe des seriellen Ports; die Überwachung wird nach dem Schließen des Dialogs fortgesetzt.
 
@@ -78,7 +78,7 @@ Board: DP2|PONG|1234ABCD|7|42000|9|2049
 Board: DP2|KEYS|1234ABCD|10|1
 ```
 
-`INFO` Werbung 12 Schlüssel und Fähigkeitsbits: 1 = Herzschlag/Zustands-Schnappschuss, 2 = Key-State Events. `PONG` Echos des Anforderungszählers, berichtet dann die Verfügbarkeit in Millisekunden, die Zustandssequenz und die 12-Bit Button Maske. `KEYS` Meldesequenz und Maske; Bit 0 ist F13 und bit 11 F24 ist, unabhängig von der physikalischen Kalibrierung, Sitzungen und Anforderungszähler lehnen veraltete Antworten ab. 32Schlüssel bleiben nur Diagnosedaten: App-Aktionen laufen immer noch einmal durch den vorhandenen Tastaturpfad, so dass ein serielles Ereignis dieselbe Aktion nicht zweimal ausführen kann.
+`INFO` Werbung 12 Schlüssel und Fähigkeitsbits: 1 = Herzschlag/Zustands-Schnappschuss, 2 = Key-State Events. `PONG` Echos des Anforderungszählers, berichtet dann die Verfügbarkeit in Millisekunden, Zustandssequenz und 12-Bit Button Maske. `KEYS` Meldesequenz und Maske; Bit 0 ist F13 und bit 11 F24 ist, unabhängig von der physikalischen Kalibrierung, Sitzungen und Anforderungszähler lehnen veraltete Antworten ab. 32Schlüssel bleiben nur Diagnosedaten: App-Aktionen laufen immer noch einmal durch den vorhandenen Tastaturpfad, so dass ein serielles Ereignis dieselbe Aktion nicht zweimal ausführen kann.
 
 Heartbeat-Anfragen werden normalerweise alle zwei Sekunden gesendet. Die App verbindet sich wieder, wenn eine passende Antwort fehlt. 1.5 Sekunden; die Firmware stoppt die unerwünschte Diagnose nach sechs Sekunden ohne Herzschlag oder wenn die serielle Verbindung geschlossen wird. Firmware 1.0.0 bleibt durch die Legacy-Identitätsabfrage unterstützt, ohne Live-Key-Diagnose. DeckPilot Apps können immer noch die Legacy-Identität der Firmware lesen 1.1.1.
 

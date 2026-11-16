@@ -8,7 +8,7 @@ Alleen voor de geteste hardwareconfiguratie: **Pro Micro ATmega32U4, 5 V / 16 MH
 <a id="wiring-and-behavior"></a>
 ## Bedrading en gedrag
 
-Elke schakelaar verbindt één speld met GND. Interne pull-ups zijn ingeschakeld. **2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15, 16** verzenden **F13 tot en met F24** Een stal in die volgorde. 30 ms debounce handvatten drukken en vrijgeven onafhankelijk van elkaar. Toetsenbordgedrag, Windows-side profielen en kalibratie blijven compatibel; USB-toetsenbordroller blijft beperkt door de toetsenbordbibliotheek van Arduino. De firmware introduceert nog geen USB-modi per knop of native media controls.
+Elke schakelaar verbindt één pin met GND. Interne pull-ups zijn ingeschakeld. Pins **2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15, 16** verzenden **F13 tot en met F24** Een stal in die volgorde. 30 ms debounce handvatten drukken en vrijgeven onafhankelijk van elkaar. Toetsenbordgedrag, Windows-side profielen en kalibratie blijven compatibel; USB-toetsenbordroller blijft beperkt door de toetsenbordbibliotheek van Arduino. De firmware introduceert nog geen USB-modi per knop of native media controls.
 
 Pin **1** wordt vastgehouden aan GND bij het opstarten schakelt de toetsenbordbewerking uit, waarbij de originele failsafe behouden blijft. De USB-kern kan nog steeds bootloader-invoer ondersteunen. Verbind VNC niet met GND.
 
@@ -34,7 +34,7 @@ DeckPilot Atelier houdt **Effacer le firmware de la carte** onder ingestorte gea
 
 DeckPilot controleert SHA-256, Intel HEX registreren controlesums, reset-vector aanwezigheid, overlappingen en de **28672-byte** toepassingsgrens voor de reset. Het komt overeen met de fysieke USB-locatie over de runtime en bootloader poorten, gebruikt AVR109 op 57600 baud, vereist AVRDUDE's schrijfverificatie, controleert dan de identiteit en versie van de draaiende firmware. Het schrijft geen zekeringen, EEPROM of de bootloader. Alleen Leonardo ID's `2341:8036` / `2A03:8036` en Caterina `2341:0036` / `2A03:0036` worden geaccepteerd. Als Windows geen passende fysieke verbinding kan bieden, wordt knipperen eerder geblokkeerd dan raden van een poort.
 
-Flitsen is niet atomair: een kabel loskoppelen of stroomverlies kan de toepassing firmware incompleet laten. Er is geen automatische firmware back-up of rollback. Indien nodig, opnieuw uploaden van de originele schets met Arduino IDE ingesteld op **Arduino Leonardo**. Afhankelijk van de bootloader van het bord, kan kort aansluiten van RST op GND tweemaal een tijdelijke bootloader poort blootleggen; uploaden terwijl die poort beschikbaar is. Een beschadigde bootloader vereist ISP hardware en kan niet worden gerepareerd door deze USB-updater. Schrijf geen ander bord of klokvariant.
+Flitsen is niet atomair: een kabel loskoppelen of stroomverlies kan de toepassing firmware incompleet laten. Er is geen automatische firmware back-up of rollback. Indien nodig, opnieuw uploaden van de originele schets met Arduino IDE ingesteld op **Arduino Leonardo**. Afhankelijk van de bootloader van het bord, kan kort aansluiten van RST op GND tweemaal een tijdelijke bootloader poort ontmaskeren; uploaden terwijl die poort beschikbaar is. Een beschadigde bootloader vereist ISP hardware en kan niet worden gerepareerd door deze USB update. Schrijf geen andere board of klokvariant.
 
 Het laatst voltooide AVRDUDE-logboek van de belangrijkste app wordt opgeslagen op `%LOCALAPPDATA%\DeckPilot\Firmware\last-flash.log`. Atelier houdt logs installeren en resetten in `%LOCALAPPDATA%\DeckPilotFactory\last-flash.log` en `last-reset.log`.
 
@@ -60,13 +60,13 @@ Firmware 1.1.1 voegt een read-only kenmerkende link met behoud van dezelfde F13.
 
 De nieuwe app identificeert de aangesloten kaart, houdt de seriële poort open, herkoppelt na het uitpluggen, en controleert de firmware-versie bij het opstarten en na het opnieuw aansluiten. Firmware-updates worden geleverd met app-releases: opstartcontroles vergelijken de aangesloten firmware met de gevalideerde bundel in de geïnstalleerde app. App-updatecontroles verkrijgen nog steeds nieuwere releases van GitHub. Er is geen aparte firmware-alleen downloadkanaal.
 
-Een oudere gedetecteerde firmware vraagt één keer per app sessie, met een 24-uurherinnering vertraging bij uitstel. Meldingen kunnen worden uitgeschakeld onder **Connexion et diagnostic**. Onbekende Arduino schetsen, losgekoppelde apparaten en dubbelzinnige multi-card selecties leiden niet automatisch knipperen of updateprompts. Firmware installatie vereist altijd bevestiging. Het openen van de firmware manager schorst de monitor en wacht tot de seriële poort wordt vrijgegeven; monitoring hervat nadat het dialoogvenster sluit.
+Een oudere gedetecteerde firmware vraagt één keer per app sessie, met een 24-uurherinnering vertraging bij uitstel. Meldingen kunnen worden uitgeschakeld onder **Connexion et diagnostic**. Onbekende Arduino schetsen, losgekoppelde apparaten en dubbelzinnige multiple-card selecties leiden niet tot automatische knipperen of updateprompts. Firmware installatie vereist altijd bevestiging. Het openen van de firmware manager schorst de monitor en wacht tot de seriële poort wordt vrijgegeven; monitoring hervat nadat het dialoogvenster sluit.
 
 **Voor een handmatige upload van Arduino IDE, stop DeckPilot van zijn dienblad pictogram eerst.** Het sluiten van het hoofdvenster verbergt het alleen, dus het blijft de eigenaar van de seriële verbinding. DeckPilot en een andere seriële monitor kan dezelfde poort niet tegelijkertijd gebruiken. Als een ander hulpmiddel al eigenaar is van de poort, rapporteert de app het probleem en herhaalt het zonder de gewone toetsenbordtoetsen te beïnvloeden.
 
 Het nieuwe `DeckPilotProtocol.h` is dezelfde uitvoering uitgeoefend door `tests/firmware-protocol.cpp`. Het maakt gebruik van fixed-size buffers, begrensde invoerverwerking en beschikbare USB-ruimte verzenden; knop scannen wordt nooit opzettelijk vertraagd tijdens het wachten op een host. De nieuwste hangende knop masker wordt gecoalesced onder tegendruk. Er zijn geen commando's om macro's uit te voeren, EEPROM schrijven, uitschakelen van het toetsenbord, wijzigen profielen of flash firmware over dit kenmerkende protocol.
 
-Bij 115200 baud, regels eindigen met LF (CRLF wordt geaccepteerd). Sessietekens bevatten precies acht hexadecimale tekens in hoofdletters. Alle getallen zijn niet ondertekend decimale tekens. Voorbeelden:
+Bij 115200 baud, regels eindigen met LF (CRLF wordt geaccepteerd). Sessietekens bevatten precies acht hexadecimale tekens in hoofdletters. Alle getallen zijn decimale cijfers niet ondertekend. Voorbeelden:
 
 ```
 PC:    DECKPILOT?
@@ -84,4 +84,4 @@ Hartslag verzoeken worden meestal elke twee seconden verzonden. De app opnieuw v
 
 De bronversie in `DeckPilotProtocol.h` levert de release manifest versie. Gepubliceerde firmware bundels nu bevatten ook de huidige schets / header onder `source/DeckPilot`, de herstelschets en de DeckPilot MIT licentie.
 
-Het kenmerkende verband maakt bewust gebruik van `Serial.dtr()` in plaats van `bool(Serial)`: Arduino AVR kern 1.8.6 plaatst a 10 ms vertraging in `Serial_::operator bool()`. Het lezen van DTR houdt direct het kenmerkende pad van het toevoegen van die pauze aan elke key-scan cyclus. De host protocol test verwijdert de impliciete bool conversie, zodat dit blokkeren patroon kan niet worden opnieuw in de gedeelde protocol implementatie ongemerkt.
+Het kenmerkende verband maakt bewust gebruik van `Serial.dtr()` in plaats van `bool(Serial)`: Arduino AVR kern 1.8.6 plaatst a 10 ms vertraging in `Serial_::operator bool()`. Het lezen van DTR houdt direct het kenmerkende pad van het toevoegen van die pauze aan elke key-scan cyclus. De host protocol test verwijdert de impliciete bool conversie, zodat dit blokkeren patroon kan niet worden opnieuw in de gedeelde protocol implementatie onopgemerkt.

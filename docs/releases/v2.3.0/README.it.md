@@ -19,7 +19,7 @@ DeckPilot 2.1.7 aggiunge Spotify-solo azioni di volume, un'azione integrata per 
 
 - Spotify volume pulsanti regolare Spotify sessione audio di Windows in 5% passi, senza cambiare il volume master o altri giocatori.
 - L'applicazione picker e ricerca azione sempre offrono DeckPilot, e la sua azione mostra la finestra esistente dall'area di notifica.
-- Le modifiche del profilo mostrano un overlay breve e non attivante sullo schermo attivo. Scegli un angolo o una posizione personalizzata nelle preferenze e visualizzalo in anteprima.
+- Le modifiche del profilo mostrano un overlay breve e non attivante sullo schermo attivo. Scegli un angolo o una posizione personalizzata nelle preferenze e visualizza l'anteprima.
 
 DeckPilot Atelier rimane 1.0.12 e il firmware rimane 1.1.1. Non è necessario alcun flash firmware per queste azioni.
 
@@ -57,7 +57,7 @@ DeckPilot 2.1.3 riduce la latenza del microfono della scheda audio e rimuove i b
 - Supporta ingressi PCM/float mono, stereo, multicanale e Windows estensibili senza la Media Foundation un secondo di lettura.
 - Mantenere l'elaborazione Discord e il routing invariato. Atelier rimane 1.0.11 e il firmware rimane 1.1.1.
 
-La validazione include controlli di regressione per il campionamento di dimensioni, la conversione dei canali, i formati estensibili, il recupero in esecuzione, la freschezza di troppopieno, la cattura / il completamento concomitante di acquisizione e clip, accanto ai test di installazione e applicazione Windows esistenti.
+La validazione include controlli di regressione per il ricampionamento delle dimensioni dei blocchi, la conversione dei canali, i formati estensibili, il recupero in esecuzione, la freschezza di troppopieno, la cattura / il completamento con corrente e clip, accanto ai test di installazione e applicazione Windows esistenti.
 
 DeckPilot 2.1.2 e DeckPilot Atelier 1.0.11 fissare la sicurezza dell'officina, l'affidabilità del suono e i suoni del profilo portatile.
 
@@ -85,7 +85,7 @@ DeckPilot 2.1.0 mantiene l'interfaccia nera profonda e colori personalizzabili, 
 
 DeckPilot 1.9.11 e DeckPilot Atelier 1.0.10 aggiungere l'hardware pre-flash e la diagnostica del firmware, un confronto della versione del firmware, un'azione di recupero guidata dopo le scritture interrotte, il flash multi-board sequenziale con un rapporto di batch, e un controllo del layout fisico-position-to-F13-F24 in ogni report di controllo chiave.
 
-DeckPilot 1.9.11 include lo stesso aggiornamento di Atelier nel rilascio dell'installatore condiviso.
+DeckPilot 1.9.11 include lo stesso aggiornamento Atelier nel rilascio dell'installatore condiviso.
 
 DeckPilot 1.9.10 ripristina i rilasci condivisi contenenti entrambi DeckPilot e DeckPilot Atelier 1.0.9. Entrambe le applicazioni controllano ancora una volta lo stesso ultimo rilascio GitHub.
 
@@ -141,7 +141,7 @@ DeckPilot 2.1.8 aggiunge un ritorno opzionale dell'altoparlante per Soundboard c
 
 DeckPilot Atelier rimane 1.0.12 e il firmware rimane 1.1.1. Non è necessario alcun flash firmware. Il routing effettivo dell'altoparlante deve essere controllato sul PC Windows del proprietario con i suoi dispositivi audio.
 
-DeckPilot 2.1.9 corregge il monitoraggio dell'altoparlante su dispositivi il cui formato audio di Windows è estensibile, tra cui alcuni auricolari USB, e aggiunge una notifica di sovrapposizione della scheda audio.
+DeckPilot 2.1.9 corregge il monitoraggio dell'altoparlante su dispositivi il cui formato audio di Windows è estensivo, tra cui alcuni auricolari USB, e aggiunge una notifica di sovrapposizione della scheda audio.
 
 - Il ritorno dell'altoparlante mantiene l'esatto formato di miscela WASAPI dell'output selezionato, converte i campioni di clip nella sua codifica PCM o float, e si ricarica senza riproduzione guidata da eventi quando un driver rifiuta tale modalità.
 - L'avvio di una clip audio mostra il suo nome nella sovrapposizione configurabile sullo schermo. La preferenza di notifica del profilo esistente, il posizionamento e l'impostazione ridotta di regolazione di controllo entrambi i tipi di notifica.

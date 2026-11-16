@@ -6,7 +6,7 @@ DeckPilot 1.9.0 إضافات DeckPilot Atelier, a separate Windows workshop app 
 - أجري فحصاً مرشداً قصيراً ومطولاً لكل مفتاح مادي، وسجل رسم خرائطه F13-F24، ووفر تقريراً عن مراقبة الجودة.
 - الحمولة **DeckPilot-Atelier-Setup.exe** من هذا الإفراج الأصلي DeckPilot ولا تزال الإنشاءات والبرمجيات الثابتة متاحة بشكل منفصل.
 
-DeckPilot 1.8.0 يضيف مكان عمل متجدد وطرق أسرع لبناء و استخدام ملفك الشخصي
+DeckPilot 1.8.0 يضيف مكان عمل متجدد وسُبل أسرع لبناء وإستعمال ملفاتك
 
 - وصلة الفحم/البقايا، مكتبة العمل أولاً 3 × 4 مفاتيح، ألوان اللهجة الرئيسية وأفضلية الحد من الحركة.
 - Three editable profile templates: Music and audio, Desktop and productivity, and Creation.

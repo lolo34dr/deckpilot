@@ -32,12 +32,12 @@ DeckPilot 2.1.4 Windows Sign-in 후 배경 시작을 포함하여 앱으로 구�
 - 명시된 정지 비활성화 및 자동 시작 설정 저장; 다시 활성화 Soundboard 패널 또는 활성화 버튼. 오디오 클립은 자동으로 재생되지 않습니다.
 - Atelier는 남아 있습니다 1.0.11 펌웨어가 남아 있습니다. 1.1.1.
 
-Validation에는 설정 마이그레이션/라운드 트립 체크 및 기본 Windows UI 체크가 persisted automatic-start preference, 그리고 기존 오디오 및 설치자 체크를 포함합니다. 물리적 장치 시작/리커넥션은 여전히 소유자의 하드웨어에 달려 있습니다.
+Validation에는 설정 마이그레이션/라운드 트립 체크 및 기본 Windows UI 체크가 persisted automatic-start preference, 그리고 기존의 오디오 및 설치자 체크를 포함합니다. 물리적 장치 시작/리커넥션은 여전히 소유자의 하드웨어에 달려 있습니다.
 
 DeckPilot 2.1.3 Soundboard 마이크 지연 시간을 줄이고 라이브 오디오 경로에서 1초 변환 블록을 제거합니다.
 
 - 마이크와 사운드 클립에 대한 출력 구동, 작은 블록 샘플링을 사용합니다. 샘플 속도 우회는 완전히 재흡수합니다.
-- 자주 묻는 질문 20 ms 캡처 및 40 ms 재생 버퍼 대신 이전 100 ms 설정. 실제 대기 시간은 Windows, 오디오 장치 및 VB-CABLE.
+- 자주 묻는 질문 20 ms 캡처 및 40 ms 재생 버퍼 대신 이전 100 ms 설정. 실제 대기 시간은 Windows, 오디오 장치 및에 달려 있습니다. VB-CABLE.
 - Bound 마이크 버퍼링 100 ms 과 유지 최근 완료 프레임 후 재생 이전 연설 대신 재생 스트래치. 짧은 underruns add only the silence required by the current read.
 - Media Foundation One-second read-ahead없이 단일, 스테레오, 멀티 채널 및 Windows 확장 가능한 PCM / 플로트 입력을 지원합니다.
 - Discord 처리를 유지하고 unchanged routing. Atelier는 남아 있습니다 1.0.11 펌웨어가 남아 있습니다. 1.1.1.
@@ -64,7 +64,7 @@ DeckPilot 2.1.1 설치 및 업데이트 개선:
 
 지원하다 **DeckPilot-설정.exe** 또는 업데이트 수락 DeckPilot. Windows 관리자 승인이 필요합니다. 기존 프로파일 및 교정이 보존됩니다. DeckPilot Atelier가 남아 있습니다. 1.0.10 펌웨어가 남아 있습니다. 1.1.1; 둘 다 공유된 방출에서 포함됩니다.
 
-유효성: 핵심 검사 및 Windows 건축, 설치자 upgrade/uninstall 및 기본 신청 시험은 풀어 놓기 전에 실행합니다. 오디오 기계설비 행동은 아직도 사용자의 PC에 시험을 요구합니다.
+유효성: 핵심 검사 및 Windows 건축, 설치자 upgrade/uninstall 및 기본 신청 시험은 풀어 놓기 전에 실행합니다. 오디오 하드웨어 행동은 아직도 사용자의 PC에 시험을 요구합니다.
 
 DeckPilot 2.1.0 딥 블랙 인터페이스와 사용자 정의 색상을 유지하고 VB-Audio를 통해 사운드 보드를 루트 VB-CABLE 자동적으로. 사용자는 그들의 육체적인 마이크만 선정합니다; 사실상 재생 엔드포인트는 조정합니다 그래서 음성과 MP3/WAV 클립은 스피커에 실수로 보내질 수 없습니다. DeckPilot installer는 공식을 다운로드 할 수 있습니다 VB-CABLE 패키지는 Authenticode 게시자를 확인하고 공급업체의 드라이버 설정을 실행합니다. 패키지는 redistributed가 아닙니다. Discord 또는 게임에서, 선택 CABLE Output 마이크로서. Atelier는 버전에 남아 있습니다. 1.0.10.
 
@@ -102,7 +102,7 @@ DeckPilot 1.9.0 더 보기 DeckPilot Atelier, 새로운 Macropads를 번쩍이�
 
 - 레오나르도 / Pro Micro ATmega32U4 보드에 포함된 펌웨어를 Caterina bootloader로 설치하십시오.
 - 모든 물리적 키를 위한 짧은 압박과 긴 압박 체크를 실행하고, 그것의 F13–F24 매핑을 기록하고, 품질 관리 보고를 저장하십시오.
-- 지원하다 **DeckPilot-Atelier-Setup.exe를 설치** 이 릴리스에서. 원래 DeckPilot 설정 및 펌웨어는 별도로 사용할 수 있습니다.
+- 지원하다 **DeckPilot-Atelier-Setup.exe에** 이 릴리스에서. 원래 DeckPilot 설정 및 펌웨어는 별도로 사용할 수 있습니다.
 
 DeckPilot 1.8.0 새로 고침된 작업 공간과 더 빠른 방법을 추가하여 프로필을 작성하고 사용합니다.
 
@@ -121,7 +121,7 @@ Validation에는 핵심 겸용성/navigation/import/template 체크 및 기본 W
 DeckPilot 2.1.8 선택된 스피커 반환을 추가 Soundboard 클립.
 
 - 내 계정 **Soundboard · micro virtuel**, 사용 가능 **Entendre aussi les 아들 du 사운드 보드**, 물리적 스피커 또는 헤드셋 출력을 선택하고 독립적으로 설정하십시오. 0–100% 볼륨. 반환은 기본으로 꺼져 실행 중에 저장됩니다.
-- 이 두 번째 출력으로만 Soundboard 클립이 전송됩니다. 물리적 마이크는 가상 마이크로 계속 이동하고 스피커 반환으로 혼합되지 않습니다. 클립은 여전히 이동 VB-CABLE 그들의 원래 볼륨에.
+- 이 두 번째 출력으로만 사운드 보드 클립이 전송됩니다. 물리적 마이크는 가상 마이크로 계속 이동하고 스피커 리턴에 결코 혼합되지 않습니다. 클립은 여전히 이동 VB-CABLE 그들의 원래 볼륨에.
 - 반환 볼륨을 변경하는 것은 가상 마이크를 다시 시작하지 않습니다. 분리 된 스피커 출력은 반환에만 중지합니다. 가상 마이크는 실행을 유지합니다. 장치를 새로 고침하거나 복원 할 다른 출력을 선택하십시오.
 
 DeckPilot Atelier가 남아 있습니다. 1.0.12 펌웨어가 남아 있습니다. 1.1.1. 펌웨어 플래시가 필요하지 않습니다. 실제 스피커 라우팅은 소유자의 Windows PC에서 오디오 장치로 검사해야합니다.
