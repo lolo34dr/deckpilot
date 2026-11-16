@@ -21,6 +21,7 @@ public static class ActionRunner
             case ActionKind.Microphone:
             case ActionKind.AudioOutput: throw new InvalidOperationException("Les commandes audio utilisent le service Windows Audio.");
             case ActionKind.Spotify: throw new InvalidOperationException("Les commandes Spotify utilisent la session dédiée.");
+            case ActionKind.Deezer: throw new InvalidOperationException("Les commandes Deezer utilisent la session dédiée.");
             case ActionKind.Passthrough: return;
             case ActionKind.Application:
                 if (ApplicationTarget.IsPackaged(action.Target))
