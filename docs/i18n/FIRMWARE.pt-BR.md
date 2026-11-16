@@ -12,13 +12,13 @@ Cada interruptor conecta um pino ao GND. As pull-ups internas estão habilitadas
 
 Pino **1** Mantido em GND na inicialização desativa a operação do teclado, preservando o sistema de segurança original. O núcleo USB ainda pode suportar a entrada do carregador de inicialização. Não conecte VCC ao GND.
 
-A atual interface serial USB CDC responde `DECKPILOT?\n` em 115200 baud com:
+A interface serial USB CDC atual responde `DECKPILOT?\n` em 115200 baud com:
 
 ```
 DECKPILOT|1|promicro-32u4-16mhz|1.1.1
 ```
 
-Nenhuma ligação serial é necessária para a operação normal do teclado. A identidade é uma verificação de compatibilidade, não uma autenticação de hardware criptográfica. O Windows ainda reporta os identificadores USB do Arduino Leonardo; muitas outras placas partilham esses identificadores.
+Nenhuma ligação serial é necessária para a operação normal do teclado. A identidade é uma verificação de compatibilidade, não autenticação de hardware criptográfica. O Windows ainda reporta os identificadores USB Arduino Leonardo; muitas outras placas partilham esses identificadores.
 
 <a id="install-from-deckpilot"></a>
 ## Instalar de DeckPilot
@@ -60,7 +60,7 @@ Firmware 1.1.1 adiciona uma ligação de diagnóstico apenas para leitura, mante
 
 O novo aplicativo identifica o cartão conectado, mantém sua porta serial aberta, reconecta após desconectar e verifica sua versão de firmware na inicialização e após a reconexão. As atualizações do Firmware são entregues com versões de aplicativos: as verificações de inicialização comparam o firmware conectado com o pacote validado incluído na aplicação instalada. As verificações de atualização do aplicativo ainda obtêm versões mais recentes do GitHub. Não há nenhum canal de download separado somente de firmware.
 
-Um firmware mais antigo detectado pede uma vez por sessão de aplicação, com uma 24- hora de atraso do lembrete quando adiado. As notificações podem ser desabilitadas em **Connexion et diagnostic**. Os esboços desconhecidos do Arduino, os dispositivos desconectados e as seleções ambíguas de múltiplos cartões não desencadeiam avisos automáticos de piscamento ou atualização. A instalação do Firmware requer sempre confirmação. Abrindo o gerenciador de firmware suspende o monitor e espera que a porta serial seja liberada; o monitoramento retoma após o encerramento da janela.
+Um firmware mais antigo detectado pede uma vez por sessão de aplicação, com uma 24- hora de atraso do lembrete quando adiado. As notificações podem ser desabilitadas em **Connexion et diagnostic**. Os esboços desconhecidos do Arduino, os dispositivos desconectados e as seleções ambíguas de múltiplos cartões não desencadeiam avisos automáticos de piscamento ou atualização. A instalação do Firmware requer sempre confirmação. Abrir o gerenciador de firmware suspende o monitor e espera que a porta serial seja liberada; o monitoramento retoma após o encerramento da janela.
 
 **Para um upload manual do Arduino IDE, saia DeckPilot do ícone da bandeja primeiro.** Fechar a janela principal só a esconde, por isso continua a possuir a ligação em série. DeckPilot e outro monitor serial não pode usar a mesma porta simultaneamente. Se outra ferramenta já possui a porta, o aplicativo relata o problema e retorna sem afetar as teclas de teclado comuns.
 

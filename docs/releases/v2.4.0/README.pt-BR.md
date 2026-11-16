@@ -27,7 +27,7 @@ DeckPilot 2.1.7 adiciona ações de volume somente do Spotify, uma ação incorp
 
 - Botões de volume do Spotify ajustar sessão de áudio do Spotify no Windows 5% passos, sem alterar o volume mestre ou outros jogadores.
 - O coletor de aplicativos e a pesquisa de ação sempre oferecem DeckPilot, e sua ação mostra a janela existente da área de notificação.
-- As alterações de perfil mostram uma sobreposição breve e não ativa na tela ativa. Escolha um canto ou posição personalizada nas preferências e visualize-o lá. Jogos de tela cheia exclusivos podem ocultar sobreposições padrão do Windows.
+- As alterações de perfil mostram uma sobreposição breve e não ativa na tela ativa. Escolha um canto ou posição personalizada nas preferências e visualize-o lá. Jogos de tela cheia exclusivos podem esconder sobreposições padrão do Windows.
 
 DeckPilot Atelier permanece em 1.0.12 e o firmware permanece 1.1.1. Nenhum flash de firmware é necessário para essas ações.
 
@@ -65,7 +65,7 @@ DeckPilot 2.1.3 reduz a latência do microfone da placa de som e remove os bloco
 - Suporte entradas mono, estéreo, multicanal e Windows extensíveis PCM/float sem a Media Foundation um segundo lido para a frente.
 - Mantenha o processamento e roteamento da Discord inalterados. 1.0.11 e o firmware permanece 1.1.1.
 
-Validação inclui verificações de regressão para reamostrar tamanhos de blocos, conversão de canal, formatos extensíveis, recuperação de underrun, frescura de transbordamento, captura concorrente / playback e conclusão do clipe, juntamente com o instalador Windows existente e testes de aplicação. Nenhuma figura de latência de hardware é reivindicada; verifique a melhoria com seu microfone e driver de áudio.
+Validação inclui verificações de regressão para reamostrar tamanhos de blocos, conversão de canal, formatos extensíveis, recuperação de underrun, frescura de transbordamento, captura concorrente / playback e conclusão do clipe, juntamente com o instalador Windows existente e testes de aplicação. Nenhuma figura de latência de hardware é reivindicada; verifique a melhoria com o seu microfone e driver de áudio.
 
 DeckPilot 2.1.2 e DeckPilot Atelier 1.0.11 corrigir a segurança da oficina, confiabilidade da placa de som e sons de perfil portáteis.
 
@@ -140,7 +140,7 @@ DeckPilot 1.8.0 adiciona um espaço de trabalho atualizado e maneiras mais rápi
 
 Transferir **DeckPilot- Setup.exe** ou atualização do aplicativo. Perfis existentes, calibração e preferências de inicialização são preservadas. Firmware permanece **1.1.1**; nenhum flash é necessário para essas características.
 
-A validação inclui as verificações de compatibilidade/navegação/importação/template do núcleo e a instalação nativa do Windows, atualização, picker, arrastar e soltar, desfazer/refazer, criação de modelo, ações de perfil, captura de atalhos, edição da área de transferência, layout e minimização/restore. O comportamento físico do macropad e do dispositivo de áudio ainda depende do hardware do proprietário do Windows.
+A validação inclui as verificações de compatibilidade/navegação/importação/template e instalação nativa do Windows, atualização, picador, arrastar e soltar, desfazer/refazer, criação de modelo, ações de perfil, captura de atalhos, edição de área de transferência, layout e minimização/restore. O comportamento físico do macropad e do dispositivo de áudio ainda depende do hardware do proprietário do Windows.
 DeckPilot 2.1.8 adiciona um retorno opcional de alto- falantes para Soundboard Clips.
 
 - In **Soundboard · micro virtuel**, habilitar **Entendre aussi les filhos du soundboard**, escolha um alto-falante físico ou saída de fones de ouvido, e definir o seu independente 0–100% volume. O retorno é desligado por padrão e salvo através de lançamentos.

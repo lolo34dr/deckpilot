@@ -181,7 +181,7 @@ Profils et calibrage sont stockés à l'extérieur du dossier d'application:
 
 Quitter DeckPilot avant de copier ce fichier pour sauvegarder ou restaurer votre configuration. Si un fichier de paramètres ne peut pas être lu, DeckPilot conserve une copie avec une `.backup-<date>` suffixe avant d'utiliser une configuration fraîche.
 
-Aucun compte n'est nécessaire. La mise à jour vérifie de contacter GitHub et peut être désactivée dans l'interface.
+Aucun compte n'est requis. Les vérifications de mise à jour contactent GitHub et peuvent être désactivées dans l'interface.
 
 <a id="development"></a>
 ## Développement
@@ -204,7 +204,7 @@ La bibliothèque centrale et la console vérifient également sous Linux. L'inte
 
 La console vérifie la sortie avec un statut non zéro lors de la première affirmation ratée.
 
-- Cartographie des touches, répétitions des touches retenues, sorties, changement de profil et copie d'action.
+- Cartographie des touches, répétitions des touches retenues, libérations, changement de profil et copie d'action.
 - Validation des paramètres, persistance et migration à partir de configurations plus anciennes.
 - Recherche d'applications et traitement des cibles.
 - Sélection de la version, comptes de contrôle, téléchargements tronqués ou corrompus, redirections et annulation.
@@ -304,12 +304,12 @@ Les **Votre macropad** carte affiche l'état de connexion, le firmware détecté
 
 Les vérifications du firmware de démarrage sont activées par défaut. Après la vérification de la mise à jour de l'application et l'étalonnage sont hors du chemin, un firmware identifié plus ancien peut inviter à ouvrir l'installation; report des rappels de retard pour 24 Les versions firmware sont groupées avec les mises à jour d'applications de GitHub, plutôt que récupérées à partir d'un flux de firmware indépendant.
 
-Firmware **1.1.1** ajoute l'identification de session, les réponses corrélées aux battements de cœur, les messages limités et les événements physiques à l'état de touche. Ces événements animent les boutons mappés et mettent à jour les diagnostics; ils n'invoquent jamais les actions une deuxième fois. 1.0.0 et la procédure flash ont été confirmées par le propriétaire. [protocole et documentation de compatibilité](FIRMWARE.fr.md).
+Firmware **1.1.1** ajoute l'identification de session, les réponses corrélées aux battements de coeur, les messages limités et les événements physiques à l'état touche. Ces événements animent les boutons mappés et mettent à jour les diagnostics; ils n'invoquent jamais les actions une seconde fois. 1.0.0 et la procédure flash ont été confirmées par le propriétaire. [protocole et documentation de compatibilité](FIRMWARE.fr.md).
 
 <a id="keypad-interface-140"></a>
 ## Interface clavier (1.4.0)
 
-La plus grande 3 × 4 Chaque touche affiche son icône principale, son étiquette, la cartographie F13–F24 et une petite icône de type action ; les tooltips conservent l'étiquette et la position complète. Appuyez sur les commentaires, les actions en cours, l'expédition réussie et les erreurs ont des apparences distinctes, y compris des symboles plutôt que de la couleur seule.
+La plus grande 3 × 4 Chaque touche affiche son icône principale, son étiquette, sa cartographie F13–F24 et une petite icône de type action; les tooltips conservent l'étiquette et la position complètes. Appuyez sur les commentaires, les actions en cours, l'expédition réussie et les erreurs ont des apparences distinctes, y compris des symboles plutôt que de la couleur seule.
 
 Choisissez une touche pour la modifier. **Options avancées · fichier et arguments** garde les chemins d'applications manuelles et les arguments de lancement effondrés par défaut, tandis que les destinations essentielles du dossier et du site Web restent élargies. **Tester l’action** enregistre et envoie l'action sélectionnée sur le PC en cours; un indicateur de succès confirme l'expédition, pas la réalisation dans une autre application. Les raccourcis clavier ciblent la fenêtre active. Les touches F13–F24 libres n'ont aucune action de test.
 
@@ -322,7 +322,7 @@ Pour les téléchargements IDE manuel Arduino, **arrêter DeckPilot à partir de
 <a id="spotify-action-search-and-drag-and-drop-150"></a>
 ## Spotify, recherche d'action et glisser-déposer (1.5.0)
 
-**Spotify** est séparé de **Multimédia**. Sa lecture/pause, les commandes suivantes et précédentes adressent la session de médias de l'application Spotify de bureau, même si un navigateur est en train de jouer sur YouTube. 5% étapes, laissant le volume maître et les autres joueurs inchangés. Spotify doit être ouvert et avoir une session de lecture disponible; démarrer une piste une fois si nécessaire. Spotify dans un navigateur n'est pas pris en charge. Les sessions manquantes Spotify produisent une erreur, sans retour aux touches médias globales ou à un autre lecteur. DeckPilot. Windows 10 version 2004 ou plus tard, ou Windows 11, est requis par cette construction.
+**Spotify** est séparé de **Multimédia**. Sa lecture/pause, les commandes suivantes et précédentes adressent la session de médias de l'application Spotify de bureau, même si un navigateur est en train de jouer sur YouTube. 5Spotify doit être ouvert et avoir une session de lecture disponible; commencer une piste une fois si nécessaire. Spotify dans un navigateur n'est pas pris en charge. Les sessions manquantes Spotify produisent une erreur, sans retour aux touches médias globales ou à un autre lecteur. DeckPilot. Windows 10 version 2004 ou plus tard, ou Windows 11, est requis par cette construction.
 
 Utilisation **Rechercher une action ou une application** pour des questions telles que `volume`, `skip`, `Spotify` ou le nom d'une application installée. L'index de l'application installée se charge de la première recherche et est mis en cache pendant cinq minutes; la sélection manuelle des fichiers reste disponible. Cliquez sur un résultat pour configurer la touche sélectionnée ou la glisser sur une autre touche.
 
@@ -335,7 +335,7 @@ Sous **Réglages → Réglages de l'application**, utiliser **Palette...** pour 
 
 L'intégration du contrôle OBS/Streamlabs a été supprimée. 2.3 les profils restent lisibles et conservent leurs actions stockées, mais les actions de streaming à la retraite ne s'exécutent pas. Sélectionnez une action de remplacement de la bibliothèque pour réassigner ces touches. D'autres actions, profils et calibrage sont conservés. Aucun flash firmware n'est nécessaire.
 
-Faites glisser une action depuis le catalogue ou les résultats de recherche sur une touche pour l'assigner. Faites glisser une touche configurée sur une autre pour **échange de leurs actions**; le calibrage physique reste inchangé. `.exe`, `.lnk`, `.appref-ms`, dossier ou URL HTTP(S) sur une touche. Dropping ne configure que la touche et n'exécute jamais l'action. Compléter les paramètres manquants dans l'éditeur.
+Faites glisser une action à partir du catalogue ou des résultats de recherche sur une touche pour l'assigner. Faites glisser une touche configurée sur une autre pour **échange de leurs actions**; le calibrage physique reste inchangé. `.exe`, `.lnk`, `.appref-ms`, dossier ou URL HTTP(S) sur une touche. Dropping ne configure que la touche et n'exécute jamais l'action. Compléter les paramètres manquants dans l'éditeur.
 
 Windows startup conserve maintenant une préférence explicite par utilisateur, répare une entrée d'exécution ou manquante, et signale que Windows startup connu désactiver les drapeaux. **Lancer avec Windows** efface le connu DeckPilot désactiver le drapeau pour l'utilisateur actuel. Les lancements d'arrière-plan restent cachés même avant l'étalonnage, et les lancements d'arrière-plan dupliqués sortent tranquillement. **Préférences de l’application**, vérifiez l'état de démarrage et réactivez l'option si Windows l'a bloquée. Une vraie connexion sur le PC de l'utilisateur reste la dernière vérification des politiques de Windows ou des restrictions spécifiques à la machine.
 
@@ -376,18 +376,18 @@ Un lecteur d'instantané de test peut attendre jusqu'à 500 ms pour Windows part
 <a id="runtime-and-editing-optimizations-170"></a>
 ## Optimisations du temps d'exécution et de l'édition (1.7.0)
 
-Enregistrer les paramètres identiques vérifie le fichier actuel mais saute le travail de remplacement et de sauvegarde. Les modifications externes/suppression et les écritures échouées sont toujours détectées. `ButtonAction` a l'égalité de valeur (y compris la longue action); les contrôles sales de l'éditeur évitent la sérialisation de JSON. L'histoire conserve des instantanés de modèle détachés, valide de nouveaux états et évite l'analyse de JSON pendant undo/redo. 50- limite d'édition et 20 Les sauvegardes de profil restent.
+Enregistrer des paramètres identiques vérifie le fichier actuel mais saute le travail de remplacement et de sauvegarde. Les modifications externes/suppression et les écritures échouées sont toujours détectées. `ButtonAction` a l'égalité de valeur (y compris la longue action); les contrôles sales de l'éditeur évitent la sérialisation de JSON. L'histoire conserve des instantanés de modèle détachés, valide de nouveaux états et évite l'analyse de JSON pendant undo/redo. 50- limite d'édition et 20 Les sauvegardes de profil restent.
 
 La recherche et le ramassage partagent un catalogue immuable d'applications installées pendant cinq minutes (15 Les consommateurs simultanés partagent un scan; la fermeture d'un sélectionneur n'annule pas un autre consommateur. Refresh contourne le cache, et chaque sélectionneur a son propre filtre/vue. La numérisation et l'analyse du catalogue s'effectuent hors du thread de l'interface utilisateur; le filtrage des sélectionneurs est débloqué par 120 ms. La recherche d'action revérifie ce cache après sa déconcentration et lors de son retour depuis le récupérateur, donc un catalogue rafraîchi y est également disponible.
 
-Les mises à jour de l'interface utilisateur suivent maintenant les notifications de connexion au lieu de se réveiller chaque 100 Les fenêtres cachées/minimisées arrêtent les animations de rétroaction et utilisent un intervalle de scrutin audio de dix secondes au lieu de deux secondes; la réouverture ou l'émission d'une commande audio demande un nouvel état immédiatement. En attendant, les mises à jour audio partagent une boucle et incluent les demandes arrivant lors d'une lecture existante. Les instantanés audio non modifiés et les pinceaux gelés évitent les allocations répétées de l'interface utilisateur. Les enveloppes de processus retournées en lançant une application sont éliminées sans fermer le programme lancé.
+Les mises à jour de l'interface utilisateur suivent maintenant les notifications de connexion au lieu de se réveiller chaque 100 Les fenêtres cachées/minimisées arrêtent les animations de rétroaction et utilisent un intervalle de scrutin audio de dix secondes au lieu de deux secondes; la réouverture ou l'émission d'une commande audio demande un nouvel état immédiatement. En attendant, les mises à jour audio partagent une boucle et incluent les demandes arrivant lors d'une lecture existante. Les instantanés audio non modifiés et les pinceaux gelés évitent les allocations répétées d'interface utilisateur. Les enveloppes de processus retournées en lançant une application sont éliminées sans fermer le programme lancé.
 
 Ces changements réduisent le travail spécifié; ils n'établissent pas un pourcentage de CPU/RAM indépendant de la machine. La commutation audio matérielle native et le comportement de touche physique nécessitent toujours une validation sur un PC Windows avec le macropad.
 
 <a id="workspace-tools-and-refreshed-interface-180"></a>
 ## Outils d'espace de travail et interface rafraîchie (1.8.0)
 
-L'interface charbon de bois place la bibliothèque d'action en premier, sépare les contrôles de profil de la taille native croustillante 3 × 4 clavier, et les paramètres d'action de groupes dans une carte. Les accents touches distinguent vos propres catégories; la sélection, la focalisation du clavier et la rétroaction d'action restent séparés. **Réduire les animations** dans les préférences complète le paramètre d'animation Windows. Les petites fenêtres conservent l'accès au défilement au lieu de réduire le texte de la touche.
+L'interface de charbon place la bibliothèque d'action en premier, sépare les contrôles de profil de la taille native croustillante 3 × 4 clavier, et les paramètres d'action de groupes dans une carte. Les accents touches distinguent vos propres catégories; la sélection, la focalisation du clavier et la rétroaction d'action restent séparés. **Réduire les animations** dans les préférences complète le paramètre d'animation Windows. Les petites fenêtres conservent l'accès au défilement au lieu de réduire le texte de la touche.
 
 - **Modèles de profil :** sous **Gérer les profils**Chaque modèle crée un profil modifiable séparé et n'exécute jamais ses actions. Les profils existants et l'étalonnage physique sont conservés. Les raccourcis clavier utilisent l'application active, dont les liaisons peuvent différer.
 - **touches du profil :** attribuer **Changer de profil**, puis sélectionnez un profil nommé ou cycle vers l'avant/vers l'arrière. Les références entre les profils sont recaptées lors de l'importation d'un jeu ou duplication d'un profil auto-référencé. Une destination manquante signale une erreur et peut être remplacée dans l'éditeur.

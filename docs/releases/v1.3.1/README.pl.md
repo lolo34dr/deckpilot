@@ -2,7 +2,7 @@
 
 DeckPilot 1.3.1 poprawia połączenie USB i sprawdza oprogramowanie firmowe makro pad przy starcie.
 
-- Podłącz deskę rozdzielczą z automatycznym ponownym podłączeniem, wykrytym oprogramowaniem firmware, diagnostyką na żywo / USB oraz wyraźnym wyborem planszy, gdy jest kilka urządzeń.
+- Podłącz deskę rozdzielczą z automatycznym ponownym podłączeniem, wykrytym oprogramowaniem firmware, diagnostyką stanu live / USB i wyraźnym wyborem planszy, gdy jest kilka urządzeń.
 - Kontrola oprogramowania firmowego i aktualizacja wniosków, z 24-hour przypomnienia opóźnienia i możliwość wyłączenia powiadomień firmware. Instalacja nadal wymaga potwierdzenia.
 - Nowe oprogramowanie firmowe **1.1.0**: ograniczone komunikaty protokołu, świeże żetony sesyjne, skorelowane odpowiedzi na bicie serca i zdarzenia stanu kluczowego. Mapowanie F13- F24 pozostaje niezmienione, w tym samodzielne użycie.
 - Menedżer oprogramowania automatycznie uwalnia port szeregowy monitora przed identyfikacją / miganiem i ponownie łączy się później. 1.0.0 i nadal wspierane są dotychczasowe pytania o tożsamość.

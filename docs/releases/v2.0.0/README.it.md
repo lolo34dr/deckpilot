@@ -1,10 +1,10 @@
 > Questa è una traduzione automatica delle note di rilascio complete. L'originale inglese è il riferimento.
 
-DeckPilot 2.0.0 La nuova scheda audio accetta clip MP3/WAV, consente agli utenti di scegliere un microfono fisico e un'uscita del cavo virtuale, e mescola la voce con clip per l'uso come microfono nei giochi o nelle chiamate. Le clip possono essere avviate dall'app o assegnate a una chiave macropad. VB-CABLE deve essere installato separatamente su Windows; Atelier rimane in versione 1.0.10.
+DeckPilot 2.0.0 La nuova scheda audio accetta clip MP3/WAV, consente agli utenti di scegliere un microfono fisico e un'uscita del cavo virtuale, e mescola la voce con clip per l'uso come un microfono in giochi o chiamate. Le clip possono essere avviate dall'app o assegnate a una chiave macropad. VB-CABLE deve essere installato separatamente su Windows; Atelier rimane in versione 1.0.10.
 
 DeckPilot 1.9.11 e DeckPilot Atelier 1.0.10 aggiungere l'hardware pre-flash e la diagnostica del firmware, un confronto della versione del firmware, un'azione di recupero guidata dopo le scritture interrotte, il flash multi-board sequenziale con un rapporto di batch, e un controllo del layout fisico-position-to-F13-F24 in ogni report di controllo chiave.
 
-DeckPilot 1.9.11 include lo stesso aggiornamento di Atelier nel rilascio dell'installatore condiviso.
+DeckPilot 1.9.11 include lo stesso aggiornamento Atelier nel rilascio dell'installatore condiviso.
 
 DeckPilot 1.9.10 ripristina i rilasci condivisi contenenti entrambi DeckPilot e DeckPilot Atelier 1.0.9. Entrambe le applicazioni controllano ancora una volta lo stesso ultimo rilascio GitHub.
 

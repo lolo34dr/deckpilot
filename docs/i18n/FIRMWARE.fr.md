@@ -23,7 +23,7 @@ Aucune connexion série n'est nécessaire pour le fonctionnement normal du clavi
 <a id="install-from-deckpilot"></a>
 ## Installer depuis DeckPilot
 
-1. Conserver le croquis de récupération fourni (`firmware/Original/Original.ino`) et une configuration de téléchargement Arduino de travail comme une option de récupération. Gardez RST et GND physiquement accessible.
+1. Conserver le croquis de récupération fourni (`firmware/Original/Original.ino`) et une configuration de téléchargement Arduino fonctionnant comme une option de récupération. Gardez RST et GND physiquement accessibles.
 2. Fermer Arduino IDE, Serial Monitor et d'autres outils série. Déconnecter d'autres cartes Leonardo.
 3. Ouvrir **Firmware du macropad…**, choisissez le bon appareil et confirmez le panneau et le câblage. Un croquis original non identifié peut être installé sur seulement après confirmation explicite.
 4. Confirmer l'installation et laisser le câble USB connecté jusqu'à la fin. DeckPilot alors que la boîte de dialogue du firmware est ouverte; les événements F13–F24 ordinaires atteignent toujours Windows.
@@ -60,7 +60,7 @@ Firmware 1.1.1 ajoute un lien de diagnostic en lecture seule tout en conservant 
 
 La nouvelle application identifie la carte connectée, maintient son port série ouvert, se reconnecte après le débranchement, et vérifie sa version firmware au démarrage et après la reconnection. Les mises à jour firmware sont livrées avec les versions app : les vérifications de démarrage comparent le firmware connecté avec le paquet validé inclus dans l'application installée.
 
-Un firmware plus ancien détecté invite une fois par session d'application, avec un 24-délai de rappel de l'heure en cas de report. Les notifications peuvent être désactivées **Connexion et diagnostic**. Des croquis Arduino inconnus, des dispositifs déconnectés et des sélections ambiguës de cartes multiples ne déclenchent pas automatiquement des appels clignotants ou des mises à jour. L'installation du firmware nécessite toujours une confirmation.
+Un firmware plus ancien détecté invite une fois par session d'application, avec un 24-délai de rappel de l'heure en cas de report. Les notifications peuvent être désactivées **Connexion et diagnostic**. Des croquis Arduino inconnus, des dispositifs déconnectés et des sélections ambiguës de cartes multiples ne déclenchent pas automatiquement des appels clignotants ou de mise à jour. L'installation du firmware nécessite toujours une confirmation.
 
 **Pour un téléchargement manuel à partir d'Arduino IDE, quitter DeckPilot de son icône de plateau d'abord.** La fermeture de la fenêtre principale ne la cache que, de sorte qu'elle continue à posséder la connexion série. DeckPilot et un autre moniteur série ne peut pas utiliser le même port simultanément. Si un autre outil possède déjà le port, l'application signale le problème et retries sans affecter les touches du clavier ordinaire.
 

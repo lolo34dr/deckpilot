@@ -4,8 +4,8 @@ DeckPilot 2.4.2 verbetert het bedieningspaneel en houdt belangrijke bewerkingsac
 
 - Houden **Tester** en **Aanmelder** naast de geselecteerde sleutel zodat ze zichtbaar blijven zonder door de editor te scrollen.
 - Behoud van de bestaande DeckPilot keypad werkruimte en zijn originele donkere palet terwijl het vereenvoudigen van de rechtse actie bibliotheek.
-- Verminder het opstartvenster naar het app-logo en de versie; de voortgangsindicator volgt de instelling van de verminderde beweging.
-- Onthoud de grootte en positie van het toepassingsvenster en herstel veilig als een opgeslagen monitor niet meer is aangesloten.
+- Verminder het opstartvenster naar het app-logo en -versie; de voortgangsindicator volgt de instelling van de reduced-motion.
+- Onthoud de grootte en positie van het toepassingsvenster en herstel veilig als een opgeslagen monitor niet meer verbonden is.
 - Houd OBS/Streamlabs gepensioneerd. Bestaande profielen blijven leesbaar en gepensioneerde acties kunnen niet worden uitgevoerd.
 
 Er is geen firmware-update of flits nodig. DeckPilot Atelier blijft op 1.0.12 en firmware blijft op 1.1.1.
@@ -62,7 +62,7 @@ DeckPilot 2.1.5 glad maakt audio-apparaat verfrist en voegt een branded opstarts
 
 Validatie omvat achtergrondscan / cache regressie controles, audio conversie controles, Windows builds, installer upgrade / uninstall, native splash / update en applicatie-picker controles. Werkelijke audio CPU gebruik en latency nog steeds afhankelijk van de PC en audio-apparaten.
 
-DeckPilot 2.1.4 start de geconfigureerde virtuele microfoon automatisch met de app, inclusief achtergrond opstarten na Windows-aanmelden.
+DeckPilot 2.1.4 start de geconfigureerde virtuele microfoon automatisch met de app, inclusief achtergrondopstart na Windows-aanmelding.
 
 - Automatisch opstarten van een soundboard microfoon is standaard ingeschakeld voor bestaande en nieuwe instellingen. Het maakt gebruik van de geselecteerde fysieke microfoon en VB-CABLE; geen handmatige activering is nodig na het herstarten van de PC wanneer DeckPilot begint met Windows.
 - Als de apparaten niet klaar zijn bij het aanmelden, of als de audio stopt na het verbreken van de verbinding, DeckPilot herstart elke vijf seconden terwijl automatische activering is ingeschakeld.
@@ -143,7 +143,7 @@ DeckPilot 1.9.0 voegt toe DeckPilot Atelier, een aparte Windows workshop app voo
 
 DeckPilot 1.8.0 voegt een vernieuwde werkruimte toe en snellere manieren om uw profielen te bouwen en te gebruiken.
 
-- Helderere houtskool/teale interface, actiebibliotheek eerst, helder 3 × 4 sleutels, accentkleuren en voorkeur voor verminderde beweging.
+- Helderere houtskool/teale interface, actiebibliotheek eerst, knapperig 3 × 4 sleutels, accentkleuren en voorkeur voor verminderde beweging.
 - Drie bewerkbare profielsjablonen: Muziek en audio, Bureaublad en productiviteit, en Creatie.
 - Profielacties: schakel over naar een genoemd profiel, het volgende of het vorige profiel van een sleutel. Geïmporteerde profielsets behouden hun interne links.
 - Windows-acties: open gemeenschappelijke instellingen of Taakbeheer, of sluit expliciet de PC.
@@ -154,7 +154,7 @@ DeckPilot 1.8.0 voegt een vernieuwde werkruimte toe en snellere manieren om uw p
 
 Downloaden **DeckPilot-Setup.exe** of update van de app. Bestaande profielen, kalibratie en opstart voorkeuren worden bewaard. Firmware blijft **1.1.1**; geen flits is vereist voor deze functies.
 
-Validatie omvat kerncompatibiliteit/navigatie/import/template controles en native Windows installatie, update, picker, drag-and-drop, undo/redo, sjabloon creatie, profiel acties, snelkoppeling, klembord bewerken, lay-out en minimaliseren / herstellen controles. Fysische macropad en audio-apparaat gedrag is nog steeds afhankelijk van de eigenaar van Windows hardware.
+Validatie omvat kerncompatibiliteit/navigatie/import/template controles en native Windows installatie, update, picker, drag-and-drop, undo/redo, sjabloon creatie, profiel acties, snelkoppeling, klembord bewerken, lay-out en minimaliseert / herstellen controles. Fysische macropad en audio-apparaat gedrag is nog steeds afhankelijk van de eigenaar Windows hardware.
 DeckPilot 2.1.8 voegt een optionele speaker terugkeer voor Soundboard Clips.
 
 - In **Soundboard · micro virtuel**, inschakelen **Entendre aussi les sons du soundboard**, kies een fysieke speaker of headset uitgang, en stel zijn onafhankelijke 0–100% volume. Het retourneren is standaard uitgeschakeld en opgeslagen bij lanceringen.

@@ -17,7 +17,7 @@ DeckPilot 2.1.3 riduce la latenza del microfono della scheda audio e rimuove i b
 - Supporta ingressi PCM/float mono, stereo, multicanale e Windows estensibili senza la Media Foundation un secondo di lettura.
 - Mantenere l'elaborazione Discord e il routing invariato. Atelier rimane 1.0.11 e il firmware rimane 1.1.1.
 
-La validazione include controlli di regressione per il campionamento di dimensioni, la conversione dei canali, i formati estensibili, il recupero in esecuzione, la freschezza di troppopieno, la cattura / il completamento concomitante di acquisizione e clip, accanto ai test di installazione e applicazione Windows esistenti.
+La validazione include controlli di regressione per il ricampionamento delle dimensioni dei blocchi, la conversione dei canali, i formati estensibili, il recupero in esecuzione, la freschezza di troppopieno, la cattura / il completamento con corrente e clip, accanto ai test di installazione e applicazione Windows esistenti.
 
 DeckPilot 2.1.2 e DeckPilot Atelier 1.0.11 fissare la sicurezza dell'officina, l'affidabilità del suono e i suoni del profilo portatile.
 
@@ -45,7 +45,7 @@ DeckPilot 2.1.0 mantiene l'interfaccia nera profonda e colori personalizzabili, 
 
 DeckPilot 1.9.11 e DeckPilot Atelier 1.0.10 aggiungere l'hardware pre-flash e la diagnostica del firmware, un confronto della versione del firmware, un'azione di recupero guidata dopo le scritture interrotte, il flash multi-board sequenziale con un rapporto di batch, e un controllo del layout fisico-position-to-F13-F24 in ogni report di controllo chiave.
 
-DeckPilot 1.9.11 include lo stesso aggiornamento di Atelier nel rilascio dell'installatore condiviso.
+DeckPilot 1.9.11 include lo stesso aggiornamento Atelier nel rilascio dell'installatore condiviso.
 
 DeckPilot 1.9.10 ripristina i rilasci condivisi contenenti entrambi DeckPilot e DeckPilot Atelier 1.0.9. Entrambe le applicazioni controllano ancora una volta lo stesso ultimo rilascio GitHub.
 

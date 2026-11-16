@@ -113,7 +113,7 @@ O executável de arquivo único extrai suas dependências empacotadas no cache .
 | Spotify | Controles Spotify playback e ajusta apenas o volume de sessão de áudio do Spotify no Windows. |
 | Aplicação — DeckPilot | Mostra o existente DeckPilot janela, incluindo quando estiver em execução na área de notificação. |
 
-Para as ações do aplicativo, abra o seletor de aplicativos e pesquise pelo nome. O seletor de arquivos manual permanece disponível, com argumentos de programa opcionais sob opções avançadas. Digite os argumentos de acordo com a sintaxe do aplicativo alvo.
+Para as ações do aplicativo, abra o seletor de aplicativos e pesquise pelo nome. O seletor de arquivos manual permanece disponível, com argumentos de programa opcionais sob opções avançadas. Digite argumentos de acordo com a sintaxe do aplicativo alvo.
 
 Se carregar num botão, irá activar uma acção configurada apenas uma vez até à libertação. No modo de chave livre, os eventos normais de repetição do teclado permanecem disponíveis.
 
@@ -168,7 +168,7 @@ Cópias portáteis requerem uma pasta pessoal escrita. Cópias instaladas usam o
 
 Versão **1.0.1** prepara a mudança de `lolo34dr/streamdeck-diy` para `lolo34dr/deckpilot`. O repositório está agora `lolo34dr/deckpilot`. As verificações de atualização usam o novo nome e mantêm a compatibilidade com o nome original. Os downloads de versão são validados com estes dois caminhos exatos do repositório.
 
-Utilização **1.0.1 ou mais tarde** com o repositório renomeado. Versions 0.2.0 e 1.0.0 valide rigorosamente os caminhos originais dos ativos e pode precisar de uma atualização manual. Baixe o executável atual da página de lançamentos se uma versão mais antiga não puder se atualizar.
+Utilização **1.0.1 ou mais tarde** com o repositório renomeado. Versions 0.2.0 e 1.0.0 valide rigorosamente os caminhos originais dos ativos e pode precisar de uma atualização manual. Baixe o executável atual da página de lançamentos se uma versão antiga não puder se atualizar.
 
 <a id="settings-and-backups"></a>
 ## Configurações e backups
@@ -242,7 +242,7 @@ Para Windows ARM64, publicar separadamente com `-r win-arm64` e validar na máqu
 
 Com o Leonardo ligado:
 
-- Calibrar tudo 12 posições em uma ordem arbitrária F13–F24. Confirmar que as chaves duplicadas são rejeitadas e cancelar preserva o mapeamento anterior.
+- Calibrar tudo 12 posições em uma ordem arbitrária F13-F24. Confirme que as chaves duplicadas são rejeitadas e cancelar preserva o mapeamento anterior.
 - Atribua uma chave livre em um jogo e verifique se o jogo recebe normalmente.
 - Inicie um programa configurado e, em seguida, segure o botão: ele deve lançar uma vez até a liberação. Inclua caminhos contendo espaços e argumentos opcionais.
 - Teste uma pasta, um site, um atalho em uma aplicação comum e controles de mídia.
@@ -288,7 +288,7 @@ Crédito sugerido:
 
 Para a preparação do dispositivo e verificação da qualidade da oficina, instalar o separado [DeckPilot Atelier](../../docs/FACTORY.md) ferramenta. Seu instalador é publicado como **[DeckPilot- Atelier- Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** ao lado da aplicação principal. Ele pode flashar o firmware incluído para uma placa Leonardo/Caterina, em seguida, verificar curtas e longas prensas em todos 12 chaves físicas e exportar um relatório.
 
-DeckPilot 1.1.0 inclui a **Firmware du macropad…** diálogo e firmware 1.0.0 para o Pro Micro ATmega32U4 **5 V / 16 MHz**, usando a configuração Leonardo/Caterina confirmada pelo log de upload do proprietário. A ferramenta de flashing do Windows empacotada não requer Arduino IDE. A seleção e confirmação de dispositivos são obrigatórias; atualizações de aplicativos nunca flash silenciosamente o tabuleiro. Mapeamentos, perfis e calibração existentes F13-F24 permanecem compatíveis.
+DeckPilot 1.1.0 inclui a **Firmware du macropad…** diálogo e firmware 1.0.0 para o Pro Micro ATmega32U4 **5 V / 16 MHz**, usando a configuração Leonardo/Caterina confirmada pelo log de upload do proprietário. A ferramenta de flashing do Windows empacotada não requer Arduino IDE. A seleção e confirmação de dispositivos são obrigatórias; atualizações de aplicativos nunca flash silenciosamente o quadro. Mapeamentos, perfis e calibração existentes F13-F24 permanecem compatíveis.
 
 **O proprietário confirmou o sucesso flashing no aplicativo, firmware 1.0.0 identificação e tudo 12 botões no quadro de referência.** Mantenha o esboço original e acesso a RST / GND para recuperação. Firmware piscando não pode ser rolado para trás automaticamente. Veja [documentação do firmware](FIRMWARE.pt-BR.md) para compatibilidade, validação, recuperação, etapas de construção e licenças de terceiros. Os modos USB por botão e controles de mídia nativa não fazem parte desta versão de firmware.
 
@@ -304,12 +304,12 @@ A **Votre macropad** O cartão mostra o estado de conexão, o firmware detectado
 
 As verificações de firmware de inicialização estão habilitadas por padrão. Após a verificação e calibração da atualização da aplicação estarem fora do caminho, um firmware identificado mais antigo pode pedir para abrir a instalação; adiar os lembretes 24 horas. Placas desconhecidas e vários candidatos não selecionados não são flashed automaticamente. Releases de Firmware são empacotados com atualizações de aplicativo do GitHub, em vez de obtido de uma fonte de firmware independente.
 
-Firmware **1.1.1** adiciona identificação da sessão, respostas cardíacas correlacionadas, mensagens delimitadas e eventos físicos de estado- chave. Estes eventos animam os botões mapeados e atualizam os diagnósticos; eles nunca invocam ações uma segunda vez. Sua primeira validação de placa física ainda é necessária, embora o firmware anterior 1.0.0 e o procedimento flash foram confirmados pelo proprietário. [documentação de protocolo e compatibilidade](FIRMWARE.pt-BR.md).
+Firmware **1.1.1** adiciona identificação da sessão, respostas cardíacas correlacionadas, mensagens delimitadas e eventos físicos de estado- chave. Estes eventos animam os botões mapeados e atualizam os diagnósticos; eles nunca invocam as ações uma segunda vez. Sua primeira validação de placa física ainda é necessária, embora o firmware anterior 1.0.0 e o procedimento flash foram confirmados pelo proprietário. [documentação de protocolo e compatibilidade](FIRMWARE.pt-BR.md).
 
 <a id="keypad-interface-140"></a>
 ## Interface de teclado (1.4.0)
 
-O maior 3 × 4 O teclado segue o gabinete físico e as teclas-caps pretas. Cada tecla mostra o seu ícone principal, a legenda, o mapeamento F13-F24 e um pequeno ícone do tipo de ação; as dicas de ferramentas mantêm a etiqueta completa e a posição. Pressione o feedback, as ações de execução, o envio bem sucedido e os erros têm aparências distintas, incluindo símbolos em vez de cores sozinho. As animações seguem a preferência de animação do Windows.
+O maior 3 × 4 O teclado segue o gabinete físico e as teclas pretas. Cada tecla mostra o seu ícone principal, a legenda, o mapeamento F13-F24 e um pequeno ícone do tipo de ação; as dicas de ferramenta mantêm a etiqueta completa e a posição. Pressione o feedback, as ações em execução, o envio bem sucedido e os erros têm aparências distintas, incluindo símbolos em vez de cores sozinho. As animações seguem a preferência de animação do Windows.
 
 Escolha uma chave para editá-la. **Options avancées · fichier et arguments** mantém os caminhos manuais da aplicação e os argumentos de lançamento colapsados por omissão, enquanto os destinos essenciais da pasta e do website permanecem expandidos. As configurações de colapsamento não limpam os seus valores. **Tester l’action** salva e envia a ação selecionada no PC atual; um indicador de sucesso confirma despacho, não completa dentro de outra aplicação. Os atalhos do teclado visam a janela ativa. Teclas F13-F24 livres não têm ação de teste.
 
@@ -324,7 +324,7 @@ Para uploads manuais do Arduino IDE, **sair DeckPilot a partir do menu da bandej
 
 **Spotify** é separado de **Multimédia**. Seu play/pause, próximo e comandos anteriores endereço da sessão de mídia do aplicativo do Spotify desktop Windows, mesmo enquanto um navegador está jogando YouTube. Spotify volume + / − ajusta sessão de áudio do Spotify Windows em 5% etapas, deixando o volume mestre e outros jogadores inalterados. O Spotify deve estar aberto e ter uma sessão de reprodução disponível; inicie uma faixa uma vez, se necessário. O Spotify em um navegador não é suportado. As sessões do Spotify em falta produzem um erro, sem retorno às teclas de mídia globais ou outro player. Nenhuma autorização da conta do Spotify, assinatura Premium ou token armazenado é necessária DeckPilot. Windows 10 versão 2004 ou mais tarde, ou Windows 11, é exigido por esta construção.
 
-Utilização **Rechercher une action ou une application** para consultas como `volume`, `skip`, `Spotify` ou o nome de uma aplicação instalada. O índice de aplicações instaladas carrega na primeira pesquisa e fica em 'cache' durante cinco minutos; a selecção manual de ficheiros permanece disponível. Carregue num resultado para configurar a chave seleccionada ou arraste- a para outra tecla.
+Utilização **Rechercher une action ou une application** para consultas como `volume`, `skip`, `Spotify` ou o nome de uma aplicação instalada. O índice de aplicações instaladas carrega na primeira pesquisa e é guardado em 'cache' durante cinco minutos; a selecção manual de ficheiros permanece disponível. Carregue num resultado para configurar a chave seleccionada ou arraste- a para outra tecla.
 
 <a id="control-panel-and-exact-colours-240"></a>
 ## Painel de controle e cores exatas (2.4.0)
@@ -342,7 +342,7 @@ A inicialização do Windows agora mantém uma preferência explícita por usuá
 <a id="sharp-keypad-rendering-profile-recovery-and-audio-controls-161"></a>
 ## renderização de teclado afiado, recuperação de perfil e controles de áudio (1.6.1)
 
-O teclado agora renderiza em tamanhos WPF nativos em vez de escalar texto através de uma Viewbox. Efeitos de sombra pai/chave e animações de escala de texto foram removidos; janelas menores rolar em vez de diminuir o teclado. O aplicativo declara consciência de DPI por monitor e usa ícones de shell maiores do Windows para aplicativos de desktop.
+O teclado agora renderiza em tamanhos WPF nativos em vez de escalar texto através de uma Viewbox. Efeitos de sombra pai/chave e animações de escala de texto foram removidos; janelas menores rolagem em vez de encolhendo o teclado. O aplicativo declara consciência de DPI por monitor e usa ícones de shell maiores do Windows para aplicativos de desktop.
 
 **Annuler / Rétablir** restaura edições de perfil, incluindo trocas de arrastar e soltar, configurações de ação, importações e criação/deleção de perfil. 50 edits during the app session. Ctrl+Z / Ctrl+Y opera em perfis fora dos campos de texto; os campos de texto mantêm sua própria desfazer/refazer. Calibração, preferências de inicialização e ações executadas não são desfeitas.
 
@@ -352,7 +352,7 @@ Antes de salvar perfis alterados, DeckPilot mantém os perfis anteriores em `%AP
 
 **Microphone Windows** comuta o estado mudo em todos os parâmetros de captura do Windows atualmente ativos. A barra de estado persistente e o cartão do Audio Windows mostram estado ativo/mutilado/indisponível, atualizado a cada dois segundos e após os comandos da aplicação. Uma atualização de vários pontos falhou nas tentativas de restaurar estados mudos anteriores. Estes indicadores descrevem o estado do terminal do Windows, não um switch de hardware ou o próprio botão mudo de uma aplicação.
 
-**Changer de sortie audio** alterna entre dois dispositivos de saída selecionados e conectados, para os padrões de console, multimídia e comunicações do Windows. Um alvo ausente dá um erro sem escolher outro dispositivo. Os aplicativos com seu próprio resultado fixo podem não seguir o padrão do Windows. IDs de endpoint importados são mostrados como indisponíveis até serem adaptados ao PC atual. Alterações de roteamento falhadas tentam restaurar os padrões anteriores.
+**Changer de sortie audio** alterna entre dois dispositivos de saída selecionados e conectados, para os padrões de console, multimídia e comunicações do Windows. Um alvo ausente dá um erro sem escolher outro dispositivo. Os aplicativos com seu próprio resultado fixo podem não seguir o padrão do Windows. IDs de endpoint importados são mostrados como indisponíveis até serem adaptados ao PC atual. Mudanças de roteamento falhadas tentam restaurar os padrões anteriores.
 
 Para configurar **appui court / appui long**, primeiro escolha uma ação configurada, habilite a opção de duas ações, selecione o gesto para editar e defina um limiar de 200 para 3000 ms. Sem este modo, as acções mantêm o comportamento imediato de 'chave- para- baixo'. Com ele, as acções curtas são executadas na libertação antes do limiar; as acções longas são executadas uma vez no limiar (ou na libertação se o temporizador ainda não tiver sido executado). Uma acção longa nunca executa também a curta. As chaves de passagem F13- F24 livres não podem usar o modo de dupla- acção. Os gestos pendentes são cancelados em alterações de perfil/ configuração, calibração, operações de firmware, alterações de sessão e suspensão. Não é necessário flash de firmware; os relatórios de teclas/chave- up do teclado existentes fornecem os gestos.
 
@@ -371,7 +371,7 @@ As configurações lidas nos testes do Windows explicitamente permitem o compart
 
 No Windows, os arquivos de configurações existentes são comprometidos com `File.Replace` em vez de substituir o modo `File.Move`. Isto suporta os leitores que permitem a exclusão enquanto retém um instantâneo antigo completo. O conjunto central testa três substituições com um leitor aberto; as verificações do núcleo do Windows são executadas antes da compilação de firmware e da publicação, pelo que as falhas de persistência são detectadas precocemente.
 
-Um leitor de instantâneos de teste pode esperar até 500 ms para o compartilhamento/travamento do Windows enquanto `ReplaceFile` commits. A espera aplica- se apenas à abertura do instantâneo, nunca à execução ou re- execução de uma acção de aplicação. Outros erros, JSON malformados e bloqueios persistentes permanecem falhas.
+Um leitor de instantâneos de teste pode esperar até 500 ms para o compartilhamento/travamento do Windows enquanto `ReplaceFile` commits. A espera se aplica apenas à abertura do instantâneo, nunca execução ou re- execução de uma ação da aplicação. Outros erros, JSON malformado e bloqueios persistentes permanecem falhas.
 
 <a id="runtime-and-editing-optimizations-170"></a>
 ## Otimização de execução e edição (1.7.0)
@@ -410,9 +410,9 @@ O áudio é processado localmente em DeckPilotNão é gravado ou enviado atravé
 
 In **Soundboard · micro virtuel**, habilitar **Entendre aussi les filhos du soundboard** para ouvir clipes através de seu fone de ouvido ou alto-falantes, bem como o microfone virtual. Escolha a saída física e defina o volume de retorno separado de 0 para 100%. Este retorno é desligado por padrão e salvo neste PC. **Unicamente clipes de placa de som**; seu microfone físico nunca é adicionado à saída do alto-falante. O microfone virtual ainda envia sua voz e clipes para VB-CABLE.
 
-A alteração do volume não interrompe o microfone virtual. Se o seu alto-falante seleccionado se desligar, o retorno pára enquanto o microfone virtual continua. Reconecte-o, refresque a lista do dispositivo ou escolha outra saída. Os auscultadores ajudam a impedir que o seu microfone físico capture os clipes acusticamente.
+A alteração do volume não interrompe o microfone virtual. Se o seu alto-falante seleccionado se desligar, o retorno pára enquanto o microfone virtual continua. Reconecte-o, refresque a lista do dispositivo ou escolha outra saída. Os auscultadores ajudam a impedir que o seu microfone físico apanhe clipes acusticamente.
 
-O retorno do alto-falante agora usa o formato de áudio anunciado do dispositivo selecionado para Windows, incluindo formatos extensíveis usados por alguns fones de ouvido USB, e cai de volta da reprodução orientada por eventos se um driver o rejeitar. Iniciando um clipe de placa de som também exibe seu nome na mesma sobreposição configurável, clique-através como alterações de perfil. A preferência e posição de sobreposição se aplicam a ambos os avisos.
+O retorno do alto-falante agora usa o formato de áudio anunciado do dispositivo selecionado para Windows, incluindo formatos extensíveis usados por alguns fones de ouvido USB, e cai de volta da reprodução orientada por eventos se um driver rejeitá-lo. Iniciando um clipe de placa de som também exibe seu nome na mesma sobreposição configurável, clique-através como alterações de perfil. A preferência sobreposição e posição se aplicam a ambos os avisos.
 
 DeckPilot Atelier permanece em 1.0.12 e o firmware permanece 1.1.1. Nenhum flash de firmware é necessário. O roteamento real de colunas ainda depende do dispositivo de áudio Windows e deve ser verificado no PC do proprietário.
 
@@ -421,7 +421,7 @@ DeckPilot Atelier permanece em 1.0.12 e o firmware permanece 1.1.1. Nenhum flash
 
 In **Soundboard · micro virtuel**, habilitar **Entendre aussi les filhos du soundboard** para ouvir clipes através de seu fone de ouvido ou alto-falantes, bem como o microfone virtual. Escolha a saída física e defina o volume de retorno separado de 0 para 100%. Este retorno é desligado por padrão e salvo neste PC. **Unicamente clipes de placa de som**; seu microfone físico nunca é adicionado à saída do alto-falante. O microfone virtual ainda envia sua voz e clipes para VB-CABLE.
 
-A alteração do volume não interrompe o microfone virtual. Se o seu alto-falante seleccionado se desligar, o retorno pára enquanto o microfone virtual continua. Reconecte-o, refresque a lista do dispositivo ou escolha outra saída. Os auscultadores ajudam a impedir que o seu microfone físico capture os clipes acusticamente.
+A alteração do volume não interrompe o microfone virtual. Se o seu alto-falante seleccionado se desligar, o retorno pára enquanto o microfone virtual continua. Reconecte-o, refresque a lista do dispositivo ou escolha outra saída. Os auscultadores ajudam a impedir que o seu microfone físico apanhe clipes acusticamente.
 
 <a id="open-deckpilot-and-profile-notifications-217"></a>
 ## Abrir DeckPilot e notificações de perfil (2.1.7)

@@ -93,7 +93,7 @@ DeckPilot 이미 보낼 Arduino Leonardo-compatible macropads 구성 **F13–F24
 
 Windows에서 제거 **앱 설치**. 제거는 프로그램 및 단축키를 제거하고, 개인 프로필을 유지하면서 나중에 다시 설치를 재사용 할 수 있습니다.
 
-Single-file executable은 사용자의 .NET 캐시에 묶인 의존성을 추출하여 조금 더 오래 걸릴 수 있습니다. 게시된 실행파일은 현재 서명되지 않았으므로 Windows는 SmartScreen 경고를 표시할 수 있습니다.
+Single-file executable은 사용자의 .NET 캐시에 묶인 의존성을 추출하여 약간 더 오래 걸릴 수 있습니다. 게시된 실행파일은 현재 서명되지 않았으므로 Windows는 SmartScreen 경고를 표시할 수 있습니다.
 
 <a id="configure-a-key"></a>
 ### 키 구성
@@ -127,7 +127,7 @@ Single-file executable은 사용자의 .NET 캐시에 묶인 의존성을 추출
 <a id="background-operation"></a>
 ### 배경 작업
 
-창을 숨기다 DeckPilot 작업 활성화를 유지하면서. 시계 근처의 알림 아이콘을 두 번 클릭하거나 아이콘을 마우스 오른쪽 버튼으로 클릭하고 완전히 중지하려면 종료 명령을 선택하십시오.
+창을 숨기다 DeckPilot 행동을 유지하면서 활성화합니다. 시계 근처의 알림 아이콘을 두 번 클릭하거나 아이콘을 마우스 오른쪽 버튼으로 클릭하고 완전히 중지하려면 종료 명령을 선택하십시오.
 
 Windows 시작은 현재 사용자를 위해 기본적으로 활성화됩니다. 당신은 그것으로 disable 할 수 있습니다 **Lancer avec Windows**; 나중에 앱 업데이트는 그 선택을 보존합니다. 설치 및 이후 실행은 현재 실행 가능한 경로에 활성화 된 항목을 새로 고침합니다.
 
@@ -286,7 +286,7 @@ DeckPilot 아래에 발표됩니다. **[MIT 라이센스](../../LICENSE)**. 사�
 <a id="macropad-firmware-updates"></a>
 ## Macropad 펌웨어 업데이트
 
-장치 준비 및 워크샵 품질 검사를 위해 별도의 설치 [DeckPilot Atelier, 그리스](../../docs/FACTORY.md) 도구. 그것의 installer는 간행됩니다 **[DeckPilot-Atelier-Setup.exe를 설치](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** 주요 응용 프로그램에 따라. 그것은 레오나르도 / 카테리나 보드에 포함 된 펌웨어를 플래시 할 수 있으며, 모든 것에 짧은 긴 압박을 확인합니다. 12 물리적 키와 수출 보고서.
+장치 준비 및 워크샵 품질 검사를 위해 별도의 설치 [DeckPilot Atelier, 그리스](../../docs/FACTORY.md) 도구. 그것의 설치자는 간행됩니다 **[DeckPilot-Atelier-Setup.exe에](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** 주요 응용 프로그램에 따라. 그것은 레오나르도 / 카테리나 보드에 포함 된 펌웨어를 플래시 할 수 있으며, 모든 것에 짧은 긴 압박을 확인합니다. 12 물리적 키와 수출 보고서.
 
 DeckPilot 1.1.0 다음을 포함합니다. **Firmware du macropad…** 대화 및 펌웨어 1.0.0 직업적인 마이크로 ATmega32U4를 위해 **5 ₢ 킹 16 MHz의**, 레오나르도/카테리나 구성을 사용하여 소유자의 업로드 로그에 의해 확인. 번들 된 Windows 번쩍이는 도구는 Arduino IDE가 필요하지 않습니다. 장치 선택 및 확인은 필수입니다. 앱 업데이트는 조용히 보드를 플래시하지 않습니다. 기존 F13–F24 매핑, 프로파일 및 캘리브레이션은 호환됩니다.
 
@@ -342,7 +342,7 @@ Windows 시작은 이제 명시적 인 사용자 선호도를 유지하고 stale
 <a id="sharp-keypad-rendering-profile-recovery-and-audio-controls-161"></a>
 ## Sharp keypad 렌더링, 프로파일 복구 및 오디오 제어 (1.6.1)
 
-Keypad는 이제 Viewbox를 통해 텍스트를 스케일링하는 대신 기본 WPF 크기로 렌더링됩니다. 부모 / 키 그림자 효과와 텍스트 스케일 애니메이션이 제거되었습니다. 작은 창 스크롤은 오히려 키패드를 축소보다 작습니다. 앱은 per-monitor DPI 인식을 선언하고 데스크톱 응용 프로그램에 대한 더 큰 Windows 쉘 아이콘을 사용합니다.
+Keypad는 이제 Viewbox를 통해 텍스트를 스케일링 대신 기본 WPF 크기로 렌더링합니다. 부모 / 키 그림자 효과와 텍스트 스케일 애니메이션이 제거되었습니다. 작은 창 스크롤은 오히려 키패드를 축소보다 작습니다. 앱은 per-monitor DPI 인식을 선언하고 데스크톱 응용 프로그램에 대한 더 큰 Windows 쉘 아이콘을 사용합니다.
 
 **Annuler / Rétablir** 드래그 앤 드롭 스왑, 액션 설정, 가져 오기 및 프로파일 생성 / 삭제를 포함하여 프로파일 편집을 복원합니다. 역사는 유지 50 앱 세션 중에 편집합니다. Ctrl+Z / Ctrl+Y는 외부 텍스트 필드에서 동작합니다. 텍스트 필드는 자신의 undo/redo를 유지합니다. 교정, 시작 환경 설정 및 실행 작업은 undone이 아닙니다.
 
@@ -367,9 +367,9 @@ Windows Smoke checks는 기본 마우스 드래그를 수행하고 저장된 할
 
 Node.js를 사용하여 빌드 및 릴리즈 워크플로우 사용 24 작업. Arduino 컴파일러는 CLI에 남아 있습니다. 1.2.2; CI는 핀 SHA-로 Windows 아카이브를 다운로드256 checksum. 펌웨어 및 도구 체인 버전은 변경되지 않습니다.
 
-설정은 Windows 테스트에서 읽기 / 쓰기 / 삭제 공유 및 파시 UTF-를 허용8 독자를 닫은 후에. 이것은 앱의 원자 파일 보충을 denying에서 시험 자체를 막습니다. 역사 시험은 3개의 undo/redo 주기의 맞은편에 열리는 오래된 스냅샷을 지키고, 살아있는 조정이 변화하는 동안 intact 남아 있다는 것을 증명합니다.
+설정은 Windows 테스트에서 읽기 / 쓰기 / 삭제 공유 및 파시 UTF-를 허용8 독자를 닫은 후에. 이것은 앱의 원자 파일 보충을 denying에서 시험 자체를 막습니다. 역사 시험은 오래된 스냅샷을 3개의 undo/redo 주기의 맞은편에 유지하고 그것이 살아있는 조정이 변화하는 동안 intact 남아 있다는 것을 증명합니다.
 
-Windows에서 기존 설정 파일이 함께 제공됩니다. `File.Replace` overwrite-mode 보다는 오히려 `File.Move`. 이것은 완전한 오래된 스냅 샷을 유지하면서 deletion을 허용하는 독자를 지원합니다. 핵심 제품군은 독자가 열리는 3개의 교체를 시험합니다; Windows 핵심 체크는 굳힌모 편집의 앞에 달리고 간결 실패를 간행하기 전에 달립니다.
+Windows에서 기존 설정 파일이 함께 제공됩니다. `File.Replace` overwrite-mode 보다는 오히려 `File.Move`. 이것은 완전한 오래된 스냅샷을 유지하면서 deletion을 허용하는 독자를 지원합니다. 핵심 제품군은 독자가 열리는 3개의 보충을 시험합니다; Windows 핵심 체크는 굳힌모 편집의 앞에 달리고 간결 실패를 간행하기 전에 달립니다.
 
 테스트 스냅 샷 리더가 기다릴 수 있습니다. 500 Windows 공유 / 잠금 위반에 대한 ms `ReplaceFile` 커밋. 대기는 스냅샷을 열고 실행하거나 다시 실행할 수 없습니다. 다른 오류, 변형된 JSON 및 지속적 잠금은 실패합니다.
 
@@ -380,7 +380,7 @@ Windows에서 기존 설정 파일이 함께 제공됩니다. `File.Replace` ove
 
 검색 및 피커는 5 분 동안 immutable install-app 카탈로그를 공유합니다 (15 부분적인 결과를 위한 초). 동시 소비자는 1개의 검사를 공유합니다; 닫히는 1개의 피커는 다른 소비자를 취소하지 않습니다. 캐시를 우회하고, 각 피커는 그것의 자신의 여과기/view를 비치하고 있습니다. 스캐닝과 카탈로그 파싱은 UI 실을 끊습니다; 피커 거르는 것은에 의해 debounced입니다 120 ms. Action search rechecks this cache after its debounce and when returning from the picker, 그래서 새로 고침 카탈로그도 사용할 수 있습니다.
 
-Board UI 업데이트는 모든 waking 대신 연결 알림을 따릅니다. 100 Ms. 주문한 단선 통보는 아직도 보류를 취소했습니다. 키보드 걸이 큐 시각적인 일은, 억제와 제스처 타이밍이 동시 남아 있는 동안 입니다. 숨겨지은/최소한 창 정지 의견 생기 및 2 초 대신에 10 초 오디오 polling 간격을 사용하십시오; 다시 열거나 오디오 명령 요구 신선한 국가를 즉시 발행하십시오. 팬딩 오디오는 반복을 공유하고 기존의 읽기 도중 도착한 요구에 포함합니다. 오디오 스냅 샷 및 언 솔을 바꾸지 마십시오. 반복된 오디오는 UI를 풀어 놓지 않고 프로그램 중단한 프로그램 없이 반복한 프로그램 반복을 피합니다.
+Board UI 업데이트는 모든 waking 대신 연결 알림을 따릅니다. 100 Ms. 주문된 단말 알림은 여전히 보류를 취소합니다. 키보드 후크 큐 시각 작업, 억제 및 제스처 타이밍은 비동기 유지. 숨겨진 / 분화 된 창 정지 피드백 애니메이션과 두 초 대신 10 초 오디오 오염 간격을 사용; 다시 열거나 오디오 명령 요청 신선한 상태로 유지. 팬딩 오디오는 루프를 공유하고 기존의 읽기 동안 도착하는 요청을 포함합니다. 오디오 스냅 샷 및 언 브러시를 변경하지 마십시오. 프로세스가 중단되지 않고도 UI가 중단되지 않습니다.
 
 이 변화는 지정된 일을 감소시킵니다; 그들은 기계에 의존하는 CPU/RAM 비율을 설치하지 않습니다. 본래 기계설비 오디오 엇바꾸기 및 육체적인 중요한 행동은 아직도 매크로패드를 가진 Windows PC에 유효성을 요구합니다.
 
@@ -389,8 +389,8 @@ Board UI 업데이트는 모든 waking 대신 연결 알림을 따릅니다. 100
 
 charcoal 인터페이스는 액션 라이브러리를 먼저 배치하고, crisp native-size의 프로파일 컨트롤을 분리합니다. 3 × 4 키패드 및 카드의 그룹 액션 설정. 키 악센트는 자신의 범주를 구별; 선택, 키보드 초점 및 액션 피드백은 별도 남아. **Réduire les animations** 기본 설정에서 Windows 애니메이션 설정을 보완합니다. 작은 창은 키 텍스트를 축소 대신 스크롤 액세스를 유지합니다.
 
-- **단면도 템플렛:** 이름 * **Gérer les profils**, 음악 및 오디오, 데스크탑 및 생산성을 추가, 또는 창조. 각 템플릿은 별도의 편집 가능한 프로필을 작성하고 작업을 수행하지 않습니다. 기존 프로파일과 물리적 교정이 유지됩니다. 키보드 단축키는 활성 응용 프로그램을 사용하여 바인딩이 다를 수 있습니다.
-- **단면도 열쇠:** 지원하다 **Changer de profil**, 그 후에 지명된 단면도 또는 주기 forward/backward를 선정하십시오. 단면도 사이 참고는 각자 referencing 단면도를 수입하거나 duplicating 때 remapped입니다. 누락한 목적지는 과실을 보고하고 편집자에서 대체될 수 있습니다.
+- **단면도 템플렛:** 이름 * **Gérer les profils**, 음악 및 오디오, 데스크탑 및 생산성을 추가, 또는 창조. 각 템플릿은 별도의 편집 가능한 프로필을 작성하고 작업을 수행하지 않습니다. 기존 프로파일 및 물리적 교정이 유지됩니다. 키보드 단축키는 활성 응용 프로그램을 사용하여 바인딩이 다를 수 있습니다.
+- **단면도 열쇠:** 지원하다 **Changer de profil**, 그 후에 지명된 단면도 또는 주기 forward/backward를 선정하십시오. 단면도 사이 참고는 각자 referencing 단면도를 수입하거나 duplicating 때 remapped 입니다. 누락한 목적지는 오류를 보고하고 편집자에서 대체될 수 있습니다.
 - **Windows 명령:** (주) **Commandes Windows** 일반적인 설정 또는 작업 관리자를 열고, 또는 명시적으로 PC를 잠그십시오. 명령은 입력 할 스크립트없이 고정 목록에서 온다. 잠금 동작은 Windows로 다시 서명해야합니다.
 - **완전한 열쇠 클립보드:** 긴 행동과 악센트를 포함하여 복사, 컷, 페이스트 또는 재설정 키를 마우스 오른쪽 버튼으로 클릭. Ctrl + C / X / V 및 덱 키가 키보드 초점 동안 작업을 삭제; 일반 텍스트 필드는 편집 단축키를 유지합니다. 키 클립 보드 내부 유지 DeckPilot 그리고 출구에 명확합니다. 이 편집은 undo/redo를 지원합니다.
 - **단축키 기록병:** 키보드 동작을 선택하고 클릭 **Enregistrer un raccourci**. 지원되는 조합을 누르고, 그 후에 저장하십시오. 탈출 취소; F13-F24는 기록 도중 macropad를 위해 예약됩니다. Windows 보존한 조합은 아직도 수동 통제를 요구합니다.
@@ -435,7 +435,7 @@ DeckPilot Atelier가 남아 있습니다. 1.0.12 펌웨어가 남아 있습니�
 
 DeckPilot 이제 기본으로 딥 블랙 인터페이스를 사용합니다. In **Préférences de l’application**, 배경, 패널 및 악센트 색상 변경 `#RRGGBB` 값; 테마는이 PC에 저장됩니다.
 
-더 많은 정보 **Soundboard · micro virtuel** 패널은 물리적 마이크와 MP3/WAV 클립을 선택할 수 있습니다. DeckPilot 자동적으로 VB-Audio에 혼합을 경로를 VB-CABLE 재생 엔드포인트; Discord 또는 게임에서, 선택 **`CABLE Output`** 마이크로. 설치 및 업데이트 중 DeckPilot 자주 묻는 질문 VB-CABLE 그리고 누락 될 때 그것을 설치합니다. 그것은 HTTPS에 공식 패키지를 다운로드하고 드라이버의 침묵 설치기를 실행하기 전에 인증 게시자를 확인합니다. 이것은 인터넷 연결 및 관리자 권한이 필요합니다. DeckPilot 묶지 않거나 redistribute VB-Audio 파일. 드라이버가 나중에 누락되면, 같은 서명 검사 된 설치 프로그램을 시작할 수 있습니다. Soundboard 패널. 오디오 엔진 용도 NAudio (MIT; 참조) [제3자 공지사항](../../third-party/NAudio-LICENSE.txt)). VB-CABLE 별도의 라이센스, 서명 Windows 드라이버, MIT 구성 요소.
+더 많은 정보 **Soundboard · micro virtuel** 패널은 물리적 마이크와 MP3/WAV 클립을 선택할 수 있습니다. DeckPilot 자동적으로 VB-Audio에 혼합을 경로를 VB-CABLE 재생 엔드포인트; Discord 또는 게임에서, 선택 **`CABLE Output`** 마이크로. 설치 및 업데이트 중 DeckPilot 자주 묻는 질문 VB-CABLE 그리고 누락될 때 그것을 설치합니다. 그것은 HTTPS에 공식 패키지를 다운로드하고 드라이버의 침묵 설치기를 실행하기 전에 인증 게시자를 확인합니다. 이것은 인터넷 연결 및 관리자 권한이 필요합니다. DeckPilot 묶지 않거나 redistribute VB-Audio 파일. 드라이버가 나중에 누락되면, 같은 서명 검사 된 설치 프로그램을 시작할 수 있습니다. Soundboard 패널. 오디오 엔진 용도 NAudio (MIT; 참조) [제3자 공지사항](../../third-party/NAudio-LICENSE.txt)). VB-CABLE 별도의 라이센스, 서명 Windows 드라이버, MIT 구성 요소.
 
 <a id="deckpilot-atelier-190"></a>
 ## DeckPilot 한국어 (ko)1.9.0)
@@ -461,16 +461,16 @@ DeckPilot 1.9.6 Atelier의 Windows DPI를 수정하여 Windows에서 올바르�
 
 DeckPilot 1.9.7 Atelier를 제거하지 않고 실행됩니다. Windows 릴리스 테스트도 실행, in-place 업데이트 및 제거를 검증합니다.
 
-DeckPilot 1.9.8 검증된 빈 스케치를 사용하여 보드의 사용자 프로그램을 교체하고 Caterina bootloader를 보존하는 명시적 인 확인 된 Atelier 재설정을 추가합니다.
+DeckPilot 1.9.8 검증된 빈 스케치를 사용하여 보드의 사용자 프로그램을 대체하고 Caterina bootloader를 보존하는 명시적 인 확인 된 Atelier 재설정을 추가합니다.
 
-검증은 레거시 설정, 악센트 검증, 프로필 탐색 및 참조 재 매핑, 휴대용 템플릿, 기본 Windows 템플릿/undo/redo 및 프로파일 스위칭, 단축키 레코딩, 복사/paste/reset, 설정 지속, 설치/업데이트, 레이아웃 재구성 및 실제 UI 캡처를 포함합니다. 하드웨어 별 행동은 여전히 Windows PC에서 매크로 패드 및 오디오 장치를 필요로합니다.
+검증은 레거시 설정, 악센트 검증, 프로파일 네비게이션 및 참조 재 매핑, 휴대용 템플릿, 기본 Windows 템플릿/undo/redo 및 프로파일 스위칭, 단축키 레코딩, 복사/paste/reset, 설정 지속, 설치/업데이트, 레이아웃 재구성 및 실제 UI 캡처를 포함합니다. 하드웨어 별 행동은 여전히 Windows PC에서 매크로 패드 및 오디오 장치를 필요로 합니다.
 
 <a id="profile-sound-files-and-workshop-safety"></a>
 ### 프로파일 사운드 파일 및 워크샵 안전
 
 프로필 수출은 참조 된 MP3/WAV 클립 (최대 32 패키지 당 오디오의 MiB). 복사본 내장 오디오를 DeckPilot’ s 관리 사운드 폴더 및 기존 클립을 교체하지 않고 다시 맵 식별자. 자동 프로필 백업은 동일한 형식을 사용합니다. 사용 가능한 오디오는 침묵으로 교체하지 않고 누락 된 것으로 기록됩니다. 수출 제한을 초과하면 소스 파일을 유지하십시오. 레거시 프로파일 파일은 지원됩니다. 짧은 또는 긴 동작으로 할당 된 클립을 제거하면 차단됩니다.
 
-Atelier는 아직 대답하지 않는 널을 받아들입니다 DeckPilot 프로토콜은 여전히 USB 위치, Caterina bootloader 및 ATmega32U4 서명을 프로그래밍하기 전에 검사합니다. 각 테스트 세션은 빈 결과가 시작되며 테스트 보드와 관련 된 보고서는 유지됩니다. 플래시 또는 리셋 동안 응용 프로그램을 닫은 것은 쓰기 및 검증 완료 될 때까지 차단됩니다.
+Atelier는 아직 대답하지 않는 널을 받아들입니다 DeckPilot 프로토콜은 여전히 USB 위치, Caterina bootloader 및 ATmega32U4 서명을 프로그래밍하기 전에 검사합니다. 각 테스트 세션은 빈 결과가 시작되며 테스트 보드와 관련 된 보고서는 유지됩니다. 플래시 또는 리셋 동안 응용 프로그램을 종료하면 서면 및 검증 완료 될 때까지 차단됩니다.
 
 <a id="live-microphone-latency"></a>
 ### 라이브 마이크 latency

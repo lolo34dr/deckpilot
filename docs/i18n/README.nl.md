@@ -322,14 +322,14 @@ Voor handmatige Arduino IDE-uploads, **stoppen DeckPilot uit het tray-menu** om 
 <a id="spotify-action-search-and-drag-and-drop-150"></a>
 ## Spotify, actie zoeken en slepen (1.5.0)
 
-**Spotify** is gescheiden van **Multimédia**. Zijn afspelen/pauzeren, volgende en vorige commando's adres van de Spotify desktop app's Windows media sessie, zelfs terwijl een browser YouTube speelt. Spotify volume +/− past Spotify's Windows audio sessie in 5%-stappen, waarbij het hoofdvolume en andere spelers ongewijzigd blijven. Spotify moet geopend zijn en een beschikbare afspeelsessie hebben; start een track indien nodig. Spotify in een browser wordt niet ondersteund. Ontbrekende Spotify-sessies produceren een foutmelding, zonder terugval naar globale mediatoetsen of een andere speler. Geen Spotify-accountmachtiging, Premium-abonnement of opgeslagen token is nodig door DeckPilot. Vensters 10 versie 2004 of later, of vensters 11, is vereist door deze bouw.
+**Spotify** is gescheiden van **Multimédia**. Zijn afspelen/pauzeren, volgende en vorige commando's adres van de Spotify desktop app's Windows media sessie, zelfs terwijl een browser YouTube speelt. Spotify volume +/− past Spotify's Windows audio sessie in 5% stappen, waardoor het mastervolume en andere spelers ongewijzigd blijven. Spotify moet geopend zijn en een beschikbare afspeelsessie hebben; start een track indien nodig. Spotify in een browser wordt niet ondersteund. Ontbrekende Spotify-sessies produceren een foutmelding, zonder terugval naar de globale mediatoetsen of een andere speler. Geen Spotify-accountvergunning, Premium-abonnement of opgeslagen token is nodig door DeckPilot. Vensters 10 versie 2004 of later, of vensters 11, is vereist door deze bouw.
 
 Gebruik **Rechercher une action ou une application** voor vragen zoals `volume`, `skip`, `Spotify` of de naam van een geïnstalleerde app. De geïnstalleerde-app index laadt bij de eerste zoekopdracht en wordt gedurende vijf minuten gecached; handmatige bestandsselectie blijft beschikbaar. Klik op een resultaat om de geselecteerde sleutel in te stellen of sleept u deze naar een andere sleutel.
 
 <a id="control-panel-and-exact-colours-240"></a>
 ## Controlepaneel en exacte kleuren (2.4.0)
 
-Het rechter paneel heeft drie tabbladen: **Acties** voor het toewijzen van sleutels, **Appareil** voor het macropad en audio, en **Réglages** voor profielen en voorkeuren. Het toetsenbord en de editor aan de linkerkant behouden hun lay-out en de originele vector pictogrammen en DeckPilot logo.
+Het rechter paneel heeft drie tabbladen: **Acties** voor het toewijzen van sleutels, **Appareil** voor macropad en audio, en **Réglages** voor profielen en voorkeuren. Het toetsenbord en de editor aan de linkerkant behouden hun lay-out en de originele vector pictogrammen en DeckPilot logo.
 
 Onder **Réglages → Réglages de l**Gebruik **Palet...** om een exacte achtergrond-, paneel- of accentkleur te kiezen met de Windows-kleurkiezer. `#RRGGBB` veld en aangrenzende swatch tonen de geselecteerde waarde. **Appliquer les couleurs** valideert en bespaart de drie kleuren; het annuleren van de picker behoudt de huidige waarde.
 
@@ -346,7 +346,7 @@ Het toetsenbord rendert nu op native WPF-formaten in plaats van tekst te schalen
 
 **Annuler / Rétablir** herstelt profielbewerkingen, waaronder drag-and-drop swaps, actie-instellingen, import en profielaanmaak/deletie. Geschiedenis houdt 50 bewerken tijdens de appsessie. Ctrl+Z / Ctrl+Y werkt op profielen buiten tekstvelden; tekstvelden behouden hun eigen undo/redo. Kalibratie, opstartvoorkeuren en uitgevoerde acties worden niet ongedaan gemaakt.
 
-Onder **Gérer les profils**, exporteer het huidige profiel of alle profielen als `.deckpilot.json`, profielen importeren als nieuwe kopieën, of een back-up van alle profielen herstellen. Import voert nooit acties uit en vervangt nooit de kalibratie van de PC. Profielen bevatten actiepaden, argumenten en audio-eindpunt-ID's, die mogelijk moeten worden aangepast op een andere pc. Onbekende formaten, oversized bestanden en misvormde gebarenconfiguraties worden geweigerd.
+Onder **Gérer les profils**, exporteer het huidige profiel of alle profielen als `.deckpilot.json`, profielen importeren als nieuwe kopieën, of een back-up van alle profielen herstellen. Importeren voert nooit acties uit en vervangt nooit de kalibratie van de PC. Profielen bevatten actiepaden, argumenten en audio-eindpunt ID's, die mogelijk moeten worden aangepast op een andere pc. Onbekende formaten, oversized bestanden en misvormde gebarenconfiguraties worden geweigerd.
 
 Voor het opslaan van gewijzigde profielen, DeckPilot houdt de vorige profielen in `%APPDATA%\DeckPilot\Backups` (20 versies, inhoud-gededupliceerd). Voorkeur-alleen opslaan maakt geen profielback-ups aan. Een back-upfout voorkomt het overschrijven van de huidige instellingen. Herstellen vervangt profielen na bevestiging en kan zelf ongedaan worden gemaakt; kalibratie blijft ongewijzigd.
 
@@ -403,7 +403,7 @@ De firmware blijft **1.1.1**. Het accepteren van een automatische firmware aanbo
 
 **Soundboard · micro virtuel** nu bevat lokale RNNoise ruisonderdrukking voor de geselecteerde fysieke microfoon. **Filtrer le bruit du microfoon** en aanpassen **Intensité**. DeckPilot filtert de stem voor het mengen in soundboard clips, zodat clips ongewijzigd blijven en niet worden verwijderd door het ruisfilter. Het filter werkt voor elk programma dat gebruikt **CABLE Output** als microfoon, met inbegrip van games en spraakchat-apps; programma's ingesteld om de fysieke microfoon rechtstreeks te gebruiken gaan niet door DeckPilot.
 
-Audio wordt lokaal verwerkt in DeckPilot. Het wordt niet opgenomen of verzonden via het netwerk. RNNoise werkt in 10 ms. 48 kHz mono frames; deze framegrootte is geen end-to-end latency garantie, die ook afhankelijk is van Windows, de apparaten en VB-CABLE. Deze update vereist geen firmware flash. De native RNNoise component wordt gedekt door zijn eigen BSD-stijl licentie, hierboven vermeld.
+Audio wordt lokaal verwerkt in DeckPilot. Het wordt niet opgenomen of verzonden via het netwerk. RNNoise werkt in 10 ms. 48 kHz mono frames; deze framegrootte is geen end-to-end latency garantie, die ook afhankelijk is van Windows, de apparaten en VB-CABLE. Deze update vereist geen firmware flash. De native RNNoise component wordt behandeld door zijn eigen BSD-stijl licentie, hierboven vermeld.
 
 <a id="soundboard-return-and-on-screen-sound-notifications-219"></a>
 ## Soundboard geluidsmeldingen op het scherm en retour (2.1.9)
@@ -453,7 +453,7 @@ Versie 1.9.1 Repareert de lancering van Atelier na installatie door het te start
 
 Versie 1.9.2 verbetert de Atelier Windows verpakking stap en rapporteert de exacte storing locatie in CI.
 
-Versie 1.9.3 corrigeert hoe het Windows-pakket de meegeleverde firmwareversie leest, dus Atelier's update controle volgt de firmware die in het installatiesysteem wordt verzonden.
+Versie 1.9.3 corrigeert hoe het Windows-pakket de meegeleverde firmwareversie leest, dus Atelier's update check volgt de firmware verzonden in het installatiesysteem.
 
 De Atelier release check nu meldt het opstarten van diagnostiek als Windows het geïnstalleerde venster niet opent.
 
@@ -463,7 +463,7 @@ DeckPilot 1.9.7 repareert het verwijderen van Atelier terwijl het wordt uitgevoe
 
 DeckPilot 1.9.8 voegt een expliciete, bevestigde Atelier reset toe die het gebruikersprogramma van het bord vervangt door een geverifieerde lege schets en de Caterina bootloader bewaart.
 
-Validatie omvat legacy-instellingen, accentvalidatie, profielnavigatie en remapping, draagbare sjablonen, native Windows template/undo/redo en profiel switching, snelkoppeling opnemen, kopiëren/plakken/reset, instellingen persistentie, installatie/update, lay-out formaat en een werkelijke UI-opname. Hardware-specifiek gedrag vereist nog steeds het macropad en audio-apparaten op een Windows-pc.
+Validatie heeft betrekking op legacy-instellingen, accentvalidatie, profielnavigatie en remapping, draagbare sjablonen, native Windows sjabloon/undo/redo en profielswitching, snelkoppelingsopname, kopieer/plakken/reset, instellingen persistentie, installatie/update, layout-indeling en een werkelijke UI-opname. Hardware-specifiek gedrag vereist nog steeds het macropad en audio-apparaten op een Windows-pc.
 
 <a id="profile-sound-files-and-workshop-safety"></a>
 ### Profiel geluidsbestanden en veiligheid van de werkplaats
