@@ -144,6 +144,10 @@
         <TextBlock Text="Commande Spotify" Foreground="{StaticResource MutedBrush}"/>
         <ComboBox x:Name="SpotifyPicker" DisplayMemberPath="Name" AutomationProperties.Name="Commande Spotify"/>
        </StackPanel>
+       <StackPanel x:Name="DeezerPanel" Visibility="Collapsed">
+        <TextBlock Text="Commande Deezer" Foreground="{StaticResource MutedBrush}"/>
+        <ComboBox x:Name="DeezerPicker" DisplayMemberPath="Name" AutomationProperties.Name="Commande Deezer"/>
+       </StackPanel>
        <StackPanel x:Name="SoundboardActionPanel" Visibility="Collapsed">
         <TextBlock Text="Son à jouer sur cette touche" Foreground="{StaticResource MutedBrush}"/>
         <ComboBox x:Name="SoundboardClipPicker" DisplayMemberPath="Name" AutomationProperties.Name="Son du soundboard"/>

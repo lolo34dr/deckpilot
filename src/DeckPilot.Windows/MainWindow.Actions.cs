@@ -37,7 +37,7 @@ public partial class MainWindow
         for (int i = 0; i < actionButtons.Count; i++)
         {
             var kind = (ActionKind)i;
-            WireDragSource(actionButtons[i], () => new(new() { Kind = kind, Key = kind is ActionKind.Media or ActionKind.Spotify ? 0xB3 : 0x41 }));
+            WireDragSource(actionButtons[i], () => new(new() { Kind = kind, Key = kind is ActionKind.Media or ActionKind.Spotify or ActionKind.Deezer ? 0xB3 : 0x41 }));
         }
         for (int i = 0; i < deckButtons.Count; i++)
         {

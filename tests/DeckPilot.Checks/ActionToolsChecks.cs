@@ -28,6 +28,9 @@ public static class ActionToolsChecks
         bool cancelled = false;
         try { await SpotifyPlayback.SendAsync([spotify], 0xB0, cancellation.Token); } catch (OperationCanceledException) { cancelled = true; }
         Check(invalid && cancelled && spotify.Commands.Count == 3, "Unsupported Spotify commands and cancellation cannot send a media command");
+        var deezer = new DeezerTestSession("Deezer.exe", true);
+        foreach (int key in new[] { 0xB3, 0xB0, 0xB1 }) await DeezerPlayback.SendAsync([new DeezerTestSession("chrome.exe", true), deezer], key, default);
+        Check(youtube.Commands.Count == 0 && deezer.Commands.SequenceEqual(new[] { 0xB3, 0xB0, 0xB1 }), "Deezer playback controls target only its Windows media session");
         var spotifyVolume = new VolumeSession("Spotify", true, .50f);
         var spotifyIdle = new VolumeSession("SpotifyAB.SpotifyMusic_123", false, .30f);
         var youtubeVolume = new VolumeSession("chrome", true, .80f);
@@ -45,11 +48,17 @@ public static class ActionToolsChecks
         Check(minimum.Volume == 0f && maximum.Volume == 1f && missingSpotifyVolume && invalidVolumeKey
             && youtubeVolume.Volume == .80f && SpotifyVolume.IsSpotifyProcess("SpotifyAB.SpotifyMusic") && !SpotifyVolume.IsSpotifyProcess("chrome"),
             "Spotify volume clamps safely and never falls back to global media volume");
+        var deezerVolume = new DeezerTestVolumeSession("Deezer", true, .50f);
+        var otherVolume = new DeezerTestVolumeSession("chrome", true, .80f);
+        DeezerVolume.Adjust([deezerVolume, otherVolume], 0xAF);
+        Check(Math.Abs(deezerVolume.Volume - .55f) < .001f && Math.Abs(otherVolume.Volume - .80f) < .001f,
+            "Deezer volume changes only its own Windows audio session");
         var volume = ActionSearch.Find("volume", []);
         var apps = new[] { new InstalledApplication("Discord", @"C:\Apps\Discord.lnk", "Menu"), new InstalledApplication("Éditeur", @"C:\Apps\edit.exe", "Menu") };
         var discord = ActionSearch.Find("DISCORD", apps);
         Check(volume.Where(p => p.Action.Kind == ActionKind.Media).Select(p => p.Action.Key).Order().SequenceEqual(new[] { 0xAD, 0xAE, 0xAF })
             && volume.Where(p => p.Action.Kind == ActionKind.Spotify).Select(p => p.Action.Key).Order().SequenceEqual(new[] { 0xAE, 0xAF })
+            && volume.Where(p => p.Action.Kind == ActionKind.Deezer).Select(p => p.Action.Key).Order().SequenceEqual(new[] { 0xAE, 0xAF })
             && volume.Any(p => p.Action.Kind == ActionKind.System && p.Action.Target == "sound-settings") && discord.Single().Action.Target == apps[0].Target
             && ActionSearch.Find("editeur", apps).Single().Action.ApplicationName == "Éditeur", "Action search finds volume presets and installed applications regardless of case or accents");
         var next = ActionSearch.Find("skip", []).Where(p => p.Action.Kind == ActionKind.Spotify).Single();
@@ -72,6 +81,20 @@ public static class ActionToolsChecks
         public bool Accept { get; init; } = true;
         public List<int> Commands { get; } = [];
         public Task<bool> SendAsync(int key, CancellationToken cancellation) { cancellation.ThrowIfCancellationRequested(); Commands.Add(key); return Task.FromResult(Accept); }
+    }
+    private sealed class DeezerTestSession(string appId, bool playing) : IDeezerMediaSession
+    {
+        public string AppId => appId;
+        public bool IsPlaying => playing;
+        public List<int> Commands { get; } = [];
+        public Task<bool> SendAsync(int key, CancellationToken cancellation) { cancellation.ThrowIfCancellationRequested(); Commands.Add(key); return Task.FromResult(true); }
+    }
+    private sealed class DeezerTestVolumeSession(string processName, bool isActive, float volume) : IDeezerVolumeSession
+    {
+        public string ProcessName => processName;
+        public bool IsActive => isActive;
+        public float Volume { get; private set; } = volume;
+        public void SetVolume(float value) => Volume = value;
     }
     private sealed class VolumeSession(string processName, bool isActive, float volume) : ISpotifyVolumeSession
     {

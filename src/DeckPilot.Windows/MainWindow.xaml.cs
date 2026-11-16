@@ -91,6 +91,7 @@ public partial class MainWindow : Window
         ShortcutPicker.ItemsSource = keys;
         MediaPicker.ItemsSource = new Choice[] { new("Lecture / pause", 0xB3), new("Piste suivante", 0xB0), new("Piste précédente", 0xB1), new("Volume +", 0xAF), new("Volume −", 0xAE), new("Muet", 0xAD) };
         SpotifyPicker.ItemsSource = new Choice[] { new("Lecture / pause", 0xB3), new("Piste suivante", 0xB0), new("Piste précédente", 0xB1), new("Volume Spotify + (5 %)", 0xAF), new("Volume Spotify − (5 %)", 0xAE) };
+        DeezerPicker.ItemsSource = new Choice[] { new("Lecture / pause", 0xB3), new("Piste suivante", 0xB0), new("Piste précédente", 0xB1), new("Volume Deezer + (5 %)", 0xAF), new("Volume Deezer − (5 %)", 0xAE) };
         BuildGrid();
         InitializeWorkspaceFeatures();
         InitializeActionTools();
@@ -158,7 +159,7 @@ public partial class MainWindow : Window
             row.Children.Add(new Image { Source = VectorIcons.ForKind((ActionKind)i), Width = 18, Height = 18, Margin = new Thickness(0, 0, 12, 0), VerticalAlignment = VerticalAlignment.Center });
             row.Children.Add(new TextBlock { Text = ActionNames[i], VerticalAlignment = VerticalAlignment.Center, FontSize = 13 });
             var button = new Button { Content = row, HorizontalContentAlignment = HorizontalAlignment.Stretch, Style = (Style)FindResource("ActionLibraryRow") };
-            button.Click += (_, _) => { if (Environment.TickCount64 < ignoreClickUntil) return; if (editingLong && index == 0) { ReportError("Choisissez une action configurée pour l’appui long."); return; } bool changed = ActionPicker.SelectedIndex != index; ActionPicker.SelectedIndex = index; if (changed && (ActionKind)index is ActionKind.Media or ActionKind.Spotify) { MediaPicker.SelectedIndex = 0; SpotifyPicker.SelectedIndex = 0; } SaveEditor(); };
+            button.Click += (_, _) => { if (Environment.TickCount64 < ignoreClickUntil) return; if (editingLong && index == 0) { ReportError("Choisissez une action configurée pour l’appui long."); return; } bool changed = ActionPicker.SelectedIndex != index; ActionPicker.SelectedIndex = index; if (changed && (ActionKind)index is ActionKind.Media or ActionKind.Spotify or ActionKind.Deezer) { MediaPicker.SelectedIndex = 0; SpotifyPicker.SelectedIndex = 0; } SaveEditor(); };
             System.Windows.Automation.AutomationProperties.SetName(button, ActionNames[i]);
             ActionCatalog.Children.Add(button); actionButtons.Add(button);
         }
@@ -334,6 +335,7 @@ public partial class MainWindow : Window
         ShortcutPicker.SelectedItem = ((IEnumerable<Choice>)ShortcutPicker.ItemsSource).FirstOrDefault(c => c.Key == action.Key) ?? ((IEnumerable<Choice>)ShortcutPicker.ItemsSource).First();
         MediaPicker.SelectedItem = ((IEnumerable<Choice>)MediaPicker.ItemsSource).FirstOrDefault(c => c.Key == action.Key) ?? ((IEnumerable<Choice>)MediaPicker.ItemsSource).First();
         SpotifyPicker.SelectedItem = ((IEnumerable<Choice>)SpotifyPicker.ItemsSource).FirstOrDefault(c => c.Key == action.Key) ?? ((IEnumerable<Choice>)SpotifyPicker.ItemsSource).First();
+        DeezerPicker.SelectedItem = ((IEnumerable<Choice>)DeezerPicker.ItemsSource).FirstOrDefault(c => c.Key == action.Key) ?? ((IEnumerable<Choice>)DeezerPicker.ItemsSource).First();
         SoundboardClipPicker.ItemsSource = settings.Soundboard.Clips;
         SoundboardClipPicker.SelectedItem = settings.Soundboard.Clips.FirstOrDefault(c => c.Id.ToString() == action.Target);
         PopulateWorkspaceEditor(action);
@@ -396,6 +398,7 @@ public partial class MainWindow : Window
         ShortcutPanel.Visibility = kind == ActionKind.Shortcut ? Visibility.Visible : Visibility.Collapsed;
         MediaPanel.Visibility = kind == ActionKind.Media ? Visibility.Visible : Visibility.Collapsed;
         SpotifyPanel.Visibility = kind == ActionKind.Spotify ? Visibility.Visible : Visibility.Collapsed;
+        DeezerPanel.Visibility = kind == ActionKind.Deezer ? Visibility.Visible : Visibility.Collapsed;
         AudioOutputPanel.Visibility = kind == ActionKind.AudioOutput ? Visibility.Visible : Visibility.Collapsed;
         SoundboardActionPanel.Visibility = kind == ActionKind.Soundboard ? Visibility.Visible : Visibility.Collapsed;
         ProfileActionPanel.Visibility = kind == ActionKind.Profile ? Visibility.Visible : Visibility.Collapsed;
@@ -413,6 +416,7 @@ public partial class MainWindow : Window
             ActionKind.Microphone => "Coupe ou réactive tous les microphones Windows actifs. L’état est affiché dans la carte Audio Windows.",
             ActionKind.AudioOutput => "Alterne entre deux sorties par défaut Windows. Les applications réglées sur une sortie fixe peuvent ne pas suivre ce changement.",
             ActionKind.Spotify => "Les commandes de lecture ciblent Spotify pour Windows. Volume +/− règle uniquement sa session audio Windows par pas de 5 %, sans modifier YouTube, un jeu ou le volume général. Lancez une lecture Spotify pour créer sa session audio ; le lecteur Spotify dans un navigateur n’est pas pris en charge.",
+            ActionKind.Deezer => "Les commandes de lecture ciblent l’application Deezer pour Windows. Volume +/− règle uniquement sa session audio Windows par pas de 5 %, sans modifier les autres applications ni le volume général. Deezer doit exposer une session multimédia Windows ; le lecteur dans un navigateur n’est pas pris en charge.",
             ActionKind.Profile => "Change de profil avec cette touche. Choisissez un profil précis, le suivant ou le précédent. Le calibrage reste commun.",
             ActionKind.System => "Ouvre un réglage ou un outil Windows. Le verrouillage protège l’accès à votre session sans arrêter vos applications.",
             _ => "Contrôles multimédias généraux de Windows : peuvent agir sur YouTube ou un autre lecteur actif."
@@ -555,6 +559,11 @@ public partial class MainWindow : Window
             {
                 if (action.Key is 0xAF or 0xAE) await SpotifyVolumeController.RunAsync(action.Key, lifetime.Token);
                 else await SpotifyController.RunAsync(action.Key, lifetime.Token);
+            }
+            else if (action.Kind == ActionKind.Deezer)
+            {
+                if (action.Key is 0xAF or 0xAE) await DeezerVolumeController.RunAsync(action.Key, lifetime.Token);
+                else await DeezerController.RunAsync(action.Key, lifetime.Token);
             }
             else if (action.Kind == ActionKind.Application && ApplicationTarget.IsDeckPilot(action.Target))
                 ShowMain();
