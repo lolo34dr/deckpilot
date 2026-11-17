@@ -12,11 +12,7 @@ public static class DeezerVolume
 {
     public const float Step = 0.05f;
 
-    public static bool IsDeezerProcess(string processName) =>
-        processName.Equals("Deezer", StringComparison.OrdinalIgnoreCase)
-        || processName.Equals("Deezer.exe", StringComparison.OrdinalIgnoreCase)
-        || processName.Equals("Deezer", StringComparison.OrdinalIgnoreCase)
-        || processName.StartsWith("Deezer_", StringComparison.OrdinalIgnoreCase);
+    public static bool IsDeezerProcess(string processName) => DeezerPlayback.HasDeezerIdentity(processName);
 
     public static int Adjust(IEnumerable<IDeezerVolumeSession> sessions, int key)
     {

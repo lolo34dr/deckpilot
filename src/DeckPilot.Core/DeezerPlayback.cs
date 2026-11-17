@@ -9,9 +9,11 @@ public interface IDeezerMediaSession
 
 public static class DeezerPlayback
 {
-    public static bool IsDeezer(string appId) => appId.Equals("Deezer.exe", StringComparison.OrdinalIgnoreCase)
-        || appId.Equals("Deezer", StringComparison.OrdinalIgnoreCase)
-        || appId.StartsWith("Deezer.", StringComparison.OrdinalIgnoreCase);
+    public static bool IsDeezer(string appId) => HasDeezerIdentity(appId);
+
+    internal static bool HasDeezerIdentity(string? identity) => !string.IsNullOrWhiteSpace(identity)
+        && identity.Split(['.', '_', '!', '-', '/', '\\', ' '], StringSplitOptions.RemoveEmptyEntries)
+            .Any(part => part.Equals("Deezer", StringComparison.OrdinalIgnoreCase));
 
     public static async Task SendAsync(IEnumerable<IDeezerMediaSession> sessions, int key, CancellationToken cancellation)
     {

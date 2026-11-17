@@ -152,15 +152,16 @@ public partial class MainWindow : Window
             var cell = new Border { CornerRadius = new CornerRadius(6), BorderThickness = new Thickness(1), Margin = new Thickness(6), Child = calibrationLabel };
             CalibrationGrid.Children.Add(cell); calibrationCells.Add(cell); calibrationLabels.Add(calibrationLabel);
         }
-        for (int i = 0; i < ActionNames.Length; i++)
+        for (int i = 0; i < ActionSearch.LibraryOrder.Length; i++)
         {
             int index = i;
+            var kind = ActionSearch.LibraryOrder[index];
             var row = new StackPanel { Orientation = Orientation.Horizontal };
-            row.Children.Add(new Image { Source = VectorIcons.ForKind((ActionKind)i), Width = 18, Height = 18, Margin = new Thickness(0, 0, 12, 0), VerticalAlignment = VerticalAlignment.Center });
-            row.Children.Add(new TextBlock { Text = ActionNames[i], VerticalAlignment = VerticalAlignment.Center, FontSize = 13 });
+            row.Children.Add(new Image { Source = VectorIcons.ForKind(kind), Width = 18, Height = 18, Margin = new Thickness(0, 0, 12, 0), VerticalAlignment = VerticalAlignment.Center });
+            row.Children.Add(new TextBlock { Text = ActionSearch.KindName(kind), VerticalAlignment = VerticalAlignment.Center, FontSize = 13 });
             var button = new Button { Content = row, HorizontalContentAlignment = HorizontalAlignment.Stretch, Style = (Style)FindResource("ActionLibraryRow") };
-            button.Click += (_, _) => { if (Environment.TickCount64 < ignoreClickUntil) return; if (editingLong && index == 0) { ReportError("Choisissez une action configurée pour l’appui long."); return; } bool changed = ActionPicker.SelectedIndex != index; ActionPicker.SelectedIndex = index; if (changed && (ActionKind)index is ActionKind.Media or ActionKind.Spotify or ActionKind.Deezer) { MediaPicker.SelectedIndex = 0; SpotifyPicker.SelectedIndex = 0; } SaveEditor(); };
-            System.Windows.Automation.AutomationProperties.SetName(button, ActionNames[i]);
+            button.Click += (_, _) => { if (Environment.TickCount64 < ignoreClickUntil) return; if (editingLong && kind == ActionKind.Passthrough) { ReportError("Choisissez une action configurée pour l’appui long."); return; } bool changed = ActionPicker.SelectedIndex != (int)kind; ActionPicker.SelectedIndex = (int)kind; if (changed && kind is ActionKind.Media or ActionKind.Spotify or ActionKind.Deezer) { MediaPicker.SelectedIndex = 0; SpotifyPicker.SelectedIndex = 0; DeezerPicker.SelectedIndex = 0; } SaveEditor(); };
+            System.Windows.Automation.AutomationProperties.SetName(button, ActionSearch.KindName(kind));
             ActionCatalog.Children.Add(button); actionButtons.Add(button);
         }
     }
@@ -385,9 +386,10 @@ public partial class MainWindow : Window
         EditorActionTitle.Text = ActionPicker.SelectedIndex < 0 ? "Action retirée" : ActionSearch.KindName(kind);
         for (int i = 0; i < actionButtons.Count; i++)
         {
-            actionButtons[i].Background = i == (int)kind ? Brush("#292336") : Brushes.Transparent;
-            actionButtons[i].BorderBrush = i == (int)kind ? (Brush)FindResource("AccentBrush") : (Brush)FindResource("LineBrush");
-            actionButtons[i].BorderThickness = i == (int)kind ? new Thickness(3, 0, 0, 0) : new Thickness(0, 0, 0, 1);
+            bool selected = ActionSearch.LibraryOrder[i] == kind;
+            actionButtons[i].Background = selected ? Brush("#292336") : Brushes.Transparent;
+            actionButtons[i].BorderBrush = selected ? (Brush)FindResource("AccentBrush") : (Brush)FindResource("LineBrush");
+            actionButtons[i].BorderThickness = selected ? new Thickness(3, 0, 0, 0) : new Thickness(0, 0, 0, 1);
         }
         ApplicationPanel.Visibility = kind == ActionKind.Application ? Visibility.Visible : Visibility.Collapsed;
         AdvancedOptionsExpander.Visibility = kind is ActionKind.Application or ActionKind.Folder or ActionKind.Website ? Visibility.Visible : Visibility.Collapsed;

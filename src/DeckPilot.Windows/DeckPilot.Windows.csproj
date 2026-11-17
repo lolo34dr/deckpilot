@@ -8,8 +8,9 @@
     <NoWarn>$(NoWarn);WFAC010</NoWarn>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets/DeckPilot.ico</ApplicationIcon>
-    <AssemblyName>DeckPilot</AssemblyName><Version>2.4.3</Version>
+    <AssemblyName>DeckPilot</AssemblyName><Version>2.4.4</Version>
   </PropertyGroup>
+  <ItemGroup><EmbeddedResource Include="Assets/deezer.svg" LogicalName="DeckPilot.Assets.deezer.svg" /></ItemGroup>
   <ItemGroup>
     <Resource Include="../../deckpilotlogo.png" Link="Assets/DeckPilot.png" />
     <Resource Include="../../deckpilotbanner.png" Link="Assets/DeckPilot-Banner.png" />
