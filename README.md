@@ -104,6 +104,7 @@ The single-file executable extracts its bundled dependencies into the user's .NE
 | Keyboard shortcut | Sends a key combination to the active window. |
 | Media | Controls playback, tracks, volume, or mute. |
 | Spotify | Controls Spotify playback and adjusts only Spotify's Windows audio-session volume. |
+| Deezer | Controls the Deezer Windows media session and adjusts only its Windows audio-session volume. |
 | Application — DeckPilot | Shows the existing DeckPilot window, including when it is running in the notification area. |
 
 For application actions, open the application picker and search by name. The manual file selector remains available, with optional program arguments under advanced options. Enter arguments according to the target application's syntax.
@@ -298,7 +299,11 @@ For manual Arduino IDE uploads, **quit DeckPilot from its tray menu** to free th
 
 **Spotify** is separate from **Multimédia**. Its play/pause, next and previous commands address the Spotify desktop app's Windows media session, even while a browser is playing YouTube. Spotify volume +/− adjusts Spotify's Windows audio session in 5% steps, leaving the master volume and other players unchanged. Spotify must be open and have an available playback session; start a track once if necessary. Spotify in a browser is not supported. Missing Spotify sessions produce an error, with no fallback to global media keys or another player. No Spotify account authorization, Premium subscription or stored token is needed by DeckPilot. Windows 10 version 2004 or later, or Windows 11, is required by this build.
 
-Use **Rechercher une action ou une application** for queries such as `volume`, `skip`, `Spotify` or an installed app's name. The installed-app index loads on the first search and is cached for five minutes; manual file selection remains available. Click a result to configure the selected key or drag it onto another key.
+## Deezer playback and per-app volume (2.4.3, refined in 2.4.4)
+
+**Deezer** sits beside **Spotify** in the action library. Play/pause and track changes use the Windows media-session API; volume +/− adjusts only Deezer's Windows audio session in 5% steps through Windows Core Audio. This uses the same local Windows APIs as Spotify and needs no Deezer account token. Open the Deezer desktop app and start playback so Windows exposes its media and audio sessions. Deezer in a browser is not supported; a missing Deezer session reports an error instead of controlling another player or the master volume. The action library and assigned keys show a dedicated Deezer SVG mark.
+
+Use **Rechercher une action ou une application** for queries such as `volume`, `skip`, `Spotify`, `Deezer` or an installed app's name. The installed-app index loads on the first search and is cached for five minutes; manual file selection remains available. Click a result to configure the selected key or drag it onto another key.
 
 ## Control panel and exact colours (2.4.0)
 

@@ -36,7 +36,7 @@ public partial class MainWindow
         Closed += (_, _) => searchTimer.Stop();
         for (int i = 0; i < actionButtons.Count; i++)
         {
-            var kind = (ActionKind)i;
+            var kind = ActionSearch.LibraryOrder[i];
             WireDragSource(actionButtons[i], () => new(new() { Kind = kind, Key = kind is ActionKind.Media or ActionKind.Spotify or ActionKind.Deezer ? 0xB3 : 0x41 }));
         }
         for (int i = 0; i < deckButtons.Count; i++)

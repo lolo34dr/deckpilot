@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Data;
@@ -9,6 +10,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using System.Xml.Linq;
 using DeckPilot.Core;
 
 namespace DeckPilot.Windows;
@@ -30,6 +32,7 @@ public static class VectorIcons
         "M3,12 L5,12 M7,8 L7,16 M10,5 L10,19 M13,9 L13,15 M16,3 L16,21 M19,7 L19,17 M22,12 L23,12"
     ];
     private static readonly ImageSource[] Images = Create();
+    private static readonly Lazy<ImageSource> DeezerImage = new(LoadDeezerSvg);
     private static ImageSource[] Create()
     {
         var images = new List<ImageSource>();
@@ -44,8 +47,54 @@ public static class VectorIcons
         }
         return images.ToArray();
     }
-    public static ImageSource ForKind(ActionKind kind) =>
-        (uint)kind < Images.Length ? Images[(int)kind] : Images[0];
+    public static ImageSource ForKind(ActionKind kind) => kind == ActionKind.Deezer
+        ? DeezerImage.Value
+        : (uint)kind < Images.Length ? Images[(int)kind] : Images[0];
+
+    private static ImageSource LoadDeezerSvg()
+    {
+        using var stream = typeof(VectorIcons).Assembly.GetManifestResourceStream("DeckPilot.Assets.deezer.svg")
+            ?? throw new InvalidOperationException("Le logo SVG de Deezer est introuvable.");
+        var root = XDocument.Load(stream).Root ?? throw new InvalidOperationException("Le logo SVG de Deezer est invalide.");
+        var viewBox = ((string?)root.Attribute("viewBox") ?? "").Split([' ', ',', '\t', '\r', '\n'], StringSplitOptions.RemoveEmptyEntries);
+        if (viewBox.Length != 4 || !SvgNumber(viewBox[0], out double left) || !SvgNumber(viewBox[1], out double top)
+            || !SvgNumber(viewBox[2], out double width) || !SvgNumber(viewBox[3], out double height) || width <= 0 || height <= 0)
+            throw new InvalidOperationException("Le logo SVG de Deezer a une zone d’affichage invalide.");
+
+        var drawing = new DrawingGroup();
+        drawing.Children.Add(new GeometryDrawing(Brushes.Transparent, null, new RectangleGeometry(new Rect(left, top, width, height))));
+        foreach (var rectangle in root.Elements().Where(element => element.Name.LocalName == "rect"))
+        {
+            if (!SvgNumber((string?)rectangle.Attribute("x"), out double x)
+                || !SvgNumber((string?)rectangle.Attribute("y"), out double y)
+                || !SvgNumber((string?)rectangle.Attribute("width"), out double rectangleWidth)
+                || !SvgNumber((string?)rectangle.Attribute("height"), out double rectangleHeight)
+                || rectangleWidth <= 0 || rectangleHeight <= 0)
+                throw new InvalidOperationException("Le logo SVG de Deezer contient un rectangle invalide.");
+
+            string fill = (string?)rectangle.Attribute("fill") ?? throw new InvalidOperationException("Le logo SVG de Deezer ne précise pas sa couleur.");
+            var brush = new SolidColorBrush(SvgColor(fill));
+            brush.Freeze();
+            drawing.Children.Add(new GeometryDrawing(brush, null, new RectangleGeometry(new Rect(x, y, rectangleWidth, rectangleHeight))));
+        }
+        if (drawing.Children.Count == 1) throw new InvalidOperationException("Le logo SVG de Deezer ne contient aucun élément graphique.");
+        var image = new DrawingImage(drawing);
+        image.Freeze();
+        return image;
+    }
+
+    private static bool SvgNumber(string? text, out double value) =>
+        double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value);
+
+    private static Color SvgColor(string value)
+    {
+        if (value.Length != 7 || value[0] != '#'
+            || !byte.TryParse(value.AsSpan(1, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte red)
+            || !byte.TryParse(value.AsSpan(3, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte green)
+            || !byte.TryParse(value.AsSpan(5, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte blue))
+            throw new InvalidOperationException("Le logo SVG de Deezer contient une couleur non prise en charge.");
+        return Color.FromRgb(red, green, blue);
+    }
 }
 public static class ApplicationIcons
 {
