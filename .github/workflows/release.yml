@@ -56,6 +56,11 @@ jobs:
         run: |
           [xml]$project = Get-Content src/DeckPilot.Windows/DeckPilot.Windows.csproj
           if ("v$($project.Project.PropertyGroup.Version)" -ne $env:GITHUB_REF_NAME) { throw "Le tag ne correspond pas à la version de l’application." }
+          $notes = Get-Content -LiteralPath .github/release-notes.md
+          $releaseSections = @($notes | Where-Object { $_ -match '^DeckPilot (\d+\.\d+\.\d+)(?:\s|$)' })
+          if ($releaseSections.Count -ne 1 -or $releaseSections[0] -notmatch "^DeckPilot $($project.Project.PropertyGroup.Version)(?:\s|$)") {
+            throw "Les notes doivent contenir uniquement les changements de la version publiée."
+          }
       - name: Build application
         shell: pwsh
         run: |
