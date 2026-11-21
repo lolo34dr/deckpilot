@@ -29,6 +29,28 @@ def releases():
 def slug(text):
     return re.sub(r'[^\w\- ]','',text.lower()).replace(' ','-')
 
+def release_notes_for_tag(tag,body):
+    body=(body or '').partition(MARKER)[0].strip()
+    sections=list(re.finditer(r'(?m)^DeckPilot (\d+\.\d+\.\d+)(?=\s|$)',body))
+    if not sections:
+        return body
+
+    version=tag.removeprefix('v')
+    matching=[index for index,section in enumerate(sections) if section.group(1)==version]
+    if matching:
+        selected=[]
+        for index in matching:
+            start=sections[index].start()
+            end=sections[index+1].start() if index+1<len(sections) else len(body)
+            selected.append(body[start:end].strip())
+        prelude=body[:sections[0].start()].strip()
+        return '\n\n'.join(([prelude] if prelude else [])+selected).strip()
+
+    prelude=body[:sections[0].start()].strip()
+    if prelude:
+        return prelude
+    return body
+
 def prepare(out):
     out.mkdir(parents=True,exist_ok=True)
     source=Path('README.md').read_bytes()
@@ -39,7 +61,7 @@ def prepare(out):
     for r in releases():
         tag=r['tag_name']
         if not re.fullmatch(r'[A-Za-z0-9._-]+',tag):raise ValueError('Unsafe release tag')
-        body=(r['body'] or '').partition(MARKER)[0].rstrip()
+        body=release_notes_for_tag(tag,r['body'])
         notes.append({'tag':tag,'body':body,'id':r['id']})
     (out/'releases.json').write_text(json.dumps(notes,ensure_ascii=False),encoding='utf-8')
     (out/'manifest.json').write_text(json.dumps({'readme_sha256':hashlib.sha256(source).hexdigest(),'firmware_sha256':hashlib.sha256(firmware).hexdigest()}))
@@ -303,7 +325,7 @@ def publish(source):
         localized={lang:(directory/f'README.{lang}.md').read_text() for lang in LANGUAGES}
         body=release_body(release['tag'],release['body'],localized)
         current=json.loads(request(f"https://api.github.com/repos/lolo34dr/deckpilot/releases/{release['id']}"))
-        if (current['body'] or '').partition(MARKER)[0].rstrip()!=release['body']:raise RuntimeError('Release notes edited during translation; refusing overwrite')
+        if release_notes_for_tag(release['tag'],current['body'])!=release['body']:raise RuntimeError('Release notes edited during translation; refusing overwrite')
         if current['body']==body:continue
         payload=json.dumps({'body':body}).encode()
         headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'User-Agent':'DeckPilot-documentation','Content-Type':'application/json'}
