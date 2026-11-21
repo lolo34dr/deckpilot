@@ -1,0 +1,74 @@
+name: Repair historical release tagger identities
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/repair-taggers.yml
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Update annotated tag identities without publishing releases
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import re
+          import subprocess
+
+          def git(*args, data=None):
+              return subprocess.check_output(["git", *args], input=data)
+
+          refs = git("for-each-ref", "--format=%(refname)", "refs/tags").decode().splitlines()
+          for ref in refs:
+              old = git("rev-parse", ref).decode().strip()
+              if git("cat-file", "-t", old).strip() != b"tag":
+                  continue
+
+              raw = git("cat-file", "tag", old)
+              headers, body = raw.split(b"\n\n", 1)
+              lines = headers.splitlines()
+              updated = []
+              is_bot = False
+              for line in lines:
+                  if line.startswith(b"tagger "):
+                      if b"github-actions[bot]" in line:
+                          is_bot = True
+                          updated.append(line)
+                      else:
+                          timestamp, timezone = line.rsplit(b" ", 2)[-2:]
+                          updated.append(
+                              b"tagger lolo34dr <louis.marley.nono@gmail.com> "
+                              + timestamp + b" " + timezone
+                          )
+                  else:
+                      updated.append(line)
+
+              if is_bot:
+                  continue
+
+              body = re.split(
+                  rb"(?m)^-----BEGIN (?:PGP|SSH) SIGNATURE-----\n", body, maxsplit=1
+              )[0].rstrip() + b"\n"
+              replacement = b"\n".join(updated) + b"\n\n" + body
+              new = git("mktag", data=replacement).decode().strip()
+              git("update-ref", ref, new, old)
+
+          git("push", "--force", "origin", "refs/tags/*:refs/tags/*")
+          PY
+      - name: Remove this one-time workflow
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/repair-taggers.yml
+          git commit -m "Remove one-time release tagger identity repair workflow [skip ci]"
+          git push origin HEAD:main
