@@ -1,4 +1,4 @@
-DeckPilot 2.4.5 keeps new soundboard clips in DeckPilot's own storage and improves profile, media and macropad reliability.
+DeckPilot 2.4.6 keeps new soundboard clips in DeckPilot's own storage and improves profile, media and macropad reliability.
 
 - Adding or replacing an MP3 or WAV now copies the file to `%APPDATA%\DeckPilot\Sounds`. Playback still works if the original is moved or deleted. To copy an existing clip, select its file again through the clip's **…** menu.
 - Failed profile imports leave the active configuration intact. Repeated imports reuse matching audio, and automatic backups stay within the package limit by omitting audio that does not fit.

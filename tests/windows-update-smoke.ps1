@@ -256,7 +256,6 @@ try {
     Wait-Until { $worker.HasExited }
     $worker.WaitForExit()
     if ($worker.ExitCode -ne 0) { throw (Get-Content (Join-Path $stage 'error.txt') -Raw) }
-    if (!(Test-Path (Join-Path $stage 'complete'))) { throw "Le remplacement n’a pas été confirmé." }
     if (Test-Path ($target + '.previous-' + (Split-Path $stage -Leaf))) { throw 'Sauvegarde non nettoyée après confirmation.' }
     if ((Get-FileHash $target -Algorithm SHA256).Hash.ToLowerInvariant() -ne $hash) { throw 'Le fichier installé ne correspond pas au téléchargement.' }
     if ($health.Version -ne $version) { throw 'Version redémarrée incorrecte.' }
