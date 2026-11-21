@@ -193,8 +193,10 @@ internal static class FactoryHardware
         catch (OperationCanceledException) { if (!process.HasExited) process.Kill(true); await process.WaitForExitAsync(); throw new IOException($"{action} interrompu ou délai dépassé. Le firmware peut être incomplet ; rebranche la carte et relance l’opération."); }
         string log = await stdout + "\n" + await stderr;
         string logPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DeckPilotFactory", logName);
-        Directory.CreateDirectory(Path.GetDirectoryName(logPath)!); await File.WriteAllTextAsync(logPath, log, cancellation);
-        if (process.ExitCode != 0) throw new IOException($"AVRDUDE a signalé une erreur ({process.ExitCode}). Journal : {logPath}");
+        bool logged = await FirmwareLog.TryWriteAsync(logPath, log);
+        if (process.ExitCode != 0)
+            throw new IOException($"AVRDUDE a signalé une erreur ({process.ExitCode})."
+                + (logged ? $" Journal : {logPath}" : " Le journal n’a pas pu être enregistré."));
     }
 
     private static async Task<FactoryDevice> WaitForAsync(string location, bool boot, TimeSpan duration, CancellationToken token)

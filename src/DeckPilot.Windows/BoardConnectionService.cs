@@ -45,6 +45,7 @@ public sealed class BoardConnectionService : IDisposable
 {
     private readonly CancellationTokenSource lifetime = new();
     private readonly SemaphoreSlim portGate = new(1, 1);
+    private readonly SemaphoreSlim devicesChanged = new(0, 1);
     private readonly object sync = new();
     private readonly IProgress<BoardConnectionState>? progress;
     private CancellationTokenSource? sessionCancellation;
@@ -67,6 +68,7 @@ public sealed class BoardConnectionService : IDisposable
             state = new(BoardConnectionKind.Searching, "Changement de macropad…", state.Devices);
             progress?.Report(state);
         }
+        NotifyDevicesChanged();
     }
     private void CancelSession()
     {
@@ -78,13 +80,26 @@ public sealed class BoardConnectionService : IDisposable
     }
     public async Task PauseAsync()
     {
-        paused = true;
-        lock (sync) CancelSession();
+        lock (sync)
+        {
+            paused = true;
+            CancelSession();
+        }
         await portGate.WaitAsync(lifetime.Token);
         portGate.Release();
         Publish(s => new(BoardConnectionKind.Paused, "Connexion libérée pour le firmware.", s.Devices));
     }
-    public void Resume() => paused = false;
+    public void Resume()
+    {
+        paused = false;
+        NotifyDevicesChanged();
+    }
+
+    public void NotifyDevicesChanged()
+    {
+        try { devicesChanged.Release(); }
+        catch (Exception ex) when (ex is SemaphoreFullException or ObjectDisposedException) { }
+    }
     private async Task WatchAsync()
     {
         var cancellation = lifetime.Token;
@@ -108,9 +123,13 @@ public sealed class BoardConnectionService : IDisposable
                         await portGate.WaitAsync(cancellation);
                         try
                         {
-                            if (paused) continue;
                             using var session = CancellationTokenSource.CreateLinkedTokenSource(cancellation);
-                            lock (sync) { sessionCancellation = session; if (preferred != selected) session.Cancel(); }
+                            lock (sync)
+                            {
+                                if (paused) continue;
+                                sessionCancellation = session;
+                                if (preferred != selected) session.Cancel();
+                            }
                             session.Token.ThrowIfCancellationRequested();
                             Publish(s => session.IsCancellationRequested ? s : new(BoardConnectionKind.Connecting, "Connexion au macropad…", devices, device));
                             using var transport = new SerialBoardTransport(device.Port);
@@ -129,7 +148,8 @@ public sealed class BoardConnectionService : IDisposable
                             {
                                 while (!run.IsCompleted && !session.IsCancellationRequested)
                                 {
-                                    if (await Task.WhenAny(run, Task.Delay(3000, session.Token)) == run) break;
+                                    var rescan = devicesChanged.WaitAsync(TimeSpan.FromSeconds(15), session.Token);
+                                    if (await Task.WhenAny(run, rescan) == run) break;
                                     if (session.IsCancellationRequested) break;
                                     var current = FirmwareService.Discover().Where(d => !d.Bootloader).ToList();
                                     Publish(s => s with { Devices = current });
@@ -153,7 +173,7 @@ public sealed class BoardConnectionService : IDisposable
                 {
                     Publish(s => new(BoardConnectionKind.Error, "Liaison indisponible : " + ex.Message, s.Devices));
                 }
-                await Task.Delay(1500, cancellation);
+                await devicesChanged.WaitAsync(TimeSpan.FromSeconds(10), cancellation);
             }
         }
         catch (OperationCanceledException) { }
@@ -162,6 +182,6 @@ public sealed class BoardConnectionService : IDisposable
     {
         lifetime.Cancel();
         lock (sync) CancelSession();
-        _ = worker.ContinueWith(_ => { lifetime.Dispose(); portGate.Dispose(); }, TaskScheduler.Default);
+        _ = worker.ContinueWith(_ => { lifetime.Dispose(); portGate.Dispose(); devicesChanged.Dispose(); }, TaskScheduler.Default);
     }
 }

@@ -62,6 +62,10 @@ public partial class MainWindow : Window
     public MainWindow(bool startInBackground = false)
     {
         InitializeComponent();
+        UsbDeviceNotifications.Observe(this, () =>
+        {
+            if (!lifetime.IsCancellationRequested) boardConnection?.NotifyDevicesChanged();
+        });
         SourceInitialized += (_, _) => EnableDarkTitleBar();
         try { settings = store.Load(); }
         catch (Exception ex) when (ex is IOException or InvalidDataException or UnauthorizedAccessException or System.Text.Json.JsonException)
@@ -125,7 +129,7 @@ public partial class MainWindow : Window
         updateTimer.Start();
         firmwareTimer.Tick += async (_, _) => await OfferFirmwareUpdateAsync();
         firmwareTimer.Start();
-        CommandBindings.Add(new System.Windows.Input.CommandBinding(System.Windows.Input.ApplicationCommands.Save, (_, e) => { SaveEditor(); e.Handled = true; }));
+        CommandBindings.Add(new System.Windows.Input.CommandBinding(System.Windows.Input.ApplicationCommands.Save, (_, e) => { SaveEditor(force: true); e.Handled = true; }));
         InputBindings.Add(new System.Windows.Input.KeyBinding(System.Windows.Input.ApplicationCommands.Save, System.Windows.Input.Key.S, System.Windows.Input.ModifierKeys.Control));
         Loaded += async (_, _) =>
         {
@@ -342,14 +346,15 @@ public partial class MainWindow : Window
         PopulateWorkspaceEditor(action);
         UpdateActionFields(); PopulateAudioPickers(action); RenderGrid(); loading = previous; UpdateHistoryState(); if (IsInterfaceActive) Motion.Reveal(EditorPanel);
     }
-    private bool SaveEditor()
+    private bool SaveEditor(bool force = false)
     {
         if (loading) return true;
         if (ActionPicker.SelectedIndex < 0) { ReportError("Cette ancienne action a été retirée. Choisissez une nouvelle action dans la bibliothèque."); return false; }
         var action = ReadEditorConfiguration();
-        if (!action.IsValid()) { ReportError("Les appuis court et long nécessitent deux actions configurées, hors touche libre."); return false; }
-        if (EditorChanged()) ResetActionFeedback(selected);
         var previous = settings.ActiveProfile.Buttons[selected];
+        if (action == previous) return !force || Persist();
+        if (!action.IsValid()) { ReportError("Vérifiez la touche choisie et les deux actions si l’appui long est activé."); return false; }
+        ResetActionFeedback(selected);
         settings.ActiveProfile.Buttons[selected] = action;
         LongPressCheck.IsEnabled = action.Kind != ActionKind.Passthrough;
         GesturePanel.Visibility = action.LongPressEnabled ? Visibility.Visible : Visibility.Collapsed;
@@ -359,10 +364,10 @@ public partial class MainWindow : Window
     }
     private bool Persist()
     {
-        try { settings.ActiveProfileId = settings.ActiveProfile.Id; store.Save(settings); if (!restoringHistory) profileHistory?.Record(settings); UpdateHistoryState(); StatusText.Text = "Configuration enregistrée sur ce PC."; return true; }
+        try { store.Save(settings); profileHistory?.Record(settings); PruneRetiredSounds(); UpdateHistoryState(); StatusText.Text = "Configuration enregistrée sur ce PC."; return true; }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException) { ReportError("Enregistrement impossible : " + ex.Message); return false; }
     }
-    private void SaveClick(object sender, RoutedEventArgs e) => SaveEditor();
+    private void SaveClick(object sender, RoutedEventArgs e) => SaveEditor(force: true);
     private void ActionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (loading) return;

@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -34,7 +35,7 @@ public partial class MainWindow
                         if (error != null) SoundboardStatus.Text = "Audio interrompu : " + error;
                         if (!string.IsNullOrWhiteSpace(soundboard.MonitorError)) SoundboardMonitorStatus.Text = soundboard.MonitorError;
                         UpdateNoiseSuppressionStatus();
-                        RefreshSoundboardClips();
+                        UpdateSoundboardPlaybackButtons();
                     }
                     catch (Exception ex) { SoundboardStatus.Text = "Audio indisponible : " + ex.Message; }
                 });
@@ -50,6 +51,9 @@ public partial class MainWindow
     private readonly AsyncSnapshotCache<SoundboardEndpointSnapshot> soundboardDeviceCache =
         new(() => Task.Run(SoundboardEngine.DiscoverEndpoints), TimeSpan.FromSeconds(15));
     private bool soundboardRefreshing;
+    private bool copyingSoundClip;
+    private readonly Dictionary<Guid, Button> soundPlaybackButtons = [];
+    private readonly HashSet<string> retiredSoundPaths = new(StringComparer.OrdinalIgnoreCase);
     private AudioEndpoint? virtualCableInput;
     private void InitializeThemeAndSoundboard()
     {
@@ -80,6 +84,7 @@ public partial class MainWindow
             soundboardRetry.Stop();
             if (monitorSaveTimer.IsEnabled) { monitorSaveTimer.Stop(); SaveSoundboardSettings(); }
             if (noiseSuppressionSaveTimer.IsEnabled) { noiseSuppressionSaveTimer.Stop(); SaveSoundboardSettings(); }
+            PruneRetiredSounds(keepHistory: false);
         };
         SoundboardStatus.Text = "Recherche des périphériques audio…";
         RefreshSoundboardClips();
@@ -199,12 +204,6 @@ public partial class MainWindow
             finally { soundboardRefreshing = false; }
             UpdateSoundboardMonitorStatus();
             ApplySoundboardMonitorSettings();
-            string outputId = virtualCableInput?.Id ?? "";
-            if (settings.Soundboard.VirtualOutputId != outputId)
-            {
-                settings.Soundboard.VirtualOutputId = outputId;
-                SaveSoundboardSettings();
-            }
             if (!string.IsNullOrWhiteSpace(snapshot.Error))
                 SoundboardStatus.Text = "Périphériques audio indisponibles : " + snapshot.Error;
             else if (virtualCableInput == null)
@@ -284,7 +283,7 @@ public partial class MainWindow
         {
             soundboard?.Stop(); SoundboardStartButton.Content = "Activer le micro virtuel";
             SoundboardStatus.Text = "Micro virtuel arrêté · Démarrage automatique désactivé.";
-            RefreshSoundboardClips();
+            UpdateSoundboardPlaybackButtons();
         }
     }
     private async void ToggleSoundboardClick(object sender, RoutedEventArgs e)
@@ -398,19 +397,90 @@ public partial class MainWindow
         }
         catch (Exception ex) { SoundboardMonitorStatus.Text = "Retour des sons indisponible : " + ex.Message; }
     }
-    private void AddSoundClipClick(object sender, RoutedEventArgs e)
+    private async void AddSoundClipClick(object sender, RoutedEventArgs e)
     {
+        if (copyingSoundClip) return;
+        if (settings.Soundboard.Clips.Count >= SoundboardSettings.MaximumClips)
+        {
+            SoundboardStatus.Text = "Limite de 48 sons atteinte.";
+            return;
+        }
         var dialog = new OpenFileDialog { Filter = "Audio MP3 ou WAV|*.mp3;*.wav", Title = "Ajouter un son au soundboard" };
         if (dialog.ShowDialog(this) != true) return;
-        if (settings.Soundboard.Clips.Count >= 48) { SoundboardStatus.Text = "Limite de 48 sons atteinte."; return; }
-        string name = Path.GetFileNameWithoutExtension(dialog.FileName);
-        settings.Soundboard.Clips.Add(new SoundboardClip { Name = name[..Math.Min(64, name.Length)], FilePath = dialog.FileName });
-        SaveSoundboardSettings(); RefreshSoundboardClips();
+        await CopySoundClipAsync(dialog.FileName);
     }
+
+    private async Task CopySoundClipAsync(string sourcePath, Guid? replaceId = null)
+    {
+        if (copyingSoundClip) return;
+        copyingSoundClip = true;
+        SoundboardClip? copied = null;
+        bool saved = false;
+        try
+        {
+            SoundboardStatus.Text = "Copie du son dans DeckPilot…";
+            var cancellation = lifetime.Token;
+            copied = await Task.Run(() => SoundboardLibrary.CopyAsync(store.SoundsPath, sourcePath, cancellation), cancellation);
+            if (lifetime.IsCancellationRequested) return;
+            var clips = settings.Soundboard.Clips.ToList();
+            string? previousPath = null;
+            if (replaceId is Guid id)
+            {
+                int index = clips.FindIndex(clip => clip.Id == id);
+                if (index < 0) throw new IOException("Le son à remplacer n’est plus dans la liste.");
+                previousPath = clips[index].FilePath;
+                clips[index] = clips[index] with { FilePath = copied.FilePath };
+            }
+            else
+            {
+                if (clips.Count >= SoundboardSettings.MaximumClips) throw new InvalidDataException("Limite de 48 sons atteinte.");
+                clips.Add(copied);
+            }
+            SoundboardLibrary.SaveClips(settings, clips, store.Save);
+            saved = true;
+            if (replaceId is Guid clipId) soundboard?.StopClip(clipId);
+            if (previousPath != null) retiredSoundPaths.Add(previousPath);
+            profileHistory?.Record(settings);
+            PruneRetiredSounds();
+            RefreshSoundboardClips();
+            SoundboardStatus.Text = "Son enregistré dans DeckPilot.";
+        }
+        catch (OperationCanceledException) when (lifetime.IsCancellationRequested) { }
+        catch (Exception ex) { SoundboardStatus.Text = "Impossible d’enregistrer le son : " + ex.Message; }
+        finally
+        {
+            if (!saved && copied != null) SoundboardLibrary.TryDeleteManagedFile(store.SoundsPath, copied.FilePath);
+            copyingSoundClip = false;
+        }
+    }
+
+    private void PruneRetiredSounds(bool keepHistory = true)
+    {
+        if (retiredSoundPaths.Count == 0) return;
+        var retained = settings.Soundboard.Clips.Select(clip => clip.FilePath).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        if (keepHistory && profileHistory != null) retained.UnionWith(profileHistory.RetainedSoundPaths);
+        foreach (string path in retiredSoundPaths.Where(path => !retained.Contains(path)).ToArray())
+        {
+            SoundboardLibrary.TryDeleteManagedFile(store.SoundsPath, path);
+            retiredSoundPaths.Remove(path);
+        }
+    }
+
+    private void UpdateSoundboardPlaybackButtons()
+    {
+        foreach (var clip in settings.Soundboard.Clips)
+            if (soundPlaybackButtons.TryGetValue(clip.Id, out var button))
+            {
+                string label = soundboard?.IsPlaying(clip.Id) == true ? "■ " + clip.Name : clip.Name;
+                if (!Equals(button.Content, label)) button.Content = label;
+            }
+    }
+
     private void RefreshSoundboardClips()
     {
         Guid selectedClipId = (SoundboardClipPicker.SelectedItem as SoundboardClip)?.Id ?? Guid.Empty;
         SoundboardClipList.Children.Clear();
+        soundPlaybackButtons.Clear();
         SoundboardClipPicker.ItemsSource = null; SoundboardClipPicker.ItemsSource = settings.Soundboard.Clips;
         SoundboardClipPicker.SelectedItem = settings.Soundboard.Clips.FirstOrDefault(c => c.Id == selectedClipId);
         foreach (var clip in settings.Soundboard.Clips)
@@ -419,21 +489,33 @@ public partial class MainWindow
             var remove = new Button { Content = "×", ToolTip = "Retirer ce son", MinWidth = 28, Padding = new Thickness(7, 3, 7, 3) };
             remove.Click += (_, _) =>
             {
+                if (copyingSoundClip) return;
                 if (settings.Profiles.SelectMany(p => p.Buttons).SelectMany(a => a.LongPressAction == null ? new[] { a } : new[] { a, a.LongPressAction })
                     .Any(a => a.Kind == ActionKind.Soundboard && Guid.TryParse(a.Target, out var id) && id == clip.Id))
                 { SoundboardStatus.Text = "Ce son est affecté à un bouton. Retire d’abord ses actions avant de supprimer le son."; return; }
-                soundboard?.StopClip(clip.Id); settings.Soundboard.Clips.Remove(clip); SaveSoundboardSettings(); RefreshSoundboardClips();
+                try
+                {
+                    var remaining = settings.Soundboard.Clips.Where(item => item.Id != clip.Id).ToList();
+                    SoundboardLibrary.SaveClips(settings, remaining, store.Save);
+                    soundboard?.StopClip(clip.Id);
+                    retiredSoundPaths.Add(clip.FilePath);
+                    profileHistory?.Record(settings);
+                    PruneRetiredSounds();
+                    RefreshSoundboardClips();
+                }
+                catch (Exception ex) { SoundboardStatus.Text = "Impossible de retirer le son : " + ex.Message; }
             };
             DockPanel.SetDock(remove, Dock.Right); row.Children.Add(remove);
             var relink = new Button { Content = "…", ToolTip = "Remplacer ou retrouver le fichier audio", MinWidth = 28, Padding = new Thickness(7, 3, 7, 3) };
-            relink.Click += (_, _) =>
+            relink.Click += async (_, _) =>
             {
+                if (copyingSoundClip) return;
                 var dialog = new OpenFileDialog { Filter = "Audio MP3 ou WAV|*.mp3;*.wav", Title = "Retrouver le son · " + clip.Name };
                 if (dialog.ShowDialog(this) != true) return;
-                soundboard?.StopClip(clip.Id); clip.FilePath = dialog.FileName; SaveSoundboardSettings(); RefreshSoundboardClips();
+                await CopySoundClipAsync(dialog.FileName, clip.Id);
             };
             DockPanel.SetDock(relink, Dock.Right); row.Children.Add(relink);
-            var play = new Button { Content = Audio.IsPlaying(clip.Id) ? "■ " + clip.Name : clip.Name, ToolTip = clip.FilePath, HorizontalContentAlignment = HorizontalAlignment.Left };
+            var play = new Button { Content = clip.Name, ToolTip = clip.FilePath, HorizontalContentAlignment = HorizontalAlignment.Left };
             play.Click += (_, _) =>
             {
                 try
@@ -444,8 +526,10 @@ public partial class MainWindow
                 }
                 catch (Exception ex) { SoundboardStatus.Text = "Son indisponible : " + ex.Message; }
             };
+            soundPlaybackButtons.Add(clip.Id, play);
             row.Children.Add(play); SoundboardClipList.Children.Add(row);
         }
+        UpdateSoundboardPlaybackButtons();
     }
     private void SaveSoundboardSettings()
     {

@@ -12,6 +12,7 @@
     <PackageReference Include="System.Management" Version="8.0.0" />
     <EmbeddedResource Include="../../artifacts/firmware/DeckPilot-firmware.zip" LogicalName="DeckPilot.Factory.FirmwareBundle.zip" Condition="Exists('../../artifacts/firmware/DeckPilot-firmware.zip')" />
     <ProjectReference Include="../DeckPilot.Core/DeckPilot.Core.csproj" />
+    <Compile Include="../DeckPilot.Windows/UsbDeviceNotifications.cs" Link="UsbDeviceNotifications.cs" />
   </ItemGroup>
   <Target Name="RequireFirmwareBundle" BeforeTargets="PrepareForBuild" Condition="'$(RequireFirmwareBundle)' == 'true' And !Exists('../../artifacts/firmware/DeckPilot-firmware.zip')">
     <Error Text="Build the firmware bundle with firmware/tools/build.ps1 before publishing the factory installer." />

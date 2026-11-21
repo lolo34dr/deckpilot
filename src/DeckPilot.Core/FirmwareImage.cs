@@ -4,6 +4,20 @@ using System.Text.Json;
 
 namespace DeckPilot.Core;
 
+public static class FirmwareLog
+{
+    public static async Task<bool> TryWriteAsync(string path, string log)
+    {
+        try
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+            await File.WriteAllTextAsync(path, log).ConfigureAwait(false);
+            return true;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException) { return false; }
+    }
+}
+
 public sealed record FirmwareIdentity(string Version)
 {
     public const string Board = "promicro-32u4-16mhz";

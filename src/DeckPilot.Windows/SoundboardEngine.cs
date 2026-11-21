@@ -98,14 +98,17 @@ internal sealed class SoundboardEngine : IDisposable
 
         if (enabled)
         {
+            bool alreadyFiltered = noiseSuppressionEnabled && noiseVoiceSamples != null;
             EnsureNoiseSuppressionPath();
             noiseSuppressionSamples!.StrengthPercent = strengthPercent;
+            if (alreadyFiltered) return;
             noiseVoiceBuffer!.Clear();
             noiseSuppressionEnabled = true;
             selectableVoiceSamples!.Select(noiseVoiceSamples!);
         }
         else
         {
+            if (!noiseSuppressionEnabled) return;
             noiseSuppressionEnabled = false;
             voiceBuffer?.Clear();
             selectableVoiceSamples!.Select(rawVoiceSamples!);

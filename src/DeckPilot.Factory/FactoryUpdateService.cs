@@ -30,6 +30,7 @@ public sealed class FactoryUpdateService : IDisposable
     private const string InstallerName = "DeckPilot-Atelier-Setup.exe";
     private const string ChecksumsName = "SHA256SUMS.txt";
     private const string MetadataName = "DeckPilot-Atelier-version.json";
+    private static readonly string UpdatesRoot = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DeckPilotFactory", "Updates");
     public static readonly Version CurrentVersion = new(Assembly.GetExecutingAssembly().GetName().Version!.ToString(3));
     private readonly HttpClient http = new(new HttpClientHandler { AllowAutoRedirect = false }) { Timeout = TimeSpan.FromSeconds(30) };
 
@@ -71,7 +72,7 @@ public sealed class FactoryUpdateService : IDisposable
     public async Task<StagedFactoryUpdate> DownloadAsync(FactoryUpdate update, IProgress<double>? progress, CancellationToken cancellation)
     {
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellation); timeout.CancelAfter(TimeSpan.FromMinutes(10));
-        string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DeckPilotFactory", "Updates", Guid.NewGuid().ToString("N"));
+        string folder = Path.Combine(UpdatesRoot, Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(folder); string path = Path.Combine(folder, InstallerName); bool created = false;
         try
         {
@@ -98,6 +99,23 @@ public sealed class FactoryUpdateService : IDisposable
             return new(folder, hash);
         }
         catch { if (created && File.Exists(path)) File.Delete(path); try { Directory.Delete(folder, true); } catch { } throw; }
+    }
+
+    internal static void CleanOldDownloads()
+    {
+        try
+        {
+            if (!Directory.Exists(UpdatesRoot)) return;
+            var cutoff = DateTime.UtcNow.AddDays(-7);
+            foreach (var folder in new DirectoryInfo(UpdatesRoot).EnumerateDirectories())
+            {
+                if (!Guid.TryParseExact(folder.Name, "N", out _) || folder.LastWriteTimeUtc >= cutoff ||
+                    (folder.Attributes & FileAttributes.ReparsePoint) != 0) continue;
+                try { folder.Delete(recursive: true); }
+                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException) { }
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException) { }
     }
 
     public static Process LaunchInstaller(StagedFactoryUpdate staged)

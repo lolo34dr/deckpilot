@@ -26,7 +26,6 @@ public sealed record PreparedFirmware(string Directory, FirmwareManifest Manifes
 
 public static class FirmwareService
 {
-    public static bool BundleAvailable => Assembly.GetExecutingAssembly().GetManifestResourceInfo("DeckPilot.FirmwareBundle.zip") != null;
     public static FirmwareManifest ReadBundledManifest()
     {
         using var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("DeckPilot.FirmwareBundle.zip")
@@ -162,8 +161,10 @@ public static class FirmwareService
         }
         string log = await stdout + "\n" + await stderr;
         string logPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DeckPilot", "Firmware", "last-flash.log");
-        await File.WriteAllTextAsync(logPath, log);
-        if (process.ExitCode != 0) throw new IOException($"AVRDUDE a signalé une erreur ({process.ExitCode}). Le firmware peut être incomplet. Journal : {logPath}");
+        bool logged = await FirmwareLog.TryWriteAsync(logPath, log);
+        if (process.ExitCode != 0)
+            throw new IOException($"AVRDUDE a signalé une erreur ({process.ExitCode}). Le firmware peut être incomplet."
+                + (logged ? $" Journal : {logPath}" : " Le journal n’a pas pu être enregistré."));
         progress.Report("Écriture vérifiée. Attente du redémarrage de DeckPilot…");
         var runtime = await WaitForDeviceAsync(device.Location, false, TimeSpan.FromSeconds(25));
         for (int attempt = 0; attempt < 6; attempt++)

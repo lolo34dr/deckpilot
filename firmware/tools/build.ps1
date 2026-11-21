@@ -6,7 +6,6 @@ function Invoke-Arduino {
 }
 Invoke-Arduino core update-index
 Invoke-Arduino core install arduino:avr@1.8.6
-Invoke-Arduino lib install Keyboard@1.0.6
 Invoke-Arduino compile --fqbn arduino:avr:leonardo --warnings all --output-dir artifacts/firmware-build firmware/DeckPilot
 
 $stage = 'artifacts/firmware-stage'

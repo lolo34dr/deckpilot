@@ -66,7 +66,6 @@ public static class UpdateInstaller
             if (!healthy) throw new IOException("La nouvelle version n’a pas confirmé son démarrage.");
             // Backup cleanup is best effort: a working installation must not roll back for a cleanup failure.
             try { transaction.Commit(); } catch (IOException) { } catch (UnauthorizedAccessException) { }
-            try { await File.WriteAllTextAsync(Path.Combine(directory, "complete"), "ok"); } catch (IOException) { } catch (UnauthorizedAccessException) { }
             return 0;
         }
         catch (Exception ex)

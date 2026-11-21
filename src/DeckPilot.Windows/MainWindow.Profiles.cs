@@ -13,7 +13,7 @@ namespace DeckPilot.Windows;
 public partial class MainWindow
 {
     private ProfileHistory? profileHistory;
-    private bool restoringHistory, editingLong;
+    private bool editingLong;
     private void InitializeProfileTools()
     {
         profileHistory = new(settings);
@@ -75,15 +75,19 @@ public partial class MainWindow
     private void RestoreHistory(bool redo)
     {
         if (profileHistory == null || calibrating || firmwareOpen || !SaveEditor()) return;
-        if (!(redo ? profileHistory.Redo(settings) : profileHistory.Undo(settings))) return;
-        CancelPendingGestures();
+        try
+        {
+            if (!(redo ? profileHistory.Redo(settings, store.Save) : profileHistory.Undo(settings, store.Save))) return;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException)
+        {
+            ReportError("Historique inchangé : " + ex.Message);
+            return;
+        }
         foreach (int i in Enumerable.Range(0, 12)) ResetActionFeedback(i);
-        editingLong = false; RefreshProfiles(); LoadEditor();
-        restoringHistory = true;
-        bool saved;
-        try { saved = Persist(); }
-        finally { restoringHistory = false; }
-        UpdateHistoryState(); if (!saved) return; StatusText.Text = redo ? "Modification rétablie." : "Modification annulée · Calibrage conservé.";
+        PruneRetiredSounds();
+        editingLong = false; RefreshSoundboardClips(); RefreshProfiles(); LoadEditor();
+        StatusText.Text = redo ? "Modification rétablie." : "Modification annulée · Calibrage conservé.";
     }
     private void LongPressClick(object sender, RoutedEventArgs e)
     {
@@ -137,11 +141,13 @@ public partial class MainWindow
             string message = restore ? $"Remplacer les profils actuels par ces {package.Profiles.Count} profil(s) ?\n\n{names}\n\nLe calibrage est conservé. Les profils actuels seront sauvegardés."
                 : $"Ajouter ces {package.Profiles.Count} profil(s) sans remplacer les vôtres ?\n\n{names}\n\nLes programmes et périphériques audio peuvent nécessiter une adaptation sur ce PC. Aucune action ne sera exécutée.";
             if (WithProfileSelectionLocked(() => MessageBox.Show(this, message, "DeckPilot", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No)) != MessageBoxResult.Yes) return;
-            PortableProfiles.Apply(settings, portable, restore, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DeckPilot", "Sounds"));
+            PortableProfiles.Apply(settings, portable, restore, store.SoundsPath, store.Save);
+            profileHistory?.Record(settings);
+            PruneRetiredSounds();
             RefreshSoundboardClips();
             CancelPendingGestures(); editingLong = false;
-            RefreshProfiles(); LoadEditor(); if (!Persist()) return;
-            StatusText.Text = portable.Sounds.Any(c => c.Audio == null) ? "Profils restaurés · Certains fichiers audio étaient absents de la sauvegarde. Remplace les sons indisponibles."
+            RefreshProfiles(); LoadEditor();
+            StatusText.Text = portable.Sounds.Any(c => c.Audio == null) ? "Profils chargés · Le paquet ne contient pas tous les fichiers audio. Remplace les sons indisponibles."
                 : restore ? "Profils restaurés · Annulation possible · Calibrage conservé." : "Profils et sons importés · Aucune action exécutée.";
         }
         catch (Exception ex) { ReportError("Lecture des profils impossible : " + ex.Message); }

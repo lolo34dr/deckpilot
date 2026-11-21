@@ -1,7 +1,6 @@
 namespace DeckPilot.Core;
 
 public sealed record StreamingCommand(string Id, string Name, string Details, bool NeedsTarget = false);
-public sealed record StreamingCommandPreset(string ProviderId, string ProviderName, StreamingCommand Command);
 
 public static class StreamingActionCatalog
 {
@@ -50,7 +49,4 @@ public static class StreamingActionCatalog
         new("replay-save", "Sauvegarder le replay", "Enregistre le replay courant.")
     ];
 
-    public static IReadOnlyList<StreamingCommandPreset> All { get; } = Array.AsReadOnly(
-        Obs.Select(command => new StreamingCommandPreset("obs", "OBS", command))
-            .Concat(Streamlabs.Select(command => new StreamingCommandPreset("streamlabs", "Streamlabs", command))).ToArray());
 }

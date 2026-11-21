@@ -42,6 +42,28 @@ internal static class AuditFixChecks
                 PortableProfiles.Apply(source, package, true, Path.Combine(root, "restore"));
                 Expect(source.Soundboard.Clips.Count == 1 && source.Profiles[0].Buttons[0].Target == clip.Id.ToString());
             });
+            Check("Repeated imports reuse the managed clip after its identifier was remapped", () =>
+            {
+                var package = PortableProfiles.Import(PortableProfiles.Export(source, source.Profiles));
+                var destination = new Settings();
+                string sounds = Path.Combine(root, "repeat");
+                PortableProfiles.Apply(destination, package, false, sounds);
+                var second = PortableProfiles.Apply(destination, package, false, sounds).Single();
+                var reused = destination.Soundboard.Clips.Single();
+                Expect(second.Buttons[0].Target == reused.Id.ToString() && Directory.GetFiles(sounds, "*", SearchOption.AllDirectories).Length == 1);
+            });
+            Check("A failed import rolls back its copied files, profiles and active selection", () =>
+            {
+                var package = PortableProfiles.Import(PortableProfiles.Export(source, source.Profiles));
+                var destination = new Settings();
+                var active = destination.ActiveProfile;
+                string sounds = Path.Combine(root, "rollback");
+                bool failed = false;
+                try { PortableProfiles.Apply(destination, package, true, sounds, _ => throw new IOException("Save blocked")); }
+                catch (IOException) { failed = true; }
+                Expect(failed && destination.Profiles.Count == 1 && destination.ActiveProfile == active && destination.Soundboard.Clips.Count == 0);
+                Expect(Directory.GetFiles(sounds, "*", SearchOption.AllDirectories).Length == 0);
+            });
             Check("Sound packages reject traversal extensions and duplicate identifiers before touching settings", () =>
             {
                 var package = PortableProfiles.Import(PortableProfiles.Export(source, source.Profiles)); package.Sounds[0].Extension = "../../bad.exe";
@@ -58,6 +80,69 @@ internal static class AuditFixChecks
             {
                 File.Delete(path); bool missing = false; try { PortableProfiles.Export(source, source.Profiles); } catch (FileNotFoundException) { missing = true; }
                 Expect(missing); var package = PortableProfiles.Import(PortableProfiles.Export(source, source.Profiles, false)); Expect(package.Sounds.Single().Audio == null);
+            });
+            Check("Oversized sound backups preserve their clip references and allow removing the assignment", () =>
+            {
+                var store = new SettingsStore(Path.Combine(root, "large", "settings.json"));
+                Directory.CreateDirectory(Path.GetDirectoryName(store.SoundsPath)!);
+                string largePath = Path.Combine(root, "large", "large.wav");
+                using (var audio = File.Create(largePath)) audio.SetLength(PortableProfiles.MaximumAudioBytes + 1);
+                var settings = new Settings();
+                var large = new SoundboardClip { Name = "Large", FilePath = largePath };
+                settings.Soundboard.Clips.Add(large);
+                settings.ActiveProfile.Buttons[0] = new() { Kind = ActionKind.Soundboard, Target = large.Id.ToString() };
+                store.Save(settings);
+                Reject(() => PortableProfiles.Export(settings, settings.Profiles));
+                settings.ActiveProfile.Buttons[0] = new();
+                store.Save(settings);
+                var backup = PortableProfiles.Read(Directory.GetFiles(store.BackupsPath).Single());
+                Expect(backup.Sounds.Single().Audio == null && backup.Sounds[0].Id == large.Id);
+                Expect(store.Load().ActiveProfile.Buttons[0].Kind == ActionKind.Passthrough);
+            });
+            Check("Managed audio survives removal of the original and undo can restore a removed library entry", () =>
+            {
+                var store = new SettingsStore(Path.Combine(root, "copied", "settings.json"));
+                string original = Path.Combine(root, "Original.WAV");
+                File.WriteAllBytes(original, bytes);
+                var managed = SoundboardLibrary.CopyAsync(store.SoundsPath, original).GetAwaiter().GetResult();
+                File.Delete(original);
+                var settings = new Settings();
+                SoundboardLibrary.SaveClips(settings, [managed], store.Save);
+                settings.ActiveProfile.Buttons[0] = new() { Kind = ActionKind.Soundboard, Target = managed.Id.ToString() };
+                store.Save(settings);
+                var history = new ProfileHistory(settings);
+                settings.ActiveProfile.Buttons[0] = new();
+                store.Save(settings);
+                history.Record(settings);
+                SoundboardLibrary.SaveClips(settings, [], store.Save);
+                history.Record(settings);
+                Expect(history.RetainedSoundPaths.Contains(managed.FilePath));
+                bool failed = false;
+                try { history.Undo(settings, _ => throw new IOException("Save blocked")); }
+                catch (IOException) { failed = true; }
+                Expect(failed && history.CanUndo && !history.CanRedo && settings.Soundboard.Clips.Count == 0);
+                Expect(history.Undo(settings, store.Save));
+                var restored = store.Load();
+                Expect(restored.ActiveProfile.Buttons[0].Target == managed.Id.ToString());
+                Expect(File.ReadAllBytes(restored.Soundboard.Clips.Single().FilePath).SequenceEqual(bytes));
+                string external = Path.Combine(root, "external.mp3");
+                File.WriteAllBytes(external, bytes);
+                SoundboardLibrary.TryDeleteManagedFile(store.SoundsPath, external);
+                Expect(File.Exists(external));
+            });
+            Check("Invalid Deezer keys are rejected in imports and migrated in local settings", () =>
+            {
+                var settings = new Settings();
+                settings.ActiveProfile.Buttons[0] = new() { Kind = ActionKind.Deezer, Key = 0xB3 };
+                string exported = ProfileExchange.Export(settings.Profiles);
+                Reject(() => ProfileExchange.Import(exported.Replace("\"Key\": 179", "\"Key\": 65")));
+                string legacy = Path.Combine(root, "legacy.json");
+                var store = new SettingsStore(legacy);
+                store.Save(settings);
+                File.WriteAllText(legacy, File.ReadAllText(legacy).Replace("\"Key\": 179", "\"Key\": 65")
+                    .Replace($"\"ActiveProfileId\": \"{settings.ActiveProfileId}\"", $"\"ActiveProfileId\": \"{Guid.Empty}\"", StringComparison.Ordinal));
+                var migrated = store.Load();
+                Expect(migrated.ActiveProfileId == settings.ActiveProfile.Id && migrated.ActiveProfile.Buttons[0].Key == 0xB3);
             });
             Check("Cable adapter identity survives endpoint renaming without accepting other audio drivers", () =>
             {

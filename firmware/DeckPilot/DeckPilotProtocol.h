@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define DECKPILOT_FIRMWARE_VERSION "1.1.1"
+#define DECKPILOT_FIRMWARE_VERSION "1.1.2"
 #define DECKPILOT_BOARD_ID "promicro-32u4-16mhz"
 
 // No dynamic allocations, blocking serial reads or unconditional serial writes.

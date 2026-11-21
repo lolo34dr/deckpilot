@@ -66,8 +66,13 @@ public partial class MainWindow
                             if (payload.Profile != settings.ActiveProfile.Id || payload.Source >= 12 || payload.Source == index) return;
                             var buttons = settings.ActiveProfile.Buttons;
                             (buttons[index], buttons[payload.Source]) = (buttons[payload.Source], buttons[index]);
+                            if (!Persist())
+                            {
+                                (buttons[index], buttons[payload.Source]) = (buttons[payload.Source], buttons[index]);
+                                return;
+                            }
                             ResetActionFeedback(payload.Source); ResetActionFeedback(index);
-                            editingLong = false; selected = index; LoadEditor(); Persist();
+                            editingLong = false; selected = index; LoadEditor();
                             StatusText.Text = "Actions échangées · Le calibrage des touches ne change pas.";
                         }
                         else AssignAction(index, payload.Action);
@@ -87,14 +92,19 @@ public partial class MainWindow
     private void AssignAction(int index, ButtonAction action, bool currentGesture = false)
     {
         if (calibrating || firmwareOpen || !SaveEditor()) return;
-        if (currentGesture && editingLong && index == selected)
+        var buttons = settings.ActiveProfile.Buttons;
+        var previous = buttons[index];
+        bool keepLongEditor = currentGesture && editingLong && index == selected;
+        if (keepLongEditor)
         {
             if (action.Kind == ActionKind.Passthrough) { ReportError("Choisissez une action configurée pour l’appui long."); return; }
-            settings.ActiveProfile.Buttons[index].LongPressAction = action.CopyBasic();
+            buttons[index] = previous with { LongPressAction = action.CopyBasic() };
         }
-        else { settings.ActiveProfile.Buttons[index] = action.Copy(); editingLong = false; }
+        else buttons[index] = action.Copy();
+        if (!Persist()) { buttons[index] = previous; return; }
+        editingLong = keepLongEditor;
         ResetActionFeedback(index);
-        selected = index; LoadEditor(); Persist();
+        selected = index; LoadEditor();
         StatusText.Text = "Action affectée · Complétez ses réglages si nécessaire. Rien n’a été exécuté.";
     }
     private void WireDragSource(FrameworkElement element, Func<ActionDragPayload?> getAction)

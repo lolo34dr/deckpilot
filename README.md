@@ -437,6 +437,8 @@ Validation covers legacy settings, accent validation, profile navigation and ref
 
 Profile exports include the referenced MP3/WAV clips (up to 32 MiB of audio per package). Imports copy embedded audio into DeckPilot’s managed Sounds folder and remap identifiers without replacing existing clips. Automatic profile backups use the same format; unavailable audio is recorded as missing rather than silently replaced. Keep the source files if you exceed the export limit. Legacy profile files remain supported. Removing a clip that is still assigned to a short or long action is blocked.
 
+Adding or replacing a sound copies it to `%APPDATA%\DeckPilot\Sounds`, so DeckPilot can play it even if the original is moved or removed. Existing sounds can be copied into this folder using their **…** button. When an automatic backup reaches the audio size limit, it retains the clip entries for the audio it could not embed.
+
 Atelier accepts boards that do not yet answer the DeckPilot protocol, while still checking the USB location, Caterina bootloader and ATmega32U4 signature before programming. Each test session starts with empty results, and its report stays associated with the tested board. Closing the application during a flash or reset is blocked until writing and verification finish.
 
 ### Live microphone latency

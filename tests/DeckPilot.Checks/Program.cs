@@ -20,7 +20,7 @@ Check("Retired streaming controls stay readable but are absent from action searc
     Expect(ActionSearch.Find("volume", []).Any(p => p.Action.Kind == ActionKind.Media));
     var legacy = new Profile();
     legacy.Buttons[0] = new() { Kind = ActionKind.Streaming, ApplicationName = "obs", Target = "scene", Arguments = "Old scene", Label = "Legacy scene" };
-    legacy.Buttons[1] = new() { Kind = ActionKind.Media, LongPressEnabled = true, LongPressAction = new() { Kind = ActionKind.Streaming, ApplicationName = "streamlabs", Target = "stream-stop" } };
+    legacy.Buttons[1] = new() { Kind = ActionKind.Media, Key = 0xB3, LongPressEnabled = true, LongPressAction = new() { Kind = ActionKind.Streaming, ApplicationName = "streamlabs", Target = "stream-stop" } };
     var imported = ProfileExchange.Import(ProfileExchange.Export([legacy])).Profiles[0];
     Expect(imported.Buttons[0] == legacy.Buttons[0] && imported.Buttons[1] == legacy.Buttons[1]);
 });

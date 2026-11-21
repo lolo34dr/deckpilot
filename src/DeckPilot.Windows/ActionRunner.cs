@@ -44,11 +44,11 @@ public static class ActionRunner
                 Process.Start(new ProcessStartInfo(uri.AbsoluteUri) { UseShellExecute = true })?.Dispose();
                 break;
             case ActionKind.Shortcut:
-                if (!IsShortcutKey(action.Key)) throw new ArgumentException("Choisissez une touche pour le raccourci.");
+                if (!ActionKeys.IsValid(action.Kind, action.Key)) throw new ArgumentException("Choisissez une touche pour le raccourci.");
                 SendChord(action);
                 break;
             case ActionKind.Media:
-                if (action.Key is not (0xAD or 0xAE or 0xAF or 0xB0 or 0xB1 or 0xB3)) throw new ArgumentException("Choisissez une commande multimédia.");
+                if (!ActionKeys.IsValid(action.Kind, action.Key)) throw new ArgumentException("Choisissez une commande multimédia.");
                 SendKeys([action.Key]);
                 break;
             default: throw new InvalidOperationException("Ce type d’action n’est pas pris en charge.");
@@ -74,7 +74,6 @@ public static class ActionRunner
         };
         Process.Start(new ProcessStartInfo(target) { UseShellExecute = true })?.Dispose();
     }
-    public static bool IsShortcutKey(int key) => key is >= 0x30 and <= 0x39 or >= 0x41 and <= 0x5A or >= 0x70 and <= 0x87 or 0x0D or 0x1B or 0x20 or 0x09 or 0x08 or >= 0x21 and <= 0x28 or 0x2D or 0x2E;
     private static void SendChord(ButtonAction action)
     {
         // Do not release or reuse modifiers currently held by the user.

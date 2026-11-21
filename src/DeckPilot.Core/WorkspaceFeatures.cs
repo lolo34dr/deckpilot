@@ -62,7 +62,7 @@ public static class ProfileTemplates
 {
     public static IReadOnlyList<ProfileTemplate> All { get; } = Array.AsReadOnly(new[]
     {
-        new ProfileTemplate("multimedia", "Musique et audio", "Spotify, volume Windows, microphone et réglages du son."),
+        new ProfileTemplate("multimedia", "Musique et audio", "Spotify, Deezer, volume Windows, microphone et réglages du son."),
         new ProfileTemplate("productivity", "Bureau et productivité", "Copier, coller, annuler, capture d’écran et outils Windows."),
         new ProfileTemplate("creator", "Création", "Enregistrer, rechercher, capturer l’écran et gérer ses projets.")
     });
@@ -82,7 +82,8 @@ public static class ProfileTemplates
         {
             "multimedia" =>
             [
-                Spotify("Spotify · Précédent", 0xB1), Spotify("Spotify · Pause", 0xB3), Spotify("Spotify · Suivant", 0xB0), new(),
+                Spotify("Spotify · Précédent", 0xB1), Spotify("Spotify · Pause", 0xB3), Spotify("Spotify · Suivant", 0xB0),
+                new() { Kind = ActionKind.Deezer, Label = "Deezer · Lecture / pause", Key = 0xB3, Accent = "#AD91E8" },
                 Media("Volume −", 0xAE), Media("Volume +", 0xAF), Media("Son muet", 0xAD), new() { Kind = ActionKind.Microphone, Label = "Micro", Accent = "#DF8898" },
                 System("sound-settings"), System("bluetooth-settings"), Profile("previous", "Profil précédent"), Profile("next", "Profil suivant")
             ],

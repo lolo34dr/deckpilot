@@ -24,28 +24,41 @@ public static class PortableProfiles
     public const int MaximumPackageBytes = 48 * 1024 * 1024;
     private static IEnumerable<ButtonAction> Actions(IEnumerable<Profile> profiles) => profiles.SelectMany(p => p.Buttons)
         .SelectMany(a => a.LongPressAction == null ? new[] { a } : new[] { a, a.LongPressAction });
+    internal static IEnumerable<Guid> ReferencedSounds(IEnumerable<Profile> profiles)
+    {
+        foreach (var action in Actions(profiles))
+            if (action.Kind == ActionKind.Soundboard && Guid.TryParse(action.Target, out var id))
+                yield return id;
+    }
+
     public static string Export(Settings settings, IEnumerable<Profile> profiles, bool requireAudio = true)
     {
         var selected = profiles.ToList();
-        var ids = Actions(selected).Where(a => a.Kind == ActionKind.Soundboard && Guid.TryParse(a.Target, out _))
-            .Select(a => Guid.Parse(a.Target)).Distinct().ToArray();
+        var ids = ReferencedSounds(selected).Distinct().ToArray();
         string plain = ProfileExchange.Export(selected);
         if (ids.Length == 0) return plain;
         var package = new PortableProfilePackage { Profiles = plain };
-        long size = 0;
+        int remaining = MaximumAudioBytes;
         foreach (var id in ids)
         {
             var clip = settings.Soundboard.Clips.FirstOrDefault(c => c.Id == id);
             if (clip == null) { if (requireAudio) throw new InvalidDataException("Un son affecté à un bouton est introuvable."); continue; }
             byte[]? audio = null;
-            if (File.Exists(clip.FilePath))
+            try
             {
-                size += new FileInfo(clip.FilePath).Length;
-                if (size > MaximumAudioBytes) throw new InvalidDataException("Les sons du profil dépassent 32 Mo.");
-                audio = File.ReadAllBytes(clip.FilePath);
-                if (audio.Length == 0) { if (requireAudio) throw new InvalidDataException("Un fichier audio est vide."); audio = null; }
+                using var source = File.OpenRead(clip.FilePath);
+                long length = source.Length;
+                if (length == 0) throw new InvalidDataException("Un fichier audio est vide.");
+                if (length > remaining) throw new InvalidDataException("Les sons du profil dépassent 32 Mo.");
+                var bytes = new byte[(int)length];
+                source.ReadExactly(bytes);
+                remaining -= bytes.Length;
+                audio = bytes;
             }
-            else if (requireAudio) throw new FileNotFoundException("Un son du profil est introuvable.", clip.FilePath);
+            catch (Exception ex) when (!requireAudio && ex is (IOException or InvalidDataException or UnauthorizedAccessException))
+            {
+                // Keep the clip identity in automatic backups even when its audio cannot be embedded.
+            }
             package.Sounds.Add(new() { Id = id, Name = clip.Name, Extension = Path.GetExtension(clip.FilePath).ToLowerInvariant(), Audio = audio });
         }
         string json = JsonSerializer.Serialize(package);
@@ -61,16 +74,21 @@ public static class PortableProfiles
     {
         if (Encoding.UTF8.GetByteCount(json) > MaximumPackageBytes) throw new InvalidDataException("Le paquet de profils est trop volumineux.");
         using var doc = JsonDocument.Parse(json);
-        if (doc.RootElement.GetProperty("Format").GetString() == "DeckPilot.Profiles")
+        if (doc.RootElement.ValueKind != JsonValueKind.Object ||
+            !doc.RootElement.TryGetProperty("Format", out var format) || format.ValueKind != JsonValueKind.String ||
+            !doc.RootElement.TryGetProperty("Version", out _))
+            throw new InvalidDataException("Le format ou la version du fichier de profils manque.");
+        if (format.GetString() == "DeckPilot.Profiles")
         { ProfileExchange.Import(json); return new() { Profiles = json }; }
         var package = JsonSerializer.Deserialize<PortableProfilePackage>(json) ?? throw new InvalidDataException("Paquet vide.");
         Validate(package); return package;
     }
-    private static void Validate(PortableProfilePackage package)
+    private static ProfilePackage Validate(PortableProfilePackage package)
     {
-        if (package.Format != "DeckPilot.SoundProfiles" || package.Version != 1 || package.Profiles == null || package.Sounds == null || package.Sounds.Count > 48)
+        if (package.Format != "DeckPilot.SoundProfiles" || package.Version != 1 || package.Profiles == null ||
+            package.Sounds == null || package.Sounds.Count > SoundboardSettings.MaximumClips)
             throw new InvalidDataException("Paquet de sons incompatible.");
-        ProfileExchange.Import(package.Profiles);
+        var profiles = ProfileExchange.Import(package.Profiles);
         long size = 0; var ids = new HashSet<Guid>();
         foreach (var sound in package.Sounds)
         {
@@ -79,32 +97,54 @@ public static class PortableProfiles
             size += sound.Audio?.Length ?? 0;
             if (size > MaximumAudioBytes) throw new InvalidDataException("Les sons du profil dépassent 32 Mo.");
         }
+        return profiles;
     }
-    public static List<Profile> Apply(Settings settings, PortableProfilePackage package, bool replace, string soundsRoot)
+
+    private static bool SameAudio(string path, ReadOnlySpan<byte> audio)
     {
-        Validate(package);
-        var profiles = ProfileExchange.Import(package.Profiles);
-        if (!replace && settings.Profiles.Count + profiles.Profiles.Count > 100) throw new InvalidDataException("Limite de 100 profils atteinte.");
-        var imported = replace ? ProfileExchange.Copy(profiles.Profiles) : ProfileExchange.CopyAsNew(profiles.Profiles);
-        var referenced = Actions(imported).Where(a => a.Kind == ActionKind.Soundboard && Guid.TryParse(a.Target, out _)).Select(a => Guid.Parse(a.Target)).ToHashSet();
-        var sounds = package.Sounds.Where(c => referenced.Contains(c.Id)).ToArray();
-        bool Reusable(PortableSound sound)
+        try
         {
-            var clip = settings.Soundboard.Clips.FirstOrDefault(c => c.Id == sound.Id && c.Name == sound.Name);
-            if (clip == null) return false;
-            if (sound.Audio == null) return true;
-            return File.Exists(clip.FilePath) && new FileInfo(clip.FilePath).Length == sound.Audio.Length
-                && File.ReadAllBytes(clip.FilePath).AsSpan().SequenceEqual(sound.Audio);
+            using var source = File.OpenRead(path);
+            if (source.Length != audio.Length) return false;
+            Span<byte> buffer = stackalloc byte[4096];
+            while (!audio.IsEmpty)
+            {
+                var chunk = buffer[..Math.Min(buffer.Length, audio.Length)];
+                source.ReadExactly(chunk);
+                if (!chunk.SequenceEqual(audio[..chunk.Length])) return false;
+                audio = audio[chunk.Length..];
+            }
+            return true;
         }
-        var reusable = sounds.Where(Reusable).Select(c => c.Id).ToHashSet();
-        if (settings.Soundboard.Clips.Count + sounds.Count(c => !reusable.Contains(c.Id)) > 48) throw new InvalidDataException("Limite de 48 sons atteinte. Retire les sons inutilisés avant d’importer.");
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException) { return false; }
+    }
+
+    public static List<Profile> Apply(Settings settings, PortableProfilePackage package, bool replace, string soundsRoot,
+        Action<Settings>? save = null)
+    {
+        var profiles = Validate(package);
+        if (!replace && settings.Profiles.Count + profiles.Profiles.Count > 100) throw new InvalidDataException("Limite de 100 profils atteinte.");
+        var imported = replace ? profiles.Profiles : ProfileExchange.CopyAsNew(profiles.Profiles);
+        var referenced = ReferencedSounds(imported).ToHashSet();
+        var sounds = package.Sounds.Where(c => referenced.Contains(c.Id)).ToArray();
+        SoundboardClip? FindReusable(PortableSound sound)
+        {
+            if (sound.Audio is not { } audio) return settings.Soundboard.Clips.FirstOrDefault(c => c.Id == sound.Id);
+            return settings.Soundboard.Clips
+                .Where(c => c.Id == sound.Id || c.Name == sound.Name && Path.GetExtension(c.FilePath).Equals(sound.Extension, StringComparison.OrdinalIgnoreCase))
+                .OrderByDescending(c => c.Id == sound.Id)
+                .FirstOrDefault(c => SameAudio(c.FilePath, audio));
+        }
+        var reusable = sounds.ToDictionary(sound => sound.Id, FindReusable);
+        if (settings.Soundboard.Clips.Count + reusable.Values.Count(clip => clip == null) > SoundboardSettings.MaximumClips)
+            throw new InvalidDataException("Limite de 48 sons atteinte. Retire les sons inutilisés avant d’importer.");
         string folder = Path.Combine(soundsRoot, Guid.NewGuid().ToString("N"));
         var clips = new List<SoundboardClip>(); var map = new Dictionary<Guid, Guid>();
         try
         {
             foreach (var sound in sounds)
             {
-                if (reusable.Contains(sound.Id)) { map.Add(sound.Id, sound.Id); continue; }
+                if (reusable[sound.Id] is { } existing) { map.Add(sound.Id, existing.Id); continue; }
                 Guid id = Guid.NewGuid(); map.Add(sound.Id, id);
                 string path = Path.Combine(folder, id.ToString("N") + sound.Extension);
                 if (sound.Audio != null) { Directory.CreateDirectory(folder); File.WriteAllBytes(path, sound.Audio); }
@@ -112,21 +152,28 @@ public static class PortableProfiles
             }
             foreach (var action in Actions(imported))
                 if (action.Kind == ActionKind.Soundboard && Guid.TryParse(action.Target, out var id) && map.TryGetValue(id, out var next)) action.Target = next.ToString();
-        }
-        catch { if (Directory.Exists(folder)) Directory.Delete(folder, true); throw; }
-        if (replace) settings.Profiles = imported;
-        else
-        {
-            var names = settings.Profiles.Select(p => p.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
-            foreach (var profile in imported)
+            if (!replace)
             {
-                string original = profile.Name;
-                for (int i = 1; !names.Add(profile.Name); i++)
-                { string suffix = $" (import {i})"; profile.Name = original[..Math.Min(original.Length, 60 - suffix.Length)] + suffix; }
+                var names = settings.Profiles.Select(p => p.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
+                foreach (var profile in imported)
+                {
+                    string original = profile.Name;
+                    for (int i = 1; !names.Add(profile.Name); i++)
+                    {
+                        string suffix = $" (import {i})";
+                        profile.Name = original[..Math.Min(original.Length, 60 - suffix.Length)] + suffix;
+                    }
+                }
             }
-            settings.Profiles.AddRange(imported);
+            settings.CommitLibrary(replace ? imported : [.. settings.Profiles, .. imported],
+                imported[0].Id, [.. settings.Soundboard.Clips, .. clips], save);
+            return imported;
         }
-        settings.Soundboard.Clips.AddRange(clips); settings.ActiveProfileId = imported[0].Id;
-        return imported;
+        catch
+        {
+            try { Directory.Delete(folder, recursive: true); }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException) { }
+            throw;
+        }
     }
 }

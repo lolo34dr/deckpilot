@@ -58,7 +58,14 @@ public static class ProfileExchange
                     throw new InvalidDataException("Action de profil trop longue.");
         }
     }
-    public static List<Profile> Copy(IEnumerable<Profile> profiles) => Import(Export(profiles)).Profiles;
+    internal static void ValidateProfiles(List<Profile> profiles) => Validate(new ProfilePackage { Profiles = profiles });
+
+    public static List<Profile> Copy(IEnumerable<Profile> profiles)
+    {
+        var package = new ProfilePackage { Profiles = profiles.ToList() };
+        Validate(package);
+        return package.Profiles.Select(profile => profile.Copy()).ToList();
+    }
     public static List<Profile> CopyAsNew(IEnumerable<Profile> profiles)
     {
         var copies = Copy(profiles);
@@ -124,26 +131,30 @@ public static class ProfileBackups
 }
 public sealed class ProfileHistory
 {
-    private sealed record Snapshot(List<Profile> Profiles, Guid Active);
+    private sealed record Snapshot(List<Profile> Profiles, Guid Active, List<SoundboardClip> Clips);
     private Snapshot current;
     private readonly List<Snapshot> undo = [], redo = [];
     public ProfileHistory(Settings settings) => current = Capture(settings);
     public bool CanUndo => undo.Count > 0;
     public bool CanRedo => redo.Count > 0;
     private static List<Profile> CopyProfiles(List<Profile> profiles) => profiles.Select(profile => profile.Copy()).ToList();
+    public IEnumerable<string> RetainedSoundPaths => undo.Concat(redo).Append(current)
+        .SelectMany(snapshot => snapshot.Clips).Select(clip => clip.FilePath);
+    private static List<SoundboardClip> CaptureClips(Settings settings)
+    {
+        var ids = PortableProfiles.ReferencedSounds(settings.Profiles).ToHashSet();
+        return settings.Soundboard.Clips.Where(clip => ids.Contains(clip.Id)).Select(clip => clip with { }).ToList();
+    }
     private static Snapshot Capture(Settings settings)
     {
-        // Keep export validation and its size limit for every new state, but
-        // retain detached model copies so unchanged edits and restores need no JSON.
-        _ = ProfileExchange.Export(settings.Profiles);
-        return new(CopyProfiles(settings.Profiles), settings.ActiveProfile.Id);
+        ProfileExchange.ValidateProfiles(settings.Profiles);
+        return new(CopyProfiles(settings.Profiles), settings.ActiveProfile.Id, CaptureClips(settings));
     }
     public void Record(Settings settings)
     {
         if (ProfileExchange.HaveSameContent(settings.Profiles, current.Profiles))
         {
-            Guid active = settings.ActiveProfile.Id;
-            if (active != current.Active) current = current with { Active = active };
+            current = current with { Active = settings.ActiveProfile.Id, Clips = CaptureClips(settings) };
             return;
         }
         var next = Capture(settings);
@@ -151,14 +162,22 @@ public sealed class ProfileHistory
         redo.Clear();
         current = next;
     }
-    public bool Undo(Settings settings) => Restore(settings, undo, redo);
-    public bool Redo(Settings settings) => Restore(settings, redo, undo);
-    private bool Restore(Settings settings, List<Snapshot> source, List<Snapshot> destination)
+    public bool Undo(Settings settings, Action<Settings>? save = null) => Restore(settings, undo, redo, save);
+    public bool Redo(Settings settings, Action<Settings>? save = null) => Restore(settings, redo, undo, save);
+    private bool Restore(Settings settings, List<Snapshot> source, List<Snapshot> destination, Action<Settings>? save)
     {
         if (source.Count == 0) return false;
-        destination.Add(current); current = source[^1]; source.RemoveAt(source.Count - 1);
-        settings.Profiles = CopyProfiles(current.Profiles);
-        settings.ActiveProfileId = current.Active;
+        var next = source[^1];
+        var clips = settings.Soundboard.Clips.Concat(next.Clips
+            .Where(saved => settings.Soundboard.Clips.All(clip => clip.Id != saved.Id))
+            .Select(clip => clip with { })).ToList();
+        if (clips.Count > SoundboardSettings.MaximumClips)
+            throw new InvalidDataException("Libère de la place dans le soundboard pour rétablir les sons de ce profil.");
+
+        settings.CommitLibrary(CopyProfiles(next.Profiles), next.Active, clips, save);
+        destination.Add(current);
+        source.RemoveAt(source.Count - 1);
+        current = Capture(settings);
         return true;
     }
 }

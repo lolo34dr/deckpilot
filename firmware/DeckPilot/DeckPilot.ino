@@ -41,12 +41,48 @@
  * ------------------------------------------------------------
  */
 // F13-F24 remain available without any host connection.
-#include <Keyboard.h>
+#include <HID.h>
 #include "DeckPilotProtocol.h"
 
+// One bit per F13-F24 usage, so the report can represent all twelve keys.
+constexpr uint8_t deckReportId = 4;
+const uint8_t deckReportDescriptor[] PROGMEM = {
+  0x05, 0x01,             // Generic Desktop
+  0x09, 0x06,             // Keyboard
+  0xA1, 0x01,             // Application collection
+  0x85, deckReportId,
+  0x05, 0x07,             // Keyboard usage page
+  0x19, 0x68, 0x29, 0x73, // F13 through F24
+  0x15, 0x00, 0x25, 0x01, // Logical range: released or pressed
+  0x75, 0x01, 0x95, 0x0C, // Twelve one-bit values
+  0x81, 0x02,             // Input: data, variable, absolute
+  0x75, 0x04, 0x95, 0x01,
+  0x81, 0x03,             // Four padding bits
+  0xC0
+};
+struct DeckKeyboard {
+  DeckKeyboard() {
+    static HIDSubDescriptor descriptor(deckReportDescriptor, sizeof(deckReportDescriptor));
+    HID().AppendDescriptor(&descriptor);
+  }
+
+  void update(uint16_t mask, unsigned long now) {
+    if (mask == lastReport) return;
+    if (retryPending && (unsigned long)(now - lastAttempt) < 20) return;
+    uint8_t report[] = {static_cast<uint8_t>(mask), static_cast<uint8_t>(mask >> 8)};
+    lastAttempt = now;
+    retryPending = HID().SendReport(deckReportId, report, sizeof(report)) < 0;
+    if (!retryPending) lastReport = mask;
+  }
+
+private:
+  uint16_t lastReport = 0;
+  unsigned long lastAttempt = 0;
+  bool retryPending = false;
+};
+DeckKeyboard keyboard;
+
 const uint8_t pins[] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15, 16};
-const uint8_t keys[] = {KEY_F13, KEY_F14, KEY_F15, KEY_F16, KEY_F17,
-                        KEY_F18, KEY_F19, KEY_F20, KEY_F21, KEY_F22, KEY_F23, KEY_F24};
 bool stable[12] = {}, sampled[12] = {};
 unsigned long changed[12] = {};
 char command[64];
@@ -60,7 +96,6 @@ void setup() {
   if (!digitalRead(1)) { for (;;) {} }
   for (uint8_t i = 0; i < 12; ++i) pinMode(pins[i], INPUT_PULLUP);
   pinMode(17, OUTPUT); digitalWrite(17, HIGH); TXLED0;
-  Keyboard.begin();
   Serial.begin(115200); // Never wait for the host.
 }
 void loop() {
@@ -71,7 +106,6 @@ void loop() {
     if (down != sampled[i]) { sampled[i] = down; changed[i] = now; }
     if (down != stable[i] && (unsigned long)(now - changed[i]) >= 30) {
       stable[i] = down;
-      if (down) Keyboard.press(keys[i]); else Keyboard.release(keys[i]);
     }
     if (stable[i]) mask |= (uint16_t)1 << i;
   }
@@ -90,4 +124,5 @@ void loop() {
     }
   }
   protocol.tick(Serial, now);
+  keyboard.update(mask, now);
 }

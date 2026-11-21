@@ -4,6 +4,26 @@ using System.Text.Json.Serialization;
 namespace DeckPilot.Core;
 
 public enum ActionKind { Passthrough, Application, Folder, Website, Shortcut, Media, Spotify, Microphone, AudioOutput, Profile, System, Soundboard, Streaming, Deezer }
+public static class ActionKeys
+{
+    public static bool IsValid(ActionKind kind, int key) => kind switch
+    {
+        ActionKind.Shortcut => key is >= 0x30 and <= 0x39 or >= 0x41 and <= 0x5A or >= 0x70 and <= 0x87
+            or 0x0D or 0x1B or 0x20 or 0x09 or 0x08 or >= 0x21 and <= 0x28 or 0x2D or 0x2E,
+        ActionKind.Media => key == 0xAD || IsPlayerKey(key),
+        ActionKind.Spotify or ActionKind.Deezer => IsPlayerKey(key),
+        _ => true
+    };
+
+    private static bool IsPlayerKey(int key) => key is 0xB3 or 0xB0 or 0xB1 or 0xAF or 0xAE;
+
+    internal static void RepairLegacyKey(ButtonAction action)
+    {
+        if (!IsValid(action.Kind, action.Key))
+            action.Key = action.Kind == ActionKind.Shortcut ? 0x41 : 0xB3;
+    }
+}
+
 public sealed record ButtonAction
 {
     public string Label { get; set; } = "";
@@ -34,6 +54,7 @@ public sealed record ButtonAction
     }
     public bool IsValid(bool nested = false) => Enum.IsDefined(Kind) && Label != null && Target != null && Arguments != null && ApplicationName != null
         && ActionAppearance.IsValidAccent(Accent)
+        && ActionKeys.IsValid(Kind, Key)
         && LongPressMilliseconds is >= 200 and <= 3000
         && (Kind != ActionKind.Streaming || IsValidStreamingAction())
         && (!nested || (!LongPressEnabled && LongPressAction == null))
@@ -64,7 +85,7 @@ public sealed class ThemeSettings
     public string Accent { get; set; } = "#9B8CFF";
     public bool IsValid() => new[] { Background, Panel, Accent }.All(c => c != null && System.Text.RegularExpressions.Regex.IsMatch(c, "^#[0-9A-Fa-f]{6}$"));
 }
-public sealed class SoundboardClip
+public sealed record SoundboardClip
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Name { get; set; } = "";
@@ -72,19 +93,25 @@ public sealed class SoundboardClip
 }
 public sealed class SoundboardSettings
 {
+    public const int MaximumClips = 48;
     public bool AutoStart { get; set; } = true;
     public string MicrophoneId { get; set; } = "";
-    public string VirtualOutputId { get; set; } = "";
     public bool NoiseSuppressionEnabled { get; set; } = true;
     public int NoiseSuppressionStrengthPercent { get; set; } = 75;
     public bool MonitorEnabled { get; set; }
     public string MonitorOutputId { get; set; } = "";
     public int MonitorVolumePercent { get; set; } = 50;
     public List<SoundboardClip> Clips { get; set; } = [];
-    public bool IsValid() => MicrophoneId != null && VirtualOutputId != null && MonitorOutputId != null
-        && MicrophoneId.Length < 1024 && VirtualOutputId.Length < 1024 && MonitorOutputId.Length < 1024
+    internal SoundboardSettings WithClips(List<SoundboardClip> clips)
+    {
+        var copy = (SoundboardSettings)MemberwiseClone();
+        copy.Clips = clips;
+        return copy;
+    }
+    public bool IsValid() => MicrophoneId != null && MonitorOutputId != null
+        && MicrophoneId.Length < 1024 && MonitorOutputId.Length < 1024
         && NoiseSuppressionStrengthPercent is >= 0 and <= 100 && MonitorVolumePercent is >= 0 and <= 100
-        && Clips != null && Clips.Count <= 48 && Clips.All(c => c != null && c.Id != Guid.Empty && c.Name is { Length: > 0 and <= 64 } && c.FilePath is { Length: > 0 and <= 4096 } && (c.FilePath.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) || c.FilePath.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))) && Clips.Select(c => c.Id).Distinct().Count() == Clips.Count;
+        && Clips != null && Clips.Count <= MaximumClips && Clips.All(c => c != null && c.Id != Guid.Empty && c.Name is { Length: > 0 and <= 64 } && c.FilePath is { Length: > 0 and <= 4096 } && (c.FilePath.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) || c.FilePath.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))) && Clips.Select(c => c.Id).Distinct().Count() == Clips.Count;
 }
 public sealed class StreamingConnections
 {
@@ -113,6 +140,7 @@ public sealed class WindowPlacementSettings
 }
 public sealed class Settings
 {
+    public Settings() => ActiveProfileId = Profiles[0].Id;
     public int Version { get; set; } = 1;
     public int LayoutColumns { get; set; } = 4;
     public bool AutoCheckFirmware { get; set; } = true;
@@ -131,6 +159,19 @@ public sealed class Settings
     public Guid ActiveProfileId { get; set; }
     [JsonIgnore] public Profile ActiveProfile => Profiles.FirstOrDefault(p => p.Id == ActiveProfileId) ?? Profiles[0];
     [JsonIgnore] public bool IsCalibrated => Calibration.IsValid(KeyMap);
+
+    // Save the proposed state before changing what the app is using.
+    internal void CommitLibrary(List<Profile> profiles, Guid activeProfileId, List<SoundboardClip> clips, Action<Settings>? save)
+    {
+        var candidate = (Settings)MemberwiseClone();
+        candidate.Profiles = profiles;
+        candidate.ActiveProfileId = activeProfileId;
+        candidate.Soundboard = Soundboard.WithClips(clips);
+        save?.Invoke(candidate);
+        Profiles = candidate.Profiles;
+        ActiveProfileId = candidate.ActiveProfileId;
+        Soundboard = candidate.Soundboard;
+    }
     public bool MigrateLayout()
     {
         if (LayoutColumns == 4) return false;
@@ -159,6 +200,7 @@ public static class Calibration
 public sealed class SettingsStore(string path)
 {
     public string BackupsPath => Path.Combine(Path.GetDirectoryName(path)!, "Backups");
+    public string SoundsPath => Path.Combine(Path.GetDirectoryName(path)!, "Sounds");
     private static readonly JsonSerializerOptions Options = new() { WriteIndented = true, Converters = { new JsonStringEnumConverter() } };
     public Settings Load()
     {
@@ -171,38 +213,43 @@ public sealed class SettingsStore(string path)
             ?? throw new InvalidDataException("Configuration vide.");
         using var document = JsonDocument.Parse(json);
         if (!document.RootElement.TryGetProperty("LayoutColumns", out _)) settings.LayoutColumns = 3;
+        // Older configurations could store command codes that the editor could not display.
+        if (settings.Profiles != null)
+            foreach (var profile in settings.Profiles)
+                if (profile?.Buttons != null)
+                    foreach (var action in profile.Buttons)
+                        if (action != null)
+                        {
+                            ActionKeys.RepairLegacyKey(action);
+                            if (action.LongPressAction is { } longAction) ActionKeys.RepairLegacyKey(longAction);
+                        }
         settings.Validate();
+        settings.ActiveProfileId = settings.ActiveProfile.Id;
         return settings;
     }
     public void Save(Settings settings)
     {
         settings.Validate();
+        settings.ActiveProfileId = settings.ActiveProfile.Id;
         string json = JsonSerializer.Serialize(settings, Options);
+        Settings? previous = null;
         if (File.Exists(path))
         {
             // Compare the actual file, not a cached timestamp: another program
             // may have changed or removed it since this instance last saved.
             string previousJson = File.ReadAllText(path);
-            if (previousJson == json)
-            {
-                _ = ProfileExchange.Export(settings.Profiles);
-                return;
-            }
-            Settings? previous = null;
+            if (previousJson == json) return;
             try { previous = Deserialize(previousJson); }
             catch (Exception ex) when (ex is JsonException or InvalidDataException)
             {
                 Directory.CreateDirectory(BackupsPath);
                 File.Copy(path, Path.Combine(BackupsPath, "recovered-settings-" + Guid.NewGuid().ToString("N") + ".json"));
             }
-            if (previous != null)
-            {
-                _ = ProfileExchange.Export(settings.Profiles);
-                if (!ProfileExchange.HaveSameContent(previous.Profiles, settings.Profiles)
-                    || JsonSerializer.Serialize(previous.Soundboard.Clips) != JsonSerializer.Serialize(settings.Soundboard.Clips))
-                    ProfileBackups.Save(BackupsPath, previous);
-            }
         }
+        bool profilesChanged = previous == null || !ProfileExchange.HaveSameContent(previous.Profiles, settings.Profiles);
+        if (profilesChanged) _ = ProfileExchange.Export(settings.Profiles);
+        if (previous != null && (profilesChanged || !previous.Soundboard.Clips.SequenceEqual(settings.Soundboard.Clips)))
+            ProfileBackups.Save(BackupsPath, previous);
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
         var temporary = path + "." + Guid.NewGuid().ToString("N") + ".tmp";
         try

@@ -399,7 +399,7 @@ try {
     $script:phase = 'verify embedded firmware bundle and disabled flash'
     Wait-Until {
         $label = Find-Control $firmwareWindow 'PackageStatus'
-        $label -and $label.Current.Name -like 'Firmware inclus : 1.1.1*'
+        $label -and $label.Current.Name -match '^Firmware inclus : \d+\.\d+\.\d+\.'
     }
     $installFirmware = Find-Control $firmwareWindow 'InstallFirmware'
     if ($installFirmware.Current.IsEnabled) { throw 'Flash enabled without explicit device selection and confirmation' }
@@ -408,6 +408,7 @@ try {
     if ($firmwareStages.Count -ne 1) { throw 'Expected exactly one extracted firmware bundle' }
     $firmwareStage = $firmwareStages[0].FullName
     $manifest = Get-Content (Join-Path $firmwareStage 'manifest.json') -Raw | ConvertFrom-Json
+    if ((Find-Control $firmwareWindow 'PackageStatus').Current.Name -notlike "Firmware inclus : $($manifest.Version).*") { throw 'Firmware dialog version differs from the manifest' }
     $imageHash = (Get-FileHash (Join-Path $firmwareStage 'DeckPilot.hex') -Algorithm SHA256).Hash
     if ($manifest.Sha256 -ne $imageHash -or $manifest.Board -ne 'promicro-32u4-16mhz') { throw 'Embedded firmware manifest mismatch' }
     if (!(Test-Path (Join-Path $firmwareStage 'avrdude-source.zip'))) { throw 'AVRDUDE source was not bundled' }

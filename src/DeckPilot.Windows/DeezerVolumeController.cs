@@ -13,8 +13,14 @@ namespace DeckPilot.Windows;
 
 public static class DeezerVolumeController
 {
-    public static Task RunAsync(int key, CancellationToken cancellation) =>
-        Task.Run(() => Run(key, cancellation), cancellation);
+    private static readonly SemaphoreSlim CommandGate = new(1);
+
+    public static async Task RunAsync(int key, CancellationToken cancellation)
+    {
+        await CommandGate.WaitAsync(cancellation).ConfigureAwait(false);
+        try { await Task.Run(() => Run(key, cancellation), cancellation).ConfigureAwait(false); }
+        finally { CommandGate.Release(); }
+    }
 
     private static void Run(int key, CancellationToken cancellation)
     {

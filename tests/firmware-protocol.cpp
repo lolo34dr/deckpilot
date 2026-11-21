@@ -21,10 +21,10 @@ static std::string drain(DeckPilotProtocol& p, FakeSerial& s, uint32_t now) {
 int main() {
   DeckPilotProtocol p; FakeSerial s;
   p.command("DECKPILOT?", 0);
-  assert(drain(p,s,0) == "DECKPILOT|1|promicro-32u4-16mhz|1.1.1\r\n");
+  assert(drain(p,s,0) == "DECKPILOT|1|promicro-32u4-16mhz|" DECKPILOT_FIRMWARE_VERSION "\r\n");
   p.command("DP2|HELLO|1234ABCD", 10);
   std::string hello = drain(p,s,10);
-  assert(hello.find("DP2|INFO|1234ABCD|promicro-32u4-16mhz|1.1.1|12|3\r\n") == 0);
+  assert(hello.find("DP2|INFO|1234ABCD|promicro-32u4-16mhz|" DECKPILOT_FIRMWARE_VERSION "|12|3\r\n") == 0);
   assert(hello.find("DP2|KEYS|1234ABCD|0|0\r\n") != std::string::npos);
   p.buttons(0x801);
   assert(drain(p,s,20) == "DP2|KEYS|1234ABCD|1|2049\r\n");

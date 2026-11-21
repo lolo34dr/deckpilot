@@ -4,14 +4,14 @@ For the tested hardware configuration only: **Pro Micro ATmega32U4, 5 V / 16 MHz
 
 ## Wiring and behavior
 
-Each switch connects one pin to GND. Internal pull-ups are enabled. Pins **2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15, 16** send **F13 through F24** in that order. A stable 30 ms debounce handles press and release independently. Keyboard behavior, Windows-side profiles and calibration remain compatible; USB keyboard rollover remains limited by Arduino's Keyboard library. The firmware does not introduce per-button USB modes or native media controls yet.
+Each switch connects one pin to GND. Internal pull-ups are enabled. Pins **2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15, 16** send **F13 through F24** in that order. A stable 30 ms debounce handles press and release independently. Firmware 1.1.2 uses one bit per key in its USB keyboard report so it can represent all twelve held keys. Windows profiles and calibration use the same key codes.
 
 Pin **1** held to GND at startup disables keyboard operation, preserving the original failsafe. The USB core can still support bootloader entry. Do not connect VCC to GND.
 
 The current USB CDC serial interface answers `DECKPILOT?\n` at 115200 baud with:
 
 ```
-DECKPILOT|1|promicro-32u4-16mhz|1.1.1
+DECKPILOT|1|promicro-32u4-16mhz|1.1.2
 ```
 
 No serial connection is required for normal keyboard operation. The identity is a compatibility check, not cryptographic hardware authentication. Windows still reports the Arduino Leonardo USB identifiers; many other boards share those identifiers.

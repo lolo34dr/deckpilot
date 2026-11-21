@@ -89,6 +89,7 @@ public static class FeatureChecks
             var third = new Profile { Name = "Third" };
             settings.Profiles.AddRange([second, third]);
             // An absent active ID follows the same fallback as Settings.ActiveProfile.
+            settings.ActiveProfileId = Guid.Empty;
             Expect(ProfileNavigation.Resolve(settings, "next") == second);
             Expect(ProfileNavigation.Resolve(settings, "previous") == third);
             Expect(settings.ActiveProfile == first && settings.ActiveProfileId == Guid.Empty);
