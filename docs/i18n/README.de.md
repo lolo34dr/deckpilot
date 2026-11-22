@@ -343,9 +343,9 @@ Verwendung **Rechercher une action ou une application** für Anfragen wie z.B. `
 <a id="control-panel-and-exact-colours-240"></a>
 ## Bedienfeld und genaue Farben ()2.4.0)
 
-Das rechte Panel hat drei Tabs: **Aktionen** zum Zuweisen von Schlüsseln, **Appareil** für Makropad und Audio und **Réglagen** für Profile und Präferenzen. Die Tastatur und der Editor links behalten ihr Layout und die ursprünglichen Vektorsymbole bei und DeckPilot Logo.
+Das Konfigurationsfeld hat vier Tabs. **Aktionen** Schlüssel zuweisen, **Macropad** um die USB-Verbindung zu überprüfen, Firmware zu kalibrieren oder zu verwalten, **Audio** zur Verwaltung von Mikrofonen und Resonanzbodenclips und **Réglagen** Die Kopfzeile zeigt den Verbindungsstatus an und öffnet die Macropad-Registerkarte. Schmale Fenster stapeln die Panels und lassen Sie sie mit dem Teiler verkleinern. 3 × 4 Die Tastatur behält ihr ursprüngliches Aussehen und Verhalten bei.
 
-Unter **Réglages → Réglages de l’application**, Verwendung **Palette...** um eine genaue Hintergrund-, Panel- oder Akzentfarbe mit dem Windows-Farbwähler auszuwählen. `#RRGGBB` Feld und angrenzender Swatch zeigen den ausgewählten Wert an. **Appliquer les couleurs** validiert und speichert die drei Farben; das Abbrechen des Pickers behält den aktuellen Wert.
+Unter **Réglages → Couleurs de l’interface**, Verwendung **Palette...** um eine genaue Hintergrund-, Panel- oder Akzentfarbe mit dem Windows-Farbwähler auszuwählen. `#RRGGBB` Feld und angrenzender Swatch zeigen den ausgewählten Wert an. **Appliquer les couleurs** validiert und speichert die drei Farben; das Abbrechen des Pickers behält den aktuellen Wert.
 
 Die Integration der OBS/Streamlabs-Steuerung wurde entfernt. 2.3 Profile bleiben lesbar und behalten ihre gespeicherten Aktionen, aber ausgediente Streaming-Aktionen werden nicht ausgeführt. Wählen Sie eine Ersatzaktion aus der Bibliothek, um diese Schlüssel neu zuzuweisen. Andere Aktionen, Profile und Kalibrierungen bleiben erhalten. Es ist kein Firmware-Flash erforderlich.
 

@@ -214,7 +214,7 @@ dotnet run --project src/DeckPilot.Windows -c Release
 
 파일 잠금 체크는 Windows에서만 실행됩니다.
 
-GitHub 동작도 실행 `tests/windows-update-smoke.ps1` 독립 실행에 대해. 그것은 업데이트 도우미를 시작, 원래 프로세스를 종료, 교체 및 시작 확인을 검증, 설정 보존을 확인, 다음 UI 자동화를 통해 설치 응용 프로그램 선택기를 열고 선택을 저장. 그것은 또한 스페이스를 포함하는 실행 실행 가능한 및 경로에 이름을 변경. 이 스크립트는 일회용 GitHub 액션 테스트 계정에 대한 예약됩니다. CI는 또한 실행 `tests/windows-installer-smoke.ps1`: 실제 프로그램 파일 설치, 데스크톱 / 시작 메뉴 단축키, 기본 시작, 응용 프로그램 열고 업그레이드, 비활성화 시작 보전 및 제거 프로파일을 삭제하지 않고.
+GitHub 동작도 실행 `tests/windows-update-smoke.ps1` 독립 실행에 대해. 그것은 업데이트 도우미를 시작, 원래 프로세스를 종료, 교체 및 시작 확인을 검증, 설정 보존을 확인, 다음 UI 자동화를 통해 설치 응용 프로그램 선택기를 열고 선택을 저장. 그것은 또한 공간을 포함하는 실행 실행 및 경로에 이름을 변경 연습. 이 스크립트는 일회용 GitHub 액션 테스트 계정에 대한 예약됩니다. CI는 또한 실행 `tests/windows-installer-smoke.ps1`: 실제 프로그램 파일 설치, 데스크톱 / 시작 메뉴 단축키, 기본 시작, 응용 프로그램 열고 업그레이드, 비활성화 시작 보전 및 제거 프로파일을 삭제하지 않고.
 
 <a id="publish-a-standalone-windows-folder"></a>
 ### 독립 Windows 폴더를 게시
@@ -336,16 +336,16 @@ Rapid Spotify 및 Deezer 볼륨 명령은 순서대로 적용되며, 음악 프�
 <a id="deezer-playback-and-per-app-volume-243-refined-in-244"></a>
 ## Deezer 재생 및 per-app 볼륨 (2.4.3, 정제 2.4.4)
 
-**언어: 한국어** 다른 것 **스포티** 액션 라이브러리에서. Play/pause 및 트랙 변경은 Windows Media-session API를 사용; 볼륨 +/−는 Deezer의 Windows 오디오 세션 만 조정 5Windows Core Audio를 통해 % 단계. Spotify와 같은 로컬 Windows API를 사용하여 Deezer 계정 토큰이 필요하지 않습니다. Deezer 데스크톱 앱을 열고 Windows가 미디어 및 오디오 세션을 노출합니다. 브라우저의 Deezer는 지원되지 않습니다. 누락 된 Deezer 세션은 다른 플레이어 또는 마스터 볼륨을 제어하는 대신 오류를 보여줍니다. 작업 라이브러리 및 할당 된 키는 전용 Deezer SVG 마크를 보여줍니다.
+**언어: 한국어** 다음 것 **스포티** 액션 라이브러리에서. Play/pause 및 트랙 변경은 Windows Media-session API를 사용; 볼륨 +/−는 Deezer의 Windows 오디오 세션 만 조정 5Windows Core Audio를 통해 % 단계. Spotify와 같은 로컬 Windows API를 사용하여 Deezer 계정 토큰이 필요하지 않습니다. Deezer 데스크톱 앱을 열고 Windows가 미디어 및 오디오 세션을 노출합니다. 브라우저의 Deezer는 지원되지 않습니다. 누락 된 Deezer 세션은 다른 플레이어 또는 마스터 볼륨을 제어하는 대신 오류를 보여줍니다. 작업 라이브러리 및 할당 된 키는 전용 Deezer SVG 마크를 보여줍니다.
 
 제품 정보 **Rechercher une action ou une application** 같은 쿼리를 위해 `volume`, `skip`, `Spotify`, `Deezer` 또는 설치 된 앱의 이름. 첫 번째 검색에 설치된 앱 인덱스로드는 5 분 동안 캐시됩니다. 수동 파일 선택은 사용할 수 있습니다. 선택한 키를 구성하거나 다른 키로 드래그하는 결과를 클릭합니다.
 
 <a id="control-panel-and-exact-colours-240"></a>
 ## 제어반과 정확한 색깔 (2.4.0)
 
-오른쪽 패널에는 세 개의 탭이 있습니다. **팟캐스트** 키 할당을 위해, **앱레일** 매크로패드와 오디오의 경우, **료 글** 프로필 및 선호 사항. 왼쪽의 키패드 및 편집기는 레이아웃과 원본 벡터 아이콘을 유지하고 DeckPilot 로고.
+구성 패널에는 4 개의 탭이 있습니다. 사용 **팟캐스트** 열쇠를 할당하기 위하여, **매크로패드** USB 연결, 캘리브레이션 또는 펌웨어를 확인하려면 **언어: 영어** 마이크 및 사운드 보드 클립을 관리하고, **료 글** 프로파일 및 선호도에 대한. 헤더는 연결 상태를 보여주고 Macropad 탭을 엽니 다. 좁은 창은 패널을 겹쳐 쌓이고 배당체로 크기를 조정하십시오. 3 × 4 키패드는 그것의 본래 외관 및 행동을 지킵니다.
 
-이름 * **Réglages → Réglages de l’application의 장점**, 사용 **팔레트 ...** 정확한 배경, 패널 또는 악센트 색상을 선택하기 위해 Windows 색상 선택기. 편집 가능 `#RRGGBB` 필드와 인접한 시계는 선택한 값을 보여줍니다. **의류 les couleurs** 검증 및 세 가지 색상을 저장합니다. 피커를 취소하면 현재 값을 유지합니다.
+이름 * **Réglages → 콜러스 드 l’interface**, 사용 **팔레트 ...** 정확한 배경, 패널 또는 악센트 색상을 선택하기 위해 Windows 색상 선택기. 편집 가능 `#RRGGBB` 필드와 인접한 시계는 선택한 값을 보여줍니다. **의류 les couleurs** 검증 및 세 가지 색상을 저장합니다. 피커를 취소하면 현재 값을 유지합니다.
 
 OBS/Streamlabs 제어 통합이 제거되었습니다. 기존 2.3 프로파일은 읽고 저장 된 작업을 유지하지만, 은퇴 한 스트리밍 작업은 실행되지 않습니다. 라이브러리에서 교체 작업을 선택하고 그 키를 다시 할당하십시오. 다른 작업, 프로파일 및 보정은 보존됩니다. 펌웨어 플래시가 필요하지 않습니다.
 
@@ -360,7 +360,7 @@ Keypad는 이제 Viewbox를 통해 텍스트를 스케일링 대신 기본 WPF �
 
 **Annuler / Rétablir** 드래그 앤 드롭 스왑, 액션 설정, 가져 오기 및 프로파일 생성 / 삭제를 포함하여 프로파일 편집을 복원합니다. 역사는 유지 50 앱 세션 중에 편집합니다. Ctrl+Z / Ctrl+Y는 외부 텍스트 필드에서 작동합니다. 텍스트 필드는 자신의 undo/redo를 유지합니다. 교정, 시작 환경 설정 및 실행 작업은 undone이 아닙니다.
 
-이름 * **Gérer les profils**, 수출 현재 단면도 또는 모든 단면도 것과 같이 `.deckpilot.json`, 새로운 사본으로 프로필을 가져 오거나 모든 프로필의 백업을 복원하십시오. 작업을 수행하지 않고 PC의 교정을 대체하지 마십시오. 프로필에는 다른 PC에서 조정할 필요가있는 액션 경로, 인수 및 오디오 엔드 포인트 ID가 포함되어 있습니다. 알 수없는 형식, 대형 파일 및 변형 제스처 구성이 거부됩니다.
+이름 * **Gérer les profils**, 수출 현재 단면도 또는 모든 단면도 것과 같이 `.deckpilot.json`, 새로운 사본으로 프로필을 가져 오거나 모든 프로필의 백업을 복원합니다. 작업을 결코 실행하지 않고 PC의 교정을 대체하지 마십시오. 프로필에는 다른 PC에서 조정할 필요가있는 액션 경로, 인수 및 오디오 엔드 포인트 ID가 포함되어 있습니다. 알 수없는 형식, 대형 파일 및 변형 제스처 구성이 거부됩니다.
 
 변경된 단면도를 저장하기 전에, DeckPilot 이전 프로파일을 유지 `%APPDATA%\DeckPilot\Backups` (20 버전, content-deduplicated). Preference-only save 프로필 백업을 만들지 않습니다. 백업 실패는 현재 설정을 overwriting 방지합니다. 복원은 확인 후 프로파일을 교체하고 undone이 될 수 있습니다. 캘리브레이션은 변경되지 않습니다.
 
@@ -370,7 +370,7 @@ Keypad는 이제 Viewbox를 통해 텍스트를 스케일링 대신 기본 WPF �
 
 설정하기 **appui court / appui long**, 먼저 구성 된 작업을 선택, 두 개의 액션 옵션을 활성화, 편집하고 임계 값을 설정하기 위해 제스처를 선택 200 이름 * 3000 ms. 이 모드없이, 작업은 즉각적인 키 다운 동작을 유지합니다. 그것으로, 짧은 동작은 임계 값 전에 실행; 긴 동작은 임계 값에서 한 번 실행 (또는 타이머가 아직 실행되지 않은 경우 릴리스). 긴 동작은 짧은 것을 실행하지 않습니다. 무료 F13–F24 passthrough 키는 듀얼 액션 모드를 사용할 수 없습니다. 종료 제스처는 프로파일 / 구성 변경, 보정, 펌웨어 작업, 세션 변경 및 중단에 취소됩니다. 펌웨어 플래시가 필요하지 않습니다; 기존의 키는 키보드의 키 / 키보드의 공급을 보여줍니다.
 
-Core checks cover repeat/release boundaries, simultaneous hold, cancel, profile history/exchange/backups and audio rollback using fake endpoints. Windows UI checks 연습 실제 드래그 undo/redo, 긴 동작과 임계값 구성, 마이크 인디언 키패드 치수. 실제 마이크 드라이버, 헤드셋 / 스피커 스위칭 및 물리적 보유 여전히 소유자의 PC에 대한 유효성 검사가 필요합니다.
+Core checks cover repeat/release boundaries, simultaneous hold, cancel, profile history/exchange/backups and audio rollback using fake endpoints. Windows UI checks 운동 실제 드래그 undo/redo, 긴 동작과 임계값 구성, 마이크 인디언 키패드 치수. 실제 마이크 드라이버, 헤드셋 / 스피커 스위칭 및 물리적 보유 여전히 소유자의 PC에 대한 유효성 검사가 필요합니다.
 
 <a id="search-and-ci-reliability-fixes-164"></a>
 ## 검색 및 CI 신뢰성 수정 (Secure Fixes)1.6.4)
@@ -385,7 +385,7 @@ Build and release 워크플로우는 Node.js를 사용합니다. 24 작업. Ardu
 
 Windows에서 기존 설정 파일이 함께 제공됩니다. `File.Replace` overwrite-mode 보다는 오히려 `File.Move`. 이것은 완전한 오래된 스냅샷을 유지하면서 deletion을 허용하는 독자를 지원합니다. 핵심 제품군은 독자가 열리는 3개의 보충을 시험합니다; Windows 핵심 체크는 굳힌모 편집의 앞에 달리고 간결 실패를 간행하기 전에 달립니다.
 
-시험 snapshot 독자는 위로 기다릴지도 모릅니다 500 Windows 공유/잠금 해제를 위한 ms `ReplaceFile` 커밋. 대기는 스냅샷을 열뿐만 아니라 애플리케이션 동작을 실행하거나 다시 실행할 수 없습니다. 다른 오류, 변형 된 JSON 및 지속적 잠금은 실패를 남깁니다.
+시험 snapshot 독자는 위로 기다릴지도 모릅니다 500 Windows 공유/잠금 해제를 위한 ms `ReplaceFile` 커밋. 대기는 스냅샷을 열고 실행하거나 다시 실행할 수 없습니다. 다른 오류, 변형 된 JSON 및 지속적 잠금은 실패를 남깁니다.
 
 <a id="runtime-and-editing-optimizations-170"></a>
 ## Runtime 및 편집 최적화 (1.7.0)

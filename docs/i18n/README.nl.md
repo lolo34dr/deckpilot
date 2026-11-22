@@ -343,9 +343,9 @@ Gebruik **Rechercher une action ou une application** voor vragen zoals `volume`,
 <a id="control-panel-and-exact-colours-240"></a>
 ## Controlepaneel en exacte kleuren (2.4.0)
 
-Het rechter paneel heeft drie tabbladen: **Acties** voor het toewijzen van sleutels, **Appareil** voor het macropad en audio, en **Réglagesworld.kgm** voor profielen en voorkeuren. Het toetsenbord en de editor aan de linkerkant behouden hun layout en de originele vector pictogrammen en DeckPilot logo.
+Het configuratiepaneel heeft vier tabbladen. Gebruik **Acties** sleutels toe te wijzen, **Macropad** om de USB-verbinding te controleren, firmware te kalibreren of te beheren; **Audio** het beheer van microfoons en soundboardclips, en **Réglagesworld.kgm** voor profielen en voorkeuren. De header toont de verbindingsstatus en opent het tabblad Macropad. Smalle vensters stapelen de panelen en laten u ze aanpassen met de verdeler. 3 × 4 toetsenbord behoudt zijn oorspronkelijke uiterlijk en gedrag.
 
-Onder **Réglages → Réglages de l**, gebruik **Palet...** om een exacte achtergrond-, paneel- of accentkleur te kiezen met de Windows-kleurkiezer. `#RRGGBB` veld en aangrenzende swatch tonen de geselecteerde waarde. **Appliquer les couleurs** valideert en bespaart de drie kleuren; het annuleren van de picker houdt de huidige waarde.
+Onder **Réglages → Couleurs de l**, gebruik **Palet...** om een exacte achtergrond-, paneel- of accentkleur te kiezen met de Windows-kleurkiezer. `#RRGGBB` veld en aangrenzende swatch tonen de geselecteerde waarde. **Appliquer les couleurs** valideert en bespaart de drie kleuren; het annuleren van de picker houdt de huidige waarde.
 
 De OBS/Streamlabs controle integratie is verwijderd. 2.3 profielen blijven leesbaar en houden hun opgeslagen acties, maar gepensioneerde streaming acties niet uitvoeren. Selecteer een vervangende actie uit de bibliotheek om deze sleutels opnieuw te toewijzen. Andere acties, profielen en kalibratie zijn bewaard gebleven. Er is geen firmware flits nodig.
 

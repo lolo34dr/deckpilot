@@ -214,7 +214,7 @@ A consola verifica a saída com um estado não zero na primeira asserção mal- 
 
 A verificação de bloqueio de arquivos é executada apenas no Windows.
 
-As Acções do GitHub também são executadas `tests/windows-update-smoke.ps1` contra o executável autónomo. Ele inicia o helper de atualização, sai do processo original, verifica a substituição e a confirmação de inicialização, verifica a preservação das configurações, então abre o coletor de aplicativos instalado através da UI Automation e salva uma seleção. Ele também exercita executáveis renomeados e caminhos contendo espaços. Este script é reservado para a conta de teste GitHub Actions descartável. CI também executa `tests/windows-installer-smoke.ps1`: instalação real de arquivos de programa, atalhos de menu desktop/Iniciar, inicialização padrão, atualização com o aplicativo aberto, preservação de inicialização desativada e desinstalação sem excluir perfis.
+As Acções do GitHub também são executadas `tests/windows-update-smoke.ps1` contra o executável autónomo. Ele inicia o helper de atualização, sai do processo original, verifica a substituição e a confirmação de inicialização, verifica a preservação das configurações, então abre o coletor de aplicativos instalado através da UI Automation e salva uma seleção. Ele também exercita executáveis renomeados e caminhos contendo espaços. Este script é reservado para a conta de teste GitHub Actions descartável. CI também executa `tests/windows-installer-smoke.ps1`: instalação de arquivos de programa reais, atalhos de menu desktop/Iniciar, inicialização padrão, atualização com o aplicativo aberto, preservação de inicialização desativada e desinstalação sem excluir perfis.
 
 <a id="publish-a-standalone-windows-folder"></a>
 ### Publicar uma pasta do Windows independente
@@ -288,7 +288,7 @@ Crédito sugerido:
 <a id="macropad-firmware-updates"></a>
 ## Atualizações de firmware do Macropad
 
-Para a preparação do dispositivo e verificação da qualidade da oficina, instale o separado [DeckPilot Atelier](../../docs/FACTORY.md) ferramenta. Seu instalador é publicado como **[DeckPilot- Atelier- Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** ao lado do aplicativo principal. Ele pode flashar o firmware incluído para uma placa Leonardo/Caterina, em seguida, verificar breves e longas prensas em todos 12 chaves físicas e exportar um relatório.
+Para a preparação do dispositivo e verificação da qualidade da oficina, instale o separado [DeckPilot Atelier](../../docs/FACTORY.md) ferramenta. Seu instalador é publicado como **[DeckPilot- Atelier- Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** ao lado da aplicação principal. Ele pode flashar o firmware incluído para uma placa Leonardo/Caterina, em seguida, verificar curtos e longos prensas em todos 12 chaves físicas e exportar um relatório.
 
 DeckPilot 1.1.0 inclui a **Firmware du macropad…** diálogo e firmware 1.0.0 para o Pro Micro ATmega32U4 **5 V / 16 MHz**, utilizando a configuração Leonardo/Caterina confirmada pelo log de upload do proprietário. A ferramenta de flashing do Windows empacotada não requer o IDE Arduino. A seleção e confirmação do dispositivo são obrigatórias; as atualizações do aplicativo nunca piscam silenciosamente o tabuleiro. Os mapeamentos, perfis e calibração existentes F13-F24 permanecem compatíveis.
 
@@ -343,9 +343,9 @@ Utilização **Rechercher une action ou une application** para consultas como `v
 <a id="control-panel-and-exact-colours-240"></a>
 ## Painel de controle e cores exatas (2.4.0)
 
-O painel direito tem três abas: **Acções** para atribuição de chaves, **Apareil** para o macropad e áudio, e **Réglages** para perfis e preferências. O teclado e o editor à esquerda mantêm a sua disposição e os ícones vetoriais originais e DeckPilot logótipo.
+O painel de configuração tem quatro páginas. Use **Acções** para atribuir chaves, **Macropad** para verificar a conexão USB, calibrar ou gerenciar firmware, **Áudio** gerir microfones e clipes de placa de som, e **Réglages** para perfis e preferências. O cabeçalho mostra o estado da ligação e abre a página Macropad. As janelas estreitas empilham os painéis e permitem- lhe redimensioná- los com o separador. 3 × 4 teclado mantém sua aparência original e comportamento.
 
-Embaixo **Réglages → Réglages de l’aplication**, utilizar **Palette...** para escolher uma cor exata de fundo, painel ou acento com o seletor de cores do Windows. O editável `#RRGGBB` campo e swatch adjacente mostrar o valor selecionado. **Aplique as colunas** valida e salva as três cores; cancelar o seletor mantém o valor atual.
+Embaixo **Réglages → Couleurs de l’interface**, utilizar **Palette...** para escolher uma cor exata de fundo, painel ou acento com o seletor de cores do Windows. O editável `#RRGGBB` campo e swatch adjacente mostrar o valor selecionado. **Aplique as colunas** valida e salva as três cores; cancelar o seletor mantém o valor atual.
 
 A integração de controle OBS/Streamlabs foi removida. 2.3 os perfis permanecem legíveis e mantêm suas ações armazenadas, mas as ações de streaming aposentadas não são executadas. Selecione uma ação de substituição da biblioteca para reatribuir essas chaves. Outras ações, perfis e calibração são preservadas. Não é necessário flash de firmware.
 
@@ -383,7 +383,7 @@ Construir e liberar fluxos de trabalho use Node.js 24 ações. O compilador Ardu
 
 As configurações lidas nos testes do Windows permitem explicitamente o compartilhamento de leitura/escrita/delete e a análise de UTF-8 depois de fechar o leitor. Isto impede que o teste em si negue a substituição de arquivos atômicos do aplicativo. O teste de histórico mantém um instantâneo antigo aberto durante três ciclos de desfazer/refazer e verifica se ele permanece intacto enquanto as configurações ao vivo mudam.
 
-No Windows, os arquivos de configurações existentes são comprometidos com `File.Replace` em vez de substituir o modo `File.Move`. Isto suporta os leitores que permitem a exclusão enquanto retém um instantâneo antigo completo. O conjunto principal testa três substituições com um leitor mantido aberto; as verificações do núcleo do Windows são executadas antes da compilação de firmware e da publicação, de modo que as falhas de persistência são detectadas precocemente.
+No Windows, os arquivos de configurações existentes são comprometidos com `File.Replace` em vez de substituir o modo `File.Move`. Isto suporta os leitores que permitem a exclusão enquanto retém um instantâneo antigo completo. O conjunto principal testa três substituições com um leitor aberto; as verificações do núcleo do Windows são executadas antes da compilação de firmware e da publicação, de modo que as falhas de persistência são detectadas precocemente.
 
 Um leitor de instantâneo de teste pode esperar até 500 ms para o compartilhamento/bloqueio de violações do Windows enquanto `ReplaceFile` commits. A espera aplica- se apenas à abertura do instantâneo, nunca à execução ou re- execução de uma acção de aplicação. Outros erros, JSON malformados e bloqueios persistentes permanecem falhas.
 

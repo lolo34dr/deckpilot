@@ -82,7 +82,7 @@ I download pubblicati includono il runtime .NET. **Non è necessario installare 
 <a id="install-and-launch"></a>
 ### Installare e lanciare
 
-1. Scarica **[DeckPilot-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** e eseguire l'installer. Windows chiede l'autorizzazione dell'amministratore per installare **Program Files\DeckPilot**.
+1. Scarica **[DeckPilot-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** ed eseguire l'installer. Windows chiede l'autorizzazione dell'amministratore da installare **Program Files\DeckPilot**.
 2. L'installatore ti permette di scegliere se DeckPilot inizia con Windows, controlla gli aggiornamenti delle app automaticamente e riduce le animazioni. I controlli di avvio e di aggiornamento sono accesi per impostazione predefinita; le animazioni ridotte sono spente. VB-CABLE autista richiesto dal Soundboard e lo installa automaticamente se mancante. È necessaria una connessione internet per il controllo del driver.
 3. Il programma di installazione aggiunge DeckPilot a Windows **App installate** e crea una scorciatoia del menu Start. Una scorciatoia del desktop è selezionata per impostazione predefinita.
 4. Collegare il macropad e aprire DeckPilot dalla sua scorciatoia.
@@ -329,7 +329,7 @@ Per gli upload manuali di Arduino IDE, **Qui. DeckPilot dal suo menu di vassoio*
 <a id="soundboard-profile-and-device-reliability-246"></a>
 ## Soundboard, affidabilità del profilo e del dispositivo (2.4.6)
 
-L'aggiunta o la sostituzione di un suono MP3/WAV lo copia in `%APPDATA%\DeckPilot\Sounds`, quindi la riproduzione rimane disponibile se il file originale viene spostato o cancellato. Per copiare un suono già nella libreria, scegliere il suo file di nuovo dal **…** Le importazioni del profilo lasciano intatta la configurazione corrente se il salvataggio non riesce, le importazioni ripetute riutilizzano l'audio gestito, e i grandi backup automatici mantengono le voci delle clip quando l'audio non può adattarsi al limite del pacchetto.
+L'aggiunta o la sostituzione di un suono MP3/WAV lo copia in `%APPDATA%\DeckPilot\Sounds`, quindi la riproduzione rimane disponibile se il file originale viene spostato o cancellato. Per copiare un suono già nella libreria, scegliere il suo file di nuovo dal **…** Le importazioni di profilati lasciano intatta la configurazione corrente se il salvataggio non riesce, le importazioni ripetute riutilizzano l'audio gestito e i grandi backup automatici mantengono le voci delle clip quando l'audio non può rientrare nel limite del pacchetto.
 
 I comandi di volume Spotify e Deezer rapidi vengono applicati in ordine e il modello di profilo musicale include il gioco/pausa Deezer. DeckPilot Atelier 1.0.13 mantiene le operazioni hardware reattive e si abbina al recupero della posizione USB della scheda. 1.1.2 rapporti tutti i dodici tasti F13-F24 indipendentemente. Gli aggiornamenti dell'app non lampeggiano mai automaticamente un macropad collegato; un'installazione del firmware richiede ancora la conferma.
 
@@ -343,9 +343,9 @@ Uso **Rechercher une action ou une application** per quesiti come `volume`, `ski
 <a id="control-panel-and-exact-colours-240"></a>
 ## Pannello di controllo e colori esatti (2.4.0)
 
-Il pannello destro ha tre schede: **Azioni** per assegnare le chiavi, **Apparentemente** per il macropad e l'audio, e **Riduzioni** per profili e preferenze. La tastiera e l'editor a sinistra mantengono il loro layout e le icone vettoriali originali e DeckPilot logo.
+Il pannello di configurazione ha quattro schede. **Azioni** per assegnare le chiavi, **Macropad** per controllare la connessione USB, calibrare o gestire il firmware, **Audio audio** gestire microfoni e clip audio, e **Riduzioni** per profili e preferenze. L'intestazione mostra lo stato di connessione e apre la scheda Macropad. Le finestre strette impilano i pannelli e permettono di ridimensionarli con il divisore. 3 × 4 tastiera mantiene il suo aspetto originale e comportamento.
 
-Sottotitolo **Riduzioni → Reglages de l’applicazione**, uso **Palette...** scegliere un colore di sfondo, pannello o accento preciso con il raccoglitore di colori di Windows. `#RRGGBB` campo e swatch adiacente mostrano il valore selezionato. **Appliquer les couleurs** convalida e salva i tre colori; la cancellazione del raccoglitore mantiene il valore corrente.
+Sottotitolo **Reglages → Couleurs de l’interface**, uso **Palette...** scegliere un colore di sfondo, pannello o accento preciso con il raccoglitore di colori di Windows. `#RRGGBB` campo e swatch adiacente mostrano il valore selezionato. **Appliquer les couleurs** convalida e salva i tre colori; la cancellazione del raccoglitore mantiene il valore corrente.
 
 L'integrazione di controllo OBS/Streamlabs è stata rimossa. 2.3 i profili rimangono leggibili e mantengono le loro azioni memorizzate, ma le azioni di streaming in pensione non vengono eseguite. Selezionare un'azione di sostituzione dalla libreria per riassegnare quelle chiavi. Altre azioni, profili e calibrazione sono conservati.
 
@@ -364,7 +364,7 @@ Sottotitolo **Gérer les profils**, esportare il profilo corrente o tutti i prof
 
 Prima di salvare i profili modificati, DeckPilot mantiene i profili precedenti in `%APPDATA%\DeckPilot\Backups` (20 Le salvazioni preferenze non creano backup dei profili. Un guasto di backup impedisce la sovrascrittura delle impostazioni attuali. Ripristino sostituisce i profili dopo la conferma e può essere annullato; la calibrazione rimane invariata.
 
-**Microphone Windows** La barra di stato persistente e la scheda di Windows Audio mostrano lo stato attivo/mutato/mixed/non disponibile, aggiornato ogni due secondi e dopo i comandi dell'app. Un aggiornamento multi-endpoint fallito tenta di ripristinare gli stati di muto precedenti. Questi indicatori descrivono lo stato di endpoint di Windows, non un interruttore hardware o un pulsante muto di un'applicazione.
+**Microphone Windows** La barra di stato persistente e la scheda audio di Windows mostrano lo stato attivo/mutato/mixed/non disponibile, aggiornato ogni due secondi e dopo i comandi dell'app. Un aggiornamento multi-endpoint fallito tenta di ripristinare gli stati di muto precedenti. Questi indicatori descrivono lo stato di endpoint di Windows, non un interruttore di hardware o un pulsante muto di un'applicazione.
 
 **Changer de sortie audio** Un obiettivo mancante dà un errore senza scegliere un altro dispositivo. Le applicazioni con il proprio output fisso potrebbero non seguire il default di Windows. Gli ID endpoint importati vengono visualizzati come non disponibili fino ad adattarsi al PC corrente.
 
@@ -477,7 +477,7 @@ DeckPilot 1.9.7 Il test di rilascio di Windows verifica anche il lancio, l'aggio
 
 DeckPilot 1.9.8 aggiunge un'esplicita e confermata Atelier reset che sostituisce il programma utente della scheda con uno schizzo vuoto verificato e conserva il bootloader Caterina.
 
-La validazione copre le impostazioni legacy, la convalida dell'accento, la navigazione del profilo e la remapping di riferimento, i modelli portatili, il modello di Windows nativo/undo/redo e il commutatore del profilo, la registrazione di scorciatoia, copia/paste/reset, le impostazioni persistenza, l'installazione/aggiornamento, il ridimensionamento del layout e un'effettiva acquisizione dell'interfaccia utente.
+La validazione copre le impostazioni legacy, la convalida dell'accento, la navigazione del profilo e la remapping di riferimento, i modelli portatili, il modello di Windows nativo/undo/redo e il commutatore del profilo, la registrazione di scorciatoia, copia/paste/reset, le impostazioni persistenza, l'installazione/aggiornamento, il ridimensionamento del layout e una cattura effettiva dell'interfaccia utente.
 
 <a id="profile-sound-files-and-workshop-safety"></a>
 ### File audio profilo e sicurezza officina

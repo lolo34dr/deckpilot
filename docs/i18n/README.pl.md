@@ -343,9 +343,9 @@ Stosowanie **Rechercher une action ou une application** w przypadku zapytań tak
 <a id="control-panel-and-exact-colours-240"></a>
 ## Panel sterowania i dokładne kolory (2.4.0)
 
-Prawy panel ma trzy zakładki: **Działania** do przypisywania kluczy, **Appareil** dla makro-pad i dźwięk, oraz **Réglages** dla profili i preferencji. Klawiatura i edytor po lewej zachowują układ i oryginalne ikony wektorowe oraz DeckPilot logo.
+Panel konfiguracyjny ma cztery karty. Użyj **Działania** przypisywanie kluczy, **Makropad** sprawdzenie połączenia USB, kalibracja lub zarządzanie oprogramowaniem firmowym, **Audio** zarządzanie mikrofonami i klipami do płyt dźwiękowych, oraz **Réglages** dla profili i preferencji. Nagłówek pokazuje stan połączenia i otwiera kartę Macropad. Zawęź okna do stos paneli i pozwól na ich zmianę rozmiaru za pomocą rozdzielacza. 3 × 4 klawiatura zachowuje swój oryginalny wygląd i zachowanie.
 
-Pod **Réglages → Réglages de l 'application**, **Paleta...** Aby wybrać dokładny kolor tła, panelu lub akcentu za pomocą wybieracza kolorów Windows. Edytowalne `#RRGGBB` pole i sąsiadujący swatch pokazują wybraną wartość. **Appliquer les couleurs** waliduje i zapisuje trzy kolory; anulowanie picker zachowuje bieżącą wartość.
+Pod **Réglages → Couleurs de l 'interface**, **Paleta...** Aby wybrać dokładny kolor tła, panelu lub akcentu za pomocą wybieracza kolorów Windows. Edytowalne `#RRGGBB` pole i sąsiadujący swatch pokazują wybraną wartość. **Appliquer les couleurs** waliduje i zapisuje trzy kolory; anulowanie picker zachowuje bieżącą wartość.
 
 Integracja kontroli OBS / Streamplates została usunięta. Istniejące 2.3 profile pozostają czytelne i zachowują swoje zapisywane akcje, ale wycofane działania streamingu nie wykonują. Wybierz akcję zastępczą z biblioteki, aby zmienić te klucze. Inne działania, profile i kalibracja są zachowane. Nie jest wymagane oprogramowanie firmware flash.
 
@@ -410,7 +410,7 @@ Interfejs węgla drzewnego stawia bibliotekę działania na pierwszym miejscu, o
 - **Rejestrator skrótów:** wybrać akcję klawiatury i kliknąć **Enregistrer un raccourci**. Naciśnij wspieraną kombinację, a następnie zapisać go. Anulowanie ucieczki; F13- F24 jest zarezerwowany dla makro pad podczas nagrywania.
 - **Szybki dostęp:** Ctrl + K lub przycisk Biblioteka koncentruje wyszukiwanie akcji. **Activité récente** utrzymuje ostatni 30 wysłanie / nieudana akcja w pamięci dla tej sesji, bez zapisywania argumentów programu lub ścieżki docelowe. Można ją w każdej chwili wyczyścić. Udane wysłanie nie gwarantuje zakończenia w aplikacji docelowej.
 
-Pozostaje oprogramowanie firmowe **1.1.1**. Akceptowanie automatycznej oferty oprogramowania firmowego teraz poprawnie otwiera menedżera oprogramowania firmowego; poprzednia ochrona modalna uniemożliwiła przekazanie go. Istniejąca tożsamość oprogramowania firmowego, bicie serca, ponowne podłączenie i kontrola flash pozostają na miejscu. Nowe funkcje przestrzeni roboczej nie wymagają błysku firmware.
+Pozostaje oprogramowanie firmowe **1.1.1**. Akceptowanie automatycznej oferty oprogramowania firmowego teraz poprawnie otwiera menedżera oprogramowania firmowego; poprzednia ochrona modalna uniemożliwiła przekazanie go. Istniejąca identyfikacja oprogramowania firmowego, bicie serca, ponowne podłączenie i kontrola flash pozostają na miejscu. Nowe funkcje przestrzeni roboczej nie potrzebują błysku firmware.
 
 <a id="microphone-noise-suppression-220"></a>
 ## tłumienie szumów mikrofonów (2.2.0)

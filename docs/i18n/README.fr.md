@@ -343,9 +343,9 @@ Utilisation **Rechercher une action ou une application** pour des questions tell
 <a id="control-panel-and-exact-colours-240"></a>
 ## Panneau de commande et couleurs exactes (2.4.0)
 
-Le panneau droit a trois onglets : **Actions** pour l'attribution des touches, **Appareil** pour le macropad et audio, et **Réglages** pour les profils et les préférences. Le clavier et l'éditeur à gauche conservent leur mise en page et les icônes vectorielles originales et DeckPilot logo.
+Le panneau de configuration comporte quatre onglets. **Actions** pour attribuer des touches, **Macropad** vérifier la connexion USB, calibrer ou gérer le firmware, **Audio** pour gérer les microphones et les clips de table, et **Réglages** pour les profils et les préférences. L'en-tête affiche l'état de connexion et ouvre l'onglet Macropad. 3 × 4 clavier garde son apparence et son comportement d'origine.
 
-Sous **Réglages → Réglages de l'application**, utilisation **Palette...** choisir une couleur exacte de fond, de panneau ou d'accent avec le sélectionneur de couleurs Windows. `#RRGGBB` champ et swatch adjacent montrent la valeur sélectionnée. **Utiliser les couleurs** valide et enregistre les trois couleurs ; l'annulation du sélecteur conserve la valeur actuelle.
+Sous **Réglages → Couleurs de l'interface**, utilisation **Palette...** choisir une couleur exacte de fond, de panneau ou d'accent avec le sélectionneur de couleurs Windows. `#RRGGBB` champ et swatch adjacent montrent la valeur sélectionnée. **Utiliser les couleurs** valide et enregistre les trois couleurs ; l'annulation du sélecteur conserve la valeur actuelle.
 
 L'intégration de contrôle OBS/Streamlabs a été supprimée. 2.3 Les profils restent lisibles et conservent leurs actions stockées, mais les actions de streaming à la retraite ne s'exécutent pas. Sélectionnez une action de remplacement de la bibliothèque pour réassigner ces touches. D'autres actions, profils et calibrage sont conservés. Aucun flash firmware n'est nécessaire.
 
@@ -362,7 +362,7 @@ Le clavier rend maintenant aux tailles WPF natives au lieu de mettre le texte à
 
 Sous **Gérer les profils**, exporter le profil actuel ou tous les profils comme `.deckpilot.json`Importer n'exécute jamais d'actions et ne remplace jamais l'étalonnage du PC. Les profils contiennent des chemins d'action, des arguments et des identifiants d'extrémité audio, qui peuvent nécessiter un ajustement sur un autre PC. Les formats inconnus, les fichiers surdimensionnés et les configurations de gestes mal formés sont refusés.
 
-Avant d'enregistrer les profils modifiés, DeckPilot conserve les profils précédents dans `%APPDATA%\DeckPilot\Backups` (20 Les sauvegardes de préférence ne créent pas de sauvegardes de profil. Une défaillance de sauvegarde empêche d'écraser les paramètres actuels. Restaurer remplace les profils après confirmation et peut elle-même être annulée; l'étalonnage reste inchangé.
+Avant d'enregistrer les profils modifiés, DeckPilot conserve les profils précédents dans `%APPDATA%\DeckPilot\Backups` (20 Une défaillance de sauvegarde empêche d'écraser les paramètres actuels. Restaurer remplace les profils après confirmation et peut être elle-même annulée; le calibrage reste inchangé.
 
 **Microphone Windows** La barre d'état persistante et la carte Audio Windows montrent un état actif/muté/mixé/indisponible, rafraîchi toutes les deux secondes et après les commandes de l'application. Une mise à jour multi-endpoint échouée tente de restaurer les états de mute précédents. Ces indicateurs décrivent l'état de fin de Windows, pas un commutateur matériel ou un bouton de mute propre à une application.
 
