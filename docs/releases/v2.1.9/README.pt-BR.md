@@ -2,7 +2,7 @@
 
 DeckPilot 2.1.9 corrige o monitoramento de alto-falantes em dispositivos cujo formato de áudio Windows é extensível, incluindo alguns fones de ouvido USB, e adiciona uma notificação de sobreposição de placa de som.
 
-- O retorno do alto-falante mantém o formato exato de mistura WASAPI da saída selecionada, converte amostras de clipe para o seu PCM ou codificação flutuante, e repete sem reprodução orientada a eventos quando um driver rejeita esse modo.
+- O retorno do alto-falante mantém o formato exato de mistura WASAPI da saída selecionada, converte amostras de clipe para o seu PCM ou codificação flutuante, e repete sem reprodução orientada por eventos quando um driver rejeita esse modo.
 - O início de um clipe de placa de som mostra o seu nome na sobreposição configurável na tela. A preferência de notificação de perfil existente, a colocação e o controle de configuração de movimento reduzido ambos os tipos de notificação.
 - O retorno ainda contém apenas clipes de placa de som; o microfone físico fica fora da mistura de alto-falantes e continua para o microfone virtual.
 

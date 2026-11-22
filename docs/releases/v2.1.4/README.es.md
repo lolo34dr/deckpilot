@@ -3,7 +3,7 @@
 DeckPilot 2.1.4 Comienza el micrófono virtual configurado automáticamente con la aplicación, incluyendo la startup de fondo después del registro de Windows.
 
 - La puesta en marcha automática del micrófono de placa sonora está habilitada por defecto para configuraciones nuevas y existentes. Utiliza el micrófono físico seleccionado y VB-CABLE; no se necesita activación manual después de reiniciar el PC cuando DeckPilot comienza con Windows.
-- Si los dispositivos no están listos para iniciar sesión, o el audio se detiene después de una desconexión, DeckPilot se alimenta cada cinco segundos mientras que la activación automática está activada.
+- Si los dispositivos no están listos para iniciar sesión, o el audio se detiene después de una desconexión, DeckPilot vuelve cada cinco segundos mientras que la activación automática está activada.
 - Una parada explícita deshabilita y ahorra la preferencia de arranque automático; activarla de nuevo desde el Soundboard panel o el botón de activación. Los clips de audio nunca se reproducen automáticamente.
 - Atelier remains 1.0.11 y restos de firmware 1.1.1.
 

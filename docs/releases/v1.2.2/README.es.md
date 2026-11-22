@@ -2,7 +2,7 @@
 
 DeckPilot ahora muestra su propio logotipo en Windows en lugar del icono de aplicación genérico.
 
-- La aplicación ejecutable incorpora un icono de Windows de múltiples resoluciones (16–256 px).
+- La aplicación ejecutable incorpora un icono de Windows multi-resolución (16–256 px).
 - El instalador y la entrada desinstalación de Windows utilizan el logotipo del proyecto.
 - Atajos de menú de escritorio y Inicio referencia explícitamente el instalado DeckPilot icono, incluso en actualizaciones.
 

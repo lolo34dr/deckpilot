@@ -7,4 +7,4 @@ DeckPilot 2.1.5 wygładza urządzenie audio- odświeża i dodaje markowy ekran s
 - Pokaż DeckPilot baner podczas uruchamiania interaktywnej aplikacji. Cichy startup z systemem Windows pozostaje w tle.
 - Pozostałości atelier 1.0.11 i firmware pozostaje 1.1.1.
 
-Walidacja obejmuje sprawdzanie tła / regresji pamięci podręcznej, sprawdzanie konwersji audio, tworzenie systemu Windows, uaktualnianie / odświeżanie instalatora, sprawdzanie natywnego plusku / aktualizacji i wybieranie aplikacji. Rzeczywiste wykorzystanie procesora audio i opóźnienia nadal zależą od komputera PC i urządzeń audio.
+Walidacja obejmuje sprawdzanie tła / regresji pamięci podręcznej, sprawdzanie konwersji audio, tworzenie systemu Windows, uaktualnianie / usuwanie instalacji, sprawdzanie natywnego plusku / aktualizacji oraz wybieranie aplikacji. Rzeczywiste wykorzystanie procesora audio i opóźnienie nadal zależy od komputera PC i urządzeń audio.

@@ -7,4 +7,4 @@ DeckPilot 2.1.5 glad maakt audio-apparaat verfrist en voegt een branded opstarts
 - Toon het DeckPilot banner terwijl de interactieve app begint. Stille opstart met Windows blijft op de achtergrond.
 - Atelier blijft 1.0.11 en firmware blijft 1.1.1.
 
-Validatie omvat achtergrondscan / cache regressie controles, audio conversie controles, Windows builds, installer upgrade / uninstall, native splash / update en applicatie-picker controles. Werkelijk audio CPU gebruik en latency nog steeds afhankelijk van de PC en audio-apparaten.
+Validatie omvat achtergrondscan / cache regressie controles, audio conversie controles, Windows builds, installer upgrade / uninstall, native splash / update en applicatie-picker controles. Werkelijke audio CPU gebruik en latency nog steeds afhankelijk van de PC en audio-apparaten.

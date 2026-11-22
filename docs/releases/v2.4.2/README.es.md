@@ -1,6 +1,6 @@
 > Esta es una traducción automática de las notas de liberación completas. El original inglés es la referencia.
 
-DeckPilot 2.4.2 mejora el panel de control y mantiene las acciones de edición clave a la vista.
+DeckPilot 2.4.2 mejora el panel de control y mantiene las acciones de edición clave en vista.
 
 - Manténganse **Tester** y **Enregistrer** al lado de la llave seleccionada para que permanezcan visibles sin desplazarse a través del editor.
 - Retener los existentes DeckPilot keypad workspace y su paleta oscura original, al tiempo que simplifica la biblioteca de acción derecha.

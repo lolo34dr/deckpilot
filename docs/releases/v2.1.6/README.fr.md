@@ -2,7 +2,7 @@
 
 DeckPilot 2.1.6 et DeckPilot Atelier 1.0.12 rendre le firmware d'Atelier effacer explicite et récupérable.
 
-- Déplacer le firmware destructeur effacer dans des opérations avancées effondrées et nécessite de taper `EFFACER` avant d'écrire.
+- Déplacer le firmware destructif effacer dans les opérations avancées effondrées et nécessite de taper `EFFACER` avant d'écrire.
 - Expliquez que le tableau cesse d'énumérer comme un clavier après l'effacement, montrez les étapes exactes de récupération RST/GND double-reset, et gardez l'action de récupération d'Atelier disponible après l'effacement ou un flash interrompu.
 - Firmware reste 1.1.1; non DeckPilot Le firmware matériel doit être modifié.
 

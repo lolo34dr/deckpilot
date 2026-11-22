@@ -7,4 +7,4 @@ DeckPilot 2.1.5 suaviza o áudio-dispositivo atualiza e adiciona uma tela de ini
 - Mostrar a DeckPilot banner enquanto a aplicação interactiva começa. A inicialização silenciosa com o Windows fica em segundo plano.
 - Restos de atelier 1.0.11 e o firmware permanece 1.1.1.
 
-A validação inclui verificações de regressão de varredura/cache de fundo, verificações de conversão de áudio, compilações do Windows, atualização/desinstalação do instalador, splash/atualização nativa e verificação do coletor de aplicativos. O uso de CPU de áudio real e latência ainda dependem do PC e dispositivos de áudio.
+A validação inclui verificações de regressão de varredura/cache de fundo, verificações de conversão de áudio, compilações do Windows, atualização/desinstalação do instalador, splash/atualização nativa e verificação de aplicativos. O uso de CPU de áudio real e latência ainda dependem do PC e dispositivos de áudio.

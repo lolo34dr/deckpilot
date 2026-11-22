@@ -1,8 +1,8 @@
 > 这是完整发行笔记的自动翻译,英文原文为参考文献.
 
-DeckPilot 2.4.4 完成 Deezer 集成并将其 SVG 标记放在 Spotify 在动作库中。
+DeckPilot 2.4.4 完成 Deezer 集成, 并将其 SVG 标记放在 Spotify 在动作库中 。
 
 - 在动作库和指定的宏板密钥上显示一个专用的,多色的Deezer SVG图标.
-- 路由播放/暂停,接下来/先前通过Deezer的Windows媒体会话,并通过它的Windows音频会话进行音量,遵循Spotify相同的本地API.
-- 一致匹配Deezer应用身份,并保持浏览器的回放,其他玩家和主音量不受影响.
+- 路由播放/暂停,接下来/先前通过Deezer的Windows媒体会话,并通过它的Windows音频会话进行音量,跟随Spotify一样的本地API.
+- 一致匹配Deezer应用身份,并保持浏览器回放,其他玩家和主音量不受影响.
 - 不需要固件更新或闪存 。

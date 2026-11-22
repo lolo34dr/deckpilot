@@ -4,4 +4,4 @@ DeckPilot 1.9.10 herstelt gedeelde releases die beide bevatten DeckPilot en Deck
 
 Als u Atelier installeerde 1.0.8 vanaf het aparte releasekanaal, installeren DeckPilot-Atelier-Setup.exe van deze release een keer terug naar gedeelde updates. Eerdere Atelier versies en DeckPilot kan gebruik maken van hun bestaande updater.
 
-DeckPilot Atelier 1.0.7 voegt een bevestigde programma-gebied wissen dat alles leegt 28 KiB van gebruiker flits, laat een veilige reset loop, en behoudt Caterina en EEPROM. Reset blijft uitgeschakeld totdat een fysiek bord is geselecteerd.
+DeckPilot Atelier 1.0.7 voegt een bevestigde programma-gebied wissen dat alles leegt 28 KiB van de gebruiker flits, laat een veilige reset loop, en behoudt Caterina en EEPROM. Reset blijft uitgeschakeld totdat een fysieke board is geselecteerd.

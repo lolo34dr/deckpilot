@@ -7,4 +7,4 @@ DeckPilot 2.1.5 suaviza el audio-dispositivo refresca y añade una pantalla de i
 - Mostrar el DeckPilot banner mientras la aplicación interactiva comienza. Silent startup con Windows permanece en el fondo.
 - Atelier remains 1.0.11 y restos de firmware 1.1.1.
 
-La validación incluye cheques de regresión por escaneo de fondo/cache, cheques de conversión de audio, Windows construye, actualización/desinstalación del instalador, salpicaduras/actuales nativas y cheques de la aplicación. El uso real de CPU y la latencia todavía dependen de los dispositivos de PC y audio.
+La validación incluye cheques de regresión por escaneo de fondo/cache, cheques de conversión de audio, Windows construye, actualización/desinstalación del instalador, salpicaduras/actuales nativas y cheques de aplicación. El uso real de CPU y la latencia todavía dependen de los dispositivos de PC y audio.
