@@ -182,9 +182,13 @@ public partial class MainWindow
         if (calibrating || firmwareOpen) return;
         CancelShortcutRecording();
         ControlTabs.SelectedIndex = 0;
-        ActionSearchBox.BringIntoView();
-        ActionSearchBox.Focus();
-        ActionSearchBox.SelectAll();
+        Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded, new Action(() =>
+        {
+            if (ControlTabs.SelectedItem != ActionsTab) return;
+            ActionSearchBox.BringIntoView();
+            ActionSearchBox.Focus();
+            ActionSearchBox.SelectAll();
+        }));
     }
 
     private void AddActivity(string title, bool success, string detail)

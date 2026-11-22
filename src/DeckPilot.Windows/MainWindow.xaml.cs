@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Automation.Peers;
 using System.Windows.Interop;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,7 +19,7 @@ using Forms = System.Windows.Forms;
 namespace DeckPilot.Windows;
 public partial class MainWindow : Window
 {
-    private static readonly string ConfigPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DeckPilot", "settings.json");
+    private static readonly string ConfigPath = BetaEnvironment.SettingsPath;
     private readonly SettingsStore store = new(ConfigPath);
     private Settings settings = new();
     private KeyboardHook? hook;
@@ -102,14 +103,18 @@ public partial class MainWindow : Window
         InitializeProductivityTools();
         RefreshProfiles();
         LoadEditor();
-        try { StartupService.Initialize(); }
-        catch (Exception ex) { StatusText.Text = "Démarrage Windows : " + ex.Message; }
-        RefreshStartupState();
-        Activated += (_, _) => RefreshStartupState();
+        if (!BetaEnvironment.IsEnabled)
+        {
+            try { StartupService.Initialize(); }
+            catch (Exception ex) { StatusText.Text = "Démarrage Windows : " + ex.Message; }
+            RefreshStartupState();
+            Activated += (_, _) => RefreshStartupState();
+        }
         AutoUpdateCheck.IsChecked = settings.AutoCheckUpdates;
         AutoFirmwareCheck.IsChecked = settings.AutoCheckFirmware;
         VersionLabel.Text = "v" + UpdateService.DisplayVersion;
         UpdateStatus.Text = "Recherche au démarrage, puis toutes les 6 h.";
+        InitializeBuildMode();
         try { hook = new KeyboardHook(); hook.KeyPressed += OnDeckKey; hook.KeyReleased += OnDeckRelease; }
         catch (Win32Exception ex)
         {
@@ -125,8 +130,11 @@ public partial class MainWindow : Window
         loading = false;
         UpdateHistoryState();
         StatusText.Text = "Prêt · Choisissez un bouton pour le personnaliser.";
-        updateTimer.Tick += async (_, _) => await CheckForUpdatesAsync(false);
-        updateTimer.Start();
+        if (!BetaEnvironment.IsEnabled)
+        {
+            updateTimer.Tick += async (_, _) => await CheckForUpdatesAsync(false);
+            updateTimer.Start();
+        }
         firmwareTimer.Tick += async (_, _) => await OfferFirmwareUpdateAsync();
         firmwareTimer.Start();
         CommandBindings.Add(new System.Windows.Input.CommandBinding(System.Windows.Input.ApplicationCommands.Save, (_, e) => { SaveEditor(force: true); e.Handled = true; }));
@@ -138,10 +146,11 @@ public partial class MainWindow : Window
             boardConnection = new BoardConnectionService(settings.PreferredBoardDeviceId, new Progress<BoardConnectionState>(OnBoardStateChanged));
             try { bundledFirmware = await Task.Run(FirmwareService.ReadBundledManifest); if (boardState != null) ApplyBoardState(boardState); }
             catch (Exception ex) { bundledFirmwareError = ex.Message; BoardFirmwareStatus.Text = ex.Message; }
+            if (BetaEnvironment.IsEnabled) return;
             try { await Task.Delay(8000, lifetime.Token); await CheckForUpdatesAsync(false); }
             catch (OperationCanceledException) { }
         };
-        _ = Task.Run(UpdateService.CleanOldDownloads);
+        if (!BetaEnvironment.IsEnabled) _ = Task.Run(UpdateService.CleanOldDownloads);
     }
     private void BuildGrid()
     {
@@ -325,7 +334,7 @@ public partial class MainWindow : Window
         if (!root.LongPressEnabled) editingLong = false;
         var action = EditedAction;
         LongPressCheck.IsChecked = root.LongPressEnabled;
-        LongPressCheck.IsEnabled = root.Kind != ActionKind.Passthrough;
+        UpdateLongPressAvailability(root.Kind);
         GesturePanel.Visibility = root.LongPressEnabled ? Visibility.Visible : Visibility.Collapsed;
         GesturePicker.SelectedIndex = editingLong ? 1 : 0;
         LongPressThreshold.Value = root.LongPressMilliseconds;
@@ -356,7 +365,7 @@ public partial class MainWindow : Window
         if (!action.IsValid()) { ReportError("Vérifiez la touche choisie et les deux actions si l’appui long est activé."); return false; }
         ResetActionFeedback(selected);
         settings.ActiveProfile.Buttons[selected] = action;
-        LongPressCheck.IsEnabled = action.Kind != ActionKind.Passthrough;
+        UpdateLongPressAvailability(action.Kind);
         GesturePanel.Visibility = action.LongPressEnabled ? Visibility.Visible : Visibility.Collapsed;
         bool saved = Persist();
         if (!saved) settings.ActiveProfile.Buttons[selected] = previous;
@@ -661,7 +670,7 @@ public partial class MainWindow : Window
         trayProfiles = new Forms.ToolStripMenuItem("Profils"); menu.Items.Add(trayProfiles);
         menu.Items.Add("Quitter", null, (_, _) => Dispatcher.Invoke(() => { quitting = true; Close(); }));
         trayIcon = BrandAssets.CreateTrayIcon();
-        tray = new Forms.NotifyIcon { Icon = trayIcon, Text = "DeckPilot", ContextMenuStrip = menu, Visible = true };
+        tray = new Forms.NotifyIcon { Icon = trayIcon, Text = BetaEnvironment.DisplayName, ContextMenuStrip = menu, Visible = true };
         tray.DoubleClick += (_, _) => Dispatcher.Invoke(ShowMain);
         RefreshTrayProfiles();
     }
@@ -767,7 +776,12 @@ public partial class MainWindow : Window
         DeckAvailabilityHint.Text = connected ? "Configuration sur ce PC · Cliquez sur une touche pour la modifier."
             : state.Kind == BoardConnectionKind.Disconnected ? "Carte débranchée · Modifiez et testez vos actions sur ce PC."
             : "Vos profils restent modifiables et testables pendant la connexion.";
-        BoardConnectionStatus.Text = state.Message;
+        if (BoardConnectionStatus.Text != state.Message)
+        {
+            BoardConnectionStatus.Text = state.Message;
+            if (AutomationPeer.ListenerExists(AutomationEvents.LiveRegionChanged))
+                UIElementAutomationPeer.CreatePeerForElement(BoardConnectionStatus)?.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
+        }
         BoardConnectionStatus.Foreground = Brush(state.Kind == BoardConnectionKind.Connected ? "#B1A8C4" : state.Kind is BoardConnectionKind.Error or BoardConnectionKind.Unidentified ? "#D1B18C" : "#A5AAA6");
         string signature = string.Join("|", state.Devices.Select(d => d.DeviceId + ":" + d.Port + ":" + d.Location + ":" + d.Name));
         if (signature != deviceListSignature)
@@ -837,13 +851,14 @@ public partial class MainWindow : Window
     private async void CheckUpdateClick(object sender, RoutedEventArgs e) => await CheckForUpdatesAsync(true);
     private void AutoUpdateClick(object sender, RoutedEventArgs e)
     {
+        if (BetaEnvironment.IsEnabled) return;
         settings.AutoCheckUpdates = AutoUpdateCheck.IsChecked == true; Persist();
         UpdateStatus.Text = settings.AutoCheckUpdates ? "Recherche automatique activée." : "Recherche automatique désactivée.";
         if (settings.AutoCheckUpdates) _ = CheckForUpdatesAsync(false);
     }
     private async Task CheckForUpdatesAsync(bool manual)
     {
-        if (updateBusy || firmwareOpen || firmwarePromptActive || OwnedWindows.Count > 0 || calibrating || lifetime.IsCancellationRequested || (!manual && (!settings.AutoCheckUpdates || settings.UpdateSnoozedUntil > DateTimeOffset.UtcNow || DateTimeOffset.UtcNow - lastUpdateCheck < TimeSpan.FromMinutes(5)))) return;
+        if (BetaEnvironment.IsEnabled || updateBusy || firmwareOpen || firmwarePromptActive || OwnedWindows.Count > 0 || calibrating || lifetime.IsCancellationRequested || (!manual && (!settings.AutoCheckUpdates || settings.UpdateSnoozedUntil > DateTimeOffset.UtcNow || DateTimeOffset.UtcNow - lastUpdateCheck < TimeSpan.FromMinutes(5)))) return;
         lastUpdateCheck = DateTimeOffset.UtcNow;
         updateBusy = true; UpdateCheckButton.IsEnabled = false; UpdateStatus.Text = "Recherche d’une mise à jour…";
         try
@@ -889,6 +904,7 @@ public partial class MainWindow : Window
     }
     private void StartupClick(object sender, RoutedEventArgs e)
     {
+        if (BetaEnvironment.IsEnabled) return;
         try
         {
             StartupService.Set(StartupCheck.IsChecked == true);

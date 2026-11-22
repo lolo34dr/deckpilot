@@ -89,12 +89,26 @@ public partial class MainWindow
         editingLong = false; RefreshSoundboardClips(); RefreshProfiles(); LoadEditor();
         StatusText.Text = redo ? "Modification rétablie." : "Modification annulée · Calibrage conservé.";
     }
+    private void UpdateLongPressAvailability(ActionKind kind)
+    {
+        LongPressCheck.IsEnabled = kind != ActionKind.Passthrough;
+        LongPressUnavailableHint.Visibility = LongPressCheck.IsEnabled ? Visibility.Collapsed : Visibility.Visible;
+    }
+
     private void LongPressClick(object sender, RoutedEventArgs e)
     {
         if (loading) return;
         if (!SaveEditor()) { LoadEditor(); return; }
-        if (LongPressCheck.IsChecked != true) editingLong = false;
+        editingLong = LongPressCheck.IsChecked == true;
         LoadEditor();
+        if (!editingLong) return;
+        Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded, new Action(() =>
+        {
+            if (!editingLong || !GesturePanel.IsVisible) return;
+            if (GesturePicker.ItemContainerGenerator.ContainerFromIndex(1) is ListBoxItem longPress)
+                longPress.Focus();
+            GesturePanel.BringIntoView();
+        }));
     }
     private void GestureChanged(object sender, SelectionChangedEventArgs e)
     {

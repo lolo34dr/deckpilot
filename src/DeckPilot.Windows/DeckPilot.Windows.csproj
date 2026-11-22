@@ -8,25 +8,34 @@
     <NoWarn>$(NoWarn);WFAC010</NoWarn>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets/DeckPilot.ico</ApplicationIcon>
-    <AssemblyName>DeckPilot</AssemblyName><Version>2.4.6</Version>
+    <AssemblyName>DeckPilot</AssemblyName><Version>2.4.7</Version>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(DeckPilotBeta)' == 'true'">
+    <AssemblyName>DeckPilot.Beta</AssemblyName>
+    <DefineConstants>$(DefineConstants);DECKPILOT_BETA</DefineConstants>
+    <InformationalVersion>$(Version)-configuration-beta</InformationalVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <FirmwareBundlePath Condition="'$(FirmwareBundlePath)' == ''">../../artifacts/firmware/DeckPilot-firmware.zip</FirmwareBundlePath>
+    <NoiseReductionBundlePath Condition="'$(NoiseReductionBundlePath)' == ''">../../artifacts/native/win-x64/rnnoise.dll</NoiseReductionBundlePath>
   </PropertyGroup>
   <ItemGroup><EmbeddedResource Include="Assets/deezer.svg" LogicalName="DeckPilot.Assets.deezer.svg" /></ItemGroup>
   <ItemGroup>
     <Resource Include="../../deckpilotlogo.png" Link="Assets/DeckPilot.png" />
     <Resource Include="../../deckpilotbanner.png" Link="Assets/DeckPilot-Banner.png" />
-    <EmbeddedResource Include="../../artifacts/native/win-x64/rnnoise.dll" LogicalName="DeckPilot.Native.rnnoise.dll" Condition="Exists('../../artifacts/native/win-x64/rnnoise.dll')" />
+    <EmbeddedResource Include="$(NoiseReductionBundlePath)" LogicalName="DeckPilot.Native.rnnoise.dll" Condition="Exists('$(NoiseReductionBundlePath)')" />
   </ItemGroup>
   <ItemGroup><Content Include="Install-VBCABLE.ps1" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.IO.Ports" Version="8.0.0" />
     <PackageReference Include="System.Management" Version="8.0.0" />
     <PackageReference Include="NAudio" Version="2.2.1" />
-    <EmbeddedResource Include="../../artifacts/firmware/DeckPilot-firmware.zip" LogicalName="DeckPilot.FirmwareBundle.zip" Condition="Exists('../../artifacts/firmware/DeckPilot-firmware.zip')" />
+    <EmbeddedResource Include="$(FirmwareBundlePath)" LogicalName="DeckPilot.FirmwareBundle.zip" Condition="Exists('$(FirmwareBundlePath)')" />
   </ItemGroup>
-  <Target Name="RequireFirmwareBundle" BeforeTargets="PrepareForBuild" Condition="'$(RequireFirmwareBundle)' == 'true' And !Exists('../../artifacts/firmware/DeckPilot-firmware.zip')">
+  <Target Name="RequireFirmwareBundle" BeforeTargets="PrepareForBuild" Condition="'$(RequireFirmwareBundle)' == 'true' And !Exists('$(FirmwareBundlePath)')">
     <Error Text="Build the firmware bundle with firmware/tools/build.ps1 before publishing." />
   </Target>
-  <Target Name="RequireNoiseReductionBundle" BeforeTargets="PrepareForBuild" Condition="'$(RequireNoiseReductionBundle)' == 'true' And !Exists('../../artifacts/native/win-x64/rnnoise.dll')">
+  <Target Name="RequireNoiseReductionBundle" BeforeTargets="PrepareForBuild" Condition="'$(RequireNoiseReductionBundle)' == 'true' And !Exists('$(NoiseReductionBundlePath)')">
     <Error Text="Build the bundled RNNoise native library with third-party/RNNoise/build.ps1 before publishing." />
   </Target>
   <ItemGroup><ProjectReference Include="../DeckPilot.Core/DeckPilot.Core.csproj" /></ItemGroup>

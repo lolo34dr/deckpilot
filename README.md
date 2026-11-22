@@ -314,9 +314,9 @@ Use **Rechercher une action ou une application** for queries such as `volume`, `
 
 ## Control panel and exact colours (2.4.0)
 
-The right panel has three tabs: **Actions** for assigning keys, **Appareil** for the macropad and audio, and **Réglages** for profiles and preferences. The keypad and editor on the left retain their layout and the original vector icons and DeckPilot logo.
+The configuration panel has four tabs. Use **Actions** to assign keys, **Macropad** to check the USB connection, calibrate or manage firmware, **Audio** to manage microphones and soundboard clips, and **Réglages** for profiles and preferences. The header shows the connection status and opens the Macropad tab. Narrow windows stack the panels and let you resize them with the divider. The 3 × 4 keypad keeps its original appearance and behavior.
 
-Under **Réglages → Réglages de l’application**, use **Palette…** to choose an exact background, panel or accent colour with the Windows colour picker. The editable `#RRGGBB` field and adjacent swatch show the selected value. **Appliquer les couleurs** validates and saves the three colours; cancelling the picker keeps the current value.
+Under **Réglages → Couleurs de l’interface**, use **Palette…** to choose an exact background, panel or accent colour with the Windows colour picker. The editable `#RRGGBB` field and adjacent swatch show the selected value. **Appliquer les couleurs** validates and saves the three colours; cancelling the picker keeps the current value.
 
 The OBS/Streamlabs control integration has been removed. Existing 2.3 profiles remain readable and keep their stored actions, but retired streaming actions do not execute. Select a replacement action from the library to reassign those keys. Other actions, profiles and calibration are preserved. No firmware flash is required.
 

@@ -42,7 +42,7 @@ public static class FirmwareService
     {
         using var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("DeckPilot.FirmwareBundle.zip")
             ?? throw new IOException("Ce build ne contient pas le firmware. Utilisez une version publiée de DeckPilot.");
-        string directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DeckPilot", "Firmware", Guid.NewGuid().ToString("N"));
+        string directory = Path.Combine(BetaEnvironment.LocalData, "Firmware", Guid.NewGuid().ToString("N"));
         System.IO.Directory.CreateDirectory(directory);
         try
         {
@@ -160,7 +160,7 @@ public static class FirmwareService
             throw new IOException("Le téléversement a dépassé le délai. Le firmware peut être incomplet ; consultez les instructions de récupération.");
         }
         string log = await stdout + "\n" + await stderr;
-        string logPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DeckPilot", "Firmware", "last-flash.log");
+        string logPath = Path.Combine(BetaEnvironment.LocalData, "Firmware", "last-flash.log");
         bool logged = await FirmwareLog.TryWriteAsync(logPath, log);
         if (process.ExitCode != 0)
             throw new IOException($"AVRDUDE a signalé une erreur ({process.ExitCode}). Le firmware peut être incomplet."

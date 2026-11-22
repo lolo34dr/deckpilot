@@ -126,7 +126,7 @@ public partial class MainWindow
         }
         CancelPendingGestures(); editingLong = false;
         RefreshProfiles(); LoadEditor();
-        if (tray != null) tray.Text = "DeckPilot · " + destination.Name[..Math.Min(destination.Name.Length, 45)];
+        if (tray != null) tray.Text = BetaEnvironment.DisplayName + " · " + destination.Name[..Math.Min(destination.Name.Length, 45)];
         StatusText.Text = "Profil actif · " + destination.Name;
         if (previous != destination.Id) ShowProfileOverlay(destination.Name);
         return true;

@@ -16,7 +16,7 @@
    <Setter Property="Foreground" Value="#DDE6EB"/><Setter Property="HorizontalContentAlignment" Value="Stretch"/>
    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Expander">
     <StackPanel>
-     <ToggleButton x:Name="HeaderToggle" FocusVisualStyle="{StaticResource KeyboardFocus}" IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" HorizontalContentAlignment="Stretch" Foreground="{TemplateBinding Foreground}">
+     <ToggleButton x:Name="HeaderToggle" MinHeight="{TemplateBinding MinHeight}" FocusVisualStyle="{StaticResource KeyboardFocus}" IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" HorizontalContentAlignment="Stretch" Foreground="{TemplateBinding Foreground}">
       <ToggleButton.Template><ControlTemplate TargetType="ToggleButton">
        <Border x:Name="HeaderBorder" Background="Transparent" CornerRadius="4" Padding="3,7">
         <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="18"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
@@ -39,6 +39,24 @@
    </ControlTemplate></Setter.Value></Setter>
   </Style>
   <Style TargetType="TextBlock"><Setter Property="Foreground" Value="#E7EDF1"/></Style>
+  <Style TargetType="ToolTip">
+   <Setter Property="MaxWidth" Value="360"/>
+   <Setter Property="Foreground" Value="#F5F3F8"/>
+   <Setter Property="Template"><Setter.Value>
+    <ControlTemplate TargetType="ToolTip">
+     <Border Background="#24212C" BorderBrush="#8F86A1" BorderThickness="1" CornerRadius="6" Padding="10,7">
+      <ContentPresenter TextElement.Foreground="{TemplateBinding Foreground}">
+       <ContentPresenter.Resources>
+        <Style TargetType="TextBlock">
+         <Setter Property="Foreground" Value="#F5F3F8"/><Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+       </ContentPresenter.Resources>
+      </ContentPresenter>
+     </Border>
+    </ControlTemplate>
+   </Setter.Value></Setter>
+  </Style>
+
   <Style TargetType="Button">
    <Setter Property="FocusVisualStyle" Value="{StaticResource KeyboardFocus}"/>
    <Setter Property="Foreground" Value="#E7EDF1"/><Setter Property="Background" Value="#2D373E"/><Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -104,9 +122,10 @@
    </ControlTemplate></Setter.Value></Setter>
   </Style>
   <Style TargetType="CheckBox">
+   <Setter Property="Background" Value="Transparent"/><Setter Property="FocusVisualStyle" Value="{StaticResource KeyboardFocus}"/>
    <Setter Property="Foreground" Value="#D6E1E7"/><Setter Property="Margin" Value="0,6,14,10"/><Setter Property="VerticalContentAlignment" Value="Center"/>
    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="CheckBox">
-    <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="21"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+    <Grid Background="{TemplateBinding Background}"><Grid.ColumnDefinitions><ColumnDefinition Width="21"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
      <Border x:Name="CheckBorder" Width="14" Height="14" Background="#181F24" BorderBrush="#657B89" BorderThickness="1" CornerRadius="2" Margin="0,0,7,0" VerticalAlignment="Center">
       <TextBlock x:Name="CheckMark" Text="✓" Foreground="#C7BFFF" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
      </Border>

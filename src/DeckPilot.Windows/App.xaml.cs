@@ -14,6 +14,11 @@ public partial class App : Application
     protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        if (BetaEnvironment.IsEnabled && e.Args.Length != 0)
+        {
+            Shutdown(1);
+            return;
+        }
         if (e.Args.Length == 2 && e.Args[0] == "--apply-update")
         {
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
@@ -91,7 +96,10 @@ public partial class App : Application
         instance = new Mutex(true, @"Local\DeckPilot.Windows", out bool first);
         if (!first)
         {
-            if (!e.Args.Contains("--background")) MessageBox.Show("DeckPilot fonctionne déjà. Ouvrez-le depuis son icône près de l’horloge.", "DeckPilot");
+            if (!e.Args.Contains("--background"))
+                MessageBox.Show(BetaEnvironment.IsEnabled
+                    ? "Quittez DeckPilot depuis son icône près de l’horloge avant de lancer la bêta."
+                    : "DeckPilot fonctionne déjà. Ouvrez-le depuis son icône près de l’horloge.", BetaEnvironment.DisplayName);
             Shutdown();
             return;
         }
@@ -110,7 +118,7 @@ public partial class App : Application
             if (splash?.IsVisible == true) splash.Close();
             try
             {
-                var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DeckPilot");
+                var folder = BetaEnvironment.LocalData;
                 System.IO.Directory.CreateDirectory(folder);
                 System.IO.File.WriteAllText(System.IO.Path.Combine(folder, "startup-error.log"), ex.ToString());
             }
@@ -123,8 +131,11 @@ public partial class App : Application
             splash.SetReducedMotion(window.ReducedMotion);
             window.ContentRendered += async (_, _) => await splash.CloseWhenReadyAsync();
         }
-        installerExit = new EventWaitHandle(false, EventResetMode.AutoReset, @"Local\DeckPilot.InstallExit");
-        installerWait = ThreadPool.RegisterWaitForSingleObject(installerExit, (_, _) => Dispatcher.BeginInvoke(window.RequestInstallerExit), null, Timeout.Infinite, false);
+        if (!BetaEnvironment.IsEnabled)
+        {
+            installerExit = new EventWaitHandle(false, EventResetMode.AutoReset, @"Local\DeckPilot.InstallExit");
+            installerWait = ThreadPool.RegisterWaitForSingleObject(installerExit, (_, _) => Dispatcher.BeginInvoke(window.RequestInstallerExit), null, Timeout.Infinite, false);
+        }
         int healthArgument = Array.IndexOf(e.Args, "--update-health");
         window.Loaded += (_, _) =>
         {

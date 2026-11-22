@@ -67,7 +67,7 @@ function Select-ControlPanel($Root, [string]$Id) {
 }
 function Assert-ControlPanelHeaders($Root) {
     $scale = [DeckPilotDragMouse]::GetDpiForWindow($replacement.MainWindowHandle) / 96.0
-    $headers = @('ActionsTab', 'DeviceTab', 'SettingsTab') | ForEach-Object { (Find-Control $Root $_).Current.BoundingRectangle }
+    $headers = @('ActionsTab', 'DeviceTab', 'AudioTab', 'SettingsTab') | ForEach-Object { (Find-Control $Root $_).Current.BoundingRectangle }
     $first = $headers[0]
     foreach ($bounds in $headers) {
         if ($bounds.Width / $scale -lt 70 -or $bounds.Height / $scale -lt 39) { throw 'A control panel tab is too small or clipped' }
@@ -283,6 +283,7 @@ try {
     if ((Find-Control $root 'DeckAvailabilityStatus').Current.Name -ne 'Hors ligne') { throw 'The keypad must clearly show its offline state' }
     if ((Find-Control $root 'DeckAvailabilityHint').Current.Name -notlike '*Modifiez et testez*') { throw 'Offline configuration guidance is missing' }
     if (@($deckButtons | Where-Object { !$_.Current.IsEnabled -or $_.Current.BoundingRectangle.Width -lt 56 -or $_.Current.BoundingRectangle.Height -lt 50 }).Count -gt 0) { throw 'Keys must stay editable offline and remain usable when the keypad scales to the desktop' }
+    Select-ControlPanel $root 'AudioTab'
     $script:phase = 'automatic virtual microphone startup preference'
     $soundSection = (Find-Control $root 'SoundboardExpander').GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern)
     $soundSection.Expand()
@@ -343,6 +344,7 @@ try {
     if ($savedSettings.Profiles[0].Buttons[1].Arguments -ne '/c exit 0') { throw 'Collapsing advanced options lost existing arguments' }
     Invoke-Control (Find-Control $root 'DeckKey01')
     Write-Host 'PASS offline keypad: 3x4 large keys, editable configuration, collapsed advanced options, actual action success and failure feedback'
+    Select-ControlPanel $root 'DeviceTab'
     $script:phase = 'check firmware startup preference'
     $details = Find-Control $root 'BoardDiagnosticExpander'
     $details.GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern).Expand()
@@ -501,9 +503,7 @@ try {
     Write-Host 'PASS action tools: volume search, Spotify-specific preset drag, swapping keys without recalibration, installed app search and assignment'
     $script:phase = 'resize with all sidebar sections expanded'
     Select-ControlPanel $root 'DeviceTab'
-    foreach ($id in @('BoardDiagnosticExpander', 'SoundboardExpander')) {
-        (Find-Control $root $id).GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern).Expand()
-    }
+    (Find-Control $root 'BoardDiagnosticExpander').GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern).Expand()
     $transform = $root.GetCurrentPattern([System.Windows.Automation.TransformPattern]::Pattern)
     foreach ($size in @(@(960,720), @(1280,1000))) {
         $transform.Resize($size[0], $size[1])
@@ -511,18 +511,14 @@ try {
         Assert-ControlPanelHeaders $root
         $deckScroll = (Find-Control $root 'DeckEditorScroll').GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern)
         if ($deckScroll.Current.VerticallyScrollable) { $deckScroll.SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 0) }
-        $sidebar = (Find-Control $root 'DeviceScroll').GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern)
-        Wait-Until { $sidebar.Current.VerticallyScrollable }
-        $sidebar.SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 100)
-        Wait-Until { !(Find-Control $root 'CalibrateButton').Current.IsOffscreen }
-        $bounds = (Find-Control $root 'CalibrateButton').Current.BoundingRectangle
+        $calibrate = Show-InScroll $root (Find-Control $root 'CalibrateButton') 'DeviceScroll'
+        $bounds = $calibrate.Current.BoundingRectangle
         if ($bounds.Bottom -gt $root.Current.BoundingRectangle.Bottom -or $bounds.Left -lt $root.Current.BoundingRectangle.Left) { throw 'Calibration button overflows after expanding sidebar sections' }
         $profileBounds = (Find-Control $root 'ProfilePicker').Current.BoundingRectangle
         $keyBounds = (Find-Control $root 'DeckKey01').Current.BoundingRectangle
         $dpi = [DeckPilotDragMouse]::GetDpiForWindow($replacement.MainWindowHandle)
         if ([Math]::Abs($keyBounds.Width * 96 / $dpi - 104) -gt 1) { throw 'Key text is being fractionally resized with the window rather than rendered at native size' }
         if ($keyBounds.Top -lt $profileBounds.Bottom + 20) { throw 'Profile selector overlaps the keypad after resizing' }
-        $sidebar.SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 0)
     }
     Write-Host 'PASS responsive layout: expanded sections remain scrollable, calibration stays reachable, profile and keypad remain separated'
     $script:phase = 'minimize and restore without modifying profiles'
@@ -598,7 +594,7 @@ try {
     if ($background.Current.Value -ne $originalBackground -or (Read-SharedJson $settingsPath).Theme.Background -ne $originalBackground) { throw 'Cancelling the palette changed the colour' }
     Write-Host 'PASS custom colours: precise value persists, invalid code is rejected and cancelling the native picker preserves settings'
     $script:phase = 'save and preview a custom profile overlay position'
-    $preferences = (Find-Control $root 'ApplicationPreferences').GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern)
+    $preferences = (Find-Control $root 'NotificationsExpander').GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern)
     if ($preferences.Current.ExpandCollapseState -eq [System.Windows.Automation.ExpandCollapseState]::Collapsed) { $preferences.Expand() }
     Select-ComboItem $root 'ProfileOverlayPositionPicker' 'Position personnalisée' $replacement.Id 'SettingsScroll'
     (Find-Control $root 'ProfileOverlayXSlider').GetCurrentPattern([System.Windows.Automation.RangeValuePattern]::Pattern).SetValue(35)
@@ -718,9 +714,11 @@ try {
     Write-Host 'PASS profile duplication: the maximum-length name remains valid and can be undone'
 
     Select-ControlPanel $root 'DeviceTab'
-    foreach ($id in @('BoardDiagnosticExpander', 'SoundboardExpander', 'ActivityExpander')) {
+    foreach ($id in @('BoardDiagnosticExpander', 'ActivityExpander')) {
         (Find-Control $root $id).GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern).Collapse()
     }
+    Select-ControlPanel $root 'AudioTab'
+    (Find-Control $root 'SoundboardExpander').GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern).Collapse()
     Select-ControlPanel $root 'SettingsTab'
     $script:phase = 'capture the actual Windows interface'
     foreach ($id in @('BoardDiagnosticExpander', 'ProfilesExpander', 'ApplicationPreferences', 'ActivityExpander')) {

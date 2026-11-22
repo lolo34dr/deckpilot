@@ -155,3 +155,23 @@ jobs:
             gh release create "$tag" @assets --verify-tag --latest --title "DeckPilot $tag" --notes-file .github/release-notes.md
           }
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Remove the completed visual beta downloads
+        if: github.ref_name == 'v2.4.7'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $latest = gh release view --json tagName --jq .tagName
+          if ($LASTEXITCODE -ne 0 -or $latest -ne 'v2.4.7') { throw 'Stable release is not current; beta downloads were retained.' }
+          foreach ($tag in @('beta-deckpilot-2.4.6-visual.1', 'beta-deckpilot-2.4.6-visual.2')) {
+            $release = gh release view $tag --json isPrerelease 2>&1
+            if ($LASTEXITCODE -ne 0) {
+              if ($release -match 'release not found') { continue }
+              throw "Unable to inspect $tag"
+            }
+            if (!(($release | ConvertFrom-Json).isPrerelease)) { throw "$tag is not a prerelease." }
+            gh release delete $tag --cleanup-tag --yes
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+          git push --atomic '--force-with-lease=refs/heads/beta/windows-visual:058256b91827fb9de2074c6139c172efb3365259' '--force-with-lease=refs/heads/beta-configuration-download:dfd5b2ebc2ef316cdf1108a77e39330949b54fa3' origin ':refs/heads/beta/windows-visual' ':refs/heads/beta-configuration-download'
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

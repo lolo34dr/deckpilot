@@ -4,5 +4,6 @@
  <ItemGroup><Compile Include="../../src/DeckPilot.Windows/ApplicationCatalogCache.cs" Link="ApplicationCatalogCache.cs"/></ItemGroup>
  <ItemGroup><Compile Include="../../src/DeckPilot.Windows/AsyncSnapshotCache.cs" Link="AsyncSnapshotCache.cs"/></ItemGroup>
  <ItemGroup><PackageReference Include="NAudio.Core" Version="2.2.1"/><Compile Include="../../src/DeckPilot.Windows/RealtimeAudio.cs" Link="RealtimeAudio.cs"/><Compile Include="../../src/DeckPilot.Windows/SoundboardMonitorWaveProvider.cs" Link="SoundboardMonitorWaveProvider.cs"/><Compile Include="../../src/DeckPilot.Windows/VoiceNoiseSuppression.cs" Link="VoiceNoiseSuppression.cs"/></ItemGroup>
+ <ItemGroup><Compile Include="../../src/DeckPilot.Windows/BetaEnvironment.cs" Link="BetaEnvironment.cs"/></ItemGroup>
  <ItemGroup><EmbeddedResource Include="../../artifacts/native/win-x64/rnnoise.dll" LogicalName="DeckPilot.Native.rnnoise.dll" Condition="Exists('../../artifacts/native/win-x64/rnnoise.dll')"/></ItemGroup>
 </Project>

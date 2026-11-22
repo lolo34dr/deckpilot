@@ -75,9 +75,7 @@ internal sealed unsafe class RnNoiseDenoiser : INoiseFrameDenoiser
         resource.CopyTo(memory);
         byte[] image = memory.ToArray();
         string hash = Convert.ToHexString(SHA256.HashData(image)).ToLowerInvariant();
-        string root = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        if (string.IsNullOrWhiteSpace(root)) root = Path.GetTempPath();
-        string directory = Path.Combine(root, "DeckPilot", "Native", hash[..16]);
+        string directory = Path.Combine(BetaEnvironment.LocalData, "Native", hash[..16]);
         string path = Path.Combine(directory, "rnnoise.dll");
         Directory.CreateDirectory(directory);
 
