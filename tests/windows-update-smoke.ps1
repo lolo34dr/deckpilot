@@ -186,6 +186,17 @@ function Select-ComboItem($Root, [string]$Id, [string]$Name, [int]$ProcessId, [s
     [DeckPilotDragMouse]::mouse_event(4,0,0,0,[UIntPtr]::Zero)
     Wait-Until { $expand.Current.ExpandCollapseState -eq [System.Windows.Automation.ExpandCollapseState]::Collapsed }
 }
+function Select-ListItem($Root, [string]$Id, [string]$Name, [int]$ProcessId, [string]$ScrollId = 'DeckEditorScroll') {
+    $list = Show-InScroll $Root (Find-Control $Root $Id) $ScrollId
+    $nameCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::NameProperty, $Name)
+    $processCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ProcessIdProperty, $ProcessId)
+    $typeCondition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::ListItem)
+    $itemCondition = [System.Windows.Automation.AndCondition]::new([System.Windows.Automation.Condition[]]@($nameCondition, $processCondition, $typeCondition))
+    Wait-Until { $script:listItem = $list.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $itemCondition); $null -ne $script:listItem }
+    $selection = $script:listItem.GetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern)
+    $selection.Select()
+    Wait-Until { $selection.Current.IsSelected }
+}
 
 $source = (Resolve-Path $Executable).Path
 $stage = Join-Path $env:LOCALAPPDATA ('DeckPilot\Updates\' + [Guid]::NewGuid().ToString('N'))
@@ -479,7 +490,7 @@ try {
     Invoke-Control (Find-Control $root 'SaveActionButton')
     (Find-Control $root 'LongPressThreshold').GetCurrentPattern([System.Windows.Automation.RangeValuePattern]::Pattern).SetValue(850)
     Invoke-Control (Find-Control $root 'SaveActionButton')
-    Select-ComboItem $root 'GesturePicker' 'Appui long' $replacement.Id
+    Select-ListItem $root 'GesturePicker' 'Appui long' $replacement.Id
     $search.SetValue('microphone')
     Wait-Until { $null -ne (Find-ButtonLike $root 'Microphone Windows') }
     Invoke-Control (Find-ButtonLike $root 'Microphone Windows')
@@ -487,7 +498,7 @@ try {
         $configured = (Read-SharedJson $settingsPath).Profiles[0].Buttons[4]
         $configured.Kind -eq 'Spotify' -and $configured.LongPressEnabled -and $configured.LongPressMilliseconds -eq 850 -and $configured.LongPressAction.Kind -eq 'Microphone'
     }
-    Select-ComboItem $root 'GesturePicker' 'Appui court' $replacement.Id
+    Select-ListItem $root 'GesturePicker' 'Appui court' $replacement.Id
     $data = Read-SharedJson $settingsPath
     $script:phase = 'search for an installed application and assign it'
     $knownName = $data.Profiles[0].Buttons[0].ApplicationName
