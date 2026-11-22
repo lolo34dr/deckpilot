@@ -56,6 +56,7 @@ DeckPilot configures Arduino Leonardo-compatible macropads that already send **F
 - **Custom actions:** launch applications, open folders or websites, send shortcuts, and control media.
 - **Free keys:** keep F13–F24 available for shortcuts configured directly in a game or another application.
 - **Local profiles:** create, duplicate, rename, delete, and select profiles. Calibration is shared across profiles.
+- **Soundboard:** mix local MP3/WAV clips with your microphone; new and replaced clips are copied into DeckPilot’s managed Sounds folder.
 - **Ready-made profiles:** start with Music, Productivity or Creation templates, then customize them. Switch to a specific, next or previous profile from a physical key.
 - **Faster editing:** copy/cut/paste/reset complete keys, record keyboard shortcuts, choose key accent colors, and undo changes.
 - **Windows tools:** open sound, display, Bluetooth and network settings, Task Manager, or lock the session.
@@ -281,7 +282,7 @@ The **Votre macropad** card shows connection state, the detected firmware and an
 
 Startup firmware checks are enabled by default. After the app update check and calibration are out of the way, an older identified firmware can prompt to open installation; postponing delays reminders for 24 hours. Unknown boards and multiple unselected candidates are not flashed automatically. Firmware releases are bundled with app updates from GitHub, rather than fetched from an independent firmware feed.
 
-Firmware **1.1.1** adds session identification, correlated heartbeat replies, bounded messages and physical key-state events. These events animate the mapped buttons and update diagnostics; they never invoke actions a second time. Its first physical-board validation is still required, although the earlier firmware 1.0.0 and flash procedure have been confirmed by the owner. See the [protocol and compatibility documentation](firmware/README.md).
+Firmware **1.1.2** reports all twelve F13–F24 keys independently while retaining session identification, correlated heartbeat replies, bounded messages and physical key-state events. These events animate the mapped buttons and update diagnostics; they never invoke actions a second time. Its first physical-board validation is still required, although firmware 1.0.0 and the original flash procedure were confirmed on the reference board. See the [protocol and compatibility documentation](firmware/README.md).
 
 ## Keypad interface (1.4.0)
 
@@ -298,6 +299,12 @@ For manual Arduino IDE uploads, **quit DeckPilot from its tray menu** to free th
 ## Spotify, action search and drag-and-drop (1.5.0)
 
 **Spotify** is separate from **Multimédia**. Its play/pause, next and previous commands address the Spotify desktop app's Windows media session, even while a browser is playing YouTube. Spotify volume +/− adjusts Spotify's Windows audio session in 5% steps, leaving the master volume and other players unchanged. Spotify must be open and have an available playback session; start a track once if necessary. Spotify in a browser is not supported. Missing Spotify sessions produce an error, with no fallback to global media keys or another player. No Spotify account authorization, Premium subscription or stored token is needed by DeckPilot. Windows 10 version 2004 or later, or Windows 11, is required by this build.
+
+## Soundboard, profile and device reliability (2.4.6)
+
+Adding or replacing an MP3/WAV sound copies it into `%APPDATA%\DeckPilot\Sounds`, so playback remains available if the original file is moved or deleted. To copy a sound already in the library, choose its file again from the **…** menu. Profile imports leave the current configuration intact if saving fails, repeated imports reuse managed audio, and large automatic backups retain clip entries when audio cannot fit within the package limit.
+
+Rapid Spotify and Deezer volume commands are applied in order, and the Music profile template includes Deezer play/pause. DeckPilot Atelier 1.0.13 keeps hardware operations responsive and matches recovery to the board’s USB location. Bundled firmware 1.1.2 reports all twelve F13–F24 keys independently. App updates never flash a connected macropad automatically; a firmware install still requires confirmation.
 
 ## Deezer playback and per-app volume (2.4.3, refined in 2.4.4)
 
