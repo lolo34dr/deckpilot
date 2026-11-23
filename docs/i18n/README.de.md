@@ -308,6 +308,13 @@ Nachdem die Überprüfung und Kalibrierung der App-Aktualisierung aus dem Weg ge
 
 Firmware **1.1.2** alle zwölf F13-F24-Tasten unabhängig voneinander meldet, wobei die Sitzungsidentifikation, korrelierte Herzschlagantworten, begrenzte Nachrichten und physische Schlüsselzustandsereignisse beibehalten werden. Diese Ereignisse beleben die abgebildeten Tasten und aktualisieren die Diagnose; sie rufen niemals Aktionen ein zweites Mal auf. Seine erste Validierung auf der physischen Platine ist immer noch erforderlich, obwohl Firmware 1.0.0 und das ursprüngliche Flash-Verfahren wurde auf der Referenztafel bestätigt. [Protokoll und Kompatibilitätsdokumentation](FIRMWARE.de.md).
 
+<a id="two-macropads-with-independent-profiles"></a>
+### Zwei Makropads mit unabhängigen Profilen
+
+Flash-Firmware **1.2.0** auf jedem kompatiblen Makropad, einzeln. Öffnen **Macropads** Um eine Tastatur pro angeschlossenem Gerät zu sehen. Klicken Sie auf eine Taste auf dem Gerät, das Sie konfigurieren möchten, und wählen Sie dann eine Aktion aus der Bibliothek. Wechseln Sie die Geräte direkt aus dem Editor mit ihren COM-Verknüpfungen. Der Editor zeigt an, welche Taste und welches Gerät Sie bearbeiten, während das Tastaturprofil selbstständig aktiv bleibt. Die erste Konfiguration ermöglicht DeckPilot moderiert und weist ein unabhängiges Profil zu: Wenn ein früheres Setup ein Profil zwischen Geräten geteilt hat, **Séparer und Konfigurator** kopiert seine Aktionen in ein unabhängiges Profil. **Kalibrer les touches** auf einem Gerät, wenn seine physische Tastenreihenfolge unterschiedlich ist. **Optionen** öffnet sein Profil, den Tastaturmodus und die Firmware-Einstellungen.
+
+In DeckPilot Modus, freie Tasten sind inaktiv und Profilaktionen ändern nur das Profil, das dem ursprünglichen Gerät zugewiesen ist. Schalten Sie den Modus aus, um F13-F24 als Tastenkombinationen wieder zu verwenden. Wenn identische Boards keine eindeutige USB-Seriennummer haben, behalten Sie jede auf ihrer eigenen USB-Buchse oder überprüfen Sie die Profilzuweisung nach dem Verschieben. [Hybrid-Modus und Hardware-Testschritte](../../firmware/README.md#hybrid-input-mode-120).
+
 <a id="keypad-interface-140"></a>
 ## Tastaturschnittstelle (Keypad)1.4.0)
 

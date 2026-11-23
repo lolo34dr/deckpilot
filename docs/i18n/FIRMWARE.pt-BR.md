@@ -15,10 +15,24 @@ Pin **1** Mantido em GND na inicialização desabilita a operação do teclado, 
 A interface serial USB CDC atual responde `DECKPILOT?\n` em 115200 baud com:
 
 ```
-DECKPILOT|1|promicro-32u4-16mhz|1.1.2
+DECKPILOT|1|promicro-32u4-16mhz|1.2.0
 ```
 
 Nenhuma conexão serial é necessária para a operação normal do teclado. A identidade é uma verificação de compatibilidade, não autenticação de hardware criptográfica. O Windows ainda relata os identificadores Arduino Leonardo USB; muitas outras placas compartilham esses identificadores.
+
+<a id="hybrid-input-mode-120"></a>
+## Modo de entrada híbrido (1.2.0)
+
+Ambas as placas usam o mesmo firmware. A aplicação identifica-as pela sua instância de dispositivo USB Windows e abre uma ligação serial por placa. **Macropads**, clique em uma chave no cartão de cada placa para habilitar DeckPilot mode e configure o seu perfil. Use **Calibrador** nesse cartão se sua ordem física do botão difere. Uma placa sem um número de série único USB pode obter uma instância diferente do dispositivo quando movido para outro soquete USB. Mantenha cada uma dessas placas em seu soquete atribuído.
+
+Depois de um aperto de mão DP2 anuncia capacidade 4, o aplicativo envia `DP2|INPUT|<session>`. O conselho responde com `DP2|INPUT|<session>` quando todas as teclas e o relatório do teclado são liberados, ou `DP2|BUSY|<session>` se uma tecla ainda estiver carregada. Uma vez activada, o tabuleiro envia encomendado `KEYS` frames com início na sequência 1 e suprime F13–F24. Clientes de diagnóstico que apenas enviam `HELLO` manter o comportamento normal do teclado. Se largar o DTR ou se faltar o aluguer do batimento cardíaco durante seis segundos, restaura o teclado depois de quaisquer botões suspensos serem libertados. Uma fila completa de eventos termina a sessão de entrada em série com `DP2|LOST|<session>` Em vez de se fundirem silenciosamente os acontecimentos de imprensa e de divulgação.
+
+Teste físico em Windows:
+
+1. Flash e verificar cada placa individualmente com **Firmware du macropad…**, em seguida, conecte ambas as placas.
+2. Abrir **Macropads** e clique no primeiro botão no cartão de cada dispositivo. Atribua uma ação diferente a cada botão. Verifique se o editor nomeia a porta COM selecionada e que cada cartão exibe seu próprio perfil.
+3. Pressione a mesma posição em ambos os decks juntos, então repita com prensas curtas e longas. Cada ação deve ser executada uma vez em seu perfil atribuído.
+4. Desligue um deck enquanto segura um botão, verifique se o outro ainda responde e reconecte o primeiro ao seu soquete USB original. DeckPilot A partir da bandeja do sistema e confirmar que uma nova prensa envia a tecla F13–F24 correspondente.
 
 <a id="install-from-deckpilot"></a>
 ## Instalar de DeckPilot
@@ -64,7 +78,7 @@ Um firmware mais antigo detectado pede uma vez por sessão de aplicação, com 2
 
 **Para um upload manual do Arduino IDE, saia DeckPilot do ícone da bandeja primeiro.** Fechar a janela principal só a esconde, por isso continua a possuir a ligação em série. DeckPilot e outro monitor serial não pode usar a mesma porta simultaneamente. Se outra ferramenta já possui a porta, o aplicativo relata o problema e retorna sem afetar as teclas de teclado comuns.
 
-A nova `DeckPilotProtocol.h` é a mesma execução exercida por `tests/firmware-protocol.cpp`. Ele usa buffers de tamanho fixo, processamento de entrada limitado e espaço de transmissão USB disponível; varredura de botão nunca é deliberadamente adiada enquanto espera por uma máquina. A máscara de botão pendente mais recente é coalesced sob contrapressão. Não há comandos para executar macros, escrever EEPROM, desativar o teclado, modificar perfis ou firmware flash sobre este protocolo de diagnóstico.
+O modo de diagnóstico em `DeckPilotProtocol.h` usa buffers de tamanho fixo, processamento de entrada limitado e espaço de transmissão USB disponível. A última máscara de diagnóstico pendente é coalesced sob contrapressão. Firmware 1.2.0 adiciona o modo de entrada serial opt-in acima.
 
 Em 115200 baud, as linhas terminam com LF (o CRLF é aceito). Os tokens de sessão contêm exatamente oito caracteres hexadecimais maiúsculas. Todos os números são decimais não assinados. Exemplos:
 
@@ -78,7 +92,7 @@ Board: DP2|PONG|1234ABCD|7|42000|9|2049
 Board: DP2|KEYS|1234ABCD|10|1
 ```
 
-`INFO` anúncios 12 chaves e bits de capacidade: 1 = snapshot batimento cardíaco/estado, 2 = eventos de estado-chave. `PONG` ecoa o contador de requisições, em seguida, relata tempo de funcionamento em milissegundos, 12- Máscara de botões de bits. `KEYS` relata sequência e máscara; bit 0 é F13 e bit 11 é F24, independente da calibração física. Sessões e contadores de pedidos rejeitam respostas defasadas. 32-bit wraparound. As teclas permanecem apenas dados de diagnóstico: as ações do aplicativo ainda são executadas uma vez através do caminho do teclado existente, de modo que um evento serial não pode executar a mesma ação duas vezes.
+`INFO` anúncios 12 chaves e bits de capacidade: 1 = snapshot batimento cardíaco/estado, 2 = eventos de estado-chave, 4 = entrada de série opt-in. `PONG` ecoa o contador de requisição e reporta tempo de funcionamento, sequência e máscara de botão para diagnósticos. `KEYS` relata sequência e máscara; bit 0 corresponde a F13 e bit 11 para F24, independentemente da calibração física. Sessões e contadores de pedidos rejeitam respostas antigas. No modo de entrada serial, as ações seguem os pedidos `KEYS` Quadros.
 
 Os pedidos de batimento cardíaco são normalmente enviados a cada dois segundos. A aplicação liga- se novamente se faltar uma resposta correspondente para 1.5 segundos; o firmware pára diagnósticos não solicitados após seis segundos sem batimento cardíaco ou quando a conexão serial fecha. Firmware 1.0.0 permanece suportado através da consulta de identidade legado, sem diagnósticos de chave viva. DeckPilot apps ainda podem ler a identidade legada do firmware 1.1.1.
 

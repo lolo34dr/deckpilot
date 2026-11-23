@@ -15,10 +15,24 @@ Pinsel **1** Der USB-Kern kann weiterhin den Bootloader-Eintrag unterstützen, V
 Die aktuelle USB CDC Serial Interface Antworten `DECKPILOT?\n` bei 115200 Baud mit:
 
 ```
-DECKPILOT|1|promicro-32u4-16mhz|1.1.2
+DECKPILOT|1|promicro-32u4-16mhz|1.2.0
 ```
 
 Für den normalen Tastaturbetrieb ist keine serielle Verbindung erforderlich. Die Identität ist eine Kompatibilitätsprüfung, keine kryptographische Hardware-Authentifizierung. Windows meldet weiterhin die Arduino Leonardo USB-Kennungen; viele andere Boards teilen diese Kennungen.
+
+<a id="hybrid-input-mode-120"></a>
+## Hybrid-Eingangsmodus1.2.0)
+
+Beide Boards verwenden die gleiche Firmware. Die App identifiziert sie an ihrer Windows USB-Instanz und öffnet eine serielle Verbindung pro Board. **Macropads**Klicken Sie auf einen Schlüssel auf jeder Karte, um zu aktivieren DeckPilot Modus und Konfiguration des Profils. Verwenden **Kalibrer** Ein Board ohne eindeutige USB-Seriennummer erhält möglicherweise eine andere Geräteinstanz, wenn es auf eine andere USB-Steckdose verschoben wird. Bewahren Sie jedes dieser Boards auf seiner zugewiesenen Steckdose auf.
+
+Nach einem DP2-Handshake bewirbt Fähigkeit 4Die App sendet `DP2|INPUT|<session>`Der Vorstand antwortet mit `DP2|INPUT|<session>` wenn alle Tasten und der Tastaturbericht freigegeben sind oder `DP2|BUSY|<session>` Wenn ein Schlüssel noch gehalten wird: Einmal aktiviert, sendet das Board bestellt `KEYS` Frames beginnend mit der Sequenz 1 und unterdrückt F13-F24. Diagnose-Clients, die nur senden `HELLO` Wenn man DTR fallen lässt oder den Heartbeat-Mietvertrag für sechs Sekunden verpasst, wird die Tastatur wiederhergestellt, nachdem alle gehaltenen Tasten freigegeben wurden. Eine vollständige Ereigniswarteschlange beendet die serielle Eingabesitzung mit `DP2|LOST|<session>` statt stillschweigend Presse- und Release-Events zusammenzuführen.
+
+Physischer Test unter Windows:
+
+1. Flashen und überprüfen Sie jedes Board einzeln mit **Firmware du macropad…**, stecke dann beide Boards an.
+2. Offen **Macropads** und klicken Sie auf die erste Schaltfläche auf der Karte jedes Geräts. Weisen Sie jeder Schaltfläche eine andere Aktion zu. Überprüfen Sie, ob der Editor den ausgewählten COM-Port benennt und dass jede Karte ihr eigenes Profil anzeigt.
+3. Drücken Sie die gleiche Position auf beiden Decks zusammen und wiederholen Sie dann mit kurzen und langen Drücken. Jede Aktion sollte einmal auf dem zugewiesenen Profil ausgeführt werden.
+4. Ziehen Sie ein Deck aus, während Sie eine Taste halten, vergewissern Sie sich, dass das andere immer noch reagiert, und schließen Sie das erste an die ursprüngliche USB-Buchse an. DeckPilot aus dem Systemfach und bestätigen, dass eine neue Presse die entsprechende F13-F24-Taste sendet.
 
 <a id="install-from-deckpilot"></a>
 ## Installieren Sie von DeckPilot
@@ -64,7 +78,7 @@ Eine ältere erkannte Firmware fordert einmal pro App-Sitzung mit einem 24-Stund
 
 **Für einen manuellen Upload von Arduino IDE, beenden DeckPilot von seinem Tray-Symbol zuerst.** Das Schließen des Hauptfensters verbirgt es nur, so dass es weiterhin die serielle Verbindung besitzt. DeckPilot Wenn ein anderes Tool den Port bereits besitzt, meldet die App das Problem und versucht es erneut, ohne die normalen Tastaturtasten zu beeinträchtigen.
 
-Die neue `DeckPilotProtocol.h` ist die gleiche Umsetzung, die von `tests/firmware-protocol.cpp`. Es verwendet Puffer in fester Größe, begrenzte Eingabeverarbeitung und verfügbaren USB-Übertragungsraum; das Scannen von Tasten wird nie absichtlich verzögert, während auf einen Host gewartet wird. Die letzte ausstehende Tastenmaske wird unter Gegendruck zusammengeführt. Es gibt keine Befehle zum Ausführen von Makros, zum Schreiben von EEPROM, zum Deaktivieren der Tastatur, zum Ändern von Profilen oder zur Flash-Firmware über dieses Diagnoseprotokoll.
+Der Diagnosemodus in `DeckPilotProtocol.h` Verwendung von Puffern mit fester Größe, begrenzter Eingabeverarbeitung und verfügbarem USB-Übertragungsplatz. Die letzte ausstehende Diagnosemaske wird unter Gegendruck zusammengeführt. Firmware 1.2.0 Fügt den oben genannten seriellen Opt-in-Eingabemodus hinzu.
 
 im 115200 Baud, Zeilen enden mit LF (CRLF wird akzeptiert). Session-Token enthalten genau acht Großbuchstaben Hexadezimalzeichen.
 
@@ -78,7 +92,7 @@ Board: DP2|PONG|1234ABCD|7|42000|9|2049
 Board: DP2|KEYS|1234ABCD|10|1
 ```
 
-`INFO` Werbung 12 Schlüssel und Fähigkeitsbits: 1 = Herzschlag/Zustands-Schnappschuss, 2 = Key-State Events. `PONG` Echos des Anforderungszählers, berichtet dann die Verfügbarkeit in Millisekunden, Zustandssequenz und 12-Bit Button Maske. `KEYS` Meldesequenz und Maske; Bit 0 ist F13 und bit 11 F24 ist unabhängig von der physikalischen Kalibrierung. Sitzungen und Anforderungszähler lehnen abgestandene Antworten ab. Sequenzvergleiche 32Schlüssel bleiben nur Diagnosedaten: App-Aktionen laufen immer noch einmal durch den vorhandenen Tastaturpfad, so dass ein serielles Ereignis dieselbe Aktion nicht zweimal ausführen kann.
+`INFO` Werbung 12 Schlüssel und Fähigkeitsbits: 1 = Herzschlag/Zustands-Schnappschuss, 2 = Key-State Events, 4 = Opt-in serielle Eingabe. `PONG` gibt den Anforderungszähler wieder und meldet Betriebszeit, Sequenz und Knopfmaske für die Diagnose. `KEYS` Meldesequenz und Maske; Bit 0 entspricht F13 und Bit 11 bis F24, unabhängig von der physikalischen Kalibrierung; Sitzungen und Anforderungszähler lehnen veraltete Antworten ab; im seriellen Eingabemodus folgen die Aktionen der geordneten `KEYS` Rahmen.
 
 Heartbeat-Anfragen werden normalerweise alle zwei Sekunden gesendet. Die App verbindet sich wieder, wenn eine passende Antwort fehlt. 1.5 Sekunden; die Firmware stoppt die unerwünschte Diagnose nach sechs Sekunden ohne Herzschlag oder wenn die serielle Verbindung geschlossen wird. Firmware 1.0.0 bleibt durch die Legacy-Identitätsabfrage unterstützt, ohne Live-Key-Diagnose. DeckPilot Apps können immer noch die Legacy-Identität der Firmware lesen 1.1.1.
 

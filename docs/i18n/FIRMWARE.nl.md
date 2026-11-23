@@ -15,10 +15,24 @@ Pin **1** wordt vastgehouden aan GND bij opstarten schakelt de toetsenbordbewerk
 De huidige USB CDC seriële interface antwoorden `DECKPILOT?\n` op 115200 Brood met:
 
 ```
-DECKPILOT|1|promicro-32u4-16mhz|1.1.2
+DECKPILOT|1|promicro-32u4-16mhz|1.2.0
 ```
 
 Er is geen seriële verbinding nodig voor een normale toetsenbordbewerking. De identiteit is een compatibiliteitscontrole, geen cryptografische hardware-authenticatie. Windows meldt nog steeds de Arduino Leonardo USB-identificaties; veel andere boards delen deze identificaties.
+
+<a id="hybrid-input-mode-120"></a>
+## Hybride invoermodus (1.2.0)
+
+Beide boards gebruiken dezelfde firmware. De app identificeert ze door hun Windows USB-apparaat instance en opent een seriële verbinding per board. In **Macropads**, klik op een sleutel op elk bord DeckPilot modus en configureer het profiel. **Kalibrator** Op die kaart als de fysieke knop orde verschilt. Een bord zonder een uniek USB serienummer kan een ander apparaat instantie krijgen wanneer verplaatst naar een andere USB socket. Houd elk van deze board op de toegewezen socket.
+
+Na een DP2 handshake adverteert vermogen 4, de app stuurt `DP2|INPUT|<session>`. Het bestuur antwoordt met `DP2|INPUT|<session>` wanneer alle toetsen en het toetsenbordrapport worden uitgebracht, of `DP2|BUSY|<session>` als een sleutel nog steeds wordt vastgehouden. Zodra geactiveerd, stuurt het bord besteld `KEYS` frames beginnend bij opeenvolging 1 en onderdrukt F13. Diagnostische clients die gewoon verzenden `HELLO` normaal toetsenbordgedrag behouden. DTR laten vallen of het hartslagcontract zes seconden missen, herstelt het toetsenbord nadat alle knoppen zijn losgelaten. Een volledige agenda eindigt de seriële invoersessie met `DP2|LOST|<session>` in plaats van stil samen te voegen pers en release gebeurtenissen.
+
+Fysische test op Windows:
+
+1. Flits en verifieer elk bord afzonderlijk met **Firmware du macropad…**, sluit dan beide boards aan.
+2. Open **Macropads** Klik op de eerste knop op de kaart van elk apparaat. Geef een andere actie toe aan elke knop. Controleer of de editor de geselecteerde COM-poort noemt en dat elke kaart zijn eigen profiel weergeeft.
+3. Druk dezelfde positie op beide dekken samen en herhaal deze dan met korte en lange persen. Elke actie moet eenmaal op het toegewezen profiel draaien.
+4. Trek het ene dek los terwijl u een knop vasthoudt, controleer of de andere nog reageert, en sluit het eerste aan op de originele USB-socket. DeckPilot van het systeemvak en bevestig een verse pers stuurt de bijbehorende F13.F24 sleutel.
 
 <a id="install-from-deckpilot"></a>
 ## Installeren vanaf DeckPilot
@@ -64,7 +78,7 @@ Een oudere gedetecteerde firmware vraagt één keer per app sessie, met een 24-u
 
 **Voor een handmatige upload van Arduino IDE, stop DeckPilot van zijn dienblad pictogram eerst.** Het sluiten van het hoofdvenster verbergt het alleen, dus het blijft de eigenaar van de seriële verbinding. DeckPilot en een andere seriële monitor kan dezelfde poort niet gelijktijdig gebruiken. Als een ander hulpmiddel al eigenaar is van de poort, rapporteert de app het probleem en herhaalt het zonder de gewone toetsenbordtoetsen te beïnvloeden.
 
-Het nieuwe `DeckPilotProtocol.h` is dezelfde uitvoering uitgeoefend door `tests/firmware-protocol.cpp`. Het maakt gebruik van fixed-size buffers, begrensde invoerverwerking en beschikbare USB-ruimte verzenden; knop scannen wordt nooit opzettelijk vertraagd tijdens het wachten op een host. De nieuwste hangende knop masker wordt gecoalesced onder backpressure. Er zijn geen commando's om macro's uit te voeren, te schrijven EEPROM, uitschakelen van het toetsenbord, wijzigen profielen of flits firmware over dit kenmerkende protocol.
+De kenmerkende modus in `DeckPilotProtocol.h` maakt gebruik van buffers van vaste grootte, begrensde invoerverwerking en beschikbare USB-transmissieruimte. Het nieuwste diagnostische masker wordt onder tegendruk gecoald. Firmware 1.2.0 voegt de opt-in seriële invoermodus hierboven toe.
 
 Op 115200 baud, regels eindigen met LF (CRLF wordt geaccepteerd). Sessietekens bevatten precies acht hexadecimale tekens in hoofdletters. Alle getallen zijn niet ondertekend decimale tekens. Voorbeelden:
 
@@ -78,7 +92,7 @@ Board: DP2|PONG|1234ABCD|7|42000|9|2049
 Board: DP2|KEYS|1234ABCD|10|1
 ```
 
-`INFO` adverteerders 12 sleutels en vermogensbits: 1 = hartslag/state snapshot, 2 = key-state events. `PONG` echo's van het verzoek teller, dan rapporteert uptime in milliseconden, staat sequentie en de 12-Bit knoopmasker. `KEYS` rapporteert reeks en masker; bit 0 is F13 en bit 11 is F24, onafhankelijk van fysieke kalibratie. Sessions en verzoektellers weigeren oude antwoorden. Sequentievergelijkingen handvat 32-bit wraparound. Sleutels blijven alleen kenmerkende gegevens: app-acties draaien nog één keer door het bestaande toetsenbordpad, dus een seriële gebeurtenis kan dezelfde actie niet tweemaal uitvoeren.
+`INFO` adverteerders 12 sleutels en vermogensbits: 1 = hartslag/state snapshot, 2 = gebeurtenissen in de sleuteltoestand, 4 = opt-in seriële invoer. `PONG` echo's van de verzoek teller en rapporten uptime, sequentie en knop masker voor diagnostiek. `KEYS` rapporteert reeks en masker; bit 0 correspondeert met F13 en bit 11 naar F24, onafhankelijk van fysieke kalibratie. Sessies en verzoektellers weigeren oude antwoorden. In seriële invoermodus volgen de acties de bestelde `KEYS` Frames.
 
 Hartslag verzoeken worden gewoonlijk elke twee seconden verzonden. De app opnieuw verbinding als een passend antwoord ontbreekt voor 1.5 seconden; de firmware stopt ongevraagde diagnostiek na zes seconden zonder hartslag of wanneer de seriële verbinding sluit. Firmware 1.0.0 blijft ondersteund door de legacy identiteit query, zonder levende sleutel diagnostiek. DeckPilot apps kunnen nog steeds de oude identiteit van firmware lezen 1.1.1.
 

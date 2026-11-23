@@ -308,6 +308,13 @@ As verificações de firmware de inicialização estão habilitadas por padrão.
 
 Firmware **1.1.2** relata todas as doze teclas F13–F24 de forma independente enquanto mantém a identificação da sessão, as respostas cardíacas correlacionadas, as mensagens delimitadas e os eventos físicos de estado-chave. Estes eventos animam os botões mapeados e atualizam os diagnósticos; eles nunca invocam as ações uma segunda vez. Sua primeira validação de placa física ainda é necessária, embora o firmware 1.0.0 e o procedimento de flash original foi confirmado no quadro de referência. [documentação de protocolo e compatibilidade](FIRMWARE.pt-BR.md).
 
+<a id="two-macropads-with-independent-profiles"></a>
+### Dois macropads com perfis independentes
+
+firmware Flash **1.2.0** em cada macropad compatível, um de cada vez. **Macropads** para ver um teclado por dispositivo conectado. Clique em uma tecla no dispositivo que deseja configurar e então escolha uma ação na biblioteca. Alterne os dispositivos diretamente do editor usando seus atalhos COM. O editor mostra qual tecla e dispositivo você está editando, enquanto o perfil do teclado permanece ativo por conta própria. A primeira configuração habilita DeckPilot mode e atribui um perfil independente. Se uma configuração anterior partilhou um perfil entre dispositivos, **Séparer et configurator** copia suas ações para um perfil independente. Use **Calibrar os toques** num dispositivo se a sua ordem física de botões for diferente. **Opções** abre o seu perfil, modo de teclado e configurações de firmware.
+
+In DeckPilot modo, os botões livres são inativos e as ações do perfil alteram apenas o perfil atribuído ao dispositivo original. Desligue o modo para usar F13-F24 como atalhos de teclado novamente. Se as placas idênticas não possuem um número de série USB único, mantenha cada uma em seu próprio soquete USB ou verifique a atribuição do perfil após movê-lo. [Passos de teste de modo híbrido e hardware](../../firmware/README.md#hybrid-input-mode-120).
+
 <a id="keypad-interface-140"></a>
 ## Interface do teclado (1.4.0)
 
@@ -383,7 +390,7 @@ Construir e liberar fluxos de trabalho use Node.js 24 ações. O compilador Ardu
 
 As configurações lidas nos testes do Windows permitem explicitamente o compartilhamento de leitura/escrita/delete e a análise de UTF-8 depois de fechar o leitor. Isto impede que o teste em si negue a substituição de arquivos atômicos do aplicativo. O teste de histórico mantém um instantâneo antigo aberto durante três ciclos de desfazer/refazer e verifica se ele permanece intacto enquanto as configurações ao vivo mudam.
 
-No Windows, os arquivos de configurações existentes são comprometidos com `File.Replace` em vez de substituir o modo `File.Move`. Isto suporta os leitores que permitem a exclusão enquanto retém um instantâneo antigo completo. O conjunto principal testa três substituições com um leitor aberto; as verificações do núcleo do Windows são executadas antes da compilação de firmware e da publicação, de modo que as falhas de persistência são detectadas precocemente.
+No Windows, os arquivos de configurações existentes são comprometidos com `File.Replace` em vez de substituir o modo `File.Move`. Isto suporta os leitores que permitem a exclusão enquanto retém um instantâneo antigo completo. O conjunto principal testa três substituições com um leitor mantido aberto; as verificações do núcleo do Windows são executadas antes da compilação de firmware e da publicação, de modo que as falhas de persistência são detectadas precocemente.
 
 Um leitor de instantâneo de teste pode esperar até 500 ms para o compartilhamento/bloqueio de violações do Windows enquanto `ReplaceFile` commits. A espera aplica- se apenas à abertura do instantâneo, nunca à execução ou re- execução de uma acção de aplicação. Outros erros, JSON malformados e bloqueios persistentes permanecem falhas.
 

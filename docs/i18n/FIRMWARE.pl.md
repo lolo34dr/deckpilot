@@ -15,10 +15,24 @@ Pin **1** Trzyma się GND przy starcie wyłącza obsługę klawiatury, zachowuj�
 Aktualny interfejs szeregowy USB CDC odpowiada `DECKPILOT?\n` at 115200 baud z:
 
 ```
-DECKPILOT|1|promicro-32u4-16mhz|1.1.2
+DECKPILOT|1|promicro-32u4-16mhz|1.2.0
 ```
 
 Dla normalnej pracy klawiatury nie jest wymagane połączenie szeregowe. Tożsamość to kontrola zgodności, a nie uwierzytelnianie sprzętu kryptograficznego. Windows nadal zgłasza identyfikatory USB Arduino Leonardo; wiele innych tablic dzieli się tymi identyfikatorami.
+
+<a id="hybrid-input-mode-120"></a>
+## Tryb wejścia hybrydowego (1.2.0)
+
+Obie płyty używają tego samego oprogramowania firmowego. Aplikacja identyfikuje je za pomocą urządzenia Windows USB i otwiera połączenie szeregowe na płytę. **Makroplony**, kliknij klawisz na karcie każdej tablicy, aby włączyć DeckPilot tryb i skonfigurować jego profil. Użyj **Kalibrator** na tej karcie, jeśli jego fizyczne zamówienie guzika różni się. Płyta bez unikalnego numeru USB może uzyskać inną instancję urządzenia, gdy przeniesiony do innego gniazda USB. Zachować każdą taką tablicę na przydzielonym gniazdku.
+
+Po uścisku dłoni DP2 reklamuje możliwości 4, aplikacja wysyła `DP2|INPUT|<session>`. Odpowiedź zarządu z `DP2|INPUT|<session>` gdy wszystkie klucze i raport z klawiatury zostaną wydane, lub `DP2|BUSY|<session>` jeśli klucz jest nadal trzymany. Po uruchomieniu, zarząd wysyła zamówione `KEYS` ramki zaczynające się w kolejności 1 i tłumi F13- F24. Klienci diagnostyczni, które po prostu wysłać `HELLO` zachować normalne zachowanie klawiatury. Upuszczanie DTR lub brakująca dzierżawa bicia serca przez sześć sekund przywraca klawiaturę po zwolnieniu wszelkich przycisków. Pełna kolejka zdarzeń kończy sesję wejścia szeregowego z `DP2|LOST|<session>` zamiast po cichu łączyć wydarzenia prasowe i release.
+
+Test fizyczny na systemie Windows:
+
+1. Błysk i sprawdzić każdą deskę indywidualnie z **Firmware du macropad…**, a następnie podłączyć do obu desek.
+2. Otwórz **Makroplony** i kliknij pierwszy przycisk na karcie każdego urządzenia. Przypisz inną akcję do każdego przycisku. Sprawdź, czy edytor określa wybrany port COM i czy każda karta wyświetla swój własny profil.
+3. Naciśnij tę samą pozycję na obu pokładach razem, a następnie powtórzyć za pomocą prasy krótkiej i długiej. Każda akcja powinna działać raz na swoim przypisanym profilu.
+4. Odłącz jeden pokład, trzymając przycisk, weryfikuj drugi i podłącz go ponownie do oryginalnego gniazda USB. Zakończ DeckPilot z tacki systemowej i potwierdzić świeżą prasę wysyła odpowiedni klawisz F13- F24.
 
 <a id="install-from-deckpilot"></a>
 ## Instalacja z DeckPilot
@@ -64,7 +78,7 @@ Starszy wykryty firmware podpowiada raz na sesję aplikacji, z 24-godzina przypo
 
 **Dla ręcznego wysyłania z Arduino IDE, zrezygnować DeckPilot najpierw z ikony tacki.** Zamknięcie głównego okna tylko go ukrywa, więc nadal posiada połączenie szeregowe. DeckPilot i inny monitor szeregowy nie może używać tego samego portu jednocześnie. Jeśli inne narzędzie jest już właścicielem portu, aplikacja zgłasza problem i ponownie próbuje bez wpływu na zwykłe klawisze klawiatury.
 
-Nowy `DeckPilotProtocol.h` jest to samo wykonanie wykonywane przez `tests/firmware-protocol.cpp`Używa buforów o mocowanych rozmiarach, ograniczonego przetwarzania danych wejściowych i dostępnej przestrzeni transmisji USB; skanowanie przycisku nie jest nigdy celowo opóźnione podczas oczekiwania na hosta. Ostatnia oczekująca maska przycisku jest skumulowana pod ciśnieniem wstecznym. Nie ma żadnych poleceń do wykonania makro, zapisu EEPROM, wyłączenia klawiatury, modyfikowania profili lub oprogramowania flash przez ten protokół diagnostyczny.
+Tryb diagnostyczny w `DeckPilotProtocol.h` korzysta z buforów o wielkości mocowanej, ograniczonego przetwarzania danych wejściowych i dostępnej przestrzeni transmisji USB. Najnowsza oczekująca maska diagnostyczna jest sprzęgana pod ciśnieniem wstecznym. 1.2.0 dodaje opt- w trybie wprowadzania szeregowego powyżej.
 
 At 115200 baud, linie kończą się na LF (akceptowane jest CRLF). Tokeny sesji zawierają dokładnie osiem znaków szesnastkowych w górnej skrzyni. Wszystkie numery są niepodpisane po przecinku. Przykłady:
 
@@ -78,7 +92,7 @@ Board: DP2|PONG|1234ABCD|7|42000|9|2049
 Board: DP2|KEYS|1234ABCD|10|1
 ```
 
-`INFO` reklamy 12 klawisze i bity funkcji: 1 = migawka bicia serca / stanu, 2 = zdarzenia stanu kluczowego. `PONG` echoes licznik żądań, a następnie zgłasza uptime w milisekundach, sekwencja stanu i 12- Maska na guziki. `KEYS` sekwencja raportów i maska; bit 0 jest F13 i bit 11 jest F24, niezależny od fizycznej kalibracji. Sesje i liczniki zapytań odrzucają nieświeże odpowiedzi. 32-bit wraparound. Klucze pozostają tylko danymi diagnostycznymi: akcje aplikacji nadal działają raz przez istniejącą ścieżkę klawiatury, więc zdarzenie seryjne nie może wykonać tej samej akcji dwa razy.
+`INFO` reklamy 12 klawisze i bity funkcji: 1 = migawka bicia serca / stanu, 2 = zdarzenia stanu key-, 4 = opt- in serial input. `PONG` echoes licznik żądań i raportuje uptime, sekwencji i maski przycisk do diagnostyki. `KEYS` sekwencja raportów i maska; bit 0 odpowiada F13 i bit 11 do F24, niezależnie od fizycznej kalibracji. Sesje i liczniki zapytań odrzucają nieświeże odpowiedzi. `KEYS` ramki.
 
 Żądania Heartbeat są zwykle wysyłane co dwie sekundy. Aplikacja ponownie łączy się, jeśli brakuje dopasowanej odpowiedzi dla 1.5 seconds; firmware zatrzymuje niezamówioną diagnostykę po sześciu sekundach bez bicia serca lub po zamknięciu połączenia szeregowego. Firmware 1.0.0 pozostaje obsługiwane poprzez dotychczasowe zapytanie tożsamości, bez diagnostyki klucza na żywo. DeckPilot aplikacje mogą nadal odczytywać dotychczasową tożsamość firmware 1.1.1.
 

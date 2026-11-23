@@ -15,10 +15,24 @@ Pin **1** mantenido a GND en la operación de teclado inicial deshabilita, prese
 La interfaz de serie USB CDC responde `DECKPILOT?\n` a 115200 baud con:
 
 ```
-DECKPILOT|1|promicro-32u4-16mhz|1.1.2
+DECKPILOT|1|promicro-32u4-16mhz|1.2.0
 ```
 
 No se requiere conexión en serie para el funcionamiento normal del teclado. La identidad es un cheque de compatibilidad, no autenticación de hardware criptográfico. Windows sigue informando de los identificadores USB Arduino Leonardo; muchas otras tablas comparten esos identificadores.
+
+<a id="hybrid-input-mode-120"></a>
+## Modo de entrada híbrido1.2.0)
+
+Ambos tableros utilizan el mismo firmware. La aplicación los identifica por su instancia de dispositivo USB de Windows y abre una conexión de serie por tablero. **Macropads**, haga clic en una tecla en la tarjeta de cada tablero para habilitar DeckPilot Modo y configura su perfil. **Calibrer** en esa tarjeta si su orden de botón físico difiere. Una tabla sin un número de serie USB único puede obtener una instancia de dispositivo diferente cuando se mueve a otra toma USB. Mantenga cada tabla en su toma asignada.
+
+Después de una capacidad de publicidad de Handhake DP2 4, la aplicación envía `DP2|INPUT|<session>`. Respuestas de la Junta `DP2|INPUT|<session>` cuando todas las teclas y el informe del teclado son liberados, o `DP2|BUSY|<session>` si se mantiene una llave. Una vez activada, el tablero envía orden `KEYS` marcos que comienzan en secuencia 1 y suprime F13–F24. Clientes diagnósticos que solo envían `HELLO` Mantener el comportamiento normal del teclado. Dejar el DTR o perder el arriendo de latidos cardíacos durante seis segundos restaura el teclado después de que se desbloqueen los botones. Una cola completa del evento termina la sesión de entrada serie con `DP2|LOST|<session>` en lugar de fusionar silenciosamente los eventos de prensa y liberación.
+
+Prueba física en Windows:
+
+1. Flash y verificar cada tabla individualmente con **Firmware du macropad…**, luego enchufa ambas tablas.
+2. Abierto **Macropads** y haga clic en el primer botón en la tarjeta de cada dispositivo. Asignar una acción diferente a cada botón. Compruebe que el editor nombre el puerto COM seleccionado y que cada tarjeta muestra su propio perfil.
+3. Presione la misma posición en ambas cubiertas juntos, luego repita con prensas cortas y largas. Cada acción debe ejecutarse una vez en su perfil asignado.
+4. Unplug una cubierta mientras sostiene un botón, verifique el otro todavía responde, y vuelva a conectar el primero a su toma USB original. DeckPilot de la bandeja del sistema y confirmar una prensa fresca envía la tecla F13-F24 correspondiente.
 
 <a id="install-from-deckpilot"></a>
 ## Instalar desde DeckPilot
@@ -30,7 +44,7 @@ No se requiere conexión en serie para el funcionamiento normal del teclado. La 
 
 El firmware y Windows AVRDUDE 8.0 se agrupan dentro de la aplicación publicada. No Arduino IDE o instalación de controlador independiente se realiza por DeckPilot. Windows ya debe exponer el puerto de serie USB de la placa, como lo hizo para la carga exitosa del propietario. Nuevas versiones de firmware se entregan con actualizaciones de la aplicación de GitHub; actualización de la aplicación lo hace **no** hardware flash automáticamente. Cada flash requiere confirmación.
 
-DeckPilot Atelier mantiene **Effacer le firmware de la carte** bajo operaciones avanzadas desplomadas. `EFFACER`, despeja todo 28 KiB de aplicación flash con un bucle de reset verificado, y para F13–F24 y la enumeración USB normal. Caterina permanece disponible, pero la tarjeta no aparecerá en Atelier de nuevo hasta que se ponga manualmente en modo de arranque. Mantenga la conexión, brevemente conectar **RST** a **GND dos veces rápidamente**, a continuación, seleccione su puerto de Arduino Leonardo / bootloader COM temporal y utilice la acción de recuperación de Atelier para reinstalar DeckPilot. Atelier muestra estas instrucciones y mantiene la recuperación activada después de la borrada o un flash interrumpido. El cargador de arranque y EEPROM se conservan; esto no es una erada de chip completo. Los datos del perfil permanecen en el PC.
+DeckPilot Atelier mantiene **Effacer le firmware de la carte** bajo operaciones avanzadas desplomadas. `EFFACER`, despeja todo 28 KiB de aplicación flash con un bucle de reset verificado, y para F13–F24 y la enumeración USB normal. Caterina permanece disponible, pero la tarjeta no aparecerá en Atelier de nuevo hasta que se ponga manualmente en modo de arranque. Mantenga la conexión, brevemente conectar **RST** a **GND dos veces rápidamente**, a continuación, seleccione su puerto de Arduino Leonardo / bootloader COM temporal y utilice la acción de recuperación de Atelier para reinstalar DeckPilot. Atelier muestra estas instrucciones y mantiene la recuperación activada después de la borrada o un flash interrumpido. El cargador de arranque y la EEPROM se conservan; esto no es una erada de chip completo. Los datos del perfil permanecen en el PC.
 
 DeckPilot cheques SHA-256, Comprobaciones de registro Intel HEX, presencia de reinicio-vector, superposiciones y las **28672- Byte.** frontera de la aplicación antes del reset. Concuerda con la ubicación física USB a través de los puertos de tiempo de ejecución y de arranque, utiliza AVR109 en 57600 baud, requiere la verificación de escritura de AVRDUDE, a continuación, comprueba la identidad y versión del firmware en ejecución. No escribe fusibles, EEPROM o el cargador de arranque. `2341:8036` / `2A03:8036` y Caterina `2341:0036` / `2A03:0036` son aceptados. Si Windows no puede proporcionar una conexión física coincidente, el flashing está bloqueado en lugar de adivinar un puerto.
 
@@ -49,7 +63,7 @@ dotnet build DeckPilot.sln -c Release -p:RequireFirmwareBundle=true
 dotnet run --project tests/DeckPilot.Checks -c Release --no-build
 ```
 
-El script pins Arduino AVR core **1.8.6**, Teclado **1.0.6**, y aguas arriba AVRDUDE **8.0**. Los paquetes gestionados por CLI utilizan la validación del paquete de Arduino; AVRDUDE binario/source archives have explicit SHA-256 Pins en el guión. `artifacts/firmware/DeckPilot-firmware.zip` contiene el DeckPilot HEX, ha generado el reseteo de la zona de aplicación HEX y su generador, sumas de comprobación, herramienta de Windows, licencia y el correspondiente archivo de origen de AVRDUDE. Publicación CI requiere el paquete; un desarrollador ordinario construir sin que pueda ejecutar la aplicación pero no puede flashear o restablecer una tabla.
+El script pins Arduino AVR core **1.8.6**, Teclado **1.0.6**, y aguas arriba AVRDUDE **8.0**. Los paquetes gestionados por CLI utilizan la validación del paquete de Arduino; AVRDUDE binario/source archives have explicit SHA-256 Pins en el guión. `artifacts/firmware/DeckPilot-firmware.zip` contiene el DeckPilot HEX, ha generado el reajuste de la zona de aplicación HEX y su generador, sumas de comprobación, herramienta de Windows, licencia y el correspondiente archivo de origen de AVRDUDE. La publicación CI requiere el paquete; un desarrollador ordinario construye sin que pueda ejecutar la aplicación pero no puede flashear o restablecer una tabla.
 
 El original 12- el boceto de botones fue adaptado de David Madison **Flujo barato** proyecto, derechos de autor 2018, MIT. Su aviso permanece en `DeckPilot.ino`. DeckPilot Las adiciones usan la licencia del repositorio MIT. **AVRDUDE es software separado bajo GPL-2.0- O-later**, con su aviso/licencia y fuente empaquetados; la licencia del repositorio MIT no sustituye esa licencia. https://github.com/avrdudes/avrdude/tree/v8.0 for upstream build instructions and dependency notices.
 
@@ -64,7 +78,7 @@ Una vez por sesión de aplicaciones, se detecta un firmware detectado más viejo
 
 **Para una carga manual de Arduino IDE, renuncie DeckPilot desde su icono de bandeja primero.** Cerrar la ventana principal sólo lo oculta, por lo que sigue siendo dueño de la conexión serial. DeckPilot y otro monitor de serie no puede utilizar el mismo puerto simultáneamente. Si otra herramienta ya posee el puerto, la aplicación reporta el problema y retries sin afectar las teclas de teclado ordinario.
 
-El nuevo `DeckPilotProtocol.h` es la misma aplicación ejercida por `tests/firmware-protocol.cpp`. Utiliza buffers de tamaño fijo, procesamiento de entrada atado y espacio de transmisión USB disponible; el escaneo de botones nunca se retrasa deliberadamente mientras espera un host. La última máscara de botón pendiente se coalesce bajo la presión trasera. No hay comandos para ejecutar macros, escribir EEPROM, deshabilitar el teclado, modificar perfiles o firmware flash sobre este protocolo de diagnóstico.
+El modo de diagnóstico en `DeckPilotProtocol.h` utiliza buffers de tamaño fijo, procesamiento de entrada atado y espacio de transmisión USB disponible. La última máscara diagnóstica pendiente es coalesced bajo presión. 1.2.0 añade el modo de entrada serie opt-in arriba.
 
 Atentos 115200 baud, las líneas terminan con LF (CRLF es aceptado). Las fichas de sesión contienen exactamente ocho caracteres hexadecimal mayúsculas. Todos los números son decimales sin firmar. Ejemplos:
 
@@ -78,7 +92,7 @@ Board: DP2|PONG|1234ABCD|7|42000|9|2049
 Board: DP2|KEYS|1234ABCD|10|1
 ```
 
-`INFO` anuncios 12 claves y bits de la capacidad: 1 = latido del corazón / instantánea del estado, 2 = eventos de estado clave. `PONG` se hace eco del mostrador de solicitud, luego reporta tiempo de inactividad en milisegundos, secuencia del estado y el 12- máscara de botón de bit. `KEYS` informes secuencia y máscara; bit 0 es F13 y bit 11 es F24, independiente de la calibración física. Las sesiones y los contadores de solicitud rechazan las respuestas definitivas. 32-bit wraparound. Las claves siguen siendo datos de diagnóstico solamente: las acciones de la aplicación todavía se ejecutan una vez a través de la ruta del teclado existente, por lo que un evento serial no puede ejecutar la misma acción dos veces.
+`INFO` anuncios 12 claves y bits de la capacidad: 1 = latido del corazón / instantánea del estado, 2 = eventos de estado clave, 4 = entrada en serie de opt-in. `PONG` se hace eco del contador de solicitud e informa de tiempo de inactividad, secuencia y máscara de botón para el diagnóstico. `KEYS` informes secuencia y máscara; bit 0 corresponde a F13 y bit 11 a F24, independiente de la calibración física. Las sesiones y los contadores de solicitud rechazan las respuestas definitivas. En modo de entrada en serie, las acciones siguen el orden `KEYS` marcos.
 
 Las solicitudes de Heartbeat se envían normalmente cada dos segundos. La aplicación se reconecta si falta una respuesta coincidente para 1.5 segundos; el firmware detiene diagnósticos no solicitados después de seis segundos sin un latido cardíaco o cuando la conexión en serie se cierra. Firmware 1.0.0 permanece apoyado a través de la consulta de identidad heredada, sin un diagnóstico clave en vivo. DeckPilot aplicaciones todavía pueden leer la identidad heredada de firmware 1.1.1.
 

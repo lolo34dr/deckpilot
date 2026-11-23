@@ -129,7 +129,7 @@ La calibración se aplica a todos los perfiles y puede repetirse desde la barra 
 <a id="background-operation"></a>
 ### Operación de antecedentes
 
-Cierra la ventana oculta DeckPilot Haga doble clic en su icono de la zona de notificación cerca del reloj para reabrirlo, o haga clic con el botón derecho en el icono y elija el comando renunciar para detenerlo completamente.
+Cierre la ventana oculta DeckPilot Haga doble clic en su icono de la zona de notificación cerca del reloj para reabrirlo, o haga clic con el botón derecho en el icono y elija el comando renunciar para detenerlo completamente.
 
 El inicio de Windows está habilitado por defecto para el usuario actual. Puede deshabilitarlo con **Lancer avec Windows**; actualizaciones de aplicaciones posteriores preservan esa opción. Instalación y lanzamientos posteriores refrescan una entrada habilitada a la ruta ejecutable actual.
 
@@ -304,9 +304,16 @@ Después de producir `artifacts/standalone/DeckPilot.exe` con el paquete de firm
 
 El **Votre macropad** tarjeta muestra estado de conexión, el firmware detectado y cualquier actualización de paquetes disponibles. **Connexion et diagnostic** expone la selección de tablero cuando varios Leonardos están conectados, el estado de enlace USB en vivo, cuenta de botones físicos, preferencias de notificación de firmware y un resumen de diagnóstico copiable. Los diagnósticos no copian las acciones de perfil o identificadores de serie USB. El monitor se conecta después de desconectar y entrega su puerto serie automáticamente mientras el administrador de firmware está abierto. 1.0.0 y sin el vínculo de diagnóstico.
 
-Las comprobaciones de firmware de inicio están activadas por defecto. Después de la actualización de la aplicación, el cheque y la calibración están fuera del camino, un firmware identificado más antiguo puede impulsar la instalación; enviar recordatorios de demoras para 24 horas. Los tableros desconocidos y múltiples candidatos no seleccionados no se destellan automáticamente. Los lanzamientos de firmware se agrupan con actualizaciones de aplicaciones de GitHub, en lugar de salir de una alimentación independiente de firmware.
+Las comprobaciones de firmware de inicio están activadas por defecto. Después de la actualización de la aplicación, el cheque y la calibración están fuera del camino, un firmware identificado más antiguo puede impulsar la instalación; enviar recordatorios de demoras para 24 horas. Los tableros desconocidos y múltiples candidatos no seleccionados no se destellan automáticamente. Los lanzamientos de firmware se agrupan con actualizaciones de aplicaciones de GitHub, en lugar de obtener de una alimentación independiente de firmware.
 
 Firmware **1.1.2** reporta todas las doce teclas F13–F24 independientemente mientras conservan la identificación de sesión, las respuestas de latidos cardíacos correlativos, mensajes ligados y eventos físicos de estado clave. Estos eventos animan los botones mapeados y actualizan los diagnósticos; nunca invocan acciones por segunda vez. Su primera validación de tablero físico todavía es necesaria, aunque firmware 1.0.0 y el procedimiento flash original fueron confirmados en el tablero de referencia. [protocolo y documentación de compatibilidad](FIRMWARE.es.md).
+
+<a id="two-macropads-with-independent-profiles"></a>
+### Dos macropados con perfiles independientes
+
+Firmware Flash **1.2.0** en cada macropado compatible, uno a la vez. **Macropads** para ver un teclado por dispositivo conectado. Haga clic en una tecla en el dispositivo que desea configurar, luego seleccione una acción de la biblioteca. Interruptor de dispositivos directamente desde el editor utilizando sus atajos COM. El editor muestra qué tecla y dispositivo está editando, mientras que el perfil del teclado permanece activo por sí mismo. DeckPilot modo y asigna un perfil independiente. Si una configuración anterior compartía un perfil entre dispositivos, **Séparer et configurer** copia sus acciones a un perfil independiente. **Calibrer les touches** en un dispositivo si su orden de botón físico difiere. **Opciones** abre su perfil, modo teclado y configuración de firmware.
+
+In DeckPilot El modo, los botones libres son inactivos y las acciones de perfil cambian sólo el perfil asignado al dispositivo originario. Apague el modo para utilizar F13–F24 como atajos de teclado de nuevo. Si las tablas idénticas carecen de un número de serie USB único, mantenga cada uno en su propio conector USB o verifique la asignación de perfil después de moverlo. [Modo híbrido y pasos de prueba de hardware](../../firmware/README.md#hybrid-input-mode-120).
 
 <a id="keypad-interface-140"></a>
 ## Interfaz de teclado (interfaz de teclado)1.4.0)
@@ -401,7 +408,7 @@ Estos cambios reducen el trabajo especificado; no establecen un porcentaje de CP
 <a id="workspace-tools-and-refreshed-interface-180"></a>
 ## Herramientas de espacio de trabajo e interfaz refrescada (1.8.0)
 
-La interfaz de carbón pone la biblioteca de acción primero, separa los controles de perfil del tamaño nativo nítido 3 × 4 keypad, y grupos configuración de acción en una tarjeta. Los acentos clave distinguen sus propias categorías; selección, enfoque del teclado y retroalimentación de acción permanecen separados. **Réduire les animations** en preferencias complementa el ajuste de animación de Windows. Las ventanas más pequeñas conservan el acceso de pergamino en lugar de reducir el texto clave.
+La interfaz de carbón pone la biblioteca de acción primero, separa los controles de perfil del tamaño nativo nítido 3 × 4 keypad, y grupos configuración de acción en una tarjeta. Los acentos clave distinguen sus propias categorías; selección, enfoque del teclado y retroalimentación de acción permanecen separados. **Réduire les animations** en preferencias complementa el ajuste de animación de Windows. Las ventanas más pequeñas conservan el acceso de desplazamiento en lugar de reducir el texto clave.
 
 - **Plantillas de perfil:** por debajo de los límites **Gérer les profils**, añadir Música y audio, Escritorio y productividad, o Creación. Cada plantilla crea un perfil editable separado y nunca ejecuta sus acciones. Se conservan perfiles existentes y calibración física. Los atajos de teclado utilizan la aplicación activa, cuyos atajos pueden diferir.
 - **Claves de perfil:** c) **Changer de profil**, a continuación, seleccione un perfil nombrado o ciclo hacia adelante / hacia atrás. Referencias entre perfiles se remapped al importar un conjunto o duplicar un perfil de auto-referencia. Un destino perdido reporta un error y puede ser reemplazado en el editor.

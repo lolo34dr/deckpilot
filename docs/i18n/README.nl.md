@@ -308,6 +308,13 @@ Opstart firmware controles zijn standaard ingeschakeld. Nadat de app update cont
 
 Firmware **1.1.2** rapporteert alle twaalf F13_F24-toetsen onafhankelijk met behoud van sessie-identificatie, gecorreleerde hartslag antwoorden, begrensde berichten en fysieke key-state gebeurtenissen. Deze gebeurtenissen animeren de in kaart gebrachte knoppen en bijwerken diagnostiek; ze nooit oproepen acties een tweede keer. De eerste fysieke-board validatie is nog steeds nodig, hoewel firmware 1.0.0 en de oorspronkelijke flitsprocedure werd bevestigd op het referentiebord. Zie de [Protocol- en compatibiliteitsdocumentatie](FIRMWARE.nl.md).
 
+<a id="two-macropads-with-independent-profiles"></a>
+### Twee macropads met onafhankelijke profielen
+
+Flash firmware **1.2.0** Openen op elk compatibel macropad, één tegelijk. **Macropads** om één toetsenbord per aangesloten apparaat te zien. Klik op een sleutel op het apparaat dat u wilt configureren en kies vervolgens een actie uit de bibliotheek. Schakel apparaten rechtstreeks van de editor met behulp van hun COM-sneltoetsen. De editor toont welke sleutel en apparaat u bewerkt, terwijl het toetsenbordprofiel zelfstandig blijft. De eerste configuratie maakt het mogelijk DeckPilot modus en wijst een onafhankelijk profiel toe. Als een eerdere instelling een profiel gedeeld heeft tussen apparaten, **Séparer et configurer** kopieert zijn acties naar een onafhankelijk profiel. **Kalibrator les touchs** op een apparaat als de fysieke knopvolgorde verschilt. **Opties** opent zijn profiel, toetsenbord modus en firmware instellingen.
+
+In DeckPilot modus, vrije knoppen zijn inactief en profiel acties veranderen alleen het profiel toegewezen aan het oorspronkelijke apparaat. Schakel de modus uit om F13_F24 te gebruiken als sneltoetsen opnieuw. Als identieke boards ontbreken een uniek USB-serienummer, houd elk op zijn eigen USB-socket of controleer de profieltoewijzing na het verplaatsen. Zie de [hybride modus en hardware teststappen](../../firmware/README.md#hybrid-input-mode-120).
+
 <a id="keypad-interface-140"></a>
 ## Toetsenbordinterface (1.4.0)
 

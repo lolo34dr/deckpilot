@@ -308,6 +308,13 @@ Les vérifications du firmware de démarrage sont activées par défaut. Après 
 
 Firmware **1.1.2** rapporte les douze touches F13–F24 indépendamment tout en conservant l'identification de session, les réponses corrélées des battements de coeur, les messages limités et les événements physiques de l'état des touches. Ces événements animent les boutons mapés et mettent à jour les diagnostics; ils n'invoquent jamais les actions une seconde fois. Sa première validation physique-board est encore nécessaire, bien que le firmware 1.0.0 et la procédure flash originale a été confirmée sur le tableau de référence. [protocole et documentation de compatibilité](FIRMWARE.fr.md).
 
+<a id="two-macropads-with-independent-profiles"></a>
+### Deux macropads avec des profils indépendants
+
+firmware Flash **1.2.0** sur chaque macropad compatible, un à la fois. **Macropades** pour voir un clavier par périphérique connecté. Cliquez sur une touche sur l'appareil que vous voulez configurer, puis choisissez une action dans la bibliothèque. Changez les périphériques directement depuis l'éditeur en utilisant leurs raccourcis COM. L'éditeur affiche la touche et le périphérique que vous modifiez, tandis que le profil du clavier reste actif seul. La première configuration permet DeckPilot mode et assigne un profil indépendant. Si une configuration antérieure partageait un profil entre les périphériques, **Séparer et configurer** copie ses actions à un profil indépendant. **Calibrer les touches** sur un appareil si l'ordre de son bouton physique diffère. **Options** ouvre son profil, le mode clavier et les paramètres du firmware.
+
+En DeckPilot les boutons libres sont inactifs et les actions de profil ne changent que le profil assigné à l'appareil d'origine. Éteignez le mode pour utiliser F13–F24 comme raccourci clavier à nouveau. Si des cartes identiques ne disposent pas d'un numéro de série USB unique, gardez chacune sur sa propre prise USB ou vérifiez l'attribution du profil après le déplacement. [étapes de test du mode hybride et du matériel](../../firmware/README.md#hybrid-input-mode-120).
+
 <a id="keypad-interface-140"></a>
 ## Interface clavier (1.4.0)
 
@@ -362,7 +369,7 @@ Le clavier rend maintenant aux tailles WPF natives au lieu de mettre le texte à
 
 Sous **Gérer les profils**, exporter le profil actuel ou tous les profils comme `.deckpilot.json`Importer n'exécute jamais d'actions et ne remplace jamais l'étalonnage du PC. Les profils contiennent des chemins d'action, des arguments et des identifiants d'extrémité audio, qui peuvent nécessiter un ajustement sur un autre PC. Les formats inconnus, les fichiers surdimensionnés et les configurations de gestes mal formés sont refusés.
 
-Avant d'enregistrer les profils modifiés, DeckPilot conserve les profils précédents dans `%APPDATA%\DeckPilot\Backups` (20 Une défaillance de sauvegarde empêche d'écraser les paramètres actuels. Restaurer remplace les profils après confirmation et peut être elle-même annulée; le calibrage reste inchangé.
+Avant d'enregistrer les profils modifiés, DeckPilot conserve les profils précédents dans `%APPDATA%\DeckPilot\Backups` (20 Les sauvegardes de préférence ne créent pas de sauvegardes de profil. Une défaillance de sauvegarde empêche d'écraser les paramètres actuels. Restaurer remplace les profils après confirmation et peut elle-même être annulée; l'étalonnage reste inchangé.
 
 **Microphone Windows** La barre d'état persistante et la carte Audio Windows montrent un état actif/muté/mixé/indisponible, rafraîchi toutes les deux secondes et après les commandes de l'application. Une mise à jour multi-endpoint échouée tente de restaurer les états de mute précédents. Ces indicateurs décrivent l'état de fin de Windows, pas un commutateur matériel ou un bouton de mute propre à une application.
 

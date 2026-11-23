@@ -15,10 +15,24 @@ Chaque interrupteur relie une broche au GND. Les pull-ups internes sont activée
 L'interface série USB CDC répond `DECKPILOT?\n` au 115200 baud avec:
 
 ```
-DECKPILOT|1|promicro-32u4-16mhz|1.1.2
+DECKPILOT|1|promicro-32u4-16mhz|1.2.0
 ```
 
 Aucune connexion série n'est requise pour le fonctionnement normal du clavier. L'identité est une vérification de compatibilité, pas une authentification matérielle cryptographique. Windows signale toujours les identifiants USB Arduino Leonardo; beaucoup d'autres cartes partagent ces identifiants.
+
+<a id="hybrid-input-mode-120"></a>
+## Mode d'entrée hybride (1.2.0)
+
+Les deux cartes utilisent le même firmware. L'application les identifie par leur instance de périphérique USB Windows et ouvre une connexion série par carte. **Macropades**, cliquez sur une touche sur chaque carte de tableau pour activer DeckPilot mode et configurer son profil. Utiliser **Calibrateur** Une carte sans numéro de série USB unique peut obtenir une instance de périphérique différente lorsqu'elle est déplacée vers une autre prise USB. Conservez chacune de ces cartes sur sa prise attribuée.
+
+Après une poignée de main DP2 annonce la capacité 4, l'application envoie `DP2|INPUT|<session>`. Réponses de la chambre `DP2|INPUT|<session>` lorsque toutes les touches et le rapport clavier sont publiés, ou `DP2|BUSY|<session>` si une touche est toujours maintenue. Une fois activée, la carte envoie l'ordre `KEYS` cadres commençant par la séquence 1 et supprime F13–F24. Les clients diagnostiques qui viennent d'envoyer `HELLO` garder le comportement normal du clavier. Dropping DTR ou manquant le contrat de battement de coeur pendant six secondes restaure le clavier après la sortie de tous les boutons retenus. `DP2|LOST|<session>` au lieu de fusionner silencieusement les événements de presse et de publier.
+
+Test physique sur Windows:
+
+1. Flash et vérifier chaque planche individuellement avec **Firmware du macropad…**, puis branchez les deux planches.
+2. Ouvrir **Macropades** et cliquez sur le premier bouton de chaque carte de périphérique. Assignez une action différente à chaque bouton. Vérifiez que l'éditeur nomme le port COM sélectionné et que chaque carte affiche son propre profil.
+3. Appuyez sur la même position sur les deux ponts ensemble, puis répétez avec des presses courtes et longues. Chaque action doit tourner une fois sur son profil assigné.
+4. Débranchez un deck tout en tenant un bouton, vérifiez que l'autre répond toujours, et reconnectez le premier à sa prise USB d'origine. DeckPilot à partir du plateau du système et confirmer une nouvelle presse envoie la touche F13–F24 correspondante.
 
 <a id="install-from-deckpilot"></a>
 ## Installer depuis DeckPilot
@@ -64,7 +78,7 @@ Un firmware plus ancien détecté invite une fois par session d'application, ave
 
 **Pour un téléchargement manuel à partir d'Arduino IDE, quitter DeckPilot de son icône de plateau d'abord.** La fermeture de la fenêtre principale ne la cache que, de sorte qu'elle continue à posséder la connexion série. DeckPilot et un autre moniteur série ne peut pas utiliser le même port simultanément. Si un autre outil est déjà propriétaire du port, l'application signale le problème et retries sans affecter les touches du clavier ordinaire.
 
-La nouvelle `DeckPilotProtocol.h` est la même mise en œuvre exercée par `tests/firmware-protocol.cpp`. Il utilise des tampons de taille fixe, le traitement d'entrée limité et l'espace de transmission USB disponible; la numérisation des boutons n'est jamais délibérément retardée en attendant un hôte. Le dernier masque bouton en attente est fusionné sous contre-pression. Il n'y a pas de commandes pour exécuter des macros, écrire EEPROM, désactiver le clavier, modifier les profils ou le firmware flash sur ce protocole de diagnostic.
+Le mode de diagnostic en `DeckPilotProtocol.h` utilise des tampons de taille fixe, le traitement d'entrée limité et l'espace de transmission USB disponible. 1.2.0 ajoute le mode d'entrée série opt-in ci-dessus.
 
 À 115200 baud, les lignes se terminent par LF (CRLF est accepté). Les jetons de session contiennent exactement huit caractères hexadécimaux majuscules. Tous les nombres sont décimal non signés.
 
@@ -78,7 +92,7 @@ Board: DP2|PONG|1234ABCD|7|42000|9|2049
 Board: DP2|KEYS|1234ABCD|10|1
 ```
 
-`INFO` Annonces 12 touches et bits de capacité: 1 = rythme cardiaque/instantané d'état, 2 = événements à l'état touche. `PONG` fait écho au compteur de requête, puis signale le temps de disponibilité en millisecondes, la séquence d'état et le 12- Un masque à boutons. `KEYS` rapports séquence et masque; bit 0 est F13 et bit 11 est F24, indépendamment de l'étalonnage physique. Les sessions et les compteurs de demande rejettent les réponses statiques. 32-bit wraparound. Les touches ne restent que des données diagnostiques : les actions de l'application s'exécutent encore une fois à travers le chemin du clavier existant, de sorte qu'un événement série ne peut pas exécuter la même action deux fois.
+`INFO` Annonces 12 touches et bits de capacité: 1 = rythme cardiaque/instantané d'état, 2 = événements à l'état touche, 4 = entrée en série opt-in. `PONG` fait écho au compteur de requête et signale le temps de disponibilité, la séquence et le masque bouton pour le diagnostic. `KEYS` rapports séquence et masque; bit 0 correspond à F13 et bit 11 à F24, indépendamment de l'étalonnage physique. Les sessions et les compteurs de requête rejettent les réponses statiques. En mode d'entrée série, les actions suivent la commande `KEYS` les cadres.
 
 Les requêtes Heartbeat sont normalement envoyées toutes les deux secondes. L'application se reconnecte si une réponse correspondante est manquante pour 1.5 secondes; le firmware arrête les diagnostics non sollicités après six secondes sans battement de cœur ou lorsque la connexion série se ferme. 1.0.0 reste pris en charge par la requête d'identité héritée, sans diagnostics touches en direct. DeckPilot les applications peuvent encore lire l'identité héritée du firmware 1.1.1.
 

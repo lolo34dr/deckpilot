@@ -308,6 +308,13 @@ I controlli firmware di avvio sono abilitati per impostazione predefinita. Dopo 
 
 Firmware **1.1.2** segnala tutti i dodici tasti F13-F24 indipendentemente mantenendo l'identificazione della sessione, correlato risposte battito cardiaco, messaggi legati e eventi fisici key-state. Questi eventi animano i pulsanti mappati e la diagnostica di aggiornamento; non invocano mai le azioni una seconda volta. 1.0.0 e la procedura flash originale sono stati confermati sulla scheda di riferimento. [documentazione di protocollo e compatibilità](FIRMWARE.it.md).
 
+<a id="two-macropads-with-independent-profiles"></a>
+### Due macropad con profili indipendenti
+
+firmware flash **1.2.0** su ogni macropad compatibile, uno alla volta. Apri **Macropads** Fare clic su una chiave sul dispositivo che si desidera configurare, quindi scegliere un'azione dalla libreria. Accendere i dispositivi direttamente dall'editor utilizzando le scorciatoie COM. L'editor mostra quale chiave e dispositivo si sta modificando, mentre il profilo della tastiera rimane attivo da solo. La prima configurazione consente DeckPilot modalità e assegna un profilo indipendente. Se una configurazione precedente ha condiviso un profilo tra i dispositivi, **Separatore et configuratore** copia le sue azioni a un profilo indipendente. **Calibrer les touchs** su un dispositivo se il suo ordine del pulsante fisico differisce. **Opzioni** apre il suo profilo, la modalità tastiera e le impostazioni del firmware.
+
+In DeckPilot la modalità, i pulsanti liberi sono inattivi e le azioni del profilo cambiano solo il profilo assegnato al dispositivo originario. Attivare la modalità di disattivazione per utilizzare F13-F24 come scorciatoie da tastiera di nuovo. Se le schede identiche non hanno un numero di serie USB unico, tenere ciascuno sulla propria presa USB o verificare l'assegnazione del profilo dopo averlo spostato. [modalità ibride e fasi di test hardware](../../firmware/README.md#hybrid-input-mode-120).
+
 <a id="keypad-interface-140"></a>
 ## Interfaccia della tastiera (1.4.0)
 
@@ -364,7 +371,7 @@ Sottotitolo **Gérer les profils**, esportare il profilo corrente o tutti i prof
 
 Prima di salvare i profili modificati, DeckPilot mantiene i profili precedenti in `%APPDATA%\DeckPilot\Backups` (20 Le salvazioni preferenze non creano backup dei profili. Un guasto di backup impedisce la sovrascrittura delle impostazioni attuali. Ripristino sostituisce i profili dopo la conferma e può essere annullato; la calibrazione rimane invariata.
 
-**Microphone Windows** La barra di stato persistente e la scheda audio di Windows mostrano lo stato attivo/mutato/mixed/non disponibile, aggiornato ogni due secondi e dopo i comandi dell'app. Un aggiornamento multi-endpoint fallito tenta di ripristinare gli stati di muto precedenti. Questi indicatori descrivono lo stato di endpoint di Windows, non un interruttore di hardware o un pulsante muto di un'applicazione.
+**Microphone Windows** La barra di stato persistente e la scheda di Windows Audio mostrano lo stato attivo/mutato/mixed/non disponibile, aggiornato ogni due secondi e dopo i comandi dell'app. Un aggiornamento multi-endpoint fallito tenta di ripristinare gli stati di muto precedenti. Questi indicatori descrivono lo stato di endpoint di Windows, non un interruttore hardware o un pulsante muto di un'applicazione.
 
 **Changer de sortie audio** Un obiettivo mancante dà un errore senza scegliere un altro dispositivo. Le applicazioni con il proprio output fisso potrebbero non seguire il default di Windows. Gli ID endpoint importati vengono visualizzati come non disponibili fino ad adattarsi al PC corrente.
 
@@ -477,7 +484,7 @@ DeckPilot 1.9.7 Il test di rilascio di Windows verifica anche il lancio, l'aggio
 
 DeckPilot 1.9.8 aggiunge un'esplicita e confermata Atelier reset che sostituisce il programma utente della scheda con uno schizzo vuoto verificato e conserva il bootloader Caterina.
 
-La validazione copre le impostazioni legacy, la convalida dell'accento, la navigazione del profilo e la remapping di riferimento, i modelli portatili, il modello di Windows nativo/undo/redo e il commutatore del profilo, la registrazione di scorciatoia, copia/paste/reset, le impostazioni persistenza, l'installazione/aggiornamento, il ridimensionamento del layout e una cattura effettiva dell'interfaccia utente.
+La validazione copre le impostazioni legacy, la convalida dell'accento, la navigazione del profilo e la remapping di riferimento, i modelli portatili, il modello di Windows nativo/undo/redo e il commutatore del profilo, la registrazione di scorciatoia, copia/paste/reset, le impostazioni persistenza, l'installazione/aggiornamento, il ridimensionamento del layout e un'effettiva acquisizione dell'interfaccia utente.
 
 <a id="profile-sound-files-and-workshop-safety"></a>
 ### File audio profilo e sicurezza officina

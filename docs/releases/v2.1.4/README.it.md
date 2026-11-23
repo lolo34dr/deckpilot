@@ -7,4 +7,4 @@ DeckPilot 2.1.4 avvia automaticamente il microfono virtuale configurato con l'ap
 - Un arresto esplicito disabilita e salva la preferenza di avvio automatico; abilitarlo di nuovo dal Soundboard pannello o il pulsante di attivazione. I clip audio non vengono mai riprodotti automaticamente.
 - Atelier rimane 1.0.11 e il firmware rimane 1.1.1.
 
-La validazione include i controlli di migrazione/rotondo-trip delle impostazioni e un controllo utente di Windows nativo per la preferenza di avvio automatico persistito, oltre ai controlli audio e installatori esistenti.
+La convalida include i controlli di migrazione/rotondo-trip delle impostazioni e un controllo utente di Windows nativo per la preferenza di avvio automatico persistito, oltre ai controlli audio e installatori esistenti.

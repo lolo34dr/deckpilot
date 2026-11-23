@@ -6,4 +6,4 @@ DeckPilot 2.1.6 y DeckPilot Atelier 1.0.12 hacer que el firmware de Atelier borr
 - Explique que el tablero deja de enumerar como un teclado después de la eliminación, muestre los pasos exactos de recuperación RST/GND de doble reajuste, y mantenga la acción de recuperación de Atelier disponible después de la borrada o un flash interrumpido.
 - Firmware sigue siendo 1.1.1; no DeckPilot Se requiere un cambio de firmware de hardware.
 
-La validación incluye controles de firmware y aplicaciones, además de la automatización de la interfaz de usuario de Windows para el control de borrado avanzado, la seguridad de no dispositivos y la guía de recuperación RST/GND.
+La validación incluye controles de firmware y aplicaciones, además de la automatización de Windows UI para el control avanzado de borrado, seguridad de no dispositivo y guía de recuperación RST/GND. El reajuste en sí mismo todavía requiere la junta física.

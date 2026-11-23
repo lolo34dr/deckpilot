@@ -15,10 +15,24 @@ Pinocchina **1** tenuto a GND all'avvio disabilita il funzionamento della tastie
 L'attuale interfaccia seriale USB CDC risponde `DECKPILOT?\n` a) 115200 baud con:
 
 ```
-DECKPILOT|1|promicro-32u4-16mhz|1.1.2
+DECKPILOT|1|promicro-32u4-16mhz|1.2.0
 ```
 
 Non è richiesta alcuna connessione seriale per il normale funzionamento della tastiera. L'identità è un controllo di compatibilità, non autenticazione dell'hardware crittografico. Windows riporta ancora gli identificatori USB Arduino Leonardo; molte altre schede condividono questi identificatori.
+
+<a id="hybrid-input-mode-120"></a>
+## Modalità di ingresso ibrido (1.2.0)
+
+Entrambe le schede utilizzano lo stesso firmware. L'applicazione li identifica con l'istanza del dispositivo Windows USB e apre una connessione seriale per scheda. **Macropads**, fare clic su una chiave sulla scheda di ogni scheda per abilitare DeckPilot modalità e configura il suo profilo. **Calibratore** una scheda senza un numero di serie USB univoco può ottenere un'istanza diversa del dispositivo quando si sposta in un'altra presa USB.
+
+Dopo una stretta di mano DP2 pubblicizza la capacità 4, l'app invia `DP2|INPUT|<session>`. La scheda risponde con `DP2|INPUT|<session>` quando tutte le chiavi e il rapporto della tastiera vengono rilasciati, o `DP2|BUSY|<session>` una volta attivata, la scheda invia ordinata `KEYS` cornici a partire da sequenza 1 e sopprime F13–F24. Client diagnostici che semplicemente inviano `HELLO` Tenere il normale comportamento della tastiera. Dropping DTR o manca il battito cardiaco locazione per sei secondi ripristina la tastiera dopo che vengono rilasciati i pulsanti detenuti. Una coda di evento completa termina la sessione di ingresso seriale con `DP2|LOST|<session>` invece di fondere silenziosamente gli eventi di stampa e di rilascio.
+
+Test fisico su Windows:
+
+1. Flash e verificare ogni scheda individualmente con **Firmware du macropad…**, poi collegare entrambe le schede.
+2. Aprire **Macropads** e fare clic sul primo pulsante sulla scheda di ogni dispositivo. Assegnare un'azione diversa a ogni pulsante. Verificare che l'editor nomina la porta COM selezionata e che ogni scheda visualizza il proprio profilo.
+3. Premere la stessa posizione su entrambi i mazzi insieme, poi ripetere con brevi e lunghe presse, ogni azione dovrebbe funzionare una volta sul suo profilo assegnato.
+4. Scollegare un mazzo tenendo premuto un pulsante, verificare l'altro risponde ancora, e riconnettere il primo alla sua presa USB originale. DeckPilot dal vassoio di sistema e confermare una nuova pressa invia la corrispondente chiave F13–F24.
 
 <a id="install-from-deckpilot"></a>
 ## Installa da DeckPilot
@@ -64,7 +78,7 @@ Una volta per sessione di app, con un vecchio firmware rilevato richiede 24-ora 
 
 **Per un caricamento manuale da Arduino IDE, smettere DeckPilot dalla sua icona del vassoio prima.** La chiusura della finestra principale lo nasconde solo, quindi continua a possedere la connessione seriale. DeckPilot e un altro monitor seriale non può utilizzare la stessa porta simultaneamente. Se un altro strumento possiede già la porta, l'app segnala il problema e le ripetizioni senza influenzare le chiavi della tastiera ordinaria.
 
-Il nuovo `DeckPilotProtocol.h` è la stessa attuazione esercitata da `tests/firmware-protocol.cpp`. Utilizza buffer di dimensione fissa, l'elaborazione di input limitato e lo spazio di trasmissione USB disponibile; la scansione del pulsante non è mai volutamente ritardata in attesa di un host. L'ultima maschera del pulsante in attesa è carbonizzata sotto la pressione posteriore. Non ci sono comandi per eseguire macro, scrivere EEPROM, disabilitare la tastiera, modificare profili o firmware flash su questo protocollo diagnostico.
+La modalità diagnostica in `DeckPilotProtocol.h` utilizza buffer a dimensione fissa, l'elaborazione di input limitato e lo spazio di trasmissione USB disponibile. L'ultima maschera diagnostica in attesa è carbonizzata sotto backpressure. 1.2.0 aggiunge la modalità di ingresso seriale opt-in sopra.
 
 Attorno 115200 baud, le linee terminano con LF (CRLF è accettato). I token di sessione contengono esattamente otto caratteri esadecimali maiuscoli. Tutti i numeri sono decimali non firmati. Esempi:
 
@@ -78,7 +92,7 @@ Board: DP2|PONG|1234ABCD|7|42000|9|2049
 Board: DP2|KEYS|1234ABCD|10|1
 ```
 
-`INFO` pubblicità 12 chiavi e bit di funzionalità: 1 = battito cardiaco/istantanea di stato, 2 = eventi chiave-stato. `PONG` riecheggia il contatore di richiesta, poi riporta uptime in millisecondi, sequenza di stato e la 12- Maschera a bottone a bit. `KEYS` segnala sequenza e maschera; bit 0 è F13 e bit 11 è F24, indipendente dalla calibrazione fisica. Sessioni e contatori di richiesta respingono risposte stanti. 32-bit wraparound. Le chiavi rimangono solo dati diagnostici: le azioni app funzionano ancora una volta attraverso il percorso della tastiera esistente, quindi un evento seriale non può eseguire la stessa azione due volte.
+`INFO` pubblicità 12 chiavi e bit di funzionalità: 1 = battito cardiaco/istantanea di stato, 2 = eventi chiave-stato, 4 = ingresso seriale opt-in. `PONG` eco il contatore di richiesta e segnala uptime, sequenza e maschera pulsante per la diagnostica. `KEYS` segnala sequenza e maschera; bit 0 corrisponde a F13 e bit 11 a F24, indipendente dalla calibrazione fisica. Le sessioni e i contatori di richiesta rifiutano le risposte stanti. In modalità di ingresso seriale, le azioni seguono l'ordine `KEYS` cornici.
 
 Le richieste di battito cardiaco vengono normalmente inviate ogni due secondi. L'app ricollega se manca una risposta corrispondente 1.5 secondi; il firmware smette di diagnostica non sollecitata dopo sei secondi senza battito cardiaco o quando la connessione seriale si chiude. 1.0.0 rimane supportato attraverso la query di identità legacy, senza diagnostica chiave dal vivo. DeckPilot le app possono ancora leggere l'identità legacy del firmware 1.1.1.
 
