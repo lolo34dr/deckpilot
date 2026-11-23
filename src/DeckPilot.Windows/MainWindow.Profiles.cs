@@ -30,10 +30,10 @@ public partial class MainWindow
         AddHandler(ToggleButton.UncheckedEvent, new RoutedEventHandler((_, _) => UpdateHistoryState()), true);
         LongPressThreshold.ValueChanged += (_, _) => UpdateHistoryState();
     }
-    private ButtonAction EditedAction => editingLong ? settings.ActiveProfile.Buttons[selected].LongPressAction ?? settings.ActiveProfile.Buttons[selected].CopyBasic() : settings.ActiveProfile.Buttons[selected];
+    private ButtonAction EditedAction => editingLong ? EditorProfile.Buttons[selected].LongPressAction ?? EditorProfile.Buttons[selected].CopyBasic() : EditorProfile.Buttons[selected];
     private ButtonAction ReadEditorConfiguration()
     {
-        var root = settings.ActiveProfile.Buttons[selected].Copy();
+        var root = EditorProfile.Buttons[selected].Copy();
         var action = editingLong ? root.LongPressAction ?? root.CopyBasic() : root;
         root.Accent = (AccentPicker.SelectedItem as ActionAccent)?.Value ?? root.Accent;
         action.Label = LabelEditor.Text.Trim(); action.Kind = (ActionKind)ActionPicker.SelectedIndex;
@@ -61,7 +61,7 @@ public partial class MainWindow
     private bool EditorChanged()
     {
         if (loading || ActionPicker.SelectedIndex < 0) return false;
-        return !ReadEditorConfiguration().Equals(settings.ActiveProfile.Buttons[selected]);
+        return !ReadEditorConfiguration().Equals(EditorProfile.Buttons[selected]);
     }
     private void UpdateHistoryState()
     {
@@ -127,7 +127,7 @@ public partial class MainWindow
         if (WithProfileSelectionLocked(() => dialog.ShowDialog(this)) != true) return;
         try
         {
-            string json = PortableProfiles.Export(settings, all ? settings.Profiles : new[] { settings.ActiveProfile });
+            string json = PortableProfiles.Export(settings, all ? settings.Profiles : new[] { EditorProfile });
             string temporary = dialog.FileName + "." + Guid.NewGuid().ToString("N") + ".tmp";
             try { File.WriteAllText(temporary, json); File.Move(temporary, dialog.FileName, true); }
             finally { if (File.Exists(temporary)) File.Delete(temporary); }

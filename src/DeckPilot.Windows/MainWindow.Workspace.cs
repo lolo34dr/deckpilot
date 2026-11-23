@@ -38,7 +38,7 @@ public partial class MainWindow
 
     private void PopulateWorkspaceEditor(ButtonAction action)
     {
-        SetKeyColor(settings.ActiveProfile.Buttons[selected].Accent);
+        SetKeyColor(EditorProfile.Buttons[selected].Accent);
         var destinations = new[] { new ProfileDestination("Profil suivant", "next"), new ProfileDestination("Profil précédent", "previous") }
             .Concat(settings.Profiles.Select(p => new ProfileDestination(p.Name, p.Id.ToString()))).ToList();
         string destination = action.Kind == ActionKind.Profile && action.Target.Length > 0 ? action.Target : "next";
@@ -73,7 +73,7 @@ public partial class MainWindow
 
     private void RefreshProfileSummary()
     {
-        int count = settings.ActiveProfile.Buttons.Count(a => a.Kind != ActionKind.Passthrough);
+        int count = EditorProfile.Buttons.Count(a => a.Kind != ActionKind.Passthrough);
         ProfileSummary.Text = $"{count} / 12 touches configurées · {settings.Profiles.Count} profil(s)";
     }
 
@@ -93,6 +93,7 @@ public partial class MainWindow
             settings.Profiles.Remove(profile); settings.ActiveProfileId = previous;
             RefreshProfiles(); LoadEditor(); return;
         }
+        UseKeyboardProfileInEditor();
         CancelPendingGestures(); editingLong = false; selected = 0;
         RefreshProfiles(); LoadEditor();
         StatusText.Text = $"Modèle « {profile.Name} » ajouté · Vos autres profils sont conservés.";
@@ -113,7 +114,7 @@ public partial class MainWindow
         }
     }
 
-    private bool SwitchProfile(Profile destination)
+    private bool SwitchProfile(Profile destination, bool openInEditor = false)
     {
         if (profileSelectionLocks > 0 || OwnedWindows.Count > 0) { ReportError("Fermez la fenêtre de configuration avant de changer de profil."); return false; }
         if (calibrating || firmwareOpen || !SaveEditor()) return false;
@@ -124,6 +125,7 @@ public partial class MainWindow
             settings.ActiveProfileId = previous;
             RefreshProfiles(); LoadEditor(); return false;
         }
+        if (openInEditor) UseKeyboardProfileInEditor();
         CancelPendingGestures(); editingLong = false;
         RefreshProfiles(); LoadEditor();
         if (tray != null) tray.Text = BetaEnvironment.DisplayName + " · " + destination.Name[..Math.Min(destination.Name.Length, 45)];

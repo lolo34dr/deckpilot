@@ -1,6 +1,6 @@
-DeckPilot 2.4.7 reorganizes the configuration workspace and fixes visual issues found during the Windows beta.
+DeckPilot 2.4.8 adds a dedicated workspace for configuring one or more macropads.
 
-- Use separate tabs for actions, the macropad, audio and settings. The header shows connection status and the existing 3 × 4 keypad retains its appearance and behavior.
-- Configure short and long presses directly in the editor. Both choices and the hold duration stay visible without opening a menu, and the selected press can be changed with the arrow keys.
-- Read checkboxes and tooltips on the dark theme, and see audio values beside their labels.
-- Resize the stacked panels in compact windows. The calibration grid fits the available height while its instructions and controls remain visible.
+- See each detected macropad and its twelve keys on the same page. Click a key to assign its action, then switch devices directly from the editor.
+- Give each macropad its own profile and calibration. Existing shared profiles can be copied without losing actions. Editing a device keeps the active F13–F24 keyboard profile in place.
+- Check the status of each device and open its firmware or calibration controls from Macropads.
+- Includes firmware 1.2.0 for compatible Leonardo and Pro Micro boards. DeckPilot mode separates USB input from each device. Standalone keyboard mode continues to send F13–F24.

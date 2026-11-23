@@ -44,7 +44,7 @@ public partial class MainWindow
             int index = i;
             var key = deckButtons[i];
             key.AllowDrop = true;
-            WireDragSource(key, () => SaveEditor() ? new(settings.ActiveProfile.Buttons[index].Copy(), settings.ActiveProfile.Id, index) : null);
+            WireDragSource(key, () => SaveEditor() ? new(EditorProfile.Buttons[index].Copy(), EditorProfile.Id, index) : null);
             key.DragOver += (_, e) =>
             {
                 bool allowed = !calibrating && !firmwareOpen && CanDropAction(e.Data);
@@ -63,8 +63,8 @@ public partial class MainWindow
                         if (!SaveEditor()) return;
                         if (payload.Source >= 0)
                         {
-                            if (payload.Profile != settings.ActiveProfile.Id || payload.Source >= 12 || payload.Source == index) return;
-                            var buttons = settings.ActiveProfile.Buttons;
+                            if (payload.Profile != EditorProfile.Id || payload.Source >= 12 || payload.Source == index) return;
+                            var buttons = EditorProfile.Buttons;
                             (buttons[index], buttons[payload.Source]) = (buttons[payload.Source], buttons[index]);
                             if (!Persist())
                             {
@@ -92,7 +92,7 @@ public partial class MainWindow
     private void AssignAction(int index, ButtonAction action, bool currentGesture = false)
     {
         if (calibrating || firmwareOpen || !SaveEditor()) return;
-        var buttons = settings.ActiveProfile.Buttons;
+        var buttons = EditorProfile.Buttons;
         var previous = buttons[index];
         bool keepLongEditor = currentGesture && editingLong && index == selected;
         if (keepLongEditor)

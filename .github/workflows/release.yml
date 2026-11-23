@@ -43,6 +43,8 @@ jobs:
         run: dotnet run --project tests/DeckPilot.Checks -c Release
         env:
           DECKPILOT_REQUIRE_RNNOISE: '1'
+      - name: Verify the macropad workspace with two simulated devices
+        run: dotnet run --project tests/DeckPilot.Workspace.Checks -c Release -p:DeckPilotBeta=true
       - name: Install verified Arduino CLI 1.2.2
         shell: pwsh
         run: ./firmware/tools/install-cli.ps1

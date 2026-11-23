@@ -38,7 +38,7 @@ public partial class MainWindow
                 CancelShortcutRecording();
                 selected = index; editingLong = false; LoadEditor();
                 paste.IsEnabled = copiedKey != null;
-                clear.IsEnabled = cut.IsEnabled = !settings.ActiveProfile.Buttons[index].Equals(new ButtonAction());
+                clear.IsEnabled = cut.IsEnabled = !EditorProfile.Buttons[index].Equals(new ButtonAction());
             };
         }
         PreviewKeyDown += ProductivityKeyDown;
@@ -90,7 +90,7 @@ public partial class MainWindow
     private void CopyDeckKey(bool cut)
     {
         if (calibrating || firmwareOpen || !SaveEditor()) return;
-        copiedKey = settings.ActiveProfile.Buttons[selected].Copy();
+        copiedKey = EditorProfile.Buttons[selected].Copy();
         if (cut)
         {
             if (ReplaceSelectedKey(new()))
@@ -115,13 +115,13 @@ public partial class MainWindow
 
     private bool ReplaceSelectedKey(ButtonAction next)
     {
-        var previous = settings.ActiveProfile.Buttons[selected];
+        var previous = EditorProfile.Buttons[selected];
         ResetActionFeedback(selected);
-        settings.ActiveProfile.Buttons[selected] = next;
+        EditorProfile.Buttons[selected] = next;
         editingLong = false; LoadEditor();
         if (Persist()) return true;
         // Keep the editor and the last saved configuration aligned on a failed write.
-        settings.ActiveProfile.Buttons[selected] = previous;
+        EditorProfile.Buttons[selected] = previous;
         LoadEditor();
         return false;
     }

@@ -26,7 +26,7 @@ public partial class MainWindow : Window
     private Forms.NotifyIcon? tray;
     private System.Drawing.Icon? trayIcon;
     private bool loading = true, quitting, calibrating;
-    private bool layoutChanged;
+    private bool layoutChanged, openDeviceWorkspaceOnDiscovery;
     private int selected;
     private readonly List<int> captured = [];
     private readonly List<DeckKeyButton> deckButtons = [];
@@ -142,7 +142,7 @@ public partial class MainWindow : Window
         {
             if (startInBackground) Hide();
             else if (BetaEnvironment.IsEnabled) ControlTabs.SelectedItem = DeviceTab;
-            else if (!settings.IsCalibrated && !EnabledSerialDevices().Any()) BeginCalibration();
+            else openDeviceWorkspaceOnDiscovery = !settings.IsCalibrated;
             Motion.Reveal(WindowContent);
             boardConnection = new BoardConnectionService(settings.PreferredBoardDeviceId, EnabledSerialDevices(),
                 new Progress<BoardConnectionState>(OnBoardStateChanged), new Progress<BoardInputFrame>(OnBoardInput));
@@ -250,9 +250,9 @@ public partial class MainWindow : Window
     }
     private void RenderGrid()
     {
-        if (feedbackProfile != settings.ActiveProfile.Id)
+        if (feedbackProfile != EditorProfile.Id)
         {
-            feedbackProfile = settings.ActiveProfile.Id;
+            feedbackProfile = EditorProfile.Id;
             for (int i = 0; i < 12; i++)
             {
                 feedback[i] = DeckKeyFeedback.Ready; feedbackMessages[i] = "";
@@ -261,7 +261,7 @@ public partial class MainWindow : Window
         }
         for (int i = 0; i < 12; i++)
         {
-            var action = settings.ActiveProfile.Buttons[i];
+            var action = EditorProfile.Buttons[i];
             string keyName = EditorKeyName(i);
             deckButtons[i].Label = string.IsNullOrWhiteSpace(action.Label) ? keyName : action.Label;
             deckButtons[i].KeyCaption = keyName;
@@ -279,7 +279,7 @@ public partial class MainWindow : Window
     {
         if (!IsInterfaceActive) return;
         var editingBoard = CurrentEditingBoard();
-        int mask = editingBoard != null ? editingBoard.Telemetry?.Mask ?? 0
+        int mask = editingBoardId != null ? editingBoard?.Telemetry?.Mask ?? 0
             : boardState is { SerialInput: false, Kind: BoardConnectionKind.Connected } ? boardState.Telemetry?.Mask ?? 0 : 0;
         var map = editingBoard == null ? settings.KeyMap : settings.BoardBindings[editingBoard.Device.DeviceId].KeyMap;
         for (int i = 0; i < deckButtons.Count; i++)
@@ -311,9 +311,9 @@ public partial class MainWindow : Window
         }
         ApplyHardwareHighlights();
         ActionExecutionStatus.Text = !string.IsNullOrEmpty(feedbackMessages[selected]) ? feedbackMessages[selected] :
-            settings.ActiveProfile.Buttons[selected].Kind == ActionKind.Passthrough ? "Aucune action à tester pour une touche libre." : "Prêt à tester · L’action sera exécutée sur ce PC.";
+            EditorProfile.Buttons[selected].Kind == ActionKind.Passthrough ? "Aucune action à tester pour une touche libre." : "Prêt à tester · L’action sera exécutée sur ce PC.";
         ActionExecutionStatus.Foreground = Brush(feedback[selected] == DeckKeyFeedback.Error ? "#E1A398" : feedback[selected] == DeckKeyFeedback.Success ? "#BAAED3" : "#ADADB9");
-        TestActionButton.IsEnabled = ActionSearch.IsAvailable(settings.ActiveProfile.Buttons[selected].Kind) && settings.ActiveProfile.Buttons[selected].Kind != ActionKind.Passthrough && feedback[selected] != DeckKeyFeedback.Running && !firmwareOpen && !calibrating;
+        TestActionButton.IsEnabled = ActionSearch.IsAvailable(EditorProfile.Buttons[selected].Kind) && EditorProfile.Buttons[selected].Kind != ActionKind.Passthrough && feedback[selected] != DeckKeyFeedback.Running && !firmwareOpen && !calibrating;
         if (pending) feedbackTimer.Start(); else feedbackTimer.Stop();
     }
     private void SetFeedback(int index, DeckKeyFeedback state, string message)
@@ -328,8 +328,9 @@ public partial class MainWindow : Window
         bool previous = loading; loading = true;
         ProfilePicker.ItemsSource = null;
         ProfilePicker.ItemsSource = settings.Profiles;
-        ProfilePicker.SelectedItem = settings.ActiveProfile;
-        ProfileName.Text = settings.ActiveProfile.Name;
+        if (editingProfileId != null && settings.Profiles.All(profile => profile.Id != editingProfileId)) UseKeyboardProfileInEditor();
+        ProfilePicker.SelectedItem = EditorProfile;
+        ProfileName.Text = EditorProfile.Name;
         loading = previous; RefreshTrayProfiles();
         ApplyBoardInputSettings(refreshProfiles: true);
     }
@@ -337,7 +338,7 @@ public partial class MainWindow : Window
     {
         CancelShortcutRecording();
         bool previous = loading; loading = true;
-        var root = settings.ActiveProfile.Buttons[selected];
+        var root = EditorProfile.Buttons[selected];
         if (!root.LongPressEnabled) editingLong = false;
         var action = EditedAction;
         LongPressCheck.IsChecked = root.LongPressEnabled;
@@ -368,15 +369,15 @@ public partial class MainWindow : Window
         if (loading) return true;
         if (ActionPicker.SelectedIndex < 0) { ReportError("Cette ancienne action a été retirée. Choisissez une nouvelle action dans la bibliothèque."); return false; }
         var action = ReadEditorConfiguration();
-        var previous = settings.ActiveProfile.Buttons[selected];
+        var previous = EditorProfile.Buttons[selected];
         if (action == previous) return !force || Persist();
         if (!action.IsValid()) { ReportError("Vérifiez la touche choisie et les deux actions si l’appui long est activé."); return false; }
         ResetActionFeedback(selected);
-        settings.ActiveProfile.Buttons[selected] = action;
+        EditorProfile.Buttons[selected] = action;
         UpdateLongPressAvailability(action.Kind);
         GesturePanel.Visibility = action.LongPressEnabled ? Visibility.Visible : Visibility.Collapsed;
         bool saved = Persist();
-        if (!saved) settings.ActiveProfile.Buttons[selected] = previous;
+        if (!saved) EditorProfile.Buttons[selected] = previous;
         RenderGrid(); return saved;
     }
     private bool Persist()
@@ -465,7 +466,7 @@ public partial class MainWindow : Window
     private void ProfileChanged(object sender, SelectionChangedEventArgs e)
     {
         if (loading || ProfilePicker.SelectedItem is not Profile next) return;
-        if (!SwitchProfile(next)) RefreshProfiles();
+        if (!SwitchProfile(next, openInEditor: true)) RefreshProfiles();
     }
     private string NewProfileName() => string.IsNullOrWhiteSpace(ProfileName.Text) ? "Nouveau profil" : ProfileName.Text.Trim();
     private void CreateProfile(object sender, RoutedEventArgs e) => AddProfile(false);
@@ -481,31 +482,39 @@ public partial class MainWindow : Window
         {
             const string suffix = " (copie)";
             string name = NewProfileName();
-            profile = ProfileExchange.CopyAsNew(new[] { settings.ActiveProfile })[0];
+            profile = ProfileExchange.CopyAsNew([EditorProfile])[0];
             profile.Name = name[..Math.Min(name.Length, 60 - suffix.Length)] + suffix;
         }
         settings.Profiles.Add(profile); settings.ActiveProfileId = profile.Id;
         if (!Persist()) { settings.Profiles.Remove(profile); settings.ActiveProfileId = previous; }
+        else UseKeyboardProfileInEditor();
         RefreshProfiles(); LoadEditor();
     }
     private void RenameProfile(object sender, RoutedEventArgs e)
     {
         if (!SaveEditor()) return;
-        string previous = settings.ActiveProfile.Name;
-        settings.ActiveProfile.Name = NewProfileName();
-        if (!Persist()) settings.ActiveProfile.Name = previous;
+        string previous = EditorProfile.Name;
+        EditorProfile.Name = NewProfileName();
+        if (!Persist()) EditorProfile.Name = previous;
         RefreshProfiles(); LoadEditor();
     }
     private void DeleteProfile(object sender, RoutedEventArgs e)
     {
         if (settings.Profiles.Count == 1) { StatusText.Text = "Conservez au moins un profil."; return; }
         if (!SaveEditor()) return;
-        if (WithProfileSelectionLocked(() => MessageBox.Show(this, $"Supprimer le profil « {settings.ActiveProfile.Name} » ?", "DeckPilot", MessageBoxButton.YesNo)) != MessageBoxResult.Yes) return;
+        var previous = EditorProfile;
+        if (settings.BoardBindings.Values.Any(binding => binding.Enabled && binding.ProfileId == previous.Id))
+        {
+            ReportError("Ce profil est utilisé par un macropad. Attribuez-lui un autre profil depuis ses options avant de le supprimer.");
+            return;
+        }
+        if (WithProfileSelectionLocked(() => MessageBox.Show(this, $"Supprimer le profil « {previous.Name} » ?", "DeckPilot", MessageBoxButton.YesNo)) != MessageBoxResult.Yes) return;
         CancelPendingGestures(); editingLong = false;
-        var previous = settings.ActiveProfile;
+        Guid active = settings.ActiveProfileId;
         int index = settings.Profiles.IndexOf(previous);
-        settings.Profiles.RemoveAt(index); settings.ActiveProfileId = settings.Profiles[0].Id;
-        if (!Persist()) { settings.Profiles.Insert(index, previous); settings.ActiveProfileId = previous.Id; }
+        settings.Profiles.RemoveAt(index);
+        if (active == previous.Id) settings.ActiveProfileId = settings.Profiles[0].Id;
+        if (!Persist()) { settings.Profiles.Insert(index, previous); settings.ActiveProfileId = active; }
         RefreshProfiles(); LoadEditor();
     }
     private void OnDeckKey(object? sender, DeckKeyEventArgs e)
@@ -529,7 +538,7 @@ public partial class MainWindow : Window
         if (index < 0) return;
         var action = settings.ActiveProfile.Buttons[index].Copy();
         e.Handled = action.Kind != ActionKind.Passthrough;
-        pressedUntil[index] = Environment.TickCount64 + 180; QueueFeedback();
+        if (editingBoardId == null) { pressedUntil[index] = Environment.TickCount64 + 180; QueueFeedback(); }
         if (gestures.Begin(e.Key, index, action, Environment.TickCount64) is { } invocation) RunGesture(invocation);
         if (gestures.HasPending) gestureTimer.Start();
     }
@@ -537,27 +546,26 @@ public partial class MainWindow : Window
     {
         if (calibrating || firmwareOpen || !SaveEditor()) return;
         var action = EditedAction.CopyBasic();
-        if (action.Kind == ActionKind.Profile && CurrentEditingBoard() is { } board)
+        if (action.Kind == ActionKind.Profile && editingBoardId is { } deviceId)
         {
-            if (!serialDecks.TryGetValue(board.Device.DeviceId, out var deck))
+            if (CurrentEditingBinding()?.ProfileId != EditorProfile.Id || !serialDecks.TryGetValue(deviceId, out var deck))
             {
-                ReportError("Attendez que le mode DeckPilot soit actif pour tester le changement de profil de ce macropad.");
+                ReportError("Ce macropad doit utiliser le profil affiché en mode DeckPilot pour tester le changement de profil.");
                 return;
             }
-            await ExecuteActionAsync(selected, action, deck, settings.ActiveProfile.Id, deck.Revision);
+            await ExecuteActionAsync(selected, action, deck, EditorProfile.Id, deck.Revision);
             return;
         }
-        await ExecuteActionAsync(selected, action);
+        await ExecuteActionAsync(selected, action, editorTest: true);
     }
-    private async Task ExecuteActionAsync(int index, ButtonAction action, SerialDeck? deck = null, Guid? deviceProfile = null, int revision = 0)
+    private async Task ExecuteActionAsync(int index, ButtonAction action, SerialDeck? deck = null, Guid? deviceProfile = null, int revision = 0, bool editorTest = false)
     {
         if (action.Kind == ActionKind.Passthrough || lifetime.IsCancellationRequested) return;
         if (!ActionSearch.IsAvailable(action.Kind)) { ReportError("Cette ancienne action a été retirée. Choisissez une nouvelle action dans la bibliothèque."); return; }
-        Guid sourceProfile = deviceProfile ?? settings.ActiveProfile.Id;
+        Guid sourceProfile = deviceProfile ?? (editorTest ? EditorProfile.Id : settings.ActiveProfile.Id);
         int generation = gestureGeneration;
-        bool displayFeedback = sourceProfile == settings.ActiveProfile.Id && (deck == null
-            || editingBoardId == null || string.Equals(editingBoardId, deck.Id, StringComparison.OrdinalIgnoreCase));
-        bool Current() => deck == null ? sourceProfile == settings.ActiveProfile.Id && generation == gestureGeneration
+        bool displayFeedback = sourceProfile == EditorProfile.Id && (editorTest || string.Equals(editingBoardId, deck?.Id, StringComparison.OrdinalIgnoreCase));
+        bool Current() => deck == null ? sourceProfile == (editorTest ? EditorProfile.Id : settings.ActiveProfile.Id) && generation == gestureGeneration
             : IsSerialActionCurrent(deck, sourceProfile, revision);
         string title = string.IsNullOrWhiteSpace(action.Label) ? ActionSearch.KindName(action.Kind) : action.Label;
         int ticket = displayFeedback ? ++executionTickets[index] : 0;
@@ -569,7 +577,7 @@ public partial class MainWindow : Window
             if (IsInterfaceActive) await Dispatcher.Yield(DispatcherPriority.Render);
             if (lifetime.IsCancellationRequested || !Current() || calibrating || firmwareOpen)
             {
-                if (displayFeedback && !lifetime.IsCancellationRequested && sourceProfile == settings.ActiveProfile.Id && executionTickets[index] == ticket)
+                if (displayFeedback && !lifetime.IsCancellationRequested && sourceProfile == EditorProfile.Id && executionTickets[index] == ticket)
                     SetFeedback(index, DeckKeyFeedback.Ready, "Action annulée · Le contexte a changé.");
                 return;
             }
@@ -628,7 +636,7 @@ public partial class MainWindow : Window
             int remaining = (int)Math.Max(0, 300 - (Environment.TickCount64 - dispatchedAt));
             if (remaining > 0 && IsInterfaceActive) await Task.Delay(remaining, lifetime.Token);
             if (lifetime.IsCancellationRequested) return;
-            if (displayFeedback && settings.ActiveProfile.Id == sourceProfile && executionTickets[index] == ticket)
+            if (displayFeedback && EditorProfile.Id == sourceProfile && executionTickets[index] == ticket)
                 SetFeedback(index, DeckKeyFeedback.Success, "Action envoyée ✓");
             StatusText.Text = $"Action envoyée · {title}";
         }
@@ -636,7 +644,7 @@ public partial class MainWindow : Window
         {
             if (lifetime.IsCancellationRequested) return;
             AddActivity(title, false, $"Bouton {index + 1:00} · Échec de l’action");
-            if (displayFeedback && settings.ActiveProfile.Id == sourceProfile && executionTickets[index] == ticket)
+            if (displayFeedback && EditorProfile.Id == sourceProfile && executionTickets[index] == ticket)
                 SetFeedback(index, DeckKeyFeedback.Error, "Échec · " + ex.Message);
             ReportError("Action impossible : " + ex.Message);
         }
@@ -800,7 +808,7 @@ public partial class MainWindow : Window
         foreach (var profile in settings.Profiles)
         {
             var item = new Forms.ToolStripMenuItem(profile.Name.Replace("&", "&&")) { Checked = profile.Id == settings.ActiveProfile.Id };
-            item.Click += (_, _) => Dispatcher.Invoke(() => { if (!firmwareOpen && !calibrating && OwnedWindows.Count == 0) ProfilePicker.SelectedItem = profile; });
+            item.Click += (_, _) => Dispatcher.Invoke(() => { if (!firmwareOpen && !calibrating && OwnedWindows.Count == 0) SwitchProfile(profile, openInEditor: true); });
             trayProfiles.DropDownItems.Add(item);
         }
     }
@@ -819,6 +827,11 @@ public partial class MainWindow : Window
         if (lifetime.IsCancellationRequested) return;
         if (boardState?.ConnectedCount > 0 && state.ConnectedCount == 0) CancelPendingGestures();
         boardState = state;
+        if (openDeviceWorkspaceOnDiscovery && state.Boards.Count > 0)
+        {
+            openDeviceWorkspaceOnDiscovery = false;
+            if (!calibrating && !firmwareOpen && ControlTabs.SelectedItem == ActionsTab) ControlTabs.SelectedItem = DeviceTab;
+        }
         bool connected = state.ConnectedCount > 0;
         DeckAvailabilityStatus.Text = state.ConnectedCount > 1 ? $"{state.ConnectedCount} macropads" : state.Kind switch
         {

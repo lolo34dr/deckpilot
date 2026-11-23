@@ -54,7 +54,7 @@ public partial class MainWindow
             YPercent = Math.Round(ProfileOverlayYSlider.Value, 1)
         };
         if (!Persist()) { settings.ProfileOverlay = previous; return; }
-        ShowProfileOverlay(settings.ActiveProfile.Name, preview: true);
+        ShowProfileOverlay(EditorProfile.Name, preview: true);
         StatusText.Text = "Notifications enregistrées · Aperçu affiché.";
     }
 
