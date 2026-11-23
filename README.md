@@ -284,6 +284,12 @@ Startup firmware checks are enabled by default. After the app update check and c
 
 Firmware **1.1.2** reports all twelve F13–F24 keys independently while retaining session identification, correlated heartbeat replies, bounded messages and physical key-state events. These events animate the mapped buttons and update diagnostics; they never invoke actions a second time. Its first physical-board validation is still required, although firmware 1.0.0 and the original flash procedure were confirmed on the reference board. See the [protocol and compatibility documentation](firmware/README.md).
 
+### Two macropads with independent profiles
+
+Flash firmware **1.2.0** on each compatible macropad, one at a time. In **Macropad**, select each device by its COM port, enable **Activer le mode DeckPilot sur ce macropad**, and choose a profile. Use two different profiles for different actions. **Modifier les touches de ce profil** opens the regular editor. **Calibrer ce macropad** saves the button layout for that device only.
+
+In DeckPilot mode, free buttons are inactive and profile actions change only the profile assigned to the originating device. Turn the mode off to use F13–F24 as keyboard shortcuts again. If identical boards lack a unique USB serial number, keep each on its own USB socket or verify the profile assignment after moving it. See the [hybrid mode and hardware test steps](firmware/README.md#hybrid-input-mode-120).
+
 ## Keypad interface (1.4.0)
 
 The larger 3 × 4 keypad follows the physical enclosure and black keycaps. Each key shows its main icon, label, F13–F24 mapping and a small action-type icon; tooltips retain the full label and position. Press feedback, running actions, successful dispatch and errors have distinct appearances, including symbols rather than color alone. Animations follow the Windows animation preference.

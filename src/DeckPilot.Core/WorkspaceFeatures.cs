@@ -20,13 +20,15 @@ public static class ActionAppearance
 public static class ProfileNavigation
 {
     // Resolving a destination never changes the active profile or runs its actions.
-    public static Profile Resolve(Settings settings, string target)
+    public static Profile Resolve(Settings settings, string target, Guid? sourceId = null)
     {
         ArgumentNullException.ThrowIfNull(settings);
         if (settings.Profiles.Count == 0) throw new InvalidOperationException("Aucun profil disponible.");
         if (target is "next" or "previous")
         {
-            int current = settings.Profiles.IndexOf(settings.ActiveProfile);
+            int current = sourceId.HasValue ? settings.Profiles.FindIndex(p => p.Id == sourceId.Value)
+                : settings.Profiles.IndexOf(settings.ActiveProfile);
+            if (current < 0) throw new InvalidOperationException("Le profil actif du macropad n’existe plus.");
             int step = target == "next" ? 1 : -1;
             return settings.Profiles[(current + step + settings.Profiles.Count) % settings.Profiles.Count];
         }

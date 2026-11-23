@@ -79,6 +79,47 @@ internal static class BoardProtocolChecks
             try { client.Connect(cancellation.Token); } catch (OperationCanceledException) { stopped = true; }
             Expect(stopped && watch.Elapsed < TimeSpan.FromSeconds(1));
         });
+        Check("Two serial decks keep ordered presses separate and ignore heartbeat masks for actions", () => {
+            using var a = HybridTransport();
+            using var b = HybridTransport();
+            var first = new BoardProtocolClient(a);
+            var second = new BoardProtocolClient(b);
+            Expect(first.Connect(default).SupportsSerialInput && second.Connect(default).SupportsSerialInput);
+            Expect(!first.EnableSerialInput(default) && first.EnableSerialInput(default));
+            Expect(!second.EnableSerialInput(default) && second.EnableSerialInput(default));
+            Expect(a.Writes[1] != b.Writes[1]);
+
+            static List<int> Read(BoardProtocolClient client)
+            {
+                var frames = new List<int>();
+                try { client.Run(_ => { }, default, frames.Add); }
+                catch (IOException ex) when (ex.Message.Contains("Séquence", StringComparison.Ordinal)) { return frames; }
+                throw new Exception("A gap in the input sequence was accepted.");
+            }
+            var left = Task.Run(() => Read(first));
+            var right = Task.Run(() => Read(second));
+            Task.WaitAll(left, right);
+            Expect(left.Result.SequenceEqual(new[] { 1, 0 }) && right.Result.SequenceEqual(left.Result));
+        });
+        Check("Device bindings retain independent profiles, key maps and modes across a settings reload", () => {
+            string directory = Path.Combine(Path.GetTempPath(), "deckpilot-hybrid-" + Guid.NewGuid());
+            try {
+                var store = new SettingsStore(Path.Combine(directory, "settings.json"));
+                var settings = store.Load();
+                Expect(settings.BoardBindings.Count == 0);
+                var second = new Profile { Name = "Soundboard" };
+                settings.Profiles.Add(second);
+                settings.BoardBindings["DECK-A"] = new(settings.ActiveProfileId, []);
+                settings.BoardBindings["DECK-B"] = new(second.Id, Enumerable.Range(Calibration.FirstKey, 12).Reverse().ToList(), false);
+                store.Save(settings);
+                var loaded = store.Load();
+                var first = loaded.BoardBindings["deck-a"];
+                var other = loaded.BoardBindings["deck-b"];
+                Expect(first.Enabled && !other.Enabled && first.ProfileId != other.ProfileId);
+                Expect(first.ButtonIndex(0) == 0 && other.ButtonIndex(0) == 11);
+                Expect(ProfileNavigation.Resolve(loaded, "next", second.Id).Id == first.ProfileId);
+            } finally { if (Directory.Exists(directory)) Directory.Delete(directory, true); }
+        });
         Check("Firmware prompt preferences default safely and survive a settings round-trip", () => {
             string path = Path.Combine(Path.GetTempPath(), "deckpilot-board-" + Guid.NewGuid() + ".json");
             try {
@@ -94,6 +135,31 @@ internal static class BoardProtocolChecks
             } finally { File.Delete(path); }
         });
         return count;
+    }
+
+    private static ScriptedTransport HybridTransport()
+    {
+        var transport = new ScriptedTransport();
+        bool held = true;
+        transport.OnWrite = line =>
+        {
+            var parts = line.Split('|');
+            if (line == "DECKPILOT?") transport.Replies.Enqueue("DECKPILOT|1|promicro-32u4-16mhz|1.2.0");
+            else if (parts[1] == "HELLO") transport.Replies.Enqueue($"DP2|INFO|{parts[2]}|promicro-32u4-16mhz|1.2.0|12|7");
+            else if (parts[1] == "INPUT")
+            {
+                transport.Replies.Enqueue(held ? $"DP2|BUSY|{parts[2]}" : line);
+                held = false;
+            }
+            else if (parts[1] == "PING")
+            {
+                transport.Replies.Enqueue($"DP2|PONG|{parts[2]}|{parts[3]}|25|4|8");
+                transport.Replies.Enqueue($"DP2|KEYS|{parts[2]}|1|1");
+                transport.Replies.Enqueue($"DP2|KEYS|{parts[2]}|2|0");
+                transport.Replies.Enqueue($"DP2|KEYS|{parts[2]}|4|8");
+            }
+        };
+        return transport;
     }
     private sealed class ScriptedTransport : IBoardTransport
     {

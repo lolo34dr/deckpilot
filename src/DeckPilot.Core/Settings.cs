@@ -138,6 +138,11 @@ public sealed class WindowPlacementSettings
         && (Left == null || (double.IsFinite(Left.Value) && Left.Value is >= -100000 and <= 100000
             && double.IsFinite(Top!.Value) && Top.Value is >= -100000 and <= 100000));
 }
+public sealed record BoardBinding(Guid ProfileId, List<int> KeyMap, bool Enabled = true)
+{
+    public int ButtonIndex(int bit) => KeyMap.Count == 0 ? bit : KeyMap.IndexOf(Calibration.FirstKey + bit);
+}
+
 public sealed class Settings
 {
     public Settings() => ActiveProfileId = Profiles[0].Id;
@@ -146,6 +151,7 @@ public sealed class Settings
     public bool AutoCheckFirmware { get; set; } = true;
     public DateTimeOffset FirmwareSnoozedUntil { get; set; }
     public string PreferredBoardDeviceId { get; set; } = "";
+    public Dictionary<string, BoardBinding> BoardBindings { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     public bool AutoCheckUpdates { get; set; } = true;
     public bool ReduceMotion { get; set; }
     public ProfileOverlaySettings ProfileOverlay { get; set; } = new();
@@ -185,7 +191,11 @@ public sealed class Settings
                 p.Buttons is null || p.Buttons.Count != 12 || p.Buttons.Any(b => b is null ||
                     !b.IsValid())) ||
             Profiles.Select(p => p.Id).Distinct().Count() != Profiles.Count || KeyMap is null ||
-            (KeyMap.Count != 0 && !IsCalibrated))
+            (KeyMap.Count != 0 && !IsCalibrated) || BoardBindings is null ||
+            BoardBindings.Any(pair => string.IsNullOrWhiteSpace(pair.Key) || pair.Key.Length > 512 ||
+                pair.Value is null || pair.Value.ProfileId == Guid.Empty || pair.Value.KeyMap is null ||
+                (pair.Value.KeyMap.Count != 0 && !Calibration.IsValid(pair.Value.KeyMap))) ||
+            BoardBindings.Keys.Distinct(StringComparer.OrdinalIgnoreCase).Count() != BoardBindings.Count)
             throw new InvalidDataException("Le fichier de configuration est incomplet ou incompatible.");
     }
 }
@@ -224,6 +234,7 @@ public sealed class SettingsStore(string path)
                             if (action.LongPressAction is { } longAction) ActionKeys.RepairLegacyKey(longAction);
                         }
         settings.Validate();
+        settings.BoardBindings = new(settings.BoardBindings, StringComparer.OrdinalIgnoreCase);
         settings.ActiveProfileId = settings.ActiveProfile.Id;
         return settings;
     }

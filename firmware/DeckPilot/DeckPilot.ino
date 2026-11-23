@@ -74,6 +74,7 @@ struct DeckKeyboard {
     retryPending = HID().SendReport(deckReportId, report, sizeof(report)) < 0;
     if (!retryPending) lastReport = mask;
   }
+  bool idle() const { return lastReport == 0 && !retryPending; }
 
 private:
   uint16_t lastReport = 0;
@@ -115,7 +116,7 @@ void loop() {
     char c = Serial.read(); lastByte = now;
     if (c == '\n') {
       command[commandLength] = 0;
-      if (!commandOverflow) protocol.command(command, now);
+      if (!commandOverflow) protocol.command(command, now, keyboard.idle());
       commandLength = 0; commandOverflow = false;
     } else if (c != '\r') {
       if (c < 32 || c > 126) commandOverflow = true;
@@ -124,5 +125,5 @@ void loop() {
     }
   }
   protocol.tick(Serial, now);
-  keyboard.update(mask, now);
+  keyboard.update(protocol.keyboardMask(), now);
 }

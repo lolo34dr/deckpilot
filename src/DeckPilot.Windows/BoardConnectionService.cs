@@ -12,7 +12,9 @@ namespace DeckPilot.Windows;
 
 public enum BoardConnectionKind { Searching, Disconnected, ChooseDevice, Connecting, Connected, Unidentified, Paused, Error }
 public sealed record BoardConnectionState(BoardConnectionKind Kind, string Message, IReadOnlyList<FirmwareDevice> Devices,
-    FirmwareDevice? Device = null, BoardInfo? Info = null, BoardTelemetry? Telemetry = null);
+    FirmwareDevice? Device = null, BoardInfo? Info = null, BoardTelemetry? Telemetry = null, bool SerialInput = false, int ConnectedCount = 0);
+
+internal sealed record BoardInputFrame(string DeviceId, Guid Session, int? Mask, long At);
 
 internal sealed class SerialBoardTransport : IBoardTransport
 {
@@ -41,54 +43,95 @@ internal sealed class SerialBoardTransport : IBoardTransport
     public void Dispose() => port.Dispose();
 }
 
-public sealed class BoardConnectionService : IDisposable
+internal sealed class BoardConnectionService : IDisposable
 {
+    private sealed class Link(FirmwareDevice device, bool requestInput, CancellationToken cancellation)
+    {
+        public FirmwareDevice Device { get; } = device;
+        public bool RequestInput { get; } = requestInput;
+        public Guid Session { get; } = Guid.NewGuid();
+        public CancellationTokenSource Stop { get; } = CancellationTokenSource.CreateLinkedTokenSource(cancellation);
+        public Task Worker { get; set; } = Task.CompletedTask;
+        public BoardConnectionKind Kind { get; set; } = BoardConnectionKind.Connecting;
+        public string Message { get; set; } = "Connexion au macropad…";
+        public BoardInfo? Info { get; set; }
+        public BoardTelemetry? Telemetry { get; set; }
+        public bool SerialInput { get; set; }
+    }
+
     private readonly CancellationTokenSource lifetime = new();
-    private readonly SemaphoreSlim portGate = new(1, 1);
+    private readonly SemaphoreSlim gate = new(1, 1);
     private readonly SemaphoreSlim devicesChanged = new(0, 1);
     private readonly object sync = new();
-    private readonly IProgress<BoardConnectionState>? progress;
-    private CancellationTokenSource? sessionCancellation;
+    private readonly Dictionary<string, Link> links = new(StringComparer.OrdinalIgnoreCase);
+    private readonly IProgress<BoardConnectionState> progress;
+    private readonly IProgress<BoardInputFrame> input;
     private readonly Task worker;
-    private volatile bool paused;
+    private IReadOnlyList<FirmwareDevice> devices = [];
+    private HashSet<string> serialDevices;
     private string preferred;
-    private BoardConnectionState state = new(BoardConnectionKind.Searching, "Recherche du macropad…", []);
-    public BoardConnectionState State { get { lock (sync) return state; } }
-    public BoardConnectionService(string preferredDeviceId, IProgress<BoardConnectionState>? progress = null)
+    private volatile bool paused;
+
+    public BoardConnectionService(string preferredDeviceId, IEnumerable<string> serialDeviceIds,
+        IProgress<BoardConnectionState> progress, IProgress<BoardInputFrame> input)
     {
-        preferred = preferredDeviceId; this.progress = progress;
+        preferred = preferredDeviceId;
+        serialDevices = new(serialDeviceIds, StringComparer.OrdinalIgnoreCase);
+        this.progress = progress;
+        this.input = input;
         worker = Task.Run(WatchAsync);
     }
+
     public void Select(string id)
     {
         lock (sync)
         {
-            if (preferred == id) return;
-            preferred = id; CancelSession();
-            state = new(BoardConnectionKind.Searching, "Changement de macropad…", state.Devices);
-            progress?.Report(state);
+            preferred = id;
+            ReportState();
         }
+    }
+
+    public void SetSerialDevices(IEnumerable<string> ids)
+    {
+        lock (sync) serialDevices = new(ids, StringComparer.OrdinalIgnoreCase);
         NotifyDevicesChanged();
     }
-    private void CancelSession()
+
+    public bool IsInputCurrent(string id, Guid session)
     {
-        try { sessionCancellation?.Cancel(); } catch (ObjectDisposedException) { }
+        lock (sync) return !paused && !lifetime.IsCancellationRequested && serialDevices.Contains(id)
+            && links.TryGetValue(id, out var link) && link.Session == session && link.SerialInput;
     }
-    private void Publish(Func<BoardConnectionState, BoardConnectionState> update)
+
+    // Call under sync. The selected device is only the subject of the diagnostics.
+    private void ReportState()
     {
-        lock (sync) { state = update(state); progress?.Report(state); }
+        var device = devices.FirstOrDefault(d => string.Equals(d.DeviceId, preferred, StringComparison.OrdinalIgnoreCase))
+            ?? (devices.Count == 1 ? devices[0] : null);
+        int connectedCount = links.Values.Count(link => link.Kind == BoardConnectionKind.Connected);
+        if (paused) progress.Report(new(BoardConnectionKind.Paused, "Connexions libérées pour le firmware.", devices, device));
+        else if (device != null && links.TryGetValue(device.DeviceId, out var link))
+            progress.Report(new(link.Kind, link.Message, devices, device, link.Info, link.Telemetry, link.SerialInput, connectedCount));
+        else if (devices.Count > 1)
+            progress.Report(new(BoardConnectionKind.ChooseDevice, "Choisissez le macropad à régler.", devices, ConnectedCount: connectedCount));
+        else if (device != null)
+            progress.Report(new(BoardConnectionKind.Connecting, "Connexion au macropad…", devices, device));
+        else
+            progress.Report(new(BoardConnectionKind.Disconnected, "Macropad déconnecté", devices));
     }
+
     public async Task PauseAsync()
     {
-        lock (sync)
+        paused = true;
+        await gate.WaitAsync(lifetime.Token);
+        try
         {
-            paused = true;
-            CancelSession();
+            await StopLinksAsync(_ => true);
+            lock (sync) ReportState();
         }
-        await portGate.WaitAsync(lifetime.Token);
-        portGate.Release();
-        Publish(s => new(BoardConnectionKind.Paused, "Connexion libérée pour le firmware.", s.Devices));
+        finally { gate.Release(); }
     }
+
     public void Resume()
     {
         paused = false;
@@ -100,6 +143,7 @@ public sealed class BoardConnectionService : IDisposable
         try { devicesChanged.Release(); }
         catch (Exception ex) when (ex is SemaphoreFullException or ObjectDisposedException) { }
     }
+
     private async Task WatchAsync()
     {
         var cancellation = lifetime.Token;
@@ -107,81 +151,130 @@ public sealed class BoardConnectionService : IDisposable
         {
             while (!cancellation.IsCancellationRequested)
             {
-                if (paused) { await Task.Delay(200, cancellation); continue; }
+                await gate.WaitAsync(cancellation);
                 try
                 {
-                    var devices = FirmwareService.Discover().Where(d => !d.Bootloader).ToList();
-                    string selected; lock (sync) selected = preferred;
-                    var device = devices.FirstOrDefault(d => d.DeviceId == selected) ?? (devices.Count == 1 ? devices[0] : null);
-                    if (device == null)
-                    {
-                        Publish(_ => new(devices.Count == 0 ? BoardConnectionKind.Disconnected : BoardConnectionKind.ChooseDevice,
-                            devices.Count == 0 ? "Macropad déconnecté" : "Choisissez le macropad à connecter.", devices));
-                    }
-                    else
-                    {
-                        await portGate.WaitAsync(cancellation);
-                        try
-                        {
-                            using var session = CancellationTokenSource.CreateLinkedTokenSource(cancellation);
-                            lock (sync)
-                            {
-                                if (paused) continue;
-                                sessionCancellation = session;
-                                if (preferred != selected) session.Cancel();
-                            }
-                            session.Token.ThrowIfCancellationRequested();
-                            Publish(s => session.IsCancellationRequested ? s : new(BoardConnectionKind.Connecting, "Connexion au macropad…", devices, device));
-                            using var transport = new SerialBoardTransport(device.Port);
-                            var client = new BoardProtocolClient(transport);
-                            BoardInfo info;
-                            try { info = client.Connect(session.Token); }
-                            catch (IOException ex)
-                            {
-                                Publish(_ => new(BoardConnectionKind.Unidentified, "Carte non identifiée : " + ex.Message, devices, device));
-                                await Task.Delay(1500, session.Token); continue;
-                            }
-                            session.Token.ThrowIfCancellationRequested();
-                            Publish(s => session.IsCancellationRequested ? s : new(BoardConnectionKind.Connected, "Macropad connecté", devices, device, info));
-                            var run = Task.Run(() => client.Run(telemetry => Publish(s => s with { Telemetry = telemetry }), session.Token), session.Token);
-                            try
-                            {
-                                while (!run.IsCompleted && !session.IsCancellationRequested)
-                                {
-                                    var rescan = devicesChanged.WaitAsync(TimeSpan.FromSeconds(15), session.Token);
-                                    if (await Task.WhenAny(run, rescan) == run) break;
-                                    if (session.IsCancellationRequested) break;
-                                    var current = FirmwareService.Discover().Where(d => !d.Bootloader).ToList();
-                                    Publish(s => s with { Devices = current });
-                                    if (!current.Any(d => d.DeviceId == device.DeviceId && d.Port == device.Port)) session.Cancel();
-                                }
-                            }
-                            finally { session.Cancel(); await run; }
-                        }
-                        finally
-                        {
-                            lock (sync) sessionCancellation = null;
-                            portGate.Release();
-                        }
-                    }
-                }
-                catch (OperationCanceledException) when (!cancellation.IsCancellationRequested)
-                {
-                    if (!paused) Publish(s => new(BoardConnectionKind.Searching, "Reconnexion du macropad…", s.Devices));
+                    if (!paused) await RefreshLinksAsync(cancellation);
                 }
                 catch (Exception ex) when (ex is not OperationCanceledException)
                 {
-                    Publish(s => new(BoardConnectionKind.Error, "Liaison indisponible : " + ex.Message, s.Devices));
+                    lock (sync) progress.Report(new(BoardConnectionKind.Error, "Détection USB indisponible : " + ex.Message, devices));
                 }
-                await devicesChanged.WaitAsync(TimeSpan.FromSeconds(10), cancellation);
+                finally { gate.Release(); }
+                await devicesChanged.WaitAsync(TimeSpan.FromSeconds(3), cancellation);
             }
         }
-        catch (OperationCanceledException) { }
+        catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
+        finally
+        {
+            await gate.WaitAsync();
+            try { await StopLinksAsync(_ => true); }
+            finally { gate.Release(); }
+        }
     }
+
+    private async Task RefreshLinksAsync(CancellationToken cancellation)
+    {
+        var found = FirmwareService.Discover().Where(d => !d.Bootloader)
+            .GroupBy(d => d.DeviceId, StringComparer.OrdinalIgnoreCase)
+            .Where(group => group.Count() == 1).Select(group => group.Single()).ToArray();
+        HashSet<string> requested;
+        lock (sync)
+        {
+            devices = found;
+            requested = serialDevices;
+        }
+        await StopLinksAsync(link => link.Worker.IsCompleted || !found.Contains(link.Device)
+            || requested.Contains(link.Device.DeviceId) != link.RequestInput);
+        if (paused || cancellation.IsCancellationRequested) return;
+        lock (sync)
+        {
+            foreach (var device in found)
+            {
+                if (links.ContainsKey(device.DeviceId)) continue;
+                var link = new Link(device, requested.Contains(device.DeviceId), cancellation);
+                links.Add(device.DeviceId, link);
+                link.Worker = Task.Run(() => RunLink(link));
+            }
+            ReportState();
+        }
+    }
+
+    private async Task StopLinksAsync(Func<Link, bool> shouldStop)
+    {
+        Link[] stopping;
+        lock (sync)
+        {
+            stopping = links.Values.Where(shouldStop).ToArray();
+            foreach (var link in stopping) links.Remove(link.Device.DeviceId);
+        }
+        foreach (var link in stopping) link.Stop.Cancel();
+        await Task.WhenAll(stopping.Select(link => link.Worker));
+        foreach (var link in stopping) link.Stop.Dispose();
+    }
+
+    private void RunLink(Link link)
+    {
+        var cancellation = link.Stop.Token;
+        string id = link.Device.DeviceId;
+        try
+        {
+            cancellation.ThrowIfCancellationRequested();
+            using var transport = new SerialBoardTransport(link.Device.Port);
+            var client = new BoardProtocolClient(transport);
+            var info = client.Connect(cancellation);
+            bool active = link.RequestInput && client.EnableSerialInput(cancellation);
+            UpdateLink(link, () =>
+            {
+                link.Info = info;
+                link.SerialInput = active;
+                link.Kind = BoardConnectionKind.Connected;
+                link.Message = active ? "Mode DeckPilot actif" : !link.RequestInput ? "Mode clavier · F13 à F24"
+                    : info.SupportsSerialInput ? "Relâchez les touches pour activer le mode DeckPilot."
+                    : "Mode clavier · Firmware 1.2.0 requis pour le mode DeckPilot.";
+            });
+            if (link.RequestInput && info.SupportsSerialInput && !active)
+            {
+                cancellation.WaitHandle.WaitOne(TimeSpan.FromMilliseconds(500));
+                return; // Retry the handshake on the next discovery pass.
+            }
+            if (active) input.Report(new(id, link.Session, 0, Environment.TickCount64));
+            client.Run(telemetry => UpdateLink(link, () => link.Telemetry = telemetry), cancellation,
+                mask => input.Report(new(id, link.Session, mask, Environment.TickCount64)));
+        }
+        catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
+        catch (Exception ex)
+        {
+            UpdateLink(link, () =>
+            {
+                link.Kind = link.Info == null && ex is BoardResponseTimeoutException ? BoardConnectionKind.Unidentified : BoardConnectionKind.Error;
+                link.Message = "Liaison indisponible : " + ex.Message;
+                link.SerialInput = false;
+            });
+        }
+        finally
+        {
+            if (link.RequestInput)
+            {
+                UpdateLink(link, () => link.SerialInput = false);
+                input.Report(new(id, link.Session, null, Environment.TickCount64));
+            }
+        }
+    }
+
+    private void UpdateLink(Link link, Action update)
+    {
+        lock (sync)
+        {
+            if (!links.TryGetValue(link.Device.DeviceId, out var current) || current != link) return;
+            update();
+            ReportState();
+        }
+    }
+
     public void Dispose()
     {
         lifetime.Cancel();
-        lock (sync) CancelSession();
-        _ = worker.ContinueWith(_ => { lifetime.Dispose(); portGate.Dispose(); devicesChanged.Dispose(); }, TaskScheduler.Default);
+        _ = worker.ContinueWith(_ => { lifetime.Dispose(); gate.Dispose(); devicesChanged.Dispose(); }, TaskScheduler.Default);
     }
 }

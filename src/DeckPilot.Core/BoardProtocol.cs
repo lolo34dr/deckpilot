@@ -4,7 +4,10 @@ using System.Security.Cryptography;
 
 namespace DeckPilot.Core;
 
-public sealed record BoardInfo(FirmwareIdentity Firmware, int Protocol, uint Capabilities);
+public sealed record BoardInfo(FirmwareIdentity Firmware, int Protocol, uint Capabilities)
+{
+    public bool SupportsSerialInput => Protocol == 2 && (Capabilities & 7) == 7;
+}
 public sealed record BoardTelemetry(uint Uptime, uint Sequence, int Mask, int LatencyMilliseconds);
 
 public static class BoardProtocol
@@ -47,6 +50,7 @@ public sealed class BoardProtocolClient(IBoardTransport transport)
 {
     private readonly string session = BoardProtocol.NewSession();
     public BoardInfo? Info { get; private set; }
+    public bool SerialInput { get; private set; }
     public FirmwareIdentity Identify(CancellationToken cancellation)
     {
         transport.WriteLine("DECKPILOT?");
@@ -66,6 +70,16 @@ public sealed class BoardProtocolClient(IBoardTransport transport)
         if (info.Firmware != identity) throw new IOException("La carte a changé d’identité pendant la connexion.");
         return Info = info;
     }
+    public bool EnableSerialInput(CancellationToken cancellation)
+    {
+        if (Info?.SupportsSerialInput != true) return false;
+        string request = "DP2|INPUT|" + session;
+        string busy = "DP2|BUSY|" + session;
+        transport.WriteLine(request);
+        var response = ReadUntil(line => line == request || line == busy ? line : null,
+            cancellation, TimeSpan.FromMilliseconds(1500));
+        return SerialInput = response == request;
+    }
     private T ReadUntil<T>(Func<string, T?> parse, CancellationToken cancellation, TimeSpan timeout) where T : class
     {
         var watch = Stopwatch.StartNew();
@@ -77,7 +91,7 @@ public sealed class BoardProtocolClient(IBoardTransport transport)
         }
         throw new BoardResponseTimeoutException("La carte ne répond pas avec le protocole attendu. Fermez les autres outils série puis réessayez.");
     }
-    public void Run(Action<BoardTelemetry> report, CancellationToken cancellation)
+    public void Run(Action<BoardTelemetry> report, CancellationToken cancellation, Action<int>? input = null)
     {
         var info = Info ?? throw new InvalidOperationException("Connect first.");
         if (info.Protocol == 1)
@@ -86,7 +100,7 @@ public sealed class BoardProtocolClient(IBoardTransport transport)
                 if (Identify(cancellation) != info.Firmware) throw new IOException("Le firmware de la carte a changé. Nouvelle détection nécessaire.");
             cancellation.ThrowIfCancellationRequested(); return;
         }
-        uint request = 0; uint? lastSequence = null;
+        uint request = 0, inputSequence = 0; uint? lastSequence = null;
         var state = new BoardTelemetry(0, 0, 0, -1);
         long sent = 0, next = 0;
         bool waiting = false;
@@ -102,6 +116,8 @@ public sealed class BoardProtocolClient(IBoardTransport transport)
             }
             string line;
             try { line = transport.ReadLine(); } catch (TimeoutException) { continue; }
+            if (SerialInput && line == "DP2|LOST|" + session)
+                throw new IOException("Des appuis USB ont été perdus. Reconnexion en cours…");
             var pong = waiting ? BoardProtocol.Pong(line, session, request, (int)Math.Clamp(Environment.TickCount64 - sent, 0, 1500)) : null;
             if (pong != null)
             {
@@ -112,6 +128,13 @@ public sealed class BoardProtocolClient(IBoardTransport transport)
                 report(state); continue;
             }
             var keys = (info.Capabilities & 2) != 0 ? BoardProtocol.Keys(line, session) : null;
+            if (SerialInput && keys is { } serialKeys)
+            {
+                if (serialKeys.Sequence != unchecked(inputSequence + 1))
+                    throw new IOException("Séquence d’appuis USB interrompue. Reconnexion en cours…");
+                inputSequence = serialKeys.Sequence;
+                input?.Invoke(serialKeys.Mask);
+            }
             if (keys != null && (lastSequence == null || BoardProtocol.Newer(keys.Value.Sequence, lastSequence.Value)))
             {
                 lastSequence = keys.Value.Sequence;

@@ -21,8 +21,10 @@ public partial class MainWindow
     {
         gestureTimer.Tick += (_, _) =>
         {
-            foreach (var invocation in gestures.Tick(Environment.TickCount64)) RunGesture(invocation);
-            if (!gestures.HasPending) gestureTimer.Stop();
+            long now = Environment.TickCount64;
+            foreach (var invocation in gestures.Tick(now)) RunGesture(invocation);
+            bool serialPending = TickSerialGestures(now);
+            if (!gestures.HasPending && !serialPending) gestureTimer.Stop();
         };
         audioTimer.Tick += async (_, _) => await RefreshAudioAsync();
         IsVisibleChanged += async (_, _) => await InterfaceActivityChangedAsync();
@@ -42,8 +44,9 @@ public partial class MainWindow
             SystemEvents.SessionSwitch -= SessionChanged; SystemEvents.PowerModeChanged -= PowerChanged;
         };
     }
-    private void SessionChanged(object sender, SessionSwitchEventArgs e) => Dispatcher.BeginInvoke(CancelPendingGestures);
-    private void PowerChanged(object sender, PowerModeChangedEventArgs e) { if (e.Mode == PowerModes.Suspend) Dispatcher.BeginInvoke(CancelPendingGestures); }
+    private void SessionChanged(object sender, SessionSwitchEventArgs e) => Dispatcher.BeginInvoke(CancelInputGestures);
+    private void PowerChanged(object sender, PowerModeChangedEventArgs e) { if (e.Mode == PowerModes.Suspend) Dispatcher.BeginInvoke(CancelInputGestures); }
+    private void CancelInputGestures() { CancelPendingGestures(); CancelSerialGestures(); }
     private int gestureGeneration;
     private void CancelPendingGestures() { gestureGeneration++; gestures.CancelAll(); gestureTimer.Stop(); }
     private void OnDeckRelease(object? sender, DeckKeyEventArgs e)
