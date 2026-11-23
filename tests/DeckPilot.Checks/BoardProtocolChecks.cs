@@ -92,8 +92,13 @@ internal static class BoardProtocolChecks
             static List<int> Read(BoardProtocolClient client)
             {
                 var frames = new List<int>();
-                try { client.Run(_ => { }, default, frames.Add); }
-                catch (IOException ex) when (ex.Message.Contains("Séquence", StringComparison.Ordinal)) { return frames; }
+                var displayed = new List<int>();
+                try { client.Run(state => displayed.Add(state.Mask), default, frames.Add); }
+                catch (IOException ex) when (ex.Message.Contains("Séquence", StringComparison.Ordinal))
+                {
+                    if (!displayed.SequenceEqual(new[] { 0, 1, 0 })) throw new Exception("The display must follow the ordered input frames.");
+                    return frames;
+                }
                 throw new Exception("A gap in the input sequence was accepted.");
             }
             var left = Task.Run(() => Read(first));
@@ -119,6 +124,27 @@ internal static class BoardProtocolChecks
                 Expect(first.ButtonIndex(0) == 0 && other.ButtonIndex(0) == 11);
                 Expect(ProfileNavigation.Resolve(loaded, "next", second.Id).Id == first.ProfileId);
             } finally { if (Directory.Exists(directory)) Directory.Delete(directory, true); }
+        });
+        Check("First board keeps the keyboard profile, second gets its own, and shared profiles split without losing actions", () => {
+            var settings = new Settings { KeyMap = Enumerable.Range(Calibration.FirstKey, 12).Reverse().ToList() };
+            settings.ActiveProfile.Buttons[0] = new() { Kind = ActionKind.Media, Key = 0xB3, Label = "Lecture" };
+            var first = BoardSetup.Prepare(settings, "board-a", "COM3");
+            Expect(!first.AddProfile && first.Profile.Id == settings.ActiveProfile.Id
+                && first.Binding.KeyMap.SequenceEqual(settings.KeyMap));
+            settings.BoardBindings["board-a"] = first.Binding;
+            var second = BoardSetup.Prepare(settings, "board-b", "COM4");
+            Expect(second.AddProfile && second.Profile.Id != first.Profile.Id && second.Binding.KeyMap.Count == 0
+                && second.Profile.Buttons.All(button => button.Kind == ActionKind.Passthrough));
+            settings.BoardBindings["board-b"] = first.Binding with { Enabled = false };
+            var split = BoardSetup.Prepare(settings, "BOARD-B", "COM4");
+            Expect(split.AddProfile && split.Binding.Enabled && split.Profile.Id != first.Profile.Id
+                && split.Profile.Buttons[0].Label == "Lecture" && split.Binding.KeyMap.SequenceEqual(first.Binding.KeyMap));
+            split.Profile.Buttons[0].Label = "Autre action";
+            Expect(first.Profile.Buttons[0].Label == "Lecture");
+            settings.Profiles.Add(split.Profile);
+            settings.BoardBindings["board-b"] = split.Binding;
+            var reopen = BoardSetup.Prepare(settings, "board-b", "COM4");
+            Expect(!reopen.AddProfile && reopen.Profile.Id == split.Profile.Id);
         });
         Check("Firmware prompt preferences default safely and survive a settings round-trip", () => {
             string path = Path.Combine(Path.GetTempPath(), "deckpilot-board-" + Guid.NewGuid() + ".json");

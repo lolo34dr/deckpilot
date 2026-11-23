@@ -1,0 +1,19 @@
+<UserControl x:ClassModifier="internal" x:Class="DeckPilot.Windows.MacropadCard"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+ <Border Background="{DynamicResource CardBrush}" BorderBrush="{DynamicResource AccentBrush}"
+         BorderThickness="1" CornerRadius="10" Padding="12">
+  <StackPanel>
+   <TextBlock x:Name="CardTitle" FontSize="16" FontWeight="SemiBold"/>
+   <TextBlock x:Name="CardStatus" Margin="0,4,0,0" TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}"/>
+   <TextBlock x:Name="CardProfile" Margin="0,6,0,8" TextWrapping="Wrap"/>
+   <UniformGrid x:Name="CardKeys" Rows="3" Columns="4"/>
+   <Button x:Name="ConfigureButton" Click="ConfigureClick" MinHeight="34" Margin="0,8,0,4" Padding="6,4"/>
+   <WrapPanel>
+    <Button x:Name="CalibrateCardButton" Content="Calibrer" Click="CalibrateClick" MinHeight="32" Margin="0,0,4,4" Padding="7,4"/>
+    <Button x:Name="BoardOptionsButton" Content="Réglages" Click="OptionsClick" MinHeight="32" Margin="0,0,4,4" Padding="7,4"/>
+    <Button x:Name="BoardFirmwareButton" Content="Firmware…" Click="FirmwareClick" MinHeight="32" Margin="0,0,0,4" Padding="7,4"/>
+   </WrapPanel>
+  </StackPanel>
+ </Border>
+</UserControl>

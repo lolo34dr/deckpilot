@@ -60,10 +60,10 @@ jobs:
         shell: powershell
         run: ./tests/windows-update-smoke.ps1 -Executable artifacts/standalone/DeckPilot.exe
       - name: Build the two macropad beta
-        if: startsWith(github.ref, 'refs/heads/beta/')
+        if: github.ref == 'refs/heads/beta/dual-deck-hybrid'
         shell: pwsh
         run: |
-          dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true -p:DeckPilotBeta=true -p:InformationalVersion=2.4.7-hybrid-beta.1 -p:RequireFirmwareBundle=true -p:RequireNoiseReductionBundle=true -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o artifacts/hybrid-beta-win-x64
+          dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true -p:DeckPilotBeta=true -p:InformationalVersion=2.4.7-hybrid-beta.2 -p:RequireFirmwareBundle=true -p:RequireNoiseReductionBundle=true -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o artifacts/hybrid-beta-win-x64
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           @'
           DeckPilot — bêta Windows x64 pour deux macropads
@@ -72,10 +72,13 @@ jobs:
           1. Quittez DeckPilot stable depuis son icône près de l’horloge.
           2. Extrayez l’archive et lancez DeckPilot.Beta.exe. Les réglages restent séparés.
           3. Installez le firmware sur chaque carte, une seule branchée à la fois.
-          4. Branchez les deux decks. Dans Macropad, activez le mode DeckPilot sur chacun
-             et choisissez son profil. Calibrez chaque deck si l’ordre des boutons diffère.
-          5. Testez la même touche sur les deux decks avec des actions distinctes,
-             les appuis longs, puis le débranchement d’un deck.
+          4. Branchez les deux decks. Dans Macropads, cliquez sur une touche de COM3,
+             COM4 ou du port indiqué. Choisissez une action dans la bibliothèque.
+             La première configuration active le mode DeckPilot de cette carte.
+          5. Revenez à Macropads pour configurer l’autre carte. Si les cartes partageaient
+             un profil, « Séparer et configurer » conserve ses actions dans une copie.
+          6. Calibrez chaque carte si nécessaire. Testez la même touche sur les deux
+             cartes avec des actions distinctes, puis essayez de débrancher une carte.
 
           En mode DeckPilot, une touche libre n’envoie aucune touche Windows.
           Désactivez le mode pour rétablir F13–F24. Après avoir quitté la bêta,
@@ -87,7 +90,7 @@ jobs:
           $hash = (Get-FileHash artifacts/DeckPilot-Deux-Macropads-Beta-win-x64.zip -Algorithm SHA256).Hash.ToLowerInvariant()
           "$hash  DeckPilot-Deux-Macropads-Beta-win-x64.zip" | Set-Content artifacts/DeckPilot-Deux-Macropads-Beta-win-x64.zip.sha256 -Encoding ascii
       - name: Upload the two macropad beta
-        if: startsWith(github.ref, 'refs/heads/beta/')
+        if: github.ref == 'refs/heads/beta/dual-deck-hybrid'
         uses: actions/upload-artifact@v6
         with:
           name: DeckPilot-Deux-Macropads-Beta-win-x64

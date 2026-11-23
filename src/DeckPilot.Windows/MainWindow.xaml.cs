@@ -38,7 +38,7 @@ public partial class MainWindow : Window
     private readonly UpdateService updateService = new();
     private readonly CancellationTokenSource lifetime = new();
     private readonly DispatcherTimer updateTimer = new() { Interval = TimeSpan.FromHours(6) };
-    private bool updateBusy, firmwareOpen, firmwarePromptActive, loadingBoardPicker;
+    private bool updateBusy, firmwareOpen, firmwarePromptActive;
     private BoardConnectionService? boardConnection;
     private BoardConnectionState? boardState;
     private FirmwareManifest? bundledFirmware;
@@ -47,7 +47,6 @@ public partial class MainWindow : Window
     private long firmwareQuietUntil;
     private readonly long startedAt = Environment.TickCount64;
     private readonly HashSet<string> firmwareOffered = [];
-    private string deviceListSignature = "";
     private Forms.ToolStripMenuItem? trayProfiles;
     private DateTimeOffset lastUpdateCheck;
     private string pickedApplicationName = "";
@@ -141,7 +140,9 @@ public partial class MainWindow : Window
         InputBindings.Add(new System.Windows.Input.KeyBinding(System.Windows.Input.ApplicationCommands.Save, System.Windows.Input.Key.S, System.Windows.Input.ModifierKeys.Control));
         Loaded += async (_, _) =>
         {
-            if (startInBackground) Hide(); else if (!settings.IsCalibrated && !EnabledSerialDevices().Any()) BeginCalibration();
+            if (startInBackground) Hide();
+            else if (BetaEnvironment.IsEnabled) ControlTabs.SelectedItem = DeviceTab;
+            else if (!settings.IsCalibrated && !EnabledSerialDevices().Any()) BeginCalibration();
             Motion.Reveal(WindowContent);
             boardConnection = new BoardConnectionService(settings.PreferredBoardDeviceId, EnabledSerialDevices(),
                 new Progress<BoardConnectionState>(OnBoardStateChanged), new Progress<BoardInputFrame>(OnBoardInput));
@@ -261,7 +262,7 @@ public partial class MainWindow : Window
         for (int i = 0; i < 12; i++)
         {
             var action = settings.ActiveProfile.Buttons[i];
-            string keyName = settings.IsCalibrated ? Calibration.KeyName(settings.KeyMap[i]) : $"{i + 1:00}";
+            string keyName = EditorKeyName(i);
             deckButtons[i].Label = string.IsNullOrWhiteSpace(action.Label) ? keyName : action.Label;
             deckButtons[i].KeyCaption = keyName;
             deckButtons[i].IconSource = action.Kind == ActionKind.Application ? ApplicationIcons.ForTarget(action.Target) : VectorIcons.ForKind(action.Kind);
@@ -272,13 +273,15 @@ public partial class MainWindow : Window
             System.Windows.Automation.AutomationProperties.SetName(deckButtons[i], (string)deckButtons[i].ToolTip);
         }
         RefreshProfileSummary(); RefreshFeedback();
+        RefreshBoardEditBanner();
     }
     private void ApplyHardwareHighlights()
     {
         if (!IsInterfaceActive) return;
-        int mask = boardState?.Kind == BoardConnectionKind.Connected ? boardState.Telemetry?.Mask ?? 0 : 0;
-        var map = boardState is { SerialInput: true, Device: { } device }
-            ? settings.BoardBindings.GetValueOrDefault(device.DeviceId)?.KeyMap : settings.KeyMap;
+        var editingBoard = CurrentEditingBoard();
+        int mask = editingBoard != null ? editingBoard.Telemetry?.Mask ?? 0
+            : boardState is { SerialInput: false, Kind: BoardConnectionKind.Connected } ? boardState.Telemetry?.Mask ?? 0 : 0;
+        var map = editingBoard == null ? settings.KeyMap : settings.BoardBindings[editingBoard.Device.DeviceId].KeyMap;
         for (int i = 0; i < deckButtons.Count; i++)
         {
             int key = map?.Count == 12 ? map[i] : Calibration.FirstKey + i;
@@ -343,7 +346,8 @@ public partial class MainWindow : Window
         GesturePicker.SelectedIndex = editingLong ? 1 : 0;
         LongPressThreshold.Value = root.LongPressMilliseconds;
         SelectedTitle.Text = $"Bouton {selected + 1:00}" + (editingLong ? " · Appui long" : "");
-        SelectedKey.Text = $"Ligne {selected / 4 + 1}, colonne {selected % 4 + 1} · " + (settings.IsCalibrated ? Calibration.KeyName(settings.KeyMap[selected]) : "Calibrage nécessaire");
+        SelectedKey.Text = $"Ligne {selected / 4 + 1}, colonne {selected % 4 + 1} · " +
+            (CurrentEditingBinding() != null || settings.IsCalibrated ? EditorKeyName(selected) : "Calibrage nécessaire");
         LabelEditor.Text = action.Label;
         ActionPicker.SelectedIndex = (int)action.Kind;
         pickedApplicationName = action.ApplicationName;
@@ -427,6 +431,7 @@ public partial class MainWindow : Window
         TargetLabel.Text = kind == ActionKind.Website ? "Adresse du site" : kind == ActionKind.Folder ? "Chemin du dossier" : "Chemin du programme";
         ActionHelp.Text = kind switch
         {
+            ActionKind.Passthrough when CurrentEditingBinding() != null => "Choisissez une action dans la bibliothèque pour cette touche.",
             ActionKind.Passthrough => settings.IsCalibrated ? "Cette touche F13–F24 reste libre. Attribuez-la directement dans votre jeu ou application." : "Le clavier F13–F24 fonctionne sans calibrage. Calibrez les positions pour que DeckPilot puisse exécuter vos actions personnalisées.",
             ActionKind.Application => "Choisissez une application installée, ou sélectionnez son fichier manuellement.",
             ActionKind.Folder => "Ouvre le dossier dans l’Explorateur Windows.",
@@ -531,7 +536,18 @@ public partial class MainWindow : Window
     private async void TestActionClick(object sender, RoutedEventArgs e)
     {
         if (calibrating || firmwareOpen || !SaveEditor()) return;
-        await ExecuteActionAsync(selected, EditedAction.CopyBasic());
+        var action = EditedAction.CopyBasic();
+        if (action.Kind == ActionKind.Profile && CurrentEditingBoard() is { } board)
+        {
+            if (!serialDecks.TryGetValue(board.Device.DeviceId, out var deck))
+            {
+                ReportError("Attendez que le mode DeckPilot soit actif pour tester le changement de profil de ce macropad.");
+                return;
+            }
+            await ExecuteActionAsync(selected, action, deck, settings.ActiveProfile.Id, deck.Revision);
+            return;
+        }
+        await ExecuteActionAsync(selected, action);
     }
     private async Task ExecuteActionAsync(int index, ButtonAction action, SerialDeck? deck = null, Guid? deviceProfile = null, int revision = 0)
     {
@@ -539,7 +555,8 @@ public partial class MainWindow : Window
         if (!ActionSearch.IsAvailable(action.Kind)) { ReportError("Cette ancienne action a été retirée. Choisissez une nouvelle action dans la bibliothèque."); return; }
         Guid sourceProfile = deviceProfile ?? settings.ActiveProfile.Id;
         int generation = gestureGeneration;
-        bool displayFeedback = sourceProfile == settings.ActiveProfile.Id;
+        bool displayFeedback = sourceProfile == settings.ActiveProfile.Id && (deck == null
+            || editingBoardId == null || string.Equals(editingBoardId, deck.Id, StringComparison.OrdinalIgnoreCase));
         bool Current() => deck == null ? sourceProfile == settings.ActiveProfile.Id && generation == gestureGeneration
             : IsSerialActionCurrent(deck, sourceProfile, revision);
         string title = string.IsNullOrWhiteSpace(action.Label) ? ActionSearch.KindName(action.Kind) : action.Label;
@@ -625,13 +642,12 @@ public partial class MainWindow : Window
         }
     }
     private async void FirmwareClick(object sender, RoutedEventArgs e) => await OpenFirmwareAsync();
-    private async Task OpenFirmwareAsync()
+    private async Task OpenFirmwareAsync(string? deviceId = null)
     {
         if (updateBusy || firmwareOpen || firmwarePromptActive || OwnedWindows.Count > 0 || calibrating || lifetime.IsCancellationRequested) return;
         if (!SaveEditor()) return;
         CancelShortcutRecording();
-        string preferredId = boardState?.Devices.Any(d => d.DeviceId == settings.PreferredBoardDeviceId) == true
-            ? settings.PreferredBoardDeviceId : boardState?.Device?.DeviceId ?? settings.PreferredBoardDeviceId;
+        string preferredId = deviceId ?? boardState?.Device?.DeviceId ?? settings.PreferredBoardDeviceId;
         CancelInputGestures(); firmwareOpen = true;
         try
         {
@@ -641,7 +657,7 @@ public partial class MainWindow : Window
             dialog.ShowDialog();
             if (dialog.SelectedDeviceId is { Length: > 0 } id)
             {
-                settings.PreferredBoardDeviceId = id; Persist(); boardConnection?.Select(id);
+                SelectBoardDetails(id);
             }
         }
         catch (Exception ex) { ReportError("Firmware : " + ex.Message); }
@@ -653,7 +669,7 @@ public partial class MainWindow : Window
         if (!SaveEditor()) return;
         CancelShortcutRecording(); CancelInputGestures(); captured.Clear(); calibrating = true;
         serialCalibrationId = deviceId;
-        CalibrationTitle.Text = deviceId != null ? $"Calibrage du macropad · {boardState?.Device?.Port}" : "Calibrage des touches clavier";
+        CalibrationTitle.Text = deviceId != null ? $"Calibrage du macropad · {boardState?.Boards.FirstOrDefault(board => board.Device.DeviceId == deviceId)?.Device.Port}" : "Calibrage des touches clavier";
         CalibrationOverlay.Visibility = Visibility.Visible; CalibrationError.Text = layoutChanged ? "Disposition corrigée : 3 lignes de 4. Recalibrez les positions ; vos profils sont conservés." : "Les actions personnalisées sont suspendues pendant le calibrage.";
         UpdateCalibration();
     }
@@ -795,7 +811,7 @@ public partial class MainWindow : Window
         if (previous != null && previous.Kind == state.Kind && previous.Message == state.Message
             && previous.Device == state.Device && previous.Info == state.Info && previous.Telemetry == state.Telemetry
             && previous.SerialInput == state.SerialInput && previous.ConnectedCount == state.ConnectedCount
-            && previous.Devices.SequenceEqual(state.Devices)) return;
+            && previous.Devices.SequenceEqual(state.Devices) && previous.Boards.SequenceEqual(state.Boards)) return;
         ApplyBoardState(state);
     }
     private void ApplyBoardState(BoardConnectionState state)
@@ -826,21 +842,7 @@ public partial class MainWindow : Window
                 UIElementAutomationPeer.CreatePeerForElement(BoardConnectionStatus)?.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
         }
         BoardConnectionStatus.Foreground = Brush(state.Kind == BoardConnectionKind.Connected ? "#B1A8C4" : state.Kind is BoardConnectionKind.Error or BoardConnectionKind.Unidentified ? "#D1B18C" : "#A5AAA6");
-        string signature = string.Join("|", state.Devices.Select(d => d.DeviceId + ":" + d.Port + ":" + d.Location + ":" + d.Name));
-        if (signature != deviceListSignature)
-        {
-            deviceListSignature = signature; loadingBoardPicker = true;
-            BoardDevicePicker.ItemsSource = state.Devices;
-            BoardDevicePicker.Visibility = state.Devices.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
-
-            loadingBoardPicker = false;
-        }
-        var target = state.Devices.FirstOrDefault(d => d.DeviceId == settings.PreferredBoardDeviceId)
-            ?? state.Devices.FirstOrDefault(d => d.DeviceId == state.Device?.DeviceId);
-        if ((BoardDevicePicker.SelectedItem as FirmwareDevice)?.DeviceId != target?.DeviceId)
-        {
-            loadingBoardPicker = true; BoardDevicePicker.SelectedItem = target; loadingBoardPicker = false;
-        }
+        BoardDetailsTitle.Text = state.Device is { } board ? $"Réglages · {board.Port}" : "Macropads";
         string installed = state.Info?.Firmware.Version ?? "";
         bool upgrade = bundledFirmware != null && state.Info != null && Version.Parse(installed) < Version.Parse(bundledFirmware.Version);
         BoardFirmwareStatus.Text = installed.Length > 0 ? $"Firmware {installed}" + (upgrade ? $" · {bundledFirmware!.Version} disponible" : bundledFirmware != null && installed == bundledFirmware.Version ? " · À jour" : "") : bundledFirmware == null ? bundledFirmwareError.Length > 0 ? bundledFirmwareError : "Lecture du firmware inclus…" : $"Firmware inclus : {bundledFirmware.Version}";
@@ -851,19 +853,8 @@ public partial class MainWindow : Window
             : state.Kind == BoardConnectionKind.Error ? "Fermez les autres outils qui utilisent la carte. DeckPilot tente de se reconnecter automatiquement."
             : "Les touches F13–F24 restent utilisables en mode clavier.";
         ApplyBoardInputSettings();
+        RefreshBoardCards();
         ApplyHardwareHighlights();
-    }
-    private void BoardDeviceChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (loadingBoardPicker || BoardDevicePicker.SelectedItem is not FirmwareDevice device || firmwareOpen) return;
-        string previous = settings.PreferredBoardDeviceId;
-        settings.PreferredBoardDeviceId = device.DeviceId;
-        if (Persist()) boardConnection?.Select(device.DeviceId);
-        else
-        {
-            settings.PreferredBoardDeviceId = previous;
-            if (boardState != null) ApplyBoardState(boardState);
-        }
     }
     private void AutoFirmwareClick(object sender, RoutedEventArgs e)
     {

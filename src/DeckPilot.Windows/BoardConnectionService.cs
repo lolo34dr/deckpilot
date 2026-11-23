@@ -12,7 +12,13 @@ namespace DeckPilot.Windows;
 
 public enum BoardConnectionKind { Searching, Disconnected, ChooseDevice, Connecting, Connected, Unidentified, Paused, Error }
 public sealed record BoardConnectionState(BoardConnectionKind Kind, string Message, IReadOnlyList<FirmwareDevice> Devices,
-    FirmwareDevice? Device = null, BoardInfo? Info = null, BoardTelemetry? Telemetry = null, bool SerialInput = false, int ConnectedCount = 0);
+    FirmwareDevice? Device = null, BoardInfo? Info = null, BoardTelemetry? Telemetry = null, bool SerialInput = false, int ConnectedCount = 0)
+{
+    public IReadOnlyList<BoardLinkState> Boards { get; init; } = [];
+}
+
+public sealed record BoardLinkState(FirmwareDevice Device, BoardConnectionKind Kind, string Message,
+    BoardInfo? Info = null, BoardTelemetry? Telemetry = null, bool SerialInput = false);
 
 internal sealed record BoardInputFrame(string DeviceId, Guid Session, int? Mask, long At);
 
@@ -106,18 +112,26 @@ internal sealed class BoardConnectionService : IDisposable
     // Call under sync. The selected device is only the subject of the diagnostics.
     private void ReportState()
     {
-        var device = devices.FirstOrDefault(d => string.Equals(d.DeviceId, preferred, StringComparison.OrdinalIgnoreCase))
-            ?? (devices.Count == 1 ? devices[0] : null);
-        int connectedCount = links.Values.Count(link => link.Kind == BoardConnectionKind.Connected);
-        if (paused) progress.Report(new(BoardConnectionKind.Paused, "Connexions libérées pour le firmware.", devices, device));
-        else if (device != null && links.TryGetValue(device.DeviceId, out var link))
-            progress.Report(new(link.Kind, link.Message, devices, device, link.Info, link.Telemetry, link.SerialInput, connectedCount));
-        else if (devices.Count > 1)
-            progress.Report(new(BoardConnectionKind.ChooseDevice, "Choisissez le macropad à régler.", devices, ConnectedCount: connectedCount));
-        else if (device != null)
-            progress.Report(new(BoardConnectionKind.Connecting, "Connexion au macropad…", devices, device));
-        else
-            progress.Report(new(BoardConnectionKind.Disconnected, "Macropad déconnecté", devices));
+        var boards = devices.Select(device =>
+        {
+            if (paused) return new BoardLinkState(device, BoardConnectionKind.Paused, "Gestionnaire de firmware ouvert");
+            return links.TryGetValue(device.DeviceId, out var link)
+                ? new(device, link.Kind, link.Message, link.Info, link.Telemetry, link.SerialInput)
+                : new(device, BoardConnectionKind.Connecting, "Connexion au macropad…");
+        }).ToArray();
+        PublishBoards(boards);
+    }
+
+    private void PublishBoards(IReadOnlyList<BoardLinkState> boards, string? error = null)
+    {
+        var selected = boards.FirstOrDefault(board => string.Equals(board.Device.DeviceId, preferred, StringComparison.OrdinalIgnoreCase))
+            ?? boards.FirstOrDefault();
+        int connected = boards.Count(board => board.Kind == BoardConnectionKind.Connected);
+        var state = selected != null
+            ? new BoardConnectionState(selected.Kind, selected.Message, devices, selected.Device, selected.Info, selected.Telemetry, selected.SerialInput, connected)
+            : new BoardConnectionState(BoardConnectionKind.Disconnected, "Macropad déconnecté", devices);
+        if (error != null) state = state with { Kind = BoardConnectionKind.Error, Message = error };
+        progress.Report(state with { Boards = boards });
     }
 
     public async Task PauseAsync()
@@ -158,7 +172,8 @@ internal sealed class BoardConnectionService : IDisposable
                 }
                 catch (Exception ex) when (ex is not OperationCanceledException)
                 {
-                    lock (sync) progress.Report(new(BoardConnectionKind.Error, "Détection USB indisponible : " + ex.Message, devices));
+                    string message = "Détection USB indisponible : " + ex.Message;
+                    lock (sync) PublishBoards(devices.Select(device => new BoardLinkState(device, BoardConnectionKind.Error, message)).ToArray(), message);
                 }
                 finally { gate.Release(); }
                 await devicesChanged.WaitAsync(TimeSpan.FromSeconds(3), cancellation);

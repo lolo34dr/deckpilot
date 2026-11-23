@@ -122,6 +122,12 @@ public sealed class BoardProtocolClient(IBoardTransport transport)
             if (pong != null)
             {
                 waiting = false; next = Environment.TickCount64 + 2000;
+                if (SerialInput)
+                {
+                    state = state with { Uptime = pong.Uptime, LatencyMilliseconds = pong.LatencyMilliseconds };
+                    report(state);
+                    continue;
+                }
                 bool current = lastSequence == null || pong.Sequence == lastSequence || BoardProtocol.Newer(pong.Sequence, lastSequence.Value);
                 state = pong with { Mask = current ? pong.Mask : state.Mask, Sequence = current ? pong.Sequence : state.Sequence };
                 if (current) lastSequence = pong.Sequence;
@@ -134,6 +140,9 @@ public sealed class BoardProtocolClient(IBoardTransport transport)
                     throw new IOException("Séquence d’appuis USB interrompue. Reconnexion en cours…");
                 inputSequence = serialKeys.Sequence;
                 input?.Invoke(serialKeys.Mask);
+                state = state with { Sequence = inputSequence, Mask = serialKeys.Mask };
+                report(state);
+                continue;
             }
             if (keys != null && (lastSequence == null || BoardProtocol.Newer(keys.Value.Sequence, lastSequence.Value)))
             {

@@ -130,7 +130,7 @@ public partial class MainWindow
         loadingBoardBinding = true;
         try
         {
-            var device = BoardDevicePicker.SelectedItem as FirmwareDevice;
+            var device = boardState?.Device;
             BoardBinding? binding = null;
             if (device != null) settings.BoardBindings.TryGetValue(device.DeviceId, out binding);
             bool enabled = binding?.Enabled == true;
@@ -148,7 +148,6 @@ public partial class MainWindow
                 BoardProfilePicker.ItemsSource = settings.Profiles.ToArray();
             var profile = enabled && device != null ? SerialProfile(device.DeviceId) : null;
             BoardProfilePicker.SelectedItem = profile;
-            EditBoardProfileButton.IsEnabled = profile != null;
             if (enabled && profile == null && active)
                 BoardInputHint.Text = "Choisissez un profil pour que ce macropad puisse déclencher des actions.";
             CalibrateButton.Content = enabled ? "Calibrer ce macropad" : "Calibrer les touches clavier";
@@ -171,34 +170,31 @@ public partial class MainWindow
         if (serialDecks.TryGetValue(id, out var deck)) deck.Cancel();
         if ((previous?.Enabled == true) != binding.Enabled) boardConnection?.SetSerialDevices(EnabledSerialDevices());
         ApplyBoardInputSettings();
+        RefreshBoardCards();
         ApplyHardwareHighlights();
         return true;
     }
 
     private void BoardSerialClick(object sender, RoutedEventArgs e)
     {
-        if (loadingBoardBinding || firmwareOpen || BoardDevicePicker.SelectedItem is not FirmwareDevice device) return;
+        if (loadingBoardBinding || firmwareOpen || boardState?.Device is not { } device) return;
         bool enable = BoardSerialCheck.IsChecked == true;
-        if (enable && boardState?.Info?.SupportsSerialInput != true) { ApplyBoardInputSettings(); return; }
-        var binding = settings.BoardBindings.GetValueOrDefault(device.DeviceId)
-            ?? new BoardBinding(settings.ActiveProfile.Id, [.. settings.KeyMap]);
-        SaveBoardBinding(device.DeviceId, binding with { Enabled = enable });
+        var binding = settings.BoardBindings.GetValueOrDefault(device.DeviceId);
+        if (enable)
+        {
+            var board = boardState?.Boards.FirstOrDefault(link => link.Device.DeviceId == device.DeviceId);
+            if (board != null) ConfigureBoard(board, 0);
+        }
+        else if (binding != null) SaveBoardBinding(device.DeviceId, binding with { Enabled = false });
+        ApplyBoardInputSettings();
     }
 
     private void BoardProfileChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (loadingBoardBinding || loading || firmwareOpen || BoardDevicePicker.SelectedItem is not FirmwareDevice device
+        if (loadingBoardBinding || loading || firmwareOpen || boardState?.Device is not { } device
             || BoardProfilePicker.SelectedItem is not Profile profile
             || !settings.BoardBindings.TryGetValue(device.DeviceId, out var binding) || profile.Id == binding.ProfileId) return;
         SaveBoardBinding(device.DeviceId, binding with { ProfileId = profile.Id });
     }
 
-    private void EditBoardProfileClick(object sender, RoutedEventArgs e)
-    {
-        if (BoardProfilePicker.SelectedItem is Profile profile && SwitchProfile(profile))
-        {
-            ControlTabs.SelectedItem = ActionsTab;
-            ActionSearchBox.Focus();
-        }
-    }
 }

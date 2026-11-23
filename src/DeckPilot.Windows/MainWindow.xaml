@@ -54,9 +54,9 @@
      <TextBlock x:Name="VersionLabel" Foreground="#D9CFF6" FontSize="12" Margin="10,0,0,0" VerticalAlignment="Center"/>
     </StackPanel>
     <WrapPanel DockPanel.Dock="Right" VerticalAlignment="Center">
-     <Button Content="{Binding Text, ElementName=DeckAvailabilityStatus}" ContentStringFormat="Macropad · {0}"
-             Click="ShowDeviceClick" MinHeight="42" Margin="0,0,8,0" ToolTip="Afficher l’état et les commandes du macropad"
-             AutomationProperties.Name="{Binding Text, ElementName=DeckAvailabilityStatus, StringFormat=État du macropad · {0}}"/>
+     <Button Content="Macropads"
+             Click="ShowDeviceClick" MinHeight="42" Margin="0,0,8,0" ToolTip="Voir et configurer les macropads"
+             AutomationProperties.Name="{Binding Text, ElementName=DeckAvailabilityStatus, StringFormat=Macropads · {0}}"/>
      <Button Content="Bibliothèque" Click="FocusActionSearchClick" MinHeight="42" Margin="0"
              ToolTip="Rechercher une action ou une application (Ctrl+K)" AutomationProperties.AutomationId="FocusActionSearchButton"/>
     </WrapPanel>
@@ -65,23 +65,34 @@
   <Grid x:Name="ConfigurationWorkspace" Grid.Row="1" SizeChanged="ConfigurationWorkspaceSizeChanged">
    <Grid.RowDefinitions><RowDefinition x:Name="DeckWorkspaceRow" Height="*"/><RowDefinition x:Name="PanelWorkspaceRow" Height="0"/><RowDefinition x:Name="ConfigurationBottomRow" Height="0"/></Grid.RowDefinitions>
    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition x:Name="PanelWorkspaceColumn" Width="440"/></Grid.ColumnDefinitions>
+   <ScrollViewer x:Name="BoardOverviewScroll" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Margin="16,16,8,12">
+     <TextBlock Text="Vos macropads" Style="{StaticResource ConfigurationHeading}"/>
+     <TextBlock Text="Cliquez sur une touche du macropad à configurer, puis choisissez son action." TextWrapping="Wrap" Margin="0,0,0,12" Foreground="{StaticResource MutedBrush}"/>
+     <WrapPanel x:Name="BoardCardsPanel" AutomationProperties.Name="Macropads détectés"/>
+    </StackPanel>
+   </ScrollViewer>
    <ScrollViewer x:Name="DeckEditorScroll" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
    <Grid MinWidth="550" Width="{Binding ViewportWidth, ElementName=DeckEditorScroll}">
     <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
     <Grid Margin="24,16,24,20">
      <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
      <Grid>
-      <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-      <Grid>
+      <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+      <DockPanel x:Name="BoardEditBanner" Visibility="Collapsed" Margin="0,0,0,10">
+       <Button DockPanel.Dock="Right" Content="Voir les macropads" Click="ShowDeviceClick" Margin="8,0,0,0"/>
+       <TextBlock x:Name="BoardEditTitle" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" TextWrapping="Wrap"/>
+      </DockPanel>
+      <Grid Grid.Row="1">
        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-       <TextBlock Text="Profil actif" Foreground="{StaticResource MutedBrush}" VerticalAlignment="Center" Margin="0,0,12,0"/>
+       <TextBlock x:Name="ProfilePickerLabel" Text="Profil actif" Foreground="{StaticResource MutedBrush}" VerticalAlignment="Center" Margin="0,0,12,0"/>
        <ComboBox x:Name="ProfilePicker" Grid.Column="1" MaxWidth="340" Margin="0" SelectionChanged="ProfileChanged" AutomationProperties.Name="Profil actif"/>
        <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="12,0,0,0">
         <Button x:Name="UndoProfileButton" Content="↶" Click="UndoProfileClick" Margin="0,0,5,0" Padding="11,4" FontSize="17" ToolTip="Annuler la dernière modification des profils (Ctrl+Z hors des champs de texte)." AutomationProperties.Name="Annuler une modification"/>
         <Button x:Name="RedoProfileButton" Content="↷" Click="RedoProfileClick" Margin="0" Padding="11,4" FontSize="17" ToolTip="Rétablir (Ctrl+Y hors des champs de texte)." AutomationProperties.Name="Rétablir une modification"/>
        </StackPanel>
       </Grid>
-      <DockPanel Grid.Row="1" Margin="0,8,0,0">
+      <DockPanel Grid.Row="2" Margin="0,8,0,0">
        <Button DockPanel.Dock="Right" Click="ShowKeyEditorClick" Content="Modifier la touche" Margin="8,0,0,0" MinHeight="38"/>
        <TextBlock x:Name="ProfileSummary" Text="12 touches · Un espace pour chaque usage" Foreground="{StaticResource MutedBrush}" VerticalAlignment="Center" TextWrapping="Wrap"/>
       </DockPanel>
@@ -314,22 +325,20 @@
         <Border Grid.Row="2" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Padding="0,10,0,0"><TextBlock Text="Sélectionnez une touche, puis une action, ou glissez l’action sur la touche." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap"/></Border>
        </Grid>
       </TabItem>
-      <TabItem x:Name="DeviceTab" Header="_Macropad" AutomationProperties.Name="État de l’appareil">
+      <TabItem x:Name="DeviceTab" Header="_Macropads" AutomationProperties.Name="Configuration des macropads">
        <ScrollViewer x:Name="DeviceScroll" HorizontalContentAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,4,6,8">
         <StackPanel>
          <Border Style="{StaticResource ConfigurationCard}">
         <StackPanel>
-         <TextBlock Text="Macropads connectés" Style="{StaticResource ConfigurationHeading}"/>
+         <TextBlock x:Name="BoardDetailsTitle" Text="Macropads" Style="{StaticResource ConfigurationHeading}"/>
          <TextBlock x:Name="BoardConnectionStatus" Text="Recherche du macropad…" TextWrapping="Wrap" Foreground="#B8B6C4" AutomationProperties.AutomationId="BoardConnectionStatus" AutomationProperties.LiveSetting="Polite"/>
          <TextBlock x:Name="BoardFirmwareStatus" Text="Vérification du firmware…" TextWrapping="Wrap" Margin="0,6,0,8"/>
-         <ComboBox x:Name="BoardDevicePicker" SelectionChanged="BoardDeviceChanged" Visibility="Collapsed" Margin="0,0,0,8" AutomationProperties.Name="Macropad à configurer"/>
          <StackPanel x:Name="BoardInputSettings" Visibility="Collapsed" Margin="0,0,0,10">
           <CheckBox x:Name="BoardSerialCheck" Click="BoardSerialClick" Margin="0,0,0,5"><TextBlock Text="Activer le mode DeckPilot sur ce macropad" TextWrapping="Wrap"/></CheckBox>
           <TextBlock x:Name="BoardInputHint" TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}"/>
           <StackPanel x:Name="BoardProfileSettings" Margin="0,8,0,0">
            <TextBlock Text="Profil de ce macropad" Foreground="{StaticResource MutedBrush}"/>
            <ComboBox x:Name="BoardProfilePicker" DisplayMemberPath="Name" SelectionChanged="BoardProfileChanged" AutomationProperties.Name="Profil de ce macropad"/>
-           <Button x:Name="EditBoardProfileButton" Content="Modifier les touches de ce profil" Click="EditBoardProfileClick" HorizontalAlignment="Left" Margin="0,6,0,0"/>
           </StackPanel>
          </StackPanel>
          <Button x:Name="CalibrateButton" Content="Calibrer les touches" Click="CalibrateClick" HorizontalAlignment="Left"/>

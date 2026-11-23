@@ -1,3 +1,5 @@
+using System;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -18,6 +20,7 @@ public partial class MainWindow
         UpdateConfigurationRows();
 
         Grid.SetColumnSpan(DeckEditorScroll, compact ? 2 : 1);
+        Grid.SetColumnSpan(BoardOverviewScroll, compact ? 2 : 1);
         Grid.SetRow(ConfigurationPanel, compact ? 2 : 0);
         Grid.SetColumn(ConfigurationPanel, compact ? 0 : 1);
         Grid.SetColumnSpan(ConfigurationPanel, compact ? 2 : 1);
@@ -26,7 +29,10 @@ public partial class MainWindow
 
     private void ConfigurationTabChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (e.Source == ControlTabs && compactConfiguration == true) UpdateConfigurationRows();
+        if (e.Source != ControlTabs) return;
+        if (compactConfiguration == true) UpdateConfigurationRows();
+        UpdateBoardWorkspace();
+        if (ControlTabs.SelectedItem == DeviceTab) RefreshBoardCards();
     }
 
     private void UpdateConfigurationRows()
@@ -60,6 +66,9 @@ public partial class MainWindow
         AutoUpdateCheck.IsChecked = false;
         StartupStatus.Text = "Le démarrage avec Windows est désactivé pour cette bêta.";
         UpdateStatus.Text = "Cette bêta locale ne recherche pas de mises à jour.";
-        VersionLabel.Text += " · Bêta";
+        var version = typeof(MainWindow).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion.Split('+')[0];
+        const string marker = "-hybrid-beta.";
+        var markerIndex = version?.IndexOf(marker, StringComparison.Ordinal) ?? -1;
+        VersionLabel.Text += markerIndex >= 0 ? $" · Bêta {version![(markerIndex + marker.Length)..]}" : " · Bêta";
     }
 }

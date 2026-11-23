@@ -286,7 +286,7 @@ Firmware **1.1.2** reports all twelve F13–F24 keys independently while retaini
 
 ### Two macropads with independent profiles
 
-Flash firmware **1.2.0** on each compatible macropad, one at a time. In **Macropad**, select each device by its COM port, enable **Activer le mode DeckPilot sur ce macropad**, and choose a profile. Use two different profiles for different actions. **Modifier les touches de ce profil** opens the regular editor. **Calibrer ce macropad** saves the button layout for that device only.
+Flash firmware **1.2.0** on each compatible macropad, one at a time. Open **Macropads** to see one keypad per connected device. Click a key on the device you want to configure, then choose an action from the library. The first configuration enables DeckPilot mode and assigns an independent profile. If an earlier setup shared a profile between devices, **Séparer et configurer** copies its actions to an independent profile. Use **Calibrer** on a device if its physical button order differs.
 
 In DeckPilot mode, free buttons are inactive and profile actions change only the profile assigned to the originating device. Turn the mode off to use F13–F24 as keyboard shortcuts again. If identical boards lack a unique USB serial number, keep each on its own USB socket or verify the profile assignment after moving it. See the [hybrid mode and hardware test steps](firmware/README.md#hybrid-input-mode-120).
 

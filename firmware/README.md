@@ -18,14 +18,14 @@ No serial connection is required for normal keyboard operation. The identity is 
 
 ## Hybrid input mode (1.2.0)
 
-Both boards use the same firmware. The app identifies them by their Windows USB device instance and opens a serial connection per board. Enable **Mode DeckPilot** for each board in the **Macropad** tab, assign a profile and calibrate that board if its physical button order differs. A board without a unique USB serial number may get a different device instance when moved to another USB socket. Keep each such board on its assigned socket.
+Both boards use the same firmware. The app identifies them by their Windows USB device instance and opens a serial connection per board. In **Macropads**, click a key on each board’s card to enable DeckPilot mode and configure its profile. Use **Calibrer** on that card if its physical button order differs. A board without a unique USB serial number may get a different device instance when moved to another USB socket. Keep each such board on its assigned socket.
 
 After a DP2 handshake advertises capability 4, the app sends `DP2|INPUT|<session>`. The board replies with `DP2|INPUT|<session>` when all keys and the keyboard report are released, or `DP2|BUSY|<session>` if a key is still held. Once activated, the board sends ordered `KEYS` frames starting at sequence 1 and suppresses F13–F24. Diagnostic clients that just send `HELLO` keep normal keyboard behavior. Dropping DTR or missing the heartbeat lease for six seconds restores the keyboard after any held buttons are released. A full event queue ends the serial input session with `DP2|LOST|<session>` instead of silently merging press and release events.
 
 Physical test on Windows:
 
 1. Flash and verify each board individually with **Firmware du macropad…**, then plug in both boards.
-2. Assign different actions to the first button in two different profiles. Enable DeckPilot mode on both boards and assign one profile to each.
+2. Open **Macropads** and click the first button on each device’s card. Assign a different action to each button. Check that the editor names the selected COM port and that each card displays its own profile.
 3. Press the same position on both decks together, then repeat with short and long presses. Each action should run once on its assigned profile.
 4. Unplug one deck while holding a button, verify the other still responds, and reconnect the first to its original USB socket. Quit DeckPilot from the system tray and confirm a fresh press sends the corresponding F13–F24 key.
 
