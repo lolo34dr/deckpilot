@@ -142,7 +142,7 @@ public partial class MainWindow : Window
         {
             if (startInBackground) Hide();
             else if (BetaEnvironment.IsEnabled) ControlTabs.SelectedItem = DeviceTab;
-            else openDeviceWorkspaceOnDiscovery = !settings.IsCalibrated;
+            else openDeviceWorkspaceOnDiscovery = true;
             Motion.Reveal(WindowContent);
             boardConnection = new BoardConnectionService(settings.PreferredBoardDeviceId, EnabledSerialDevices(),
                 new Progress<BoardConnectionState>(OnBoardStateChanged), new Progress<BoardInputFrame>(OnBoardInput));
@@ -346,7 +346,7 @@ public partial class MainWindow : Window
         GesturePanel.Visibility = root.LongPressEnabled ? Visibility.Visible : Visibility.Collapsed;
         GesturePicker.SelectedIndex = editingLong ? 1 : 0;
         LongPressThreshold.Value = root.LongPressMilliseconds;
-        SelectedTitle.Text = $"Bouton {selected + 1:00}" + (editingLong ? " · Appui long" : "");
+        SelectedTitle.Text = $"Touche {selected + 1:00}" + (editingLong ? " · Appui long" : "");
         SelectedKey.Text = $"Ligne {selected / 4 + 1}, colonne {selected % 4 + 1} · " +
             (CurrentEditingBinding() != null || settings.IsCalibrated ? EditorKeyName(selected) : "Calibrage nécessaire");
         LabelEditor.Text = action.Label;
@@ -830,7 +830,9 @@ public partial class MainWindow : Window
         if (openDeviceWorkspaceOnDiscovery && state.Boards.Count > 0)
         {
             openDeviceWorkspaceOnDiscovery = false;
-            if (!calibrating && !firmwareOpen && ControlTabs.SelectedItem == ActionsTab) ControlTabs.SelectedItem = DeviceTab;
+            // Show the connected device at launch, without interrupting a later editing session.
+            if (Environment.TickCount64 - startedAt < 10000 && !calibrating && !firmwareOpen && ControlTabs.SelectedItem == ActionsTab)
+                ControlTabs.SelectedItem = DeviceTab;
         }
         bool connected = state.ConnectedCount > 0;
         DeckAvailabilityStatus.Text = state.ConnectedCount > 1 ? $"{state.ConnectedCount} macropads" : state.Kind switch
@@ -855,7 +857,9 @@ public partial class MainWindow : Window
                 UIElementAutomationPeer.CreatePeerForElement(BoardConnectionStatus)?.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
         }
         BoardConnectionStatus.Foreground = Brush(state.Kind == BoardConnectionKind.Connected ? "#B1A8C4" : state.Kind is BoardConnectionKind.Error or BoardConnectionKind.Unidentified ? "#D1B18C" : "#A5AAA6");
-        BoardDetailsTitle.Text = state.Device is { } board ? $"Réglages · {board.Port}" : "Macropads";
+        var detailsBoard = state.Boards.FirstOrDefault(item => item.Device.DeviceId == state.Device?.DeviceId);
+        BoardDetailsTitle.Text = detailsBoard == null ? "Réglages des macropads"
+            : $"Réglages · {BoardDisplayName(detailsBoard)} ({detailsBoard.Device.Port})";
         string installed = state.Info?.Firmware.Version ?? "";
         bool upgrade = bundledFirmware != null && state.Info != null && Version.Parse(installed) < Version.Parse(bundledFirmware.Version);
         BoardFirmwareStatus.Text = installed.Length > 0 ? $"Firmware {installed}" + (upgrade ? $" · {bundledFirmware!.Version} disponible" : bundledFirmware != null && installed == bundledFirmware.Version ? " · À jour" : "") : bundledFirmware == null ? bundledFirmwareError.Length > 0 ? bundledFirmwareError : "Lecture du firmware inclus…" : $"Firmware inclus : {bundledFirmware.Version}";

@@ -141,7 +141,7 @@ public partial class MainWindow
             BoardSerialCheck.IsChecked = enabled;
             BoardInputHint.Text = active ? "Les appuis utilisent le profil ci-dessous. Les touches libres ne produisent aucun raccourci clavier."
                 : enabled ? "Le mode DeckPilot est en attente. Vérifiez le firmware et relâchez toutes les touches."
-                : supported ? "Activez ce mode pour utiliser plusieurs macropads avec des profils distincts."
+                : supported ? "Activez ce mode pour attribuer une action à chaque touche. Les touches libres n’enverront alors plus F13 à F24."
                 : "Le mode DeckPilot nécessite le firmware 1.2.0 ou plus récent.";
             BoardProfileSettings.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;
             if (refreshProfiles || BoardProfilePicker.ItemsSource == null)

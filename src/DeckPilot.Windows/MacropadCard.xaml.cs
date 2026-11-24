@@ -11,6 +11,7 @@ namespace DeckPilot.Windows;
 internal partial class MacropadCard : UserControl
 {
     private readonly DeckKeyButton[] keys = new DeckKeyButton[12];
+    private static readonly Brush DefaultFrameBrush = new SolidColorBrush(Color.FromRgb(0x54, 0x50, 0x60));
     private bool firmwareRequired;
     public BoardLinkState Board { get; private set; }
     public event Action<BoardLinkState, int>? ConfigureRequested;
@@ -25,7 +26,7 @@ internal partial class MacropadCard : UserControl
             int index = i;
             var key = keys[i] = new DeckKeyButton
             {
-                Width = double.NaN, Height = 82, Margin = new Thickness(3),
+                Width = double.NaN, Height = 90, Margin = new Thickness(4),
                 KeyCaption = $"{i + 1:00}"
             };
             key.Click += (_, _) => ConfigureRequested?.Invoke(Board, index);
@@ -33,40 +34,54 @@ internal partial class MacropadCard : UserControl
         }
     }
 
+    public void SetWide(bool wide)
+    {
+        GuideColumn.Width = wide ? new GridLength(260) : new GridLength(0);
+        Grid.SetColumn(CardGuide, wide ? 1 : 0);
+        Grid.SetRow(CardGuide, wide ? 0 : 1);
+        CardGuide.Margin = wide ? new Thickness(14, 0, 0, 0) : new Thickness(0, 12, 0, 0);
+    }
+
     public void Refresh(BoardLinkState board, BoardBinding? binding, Profile? profile, bool shared,
-        bool firmwareOpen, bool editing, int selectedKey, Brush accent)
+        bool firmwareOpen, bool editing, int selectedKey, string title, Func<string, Brush> accentFor)
     {
         Board = board;
-        string title = $"Macropad {board.Device.Port}";
-        CardTitle.Text = profile?.Name ?? "Macropad";
+        CardTitle.Text = title;
+        CardProfile.Text = profile == null ? "Aucun profil attribué" : $"Profil de touches · {profile.Name}";
         CardPort.Text = board.Device.Port;
         if (editing) CardFrame.SetResourceReference(Border.BorderBrushProperty, "AccentBrush");
-        else CardFrame.ClearValue(Border.BorderBrushProperty);
-        AutomationProperties.SetName(this, title);
+        else CardFrame.BorderBrush = DefaultFrameBrush;
+        AutomationProperties.SetName(this, $"{title} · {board.Device.Port}");
         AutomationProperties.SetAutomationId(this, $"Macropad{board.Device.Port}");
         bool supported = board.Info?.SupportsSerialInput == true;
         firmwareRequired = board.Info != null && !supported || board.Kind == BoardConnectionKind.Unidentified;
         CardStatus.Text = (board, binding?.Enabled) switch
         {
-            ({ SerialInput: true }, true) => "Prêt à utiliser",
+            ({ SerialInput: true }, true) => "Connecté · Prêt à utiliser",
             _ when firmwareRequired => "Mise à jour du firmware nécessaire",
-            _ when supported && binding?.Enabled != true => "Mode clavier · F13 à F24",
+            _ when supported && binding?.Enabled != true => "Connecté · Mode clavier F13 à F24",
             _ when supported && board.Message.StartsWith("Mode clavier", StringComparison.Ordinal) => "Activation du mode DeckPilot…",
             _ => board.Message
         };
+        StatusDot.Fill = board.SerialInput && binding?.Enabled == true ? Brushes.LightGreen
+            : firmwareRequired ? Brushes.Orange : Brushes.LightSteelBlue;
         int assigned = profile?.Buttons.Count(action => action.Kind != ActionKind.Passthrough) ?? 0;
         CardProgress.Text = shared ? $"{assigned} / 12 touches · Profil partagé"
             : $"{assigned} / 12 touches configurées";
+        CardModeHint.Text = firmwareRequired ? "Installez le firmware compatible pour attribuer des actions indépendantes à ce macropad."
+            : binding?.Enabled != true ? "Au premier choix d’une touche, le mode DeckPilot sera activé pour cet appareil. Les touches libres n’enverront alors plus F13 à F24."
+            : shared ? "Ce profil est utilisé par plusieurs macropads. La première modification en créera une copie pour celui-ci."
+            : "Chaque modification est enregistrée automatiquement. Les autres macropads gardent leurs propres actions.";
         bool editable = !firmwareOpen && !firmwareRequired && (supported || binding?.Enabled == true && profile != null);
-        ConfigureButton.Content = firmwareRequired ? "Mettre à jour le firmware" : shared ? "Séparer et configurer"
-            : profile == null || binding?.Enabled != true ? "Configurer le macropad" : "Modifier les touches";
+        ConfigureButton.Content = firmwareRequired ? "Mettre à jour le firmware" : shared ? "Séparer et configurer les touches"
+            : assigned == 0 ? "Configurer la touche 01" : "Modifier la touche 01";
         ConfigureButton.IsEnabled = editable || firmwareRequired && !firmwareOpen;
         CalibrateCardButton.IsEnabled = board.SerialInput && !firmwareOpen;
-        CalibrateCardButton.Visibility = board.SerialInput && binding?.KeyMap.Count == 0 && assigned == 0 ? Visibility.Visible : Visibility.Collapsed;
+        CalibrateCardButton.Visibility = board.SerialInput ? Visibility.Visible : Visibility.Collapsed;
         BoardOptionsButton.IsEnabled = !firmwareOpen;
-        AutomationProperties.SetName(ConfigureButton, $"{ConfigureButton.Content} · {title}");
-        AutomationProperties.SetName(CalibrateCardButton, $"Calibrer {title}");
-        AutomationProperties.SetName(BoardOptionsButton, $"Options de {title}");
+        AutomationProperties.SetName(ConfigureButton, $"{ConfigureButton.Content} · {title} · {board.Device.Port}");
+        AutomationProperties.SetName(CalibrateCardButton, $"Calibrer {title} · {board.Device.Port}");
+        AutomationProperties.SetName(BoardOptionsButton, $"Réglages de {title} · {board.Device.Port}");
 
         var map = binding?.KeyMap;
         int mask = board.Telemetry?.Mask ?? 0;
@@ -78,10 +93,11 @@ internal partial class MacropadCard : UserControl
             key.Label = kind == ActionKind.Passthrough ? "Libre"
                 : string.IsNullOrWhiteSpace(action!.Label) ? ActionSearch.KindName(kind) : action.Label;
             key.IconSource = kind == ActionKind.Application ? ApplicationIcons.ForTarget(action!.Target) : VectorIcons.ForKind(kind);
-            key.AccentBrush = kind == ActionKind.Passthrough ? Brushes.Transparent : accent;
+            key.KindSource = VectorIcons.ForKind(kind);
+            key.AccentBrush = kind == ActionKind.Passthrough ? Brushes.Transparent : accentFor(action!.Accent);
             key.IsEnabled = editable;
             key.IsSelected = editing && i == selectedKey;
-            string name = $"{title} · Touche {i + 1:00} · {key.Label}";
+            string name = $"{title} · {board.Device.Port} · Touche {i + 1:00} · {key.Label}";
             key.ToolTip = name;
             AutomationProperties.SetName(key, name);
             AutomationProperties.SetAutomationId(key, $"Macropad{board.Device.Port}Key{i + 1:00}");

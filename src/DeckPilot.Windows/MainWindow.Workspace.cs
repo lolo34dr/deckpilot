@@ -74,7 +74,9 @@ public partial class MainWindow
     private void RefreshProfileSummary()
     {
         int count = EditorProfile.Buttons.Count(a => a.Kind != ActionKind.Passthrough);
-        ProfileSummary.Text = $"{count} / 12 touches configurées · {settings.Profiles.Count} profil(s)";
+        ProfileSummary.Text = editingBoardId == null
+            ? $"{count} / 12 touches configurées · {settings.Profiles.Count} profil(s)"
+            : $"{count} / 12 touches configurées · Cliquez sur une touche pour la modifier.";
     }
 
     private void AddTemplateClick(object sender, RoutedEventArgs e)

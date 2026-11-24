@@ -2,30 +2,48 @@
  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
  <Border x:Name="CardFrame" Background="{DynamicResource CardBrush}"
-         BorderThickness="1" CornerRadius="15" Padding="18">
-  <Border.Style>
-   <Style TargetType="Border"><Setter Property="BorderBrush" Value="#545060"/></Style>
-  </Border.Style>
+         BorderThickness="1" CornerRadius="16" Padding="20" BorderBrush="#545060">
   <StackPanel>
-   <DockPanel LastChildFill="True">
-    <Border DockPanel.Dock="Right" Background="#2D2939" CornerRadius="6" Padding="8,4" VerticalAlignment="Top" Margin="8,0,0,0">
-     <TextBlock x:Name="CardPort" Foreground="{DynamicResource MutedBrush}" FontSize="12"/>
+   <Grid>
+    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+    <StackPanel>
+     <TextBlock x:Name="CardTitle" FontSize="21" FontWeight="SemiBold" TextWrapping="Wrap"/>
+     <TextBlock x:Name="CardProfile" Margin="0,4,0,0" TextWrapping="Wrap" Foreground="{DynamicResource MutedBrush}"/>
+    </StackPanel>
+    <Border Grid.Column="1" Background="#302C3C" CornerRadius="7" Padding="9,5" VerticalAlignment="Top" Margin="12,0,0,0">
+     <TextBlock x:Name="CardPort" Foreground="#E0D8F4" FontSize="12" FontWeight="SemiBold"/>
     </Border>
-    <TextBlock x:Name="CardTitle" FontSize="19" FontWeight="SemiBold" TextWrapping="Wrap"/>
-   </DockPanel>
-   <TextBlock x:Name="CardStatus" Margin="0,5,0,0" TextWrapping="Wrap" Foreground="{DynamicResource MutedBrush}"/>
-   <TextBlock x:Name="CardProgress" Margin="0,12,0,6" TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource MutedBrush}"/>
-   <Border Background="#131218" BorderBrush="#373340" BorderThickness="1" CornerRadius="10" Padding="6">
-    <UniformGrid x:Name="CardKeys" Rows="3" Columns="4" MaxWidth="440"/>
+   </Grid>
+   <Border Background="#292B32" CornerRadius="8" Padding="10,7" Margin="0,14,0,14">
+    <DockPanel>
+     <Ellipse x:Name="StatusDot" DockPanel.Dock="Left" Width="8" Height="8" Fill="#AFA3D6" Margin="0,0,9,0" VerticalAlignment="Center"/>
+     <TextBlock x:Name="CardStatus" TextWrapping="Wrap" FontWeight="Medium"/>
+    </DockPanel>
    </Border>
-   <DockPanel Margin="0,12,0,0" LastChildFill="True">
-    <Button x:Name="BoardOptionsButton" DockPanel.Dock="Right" Content="Options" Click="OptionsClick"
-            MinHeight="40" Margin="8,0,0,0" Padding="9,6"/>
+   <Grid x:Name="CardBody">
+    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition x:Name="GuideColumn" Width="0"/></Grid.ColumnDefinitions>
+    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition x:Name="GuideRow" Height="Auto"/></Grid.RowDefinitions>
+    <Border x:Name="KeysFrame" Background="#131218" BorderBrush="#373340" BorderThickness="1" CornerRadius="12" Padding="7">
+     <UniformGrid x:Name="CardKeys" Rows="3" Columns="4" MaxWidth="480"/>
+    </Border>
+    <Border x:Name="CardGuide" Grid.Row="1" Background="#23222B" BorderBrush="#484450" BorderThickness="1" CornerRadius="12" Padding="15" Margin="0,12,0,0">
+     <StackPanel>
+      <TextBlock Text="Configurer vos touches" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap"/>
+      <TextBlock x:Name="CardProgress" Margin="0,7,0,14" TextWrapping="Wrap" Foreground="#C7BEDD"/>
+      <TextBlock Text="1  Cliquez sur la touche à personnaliser." TextWrapping="Wrap" Margin="0,0,0,9"/>
+      <TextBlock Text="2  Choisissez une action. Elle est enregistrée sur ce PC." TextWrapping="Wrap"/>
+      <TextBlock x:Name="CardModeHint" Margin="0,14,0,0" TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource MutedBrush}"/>
+     </StackPanel>
+    </Border>
+   </Grid>
+   <WrapPanel Margin="0,15,0,0">
     <Button x:Name="ConfigureButton" Click="ConfigureClick" Style="{StaticResource PrimaryButton}"
-            MinHeight="40" Margin="0" Padding="8,6"/>
-   </DockPanel>
-   <Button x:Name="CalibrateCardButton" Content="Calibrer les touches" Click="CalibrateClick"
-           HorizontalAlignment="Left" Margin="0,8,0,0" MinHeight="36"/>
+            MinHeight="42" Margin="0,6,8,0" Padding="14,8"/>
+    <Button x:Name="BoardOptionsButton" Content="Réglages du macropad" Click="OptionsClick"
+            MinHeight="42" Margin="0,6,8,0" Padding="12,8"/>
+    <Button x:Name="CalibrateCardButton" Content="Calibrer les touches" Click="CalibrateClick"
+            MinHeight="42" Margin="0,6,0,0" Padding="12,8"/>
+   </WrapPanel>
   </StackPanel>
  </Border>
 </UserControl>

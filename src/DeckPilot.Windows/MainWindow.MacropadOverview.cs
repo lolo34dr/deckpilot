@@ -50,7 +50,7 @@ public partial class MainWindow
             string id = board.Device.DeviceId;
             if (!boardCards.TryGetValue(id, out var card))
             {
-                card = new MacropadCard(board) { Margin = new Thickness(0, 0, 12, 12) };
+                card = new MacropadCard(board) { Margin = new Thickness(6, 0, 6, 12) };
                 card.ConfigureRequested += ConfigureBoard;
                 card.CalibrateRequested += board => BeginCalibration(board.Device.DeviceId);
                 card.OptionsRequested += board =>
@@ -68,7 +68,8 @@ public partial class MainWindow
             var binding = settings.BoardBindings.GetValueOrDefault(id);
             var profile = binding == null ? null : settings.Profiles.FirstOrDefault(profile => profile.Id == binding.ProfileId);
             card.Refresh(board, binding, profile, profile != null && BoardSetup.IsShared(settings, id, profile.Id),
-                firmwareOpen, string.Equals(editingBoardId, id, StringComparison.OrdinalIgnoreCase), selected, AccentBrushFor(""));
+                firmwareOpen, string.Equals(editingBoardId, id, StringComparison.OrdinalIgnoreCase), selected,
+                BoardDisplayName(board), AccentBrushFor);
         }
         UpdateBoardWorkspace();
         RefreshBoardEditBanner();
@@ -88,6 +89,11 @@ public partial class MainWindow
         DeckEditorScroll.Visibility = overview ? Visibility.Collapsed : Visibility.Visible;
         UpdateConfigurationLayout(overview);
         BoardOverviewCount.Text = boardCards.Count == 1 ? "1 appareil détecté" : $"{boardCards.Count} appareils détectés";
+        BoardSettingsCard.MaxWidth = boardCards.Count == 1 ? 940 : 1450;
+        BoardOverviewTitle.Text = boardCards.Count == 1 ? "Votre macropad" : "Vos macropads";
+        BoardOverviewIntro.Text = boardCards.Count == 1
+            ? "Choisissez une touche sur le macropad ci-dessous, puis l’action qu’elle doit lancer. Aucun réglage avancé n’est nécessaire pour commencer."
+            : "Chaque macropad a ses propres touches et son profil. Choisissez d’abord l’appareil, puis cliquez sur la touche à personnaliser.";
         ResizeBoardCards(BoardOverviewPanel.ActualWidth);
     }
 
@@ -97,9 +103,19 @@ public partial class MainWindow
     {
         if (BoardCardsPanel == null) return;
         BoardCardsPanel.Columns = Math.Min(Math.Max(boardCards.Count, 1), width >= 1230 ? 3 : width >= 750 ? 2 : 1);
-        BoardCardsPanel.MaxWidth = BoardCardsPanel.Columns == 1 ? 610 : double.PositiveInfinity;
+        BoardCardsPanel.MaxWidth = BoardCardsPanel.Columns == 1 ? 940 : double.PositiveInfinity;
         BoardCardsPanel.HorizontalAlignment = BoardCardsPanel.Columns == 1 ? HorizontalAlignment.Center : HorizontalAlignment.Stretch;
-        BoardCardsPanel.Width = BoardCardsPanel.Columns == 1 && width > 0 ? Math.Min(610, width) : double.NaN;
+        BoardCardsPanel.Width = BoardCardsPanel.Columns == 1 && width > 0 ? Math.Min(940, width) : double.NaN;
+        bool wideCard = BoardCardsPanel.Columns == 1 && width >= 820;
+        foreach (var card in boardCards.Values) card.SetWide(wideCard);
+    }
+
+    private string BoardDisplayName(BoardLinkState board)
+    {
+        var boards = boardState?.Boards;
+        if (boards == null || boards.Count <= 1) return "Votre macropad";
+        int index = boards.ToList().FindIndex(item => string.Equals(item.Device.DeviceId, board.Device.DeviceId, StringComparison.OrdinalIgnoreCase));
+        return $"Macropad {Math.Max(index, 0) + 1}";
     }
 
     private BoardBinding? CurrentEditingBinding() =>
@@ -125,18 +141,21 @@ public partial class MainWindow
         ActionBoardTarget.Visibility = BoardEditBanner.Visibility;
         if (editing)
         {
-            BoardEditTitle.Text = port == null ? EditorProfile.Name : $"{EditorProfile.Name} · {port}";
+            BoardEditTitle.Text = port == null ? "Configurer les touches du macropad" : $"Configurer les touches · {BoardDisplayName(board!)}";
+            BoardEditProfile.Text = $"Profil de touches · {EditorProfile.Name}";
             BoardEditStatus.Text = !assigned ? "Ce profil n’est plus celui utilisé par ce macropad."
-                : port == null ? "Macropad débranché · Vous pouvez modifier ses actions."
-                : board?.SerialInput == true ? "Mode DeckPilot actif" : "Mode DeckPilot en attente";
-            ActionBoardTarget.Text = port == null ? $"Touche {selected + 1:00} · {EditorProfile.Name}"
-                : $"{port} · Touche {selected + 1:00}";
+                : port == null ? "Macropad débranché · Les modifications restent enregistrées sur ce PC."
+                : $"Touche {selected + 1:00} sélectionnée · Choisissez une action dans la bibliothèque, puis revenez au macropad.";
+            ActionBoardTarget.Text = port == null ? $"Étape 2 · Action de la touche {selected + 1:00}"
+                : $"{port} · Étape 2 · Action de la touche {selected + 1:00}";
         }
 
         ProfilePickerLabel.Text = editing ? "Profil affiché" : "Profil actif";
         ProfilePicker.IsEnabled = !editing;
+        ProfilePickerLabel.Visibility = editing ? Visibility.Collapsed : Visibility.Visible;
+        ProfilePicker.Visibility = editing ? Visibility.Collapsed : Visibility.Visible;
         AutomationProperties.SetName(ProfilePicker, ProfilePickerLabel.Text);
-        DeckSurfaceTitle.Text = editing && port != null ? $"MACROPAD {port} / 3 × 4" : "MACROPAD / 3 × 4";
+        DeckSurfaceTitle.Text = editing && port != null ? $"APERÇU DES TOUCHES · {port}" : "MACROPAD / 3 × 4";
         RefreshBoardEditorSwitches();
     }
 
@@ -162,7 +181,7 @@ public partial class MainWindow
                 boardEditorButtons.Add(device.DeviceId, button);
                 BoardEditorSwitches.Children.Add(button);
             }
-            button.Content = device.Port;
+            button.Content = $"{BoardDisplayName(board)} · {device.Port}";
             bool selectedBoard = string.Equals(device.DeviceId, editingBoardId, StringComparison.OrdinalIgnoreCase);
             button.IsEnabled = (!selectedBoard || CurrentEditingBinding()?.ProfileId != EditorProfile.Id)
                 && (board.Info?.SupportsSerialInput == true || settings.BoardBindings.GetValueOrDefault(device.DeviceId)?.Enabled == true);
@@ -198,7 +217,9 @@ public partial class MainWindow
         if (setup.AddProfile) settings.Profiles.Add(setup.Profile);
         settings.BoardBindings[id] = setup.Binding;
         settings.PreferredBoardDeviceId = id;
-        if (!Persist())
+        bool changed = setup.AddProfile || previousBinding != setup.Binding ||
+            !string.Equals(previousDevice, id, StringComparison.OrdinalIgnoreCase);
+        if (changed && !Persist())
         {
             if (setup.AddProfile) settings.Profiles.Remove(setup.Profile);
             if (previousBinding == null) settings.BoardBindings.Remove(id);

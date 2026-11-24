@@ -73,13 +73,17 @@
      <Grid>
       <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
       <Border x:Name="BoardEditBanner" Visibility="Collapsed" Background="{DynamicResource CardBrush}"
-              BorderBrush="#545060" BorderThickness="1" CornerRadius="10" Padding="12" Margin="0,0,0,12">
+              BorderBrush="#686079" BorderThickness="1" CornerRadius="12" Padding="16" Margin="0,0,0,12">
        <StackPanel>
         <DockPanel>
-         <Button DockPanel.Dock="Right" Content="Tous les macropads" Click="ShowDeviceClick" Margin="8,0,0,0"/>
-         <TextBlock x:Name="BoardEditTitle" FontSize="17" FontWeight="SemiBold" VerticalAlignment="Center" TextWrapping="Wrap"/>
+         <Button DockPanel.Dock="Right" Content="← Retour au macropad" Click="ShowDeviceClick" MinHeight="40" Margin="10,0,0,0"/>
+         <StackPanel>
+          <TextBlock Text="ÉTAPE 2 · CHOISIR UNE ACTION" FontSize="11" FontWeight="SemiBold" Foreground="#C7B9E8"/>
+          <TextBlock x:Name="BoardEditTitle" FontSize="18" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,4,0,0"/>
+          <TextBlock x:Name="BoardEditProfile" Foreground="{DynamicResource MutedBrush}" TextWrapping="Wrap" Margin="0,3,0,0"/>
+         </StackPanel>
         </DockPanel>
-        <TextBlock x:Name="BoardEditStatus" TextWrapping="Wrap" Foreground="{DynamicResource MutedBrush}" Margin="0,5,0,0"/>
+        <TextBlock x:Name="BoardEditStatus" TextWrapping="Wrap" Foreground="#D3D0DC" Margin="0,10,0,0"/>
         <WrapPanel Margin="0,8,0,0">
          <WrapPanel x:Name="BoardEditorSwitches" AutomationProperties.Name="Changer de macropad"/>
          <Button Content="Profils clavier" Click="ShowKeyboardProfilesClick" MinHeight="36" Margin="0,0,0,6"/>
@@ -293,13 +297,13 @@
         <Setter Property="Foreground" Value="{StaticResource MutedBrush}"/>
         <Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/>
         <Setter Property="BorderThickness" Value="0,0,0,2"/>
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="FocusVisualStyle" Value="{StaticResource KeyboardFocus}"/>
         <Setter Property="Template">
          <Setter.Value>
           <ControlTemplate TargetType="{x:Type TabItem}">
            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0" Padding="{TemplateBinding Padding}" Margin="0" SnapsToDevicePixels="True">
-            <ContentPresenter ContentSource="Header" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center" RecognizesAccessKey="True"/>
+            <ContentPresenter ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True"/>
            </Border>
           </ControlTemplate>
          </Setter.Value>
@@ -334,21 +338,21 @@
         <StackPanel>
          <StackPanel x:Name="BoardOverviewPanel" Visibility="Collapsed" MaxWidth="1450" SizeChanged="BoardOverviewSizeChanged" Margin="8,7,8,12">
           <DockPanel Margin="0,4,0,2">
-           <TextBlock x:Name="BoardOverviewCount" DockPanel.Dock="Right" Foreground="{StaticResource MutedBrush}" VerticalAlignment="Center"/>
-           <TextBlock Text="Vos macropads" FontSize="23" FontWeight="SemiBold"/>
+         <TextBlock x:Name="BoardOverviewCount" DockPanel.Dock="Right" Foreground="{StaticResource MutedBrush}" VerticalAlignment="Center"/>
+           <TextBlock x:Name="BoardOverviewTitle" Text="Votre macropad" FontSize="24" FontWeight="SemiBold"/>
           </DockPanel>
-          <TextBlock Text="Cliquez sur une touche pour choisir son action." TextWrapping="Wrap" Margin="0,5,0,15" Foreground="{StaticResource MutedBrush}"/>
+          <TextBlock x:Name="BoardOverviewIntro" Text="Choisissez une touche, puis une action." TextWrapping="Wrap" Margin="0,5,0,18" Foreground="{StaticResource MutedBrush}" FontSize="14"/>
           <UniformGrid x:Name="BoardCardsPanel" Columns="1" AutomationProperties.Name="Macropads détectés"/>
          </StackPanel>
-         <Border Style="{StaticResource ConfigurationCard}" MaxWidth="1450">
+         <Border x:Name="BoardSettingsCard" Style="{StaticResource ConfigurationCard}" MaxWidth="1450">
         <StackPanel>
          <TextBlock x:Name="BoardDetailsTitle" Text="Macropads" Style="{StaticResource ConfigurationHeading}"/>
-         <Expander x:Name="BoardSettingsExpander" IsExpanded="True" Header="Profil, mode clavier et firmware" Margin="0,5,0,0">
+         <Expander x:Name="BoardSettingsExpander" IsExpanded="True" Header="Mode de fonctionnement, profil et firmware" Margin="0,5,0,0">
           <StackPanel>
          <TextBlock x:Name="BoardConnectionStatus" Text="Recherche du macropad…" TextWrapping="Wrap" Foreground="#B8B6C4" AutomationProperties.AutomationId="BoardConnectionStatus" AutomationProperties.LiveSetting="Polite"/>
          <TextBlock x:Name="BoardFirmwareStatus" Text="Vérification du firmware…" TextWrapping="Wrap" Margin="0,6,0,8"/>
          <StackPanel x:Name="BoardInputSettings" Visibility="Collapsed" Margin="0,0,0,10">
-          <CheckBox x:Name="BoardSerialCheck" Click="BoardSerialClick" Margin="0,0,0,5"><TextBlock Text="Activer le mode DeckPilot sur ce macropad" TextWrapping="Wrap"/></CheckBox>
+          <CheckBox x:Name="BoardSerialCheck" Click="BoardSerialClick" Margin="0,0,0,5"><TextBlock Text="Gérer les touches de ce macropad dans DeckPilot" TextWrapping="Wrap"/></CheckBox>
           <TextBlock x:Name="BoardInputHint" TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}"/>
           <StackPanel x:Name="BoardProfileSettings" Margin="0,8,0,0">
            <TextBlock Text="Profil de ce macropad" Foreground="{StaticResource MutedBrush}"/>
