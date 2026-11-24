@@ -44,7 +44,7 @@ DECKPILOT|1|promicro-32u4-16mhz|1.2.0
 
 مؤسسة ويندوز AVRDUDE 8.0 يتم تجميعها داخل التطبيق المنشور. DeckPilot(ويندوز) يجب أن يفضح المرفأ التسلسلي للمجلس كما فعل من أجل حمولة المالك الناجحة **لا** كل مصباح يتطلب تأكيداً
 
-DeckPilot Atelier يحفظ **Effacer le firmware de la carte** تحت العمليات المتطورة المنهارة `EFFACER`يُوضّحُ كُلّ 28 ويتوقف هذا النوع من تطبيقات الوميض مع حلقة إعادة تحديد مثبتة، ويتوقف عن القيد من طراز F13-F24 والعدد العادي من USB، ولا تزال كاترينا متاحة، ولكن البطاقة لن تظهر في أتيلييه مرة أخرى إلى أن توضع يدويا في واسطة تحميل الأحذية. **RST** إلى **GND مرتين**"ثم تختار "أرودينو ليوناردو" المؤقت و مُحمّل الأحذية "ميناء كوم" و تُستخدم إجراءات إنعاش (أتيلير) لإعادة الاستقرار DeckPilotيُظهر (أتيلر) هذه التعليمات ويُبقي التعافي مُمكناً بعد العصور أو الوميض المُقطع، ويُحفظ مُحمّل الأحذية و(إي بي دي روم).
+DeckPilot Atelier يحفظ **Effacer le firmware de la carte** تحت العمليات المتطورة المنهارة `EFFACER`يُوضّحُ كُلّ 28 ويتوقف هذا النوع من تطبيقات الوميض مع حلقة إعادة تحديد مثبتة، ويتوقف عن القيد من طراز F13-F24 والعدد العادي من USB، ولا تزال كاترينا متاحة، ولكن البطاقة لن تظهر في أتيلييه مرة أخرى إلى أن توضع يدويا في واسطة تحميل الأحذية. **RST** إلى **GND مرتين**"ثم تختار "أرودينو ليوناردو" المؤقت و مُحمّل الأحذية "ميناء كوم" و تُستخدم إجراءات الإنعاش لـ "أتليير" لإعادة الاستقرار DeckPilotيُظهر (أتيلر) هذه التعليمات ويُبقي التعافي مُتاحاً بعد العصور أو الوميض المُقطع، ويُحفظ مُحمّل الأحذية و(إي بي دي روم).
 
 DeckPilot شيكات شا256, Intel HEX record checksums, reset-vector presence, overlaps and the **28672-بايت** الحدود التطبيقية قبل إعادة ضبطها، وهي تتطابق مع الموقع الفيزيائي للمركبة الأمريكية عبر موانئ التشغيل وأجهزة تحميل الأحذية، وتستخدم AVR109 في 57600 (بود)، يتطلب من (أفرود) أن يكتب تحققاً، ثم يفحص هويّة ونسخة البرمجيات الجاهزة، ولا يكتب الصمامات، أو (إب روم) أو الأحذية. `2341:8036` / `2A03:8036` كاترينا `2341:0036` / `2A03:0036` إذا لم يتمكن (ويندوز) من إقامة علاقة جسدية متطابقة، فإن الوميض مغلق بدلاً من التخمين في ميناء.
 
@@ -63,7 +63,7 @@ dotnet build DeckPilot.sln -c Release -p:RequireFirmwareBundle=true
 dotnet run --project tests/DeckPilot.Checks -c Release --no-build
 ```
 
-النص يدقق في نواة "أردينو" **1.8.6**لوحة المفاتيح **1.0.6**و في أعلى المجرى **8.0**حزمة مُحكمة من (كاليفورنيا) تستخدم حزمة (أردينو) للتحقق من المواصفات، محفوظات (آفرود) الثنائية/المصدر256 دبابيس في النص. `artifacts/firmware/DeckPilot-firmware.zip` يحتوي على DeckPilot (ب) شركة HEX, generated application-area reset HEX ومولدها, checksums, Windows tool, license and corresponding upstream AVRDUDE source archive. Publishing CI requires the bundle; an ordinary developer build without it can run the app but cannot flash or reset a board.
+النص يدقق في نواة "أردينو" **1.8.6**لوحة المفاتيح **1.0.6**و في أعلى المجرى **8.0**حزمة مُديرة من (كاليفورنيا) تستخدم حزمة (أردينو) للتحقق من المُؤقتة، محفوظات (آفرود) الثنائية/المصدر256 دبابيس في النص. `artifacts/firmware/DeckPilot-firmware.zip` يحتوي على DeckPilot (ب) شركة HEX, generated application-area reset HEX ومولدها, checksums, Windows tool, license and corresponding upstream AVRDUDE source archive. Publishing CI requires the bundle; an ordinary developer build without it can run the app but cannot flash or reset a board.
 
 الأصلي 12-لكن الرسم التخطيطي تم تكييفه من (ديفيد ماديسون) **Stream Cheap** مشروع حقوق المؤلف 2018"معهد ماساتشوستس للتكنولوجيا" `DeckPilot.ino`. DeckPilot وتستخدم الإضافات رخصة المستودعات. **AVRDUDE is separate software under GPL-2.0-أو لاتر**(أ) مع حزم إشعارها/رخصتها ومصدرها؛ ولا تحل رخصة المستودعات التابعة لمعهد ماساتشوستس للتكنولوجيا محل تلك الرخصة. https://github.com/avrdudes/avrdude/tree/v8.0 من أجل بناء التعليمات وإشعارات التبعية
 
@@ -74,7 +74,7 @@ dotnet run --project tests/DeckPilot.Checks -c Release --no-build
 
 The new app identifies the connected card, keeps its chain port open, reconnects after unplugging, and checks its firmware version at startup and after reconnection. Firmware updates are delivered with app releases: startup checks comparison the connected firmware with the validated bundle included in the installed app. App update checks still obtain newer releases from GitHub. There is noly firmware-
 
-A older detected firmware prompts once per app session, with a 24- تأخير للتذكير لمدة ساعة عند تأجيل الإخطارات يمكن تعطيلها **Connexion et diagnostic**- لا تؤدي الطوابع غير المعروفة من طراز Arduino، والأجهزة المفككة، واختيارات البطاقات المتعددة الغموض إلى ظهور أوتوماتيكي أو تحديث العجلات، ويستلزم تركيب البرمجيات تأكيدا دائما، كما أن فتح مدير البرمجيات يعلق الشاشة وينتظر الإفراج عن المرفأ المتسلسل؛ ويستأنف الرصد بعد إغلاق جهاز الهاتف.
+A older detected firmware prompts once per app session, with a 24- تأخير للتذكير لمدة ساعة عند تأجيل الإخطارات يمكن تعطيلها **Connexion et diagnostic**- لا تؤدي الطوابع غير المعروفة من طراز Arduino، والأجهزة المفككة، واختيارات البطاقات المتعددة الغموض إلى ظهور أوتوماتيكي للعجلات أو تحديثها، كما أن تركيب البرمجيات يتطلب دائما تأكيدا، وفتح مدير البرمجيات يعلق الشاشة وينتظر الإفراج عن المرفأ المسلسل؛ ويستأنف الرصد بعد إغلاق جهاز الهاتف.
 
 **من أجل تحميل يدوي من "أردينو آي دي" DeckPilot مِنْ آيكونِ صينيةِه أولاً.** إغلاق النافذة الرئيسية يخفيها فقط لذا لا يزال يملك الإتصال التسلسلي DeckPilot ولا يمكن لشاشة متسلسلة أخرى أن تستخدم نفس الميناء في وقت واحد، وإذا كانت هناك أداة أخرى تملك الميناء بالفعل، يُبلّغ عن المشكلة ويُعاد النظر فيها دون أن يؤثر ذلك على مفاتيح لوحة المفاتيح العادية.
 
@@ -98,4 +98,4 @@ Board: DP2|KEYS|1234ABCD|10|1
 
 النسخة المصدرية `DeckPilotProtocol.h` كما أن حزمة البرمجيات الجاهزة المنشورة تحتوي الآن أيضا على الرسم البياني الحالي/الرؤوس تحت `source/DeckPilot`ورسمة التعافي و DeckPilot MITرخصة.
 
-الوصلة التشخيصية تستخدم عمداً `Serial.dtr()` بدلاً من `bool(Serial)`: Arduino AVR core 1.8.6 يضاف ما يلي: 10 ms delay in `Serial_::operator bool()`(ج) يُبقي قراءة استعراض منتصف المدة بشكل مباشر مسار التشخيص من إضافة هذا التوقف إلى كل دورة من دورات المسح الرئيسية، ويُحذف اختبار المراسم المضيفة التحويل الضمني للخنزير بحيث لا يمكن إعادة إدخال هذا النمط المانع في تنفيذ البروتوكول المشترك دون ملاحظة.
+الوصلة التشخيصية تستخدم عمداً `Serial.dtr()` بدلاً من `bool(Serial)`: Arduino AVR core 1.8.6 يضاف ما يلي: 10 ms delay in `Serial_::operator bool()`(ج) يُبقي قراءة استعراض منتصف المدة بصورة مباشرة مسار التشخيص من إضافة هذا التوقف إلى كل دورة من دورات المسح الرئيسية، ويُحذف اختبار البروتوكول المضيف التحويل الضمني للخنزير بحيث لا يمكن إعادة إدخال هذا النمط المانع في تنفيذ البروتوكول المشترك دون ملاحظة.

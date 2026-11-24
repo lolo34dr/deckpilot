@@ -57,7 +57,7 @@ DeckPilot configura Arduino Leonardo-compatible macropads que ya envía **F13-F2
 - **Calibración guiada:** Identificar todos 12 botones físicos sin cambiar el macropado.
 - **Picker de aplicación instalado:** búsqueda Iniciar atajos de menú y el catálogo de aplicaciones de Windows, incluyendo entradas de Microsoft Store. La selección manual de archivos sigue disponible.
 - **Acciones personalizadas:** aplicaciones de lanzamiento, carpetas abiertas o sitios web, enviar accesos directos y medios de control.
-- **Teclas libres:** mantener F13–F24 disponible para atajos configurados directamente en un juego u otra aplicación.
+- **Teclas libres:** mantener F13–F24 disponible en modo teclado para atajos configurados directamente en un juego u otra aplicación. DeckPilot modo, las teclas no firmadas permanecen inactivas.
 - **Perfiles locales:** crear, duplicar, renombrar, eliminar y seleccionar perfiles. La calibración se comparte a través de perfiles.
 - **Soundboard:** mezclar clips MP3/WAV locales con su micrófono; los clips nuevos y reemplazados se copian en DeckPilot’s managed Sounds carpeta.
 - **Perfiles listos:** empezar con plantillas de música, productividad o creación, a continuación, personalizarlas. Cambiar a un perfil específico, próximo o anterior de una clave física.
@@ -86,7 +86,8 @@ Las descargas publicadas incluyen el tiempo de ejecución .NET. **Usted no neces
 2. El instalador le permite elegir si DeckPilot Comienza con Windows, comprueba las actualizaciones de la aplicación automáticamente y reduce las animaciones. Los cheques de inicio y actualización están por defecto; las animaciones reducidas están apagadas. VB-CABLE conductor requerido por el Soundboard e lo instala automáticamente si falta. Se requiere una conexión a Internet para ese cheque de controlador.
 3. El instalador añade DeckPilot a Windows **Aplicaciones instaladas** y crea un atajo de menú Inicio. Un atajo de escritorio es seleccionado por defecto.
 4. Conecta tu macropado y abre DeckPilot de su atajo.
-5. Siga la calibración de izquierda a derecha a través **cuatro columnas**, entonces la siguiente fila, para **tres filas**. Cada botón debe enviar una tecla F13-F24 diferente.
+5. Abierto **Macropads**, haga clic en una tecla física en la tarjeta del dispositivo, y elija una acción de la biblioteca. 1.2.0 o más reciente, la primera opción permite DeckPilot Modo para ese dispositivo.
+6. Si las posiciones en pantalla no coinciden con las teclas físicas, elija **Calibrer les touches** en ese dispositivo. Para el firmware F13–F24 más antiguo, utilice el **Acciones** pestaña y calibrar el 3 × 4 cuadrícula antes de asignar atajos.
 
 Al actualizarse de la primera 4- diseño de la hoja, DeckPilot conserva perfiles/acciones y solicita una nueva calibración para las posiciones corregidas. Instalar sobre una configuración portátil existente también preserva la configuración en `%APPDATA%\DeckPilot`; renunciar a la copia vieja si la configuración le pide.
 
@@ -99,13 +100,13 @@ El ejecutable de un solo fichero extrae sus dependencias agrupadas en la caché 
 <a id="configure-a-key"></a>
 ### Configurar una clave
 
-1. Seleccione una llave en la cuadrícula.
-2. Elija una acción en la barra lateral derecha.
-3. Configurar su configuración debajo de la cuadrícula y guardar. Cambiar las teclas o los perfiles también guarda la configuración actual de la llave.
+1. Abierto **Macropads** y seleccione la clave para personalizar. Con dos dispositivos, elija primero la tarjeta correcta del dispositivo.
+2. Haga clic o busque una acción en la biblioteca. En ventanas estrechas, la biblioteca aparece debajo de la vista previa clave.
+3. Si la acción necesita un destino o atajo, complete su configuración debajo de la vista previa. Los cambios se guardan cuando se cambian las teclas o regresan al macropad.
 
 | Medida | Comportamiento |
 | --- | --- |
-| Tecla libre | Pasa F13–F24 a través de normalmente. Asignarlo directamente en su juego o aplicación. |
+| Tecla libre | Pasa F13–F24 en modo teclado. En DeckPilot Modo, una llave no firmada no hace nada. |
 | Aplicación | Lanza una aplicación instalada o un programa seleccionado manualmente o atajo. |
 | Folder | Abre una carpeta en Windows Explorer. |
 | Sitio web | Abre una dirección HTTP o HTTPS en tu navegador predeterminado. |
@@ -308,10 +309,10 @@ Las comprobaciones de firmware de inicio están activadas por defecto. Después 
 
 Firmware **1.1.2** reporta todas las doce teclas F13–F24 independientemente mientras conservan la identificación de sesión, las respuestas de latidos cardíacos correlativos, mensajes ligados y eventos físicos de estado clave. Estos eventos animan los botones mapeados y actualizan los diagnósticos; nunca invocan acciones por segunda vez. Su primera validación de tablero físico todavía es necesaria, aunque firmware 1.0.0 y el procedimiento flash original fueron confirmados en el tablero de referencia. [protocolo y documentación de compatibilidad](FIRMWARE.es.md).
 
-<a id="two-macropads-with-independent-profiles"></a>
-### Dos macropados con perfiles independientes
+<a id="one-or-two-macropads-with-independent-profiles"></a>
+### Uno o dos macropados con perfiles independientes
 
-Firmware Flash **1.2.0** en cada macropado compatible, uno a la vez. **Macropads** para ver un teclado por dispositivo conectado. Haga clic en una tecla en el dispositivo que desea configurar, luego seleccione una acción de la biblioteca. Interruptor de dispositivos directamente desde el editor utilizando sus atajos COM. El editor muestra qué tecla y dispositivo está editando, mientras que el perfil del teclado permanece activo por sí mismo. DeckPilot modo y asigna un perfil independiente. Si una configuración anterior compartía un perfil entre dispositivos, **Séparer et configurer** copia sus acciones a un perfil independiente. **Calibrer les touches** en un dispositivo si su orden de botón físico difiere. **Opciones** abre su perfil, modo teclado y configuración de firmware.
+Firmware Flash **1.2.0** en cada macropado compatible, uno a la vez. **Macropads** para ver un teclado por dispositivo conectado. Con un dispositivo, comienza desde **Votre macropad**: haga clic en una tecla, elija una acción en la biblioteca, luego vuelva a la tarjeta. Con dos dispositivos, cada tarjeta nombre su puerto y perfil; el editor también ofrece un interruptor directo entre dispositivos. DeckPilot modo. El primer dispositivo puede reutilizar su perfil de teclado existente, mientras que otros dispositivos reciben perfiles independientes. Editar un dispositivo no cambia el perfil de teclado activo. Si una configuración anterior compartió un perfil entre dispositivos, **Séparer et configurer les touches** copia sus acciones a un perfil independiente. **Calibrer les touches** en un dispositivo si su orden de botón físico difiere. **Réglages du macropad** abre su perfil, modo teclado y configuración de firmware.
 
 In DeckPilot El modo, los botones libres son inactivos y las acciones de perfil cambian sólo el perfil asignado al dispositivo originario. Apague el modo para utilizar F13–F24 como atajos de teclado de nuevo. Si las tablas idénticas carecen de un número de serie USB único, mantenga cada uno en su propio conector USB o verifique la asignación de perfil después de moverlo. [Modo híbrido y pasos de prueba de hardware](../../firmware/README.md#hybrid-input-mode-120).
 
@@ -461,7 +462,7 @@ El **Soundboard · micro virtuel** panel le permite seleccionar su micrófono f�
 <a id="deckpilot-atelier-190"></a>
 ## DeckPilot Atelier (Atelier)1.9.0)
 
-Atelier comprueba ahora el tablero seleccionado y el firmware antes de parpadear, compara las versiones instaladas y agrupadas, y ofrece una reinicia verificada después de las escrituras interrumpidas. **Mode atelier en série...** diagnostica y flashea todas las tablas detectadas secuencialmente y puede exportar un informe de lote. 12- la prueba de tecla verifica el físico 01→12 diseño, registra la asignación F13–F24, e incluye resultados de firmware y per-key en el informe de calidad.
+Atelier comprueba ahora el tablero seleccionado y el firmware antes de parpadear, compara las versiones instaladas y agrupadas, y ofrece una reinicia verificada después de las escrituras interrumpidas. **Mode atelier en série...** diagnostica y flashea todas las tablas detectadas secuencialmente y puede exportar un informe de lote. 12- La prueba de clave verifica el físico 01→12 diseño, registra la asignación F13–F24, e incluye resultados de firmware y per-key en el informe de calidad.
 
 
 El separado **DeckPilot Atelier** El instalador de Windows prepara nuevos macropados DIY. Detecta tableros Leonardo/Caterina, valida y destella el firmware agrupado sin sobrescribir el cargador de arranque, luego guía un físico 3×4 chequeo de todos 12 botones. Cada botón debe pasar una pulsación corta y una sujeción de al menos 700 ms. Los registros de herramientas que la señal F13–F24 pertenece a cada posición física, marca señales múltiples o inconsistentes, y exporta un reporte atemporal. `DeckPilot-Atelier-Setup.exe` desde la página de lanzamientos. Un descargador de arranque Caterina ya debe estar presente; la herramienta no instala un cargador de arranque perdido.

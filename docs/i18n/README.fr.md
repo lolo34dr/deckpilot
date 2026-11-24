@@ -57,7 +57,7 @@ DeckPilot configure les macropads compatibles Arduino Leonardo qui envoient déj
 - **Étalonnage guidé:** identifier tous 12 boutons physiques sans re-remorquer votre macropad.
 - **Sélecteur d’applications installées :** Rechercher Démarrer les raccourcis de menu et le catalogue d'applications Windows, y compris les entrées Microsoft Store. La sélection manuelle des fichiers reste disponible.
 - **Actions personnalisées  :** lancer des applications, ouvrir des dossiers ou des sites Web, envoyer des raccourcis et contrôler les médias.
-- **Touches libres:** Gardez F13–F24 disponible pour les raccourcis configurés directement dans un jeu ou une autre application.
+- **Touches libres:** Gardez F13–F24 disponible en mode clavier pour les raccourcis configurés directement dans un jeu ou une autre application. DeckPilot mode, les touches non assignées restent inactives.
 - **Profils locaux:** créer, dupliquer, renommer, supprimer et sélectionner les profils. L'étalonnage est partagé entre les profils.
 - **Soundboard:** Mélangez les clips MP3/WAV locaux avec votre microphone; les clips neufs et remplacés sont copiés dans DeckPilotLes sons gérés dossier.
 - **Profils prêts à l'emploi:** Commencez par les modèles Musique, Productivité ou Création, puis personnalisez-les. Passez à un profil spécifique, suivant ou précédent à partir d'une touche physique.
@@ -86,7 +86,8 @@ Les téléchargements publiés incluent le .NET runtime. **Vous n'avez pas besoi
 2. L'installateur vous permet de choisir si DeckPilot commence par Windows, vérifie automatiquement les mises à jour de l'application et réduit les animations. Les vérifications de démarrage et de mise à jour sont effectuées par défaut; les animations réduites sont désactivées. VB-CABLE le conducteur requis par le Soundboard et l'installe automatiquement en cas de manque. Une connexion Internet est requise pour cette vérification du conducteur.
 3. L'installateur ajoute DeckPilot vers Windows **Installé des applications** et crée un raccourci de menu Démarrer. Un raccourci de bureau est sélectionné par défaut.
 4. Connectez votre macropad et ouvrez DeckPilot de son raccourci.
-5. Suivre le calibrage de gauche à droite **quatre colonnes**, puis la prochaine rangée, pour **trois lignes**. Chaque bouton doit envoyer une autre touche F13–F24.
+5. Ouvrir **Macropades**, cliquez sur une touche physique dans la carte de périphérique, et choisissez une action dans la bibliothèque. 1.2.0 ou plus récent, le premier choix permet DeckPilot mode pour ce dispositif.
+6. Si les positions à l'écran ne correspondent pas à vos touches physiques, choisissez **Calibrer les touches** Pour l'ancien firmware F13–F24, utilisez le **Actions** onglet et étalonner le 3 × 4 grille avant d'assigner des raccourcis.
 
 Dans le cadre de la mise à niveau de la première 4-la mise en page de la ligne, DeckPilot Préserve les profils/actions et demande un nouveau calibrage pour les positions corrigées. `%APPDATA%\DeckPilot`; quitter l'ancienne copie si la configuration vous le demande.
 
@@ -99,13 +100,13 @@ L'exécutable à un seul fichier extrait ses dépendances groupées dans le cach
 <a id="configure-a-key"></a>
 ### Configurer une touche
 
-1. Sélectionnez une touche dans la grille.
-2. Choisissez une action dans la barre latérale droite.
-3. Configurez ses paramètres sous la grille et enregistrez. La commutation des touches ou des profils enregistre également les paramètres de la touche actuelle.
+1. Ouvrir **Macropades** et sélectionnez la touche à personnaliser. Avec deux appareils, choisissez d'abord la bonne carte de l'appareil.
+2. Cliquez ou recherchez une action dans la bibliothèque. Sur les fenêtres étroites, la bibliothèque apparaît sous l'aperçu de la touche.
+3. Si l'action a besoin d'une destination ou d'un raccourci, remplissez ses paramètres en dessous de l'aperçu. Les modifications sont enregistrées lorsque vous changez de touches ou retournez dans le macropad.
 
 | Décision | Comportement |
 | --- | --- |
-| Touche libre | Passe F13–F24 à travers normalement. Assignez-le directement dans votre jeu ou application. |
+| Touche libre | Passe F13–F24 en mode clavier. DeckPilot mode, une touche non assignée ne fait rien. |
 | Demande | Lance une application installée ou un programme ou un raccourci sélectionné manuellement. |
 | Dossier | Ouvre un dossier dans l'Explorateur Windows. |
 | Site Web | Ouvre une adresse HTTP ou HTTPS dans votre navigateur par défaut. |
@@ -308,10 +309,10 @@ Les vérifications du firmware de démarrage sont activées par défaut. Après 
 
 Firmware **1.1.2** rapporte les douze touches F13–F24 indépendamment tout en conservant l'identification de session, les réponses corrélées des battements de coeur, les messages limités et les événements physiques de l'état des touches. Ces événements animent les boutons mapés et mettent à jour les diagnostics; ils n'invoquent jamais les actions une seconde fois. Sa première validation physique-board est encore nécessaire, bien que le firmware 1.0.0 et la procédure flash originale a été confirmée sur le tableau de référence. [protocole et documentation de compatibilité](FIRMWARE.fr.md).
 
-<a id="two-macropads-with-independent-profiles"></a>
-### Deux macropads avec des profils indépendants
+<a id="one-or-two-macropads-with-independent-profiles"></a>
+### Un ou deux macropads avec des profils indépendants
 
-firmware Flash **1.2.0** sur chaque macropad compatible, un à la fois. **Macropades** pour voir un clavier par périphérique connecté. Cliquez sur une touche sur l'appareil que vous voulez configurer, puis choisissez une action dans la bibliothèque. Changez les périphériques directement depuis l'éditeur en utilisant leurs raccourcis COM. L'éditeur affiche la touche et le périphérique que vous modifiez, tandis que le profil du clavier reste actif seul. La première configuration permet DeckPilot mode et assigne un profil indépendant. Si une configuration antérieure partageait un profil entre les périphériques, **Séparer et configurer** copie ses actions à un profil indépendant. **Calibrer les touches** sur un appareil si l'ordre de son bouton physique diffère. **Options** ouvre son profil, le mode clavier et les paramètres du firmware.
+firmware Flash **1.2.0** sur chaque macropad compatible, un à la fois. **Macropades** pour voir un clavier par périphérique connecté. **Votre macropad**: cliquez sur une touche, choisissez une action dans la bibliothèque, puis retournez à la carte. Avec deux appareils, chaque carte indique son port et son profil ; l'éditeur propose également un commutateur direct entre les appareils. La première configuration permet DeckPilot mode. Le premier appareil peut réutiliser votre profil de clavier existant, tandis que d'autres appareils reçoivent des profils indépendants. Modifier un appareil ne change pas le profil de clavier actif. Si une configuration antérieure partageait un profil entre les appareils, **Séparer et configurer les touches** copie ses actions à un profil indépendant. **Calibrer les touches** sur un appareil si l'ordre de son bouton physique diffère. **Réglages du macropad** ouvre son profil, le mode clavier et les paramètres du firmware.
 
 En DeckPilot les boutons libres sont inactifs et les actions de profil ne changent que le profil assigné à l'appareil d'origine. Éteignez le mode pour utiliser F13–F24 comme raccourci clavier à nouveau. Si des cartes identiques ne disposent pas d'un numéro de série USB unique, gardez chacune sur sa propre prise USB ou vérifiez l'attribution du profil après le déplacement. [étapes de test du mode hybride et du matériel](../../firmware/README.md#hybrid-input-mode-120).
 
@@ -369,7 +370,7 @@ Le clavier rend maintenant aux tailles WPF natives au lieu de mettre le texte à
 
 Sous **Gérer les profils**, exporter le profil actuel ou tous les profils comme `.deckpilot.json`Importer n'exécute jamais d'actions et ne remplace jamais l'étalonnage du PC. Les profils contiennent des chemins d'action, des arguments et des identifiants d'extrémité audio, qui peuvent nécessiter un ajustement sur un autre PC. Les formats inconnus, les fichiers surdimensionnés et les configurations de gestes mal formés sont refusés.
 
-Avant d'enregistrer les profils modifiés, DeckPilot conserve les profils précédents dans `%APPDATA%\DeckPilot\Backups` (20 Les sauvegardes de préférence ne créent pas de sauvegardes de profil. Une défaillance de sauvegarde empêche d'écraser les paramètres actuels. Restaurer remplace les profils après confirmation et peut elle-même être annulée; l'étalonnage reste inchangé.
+Avant d'enregistrer les profils modifiés, DeckPilot conserve les profils précédents dans `%APPDATA%\DeckPilot\Backups` (20 Une défaillance de sauvegarde empêche d'écraser les paramètres actuels. Restaurer remplace les profils après confirmation et peut être elle-même annulée; le calibrage reste inchangé.
 
 **Microphone Windows** La barre d'état persistante et la carte Audio Windows montrent un état actif/muté/mixé/indisponible, rafraîchi toutes les deux secondes et après les commandes de l'application. Une mise à jour multi-endpoint échouée tente de restaurer les états de mute précédents. Ces indicateurs décrivent l'état de fin de Windows, pas un commutateur matériel ou un bouton de mute propre à une application.
 

@@ -57,7 +57,7 @@ DeckPilot konfiguruje Arduino Leonardo- kompatybilne makropadki, które już wys
 - **Kalibracja z przewodnikiem:** identyfikacja wszystkich 12 przyciski fizyczne bez ponownego okablowania makro-pad.
 - **Instalowany wybielacz aplikacji:** wyszukaj skróty menu Start i katalog aplikacji Windows, w tym wpisy Microsoft Store. Ręczny wybór plików pozostaje dostępny.
 - **Niestandardowe działania:** uruchamianie aplikacji, otwieranie folderów lub stron internetowych, wysyłanie skrótów i sterowanie mediami.
-- **Wolne klawisze:** zachować F13- F24 dostępne dla skrótów skonfigurowanych bezpośrednio w grze lub innej aplikacji.
+- **Wolne klawisze:** zachować F13- F24 dostępne w trybie klawiatury dla skrótów skonfigurowanych bezpośrednio w grze lub innej aplikacji. DeckPilot tryb, nieprzypisane klucze pozostają nieaktywne.
 - **Profile lokalne:** tworzy, duplikuje, zmienia nazwę, usuwa i wybiera profile. Kalibracja jest dzielona między profile.
 - **Soundboard:** wymieszać lokalne klipy MP3 / WAV z mikrofonem; nowe i zastąpione klipy są kopiowane do DeckPilotjest zarządzany folder Sounds.
 - **Profile wykonane z papieru:** zacząć od szablonów Music, Productivity lub Creation, a następnie dostosować je. Przełącz na konkretny, następny lub poprzedni profil z klucza fizycznego.
@@ -86,7 +86,8 @@ Publikowane pliki do pobrania zawierają runtime .NET. **Nie trzeba instalować 
 2. Instalator pozwala wybrać, czy DeckPilot zaczyna się od systemu Windows, automatycznie sprawdza aktualizacje aplikacji i redukuje animacje. Domyślnie uruchamianie i aktualizowanie kontroli; zmniejszone animacje są wyłączone. VB-CABLE kierowca wymagany przez Soundboard i instaluje go automatycznie, jeśli brakuje. Do sprawdzenia kierowcy wymagane jest połączenie internetowe.
 3. Instalator dodaje DeckPilot do Windows **Instalowane aplikacje** i tworzy skrót w menu Start. Skrót pulpitu jest domyślnie wybierany.
 4. Połącz makropad i otwórz DeckPilot ze skrótu.
-5. Postępuj zgodnie z kalibracją od lewej do prawej strony **4 kolumny**, następnie w następnym wierszu, dla **trzy wiersze**. Każdy przycisk musi wysłać inny klawisz F13- F24.
+5. Otwórz **Makroplony**, kliknij klucz fizyczny w karcie urządzenia i wybierz akcję z biblioteki. Na firmware 1.2.0 lub nowsze, pierwszy wybór umożliwia DeckPilot tryb dla tego urządzenia.
+6. Jeśli pozycje na ekranie nie pasują do Twoich kluczy fizycznych, wybierz **Kalibrer les touches** na tym urządzeniu. Dla starszych firmware F13- F24, należy użyć **Działania** tab i kalibrować 3 × 4 grid przed przydzieleniem skrótów.
 
 Podczas modernizacji od pierwszego 4- układ wiersza, DeckPilot zachowuje profile / działania i żąda jednej nowej kalibracji dla skorygowanych pozycji. Instalacja nad istniejącym przenośnym ustawieniem zachowuje również ustawienia w `%APPDATA%\DeckPilot`; rzucić starą kopię, jeśli konfiguracja poprosi.
 
@@ -99,13 +100,13 @@ Pojedynczy plik wykonywalny pobiera swoje powiązane zależności do pamięci po
 <a id="configure-a-key"></a>
 ### Konfiguracja klucza
 
-1. Wybierz klucz w siatce.
-2. Wybierz akcję na prawym pasku bocznym.
-3. Konfiguracja ustawień poniżej siatki i zapis. Przełączanie klawiszy lub profili również zapisuje ustawienia bieżącego klucza.
+1. Otwórz **Makroplony** i wybierz klucz do personalizacji. Za pomocą dwóch urządzeń najpierw wybierz właściwą kartę urządzenia.
+2. Kliknij lub wyszukaj akcję w bibliotece. W wąskich oknach biblioteka pojawia się poniżej podglądu klucza.
+3. Jeśli akcja wymaga miejsca docelowego lub skrótu, należy uzupełnić ustawienia poniżej podglądu. Zmiany są zapisywane po zmianie klawiszy lub powrocie do makro pad.
 
 | Działanie | Zachowanie |
 | --- | --- |
-| Wolny klawisz | Przesyłki F13- F24 przez normalnie. Przypisz go bezpośrednio w grze lub aplikacji. |
+| Wolny klawisz | Pasy F13- F24 w trybie klawiatury. DeckPilot tryb, nieprzypisany klucz nic nie robi. |
 | Stosowanie | Otwiera zainstalowaną aplikację lub ręcznie wybrany program lub skrót. |
 | Katalog | Otwiera folder w systemie Windows Explorer. |
 | Strona internetowa | Otwiera adres HTTP lub HTTPS w domyślnej przeglądarce. |
@@ -290,7 +291,7 @@ Proponowany kredyt:
 
 Dla przygotowania urządzenia i kontroli jakości warsztatu, zainstalować oddzielny [DeckPilot Atelier](../../docs/FACTORY.md) narzędzie. Jego instalator jest opublikowany jako **[DeckPilot-Atelier- Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** obok aplikacji głównej. Może wyświetlić dołączone oprogramowanie firmowe na desce Leonardo / Caterina, a następnie sprawdzić krótkie i długie prasy na wszystkich 12 klawisze fizyczne i eksportować raport.
 
-DeckPilot 1.1.0 zawiera **Firmware du macropad…** okno dialogowe i oprogramowanie firmowe 1.0.0 dla Pro Micro ATmega32U4 **5 V / 16 MHz**, przy użyciu konfiguracji Leonardo / Caterina potwierdzonej przez właściciela dziennika wysyłania. Złączone narzędzie do migania systemu Windows nie wymaga Arduino IDE. Wybór urządzenia i potwierdzenie są obowiązkowe; aktualizacje aplikacji nigdy po cichu nie świecą planszą. Istniejące mappingi F13- F24, profile i kalibracja pozostają kompatybilne.
+DeckPilot 1.1.0 zawiera **Firmware du macropad…** okno dialogowe i oprogramowanie firmowe 1.0.0 dla Pro Micro ATmega32U4 **5 V / 16 MHz**, przy użyciu konfiguracji Leonardo / Caterina potwierdzonej przez właściciela dziennika wysyłania. Złączone narzędzie do migania systemu Windows nie wymaga Arduino IDE. Wybór urządzenia i potwierdzenie są obowiązkowe; aktualizacje aplikacji nigdy po cichu nie świecą planszą. Istniejące mappingi, profile i kalibracja F13- F24 pozostają kompatybilne.
 
 **Właściciel potwierdził udaną migawkę w aplikacji, firmware 1.0.0 identyfikacja i wszystkie 12 przyciski na tablicy odniesienia.** Przechowywać oryginalny szkic i dostęp do RST / GND do odzysku. Mignięcie firmware nie może być toczone automatycznie. Zobacz [dokumentacja oprogramowania firmowego](FIRMWARE.pl.md) dla kompatybilności, walidacji, odzyskiwania, budowania kroków i licencji stron trzecich. Przycisk Per- tryby USB i natywnych kontroli mediów nie są częścią tej wersji oprogramowania firmowego.
 
@@ -308,10 +309,10 @@ Sprawdzanie oprogramowania firmowego w startupie jest domyślnie włączone. Po 
 
 Oprogramowanie firmowe **1.1.2** raportuje niezależnie wszystkie dwanaście klawiszy F13- F24, zachowując przy tym identyfikację sesji, skorelowane odpowiedzi na bicie serca, ograniczone komunikaty i fizyczne zdarzenia stanu kluczowego. Zdarzenia te animują mapowane przyciski i aktualizują diagnostykę; nigdy nie powołują się na działania po raz drugi. Jego pierwsza walidacja fizyczna jest nadal wymagana, chociaż oprogramowanie firmware 1.0.0 Oryginalna procedura błyskowa została potwierdzona na tablicy referencyjnej. [dokumentacja dotycząca protokołu i zgodności](FIRMWARE.pl.md).
 
-<a id="two-macropads-with-independent-profiles"></a>
-### Dwa makro-padki z niezależnymi profilami
+<a id="one-or-two-macropads-with-independent-profiles"></a>
+### Jedna lub dwie makro-poduszki z niezależnymi profilami
 
-Błysk firmware **1.2.0** na każdym kompatybilnym makro-pad, jeden na raz. Otwórz **Makroplony** aby zobaczyć jedną klawiaturę na podłączone urządzenie. Kliknij klawisz na urządzeniu, które chcesz skonfigurować, a następnie wybierz akcję z biblioteki. Przełącz urządzenia bezpośrednio z edytora za pomocą skrótów COM. Edytor pokazuje, który klucz i urządzenie edytujesz, podczas gdy profil klawiatury pozostaje aktywny. Pierwsza konfiguracja umożliwia DeckPilot tryb i przypisuje niezależny profil. Jeśli wcześniejsza konfiguracja udostępni profil między urządzeniami, **Séparer et configurer** kopiuje swoje działania do niezależnego profilu. **Kalibrer les touches** na urządzeniu, jeżeli jego fizyczna kolejność przycisków jest różna. **Opcje** otwiera profil, tryb klawiatury i ustawienia oprogramowania firmowego.
+Błysk firmware **1.2.0** na każdym kompatybilnym makro-pad, jeden na raz. Otwórz **Makroplony** aby zobaczyć jedną klawiaturę na podłączone urządzenie. **Votre macropad**: kliknij klawisz, wybierz akcję w bibliotece, a następnie wróć do karty. Za pomocą dwóch urządzeń każda karta określa port i profil; edytor oferuje również bezpośredni przełączanie pomiędzy urządzeniami. Pierwsza konfiguracja umożliwia DeckPilot tryb. Pierwsze urządzenie może ponownie wykorzystać istniejący profil klawiatury, podczas gdy kolejne urządzenia otrzymują niezależne profile. Edycja urządzenia nie zmienia aktywnego profilu klawiatury. Jeśli wcześniejsza konfiguracja udostępniła profil pomiędzy urządzeniami, **Séparer et configurer les touches** kopiuje swoje działania do niezależnego profilu. **Kalibrer les touches** na urządzeniu, jeżeli jego fizyczna kolejność przycisków jest różna. **Réglages du macropad** otwiera profil, tryb klawiatury i ustawienia oprogramowania firmowego.
 
 W DeckPilot tryb, wolne przyciski są nieaktywne, a działania profilowe zmieniają tylko profil przypisany do urządzenia wyjściowego. Wyłącz tryb, aby ponownie użyć F13- F24 jako skrótów klawiszowych. Jeśli identyczne tablice nie mają unikalnego numeru USB, przechowywać każdy na swoim własnym gniazdku USB lub zweryfikować przypisanie profilu po przeniesieniu go. Zobacz [etapy testów w trybie hybrydowym i sprzętowym](../../firmware/README.md#hybrid-input-mode-120).
 
@@ -417,7 +418,7 @@ Interfejs węgla drzewnego stawia bibliotekę działania na pierwszym miejscu, o
 - **Rejestrator skrótów:** wybrać akcję klawiatury i kliknąć **Enregistrer un raccourci**. Naciśnij wspieraną kombinację, a następnie zapisać go. Anulowanie ucieczki; F13- F24 jest zarezerwowany dla makro pad podczas nagrywania.
 - **Szybki dostęp:** Ctrl + K lub przycisk Biblioteka koncentruje wyszukiwanie akcji. **Activité récente** utrzymuje ostatni 30 wysłanie / nieudana akcja w pamięci dla tej sesji, bez zapisywania argumentów programu lub ścieżki docelowe. Można ją w każdej chwili wyczyścić. Udane wysłanie nie gwarantuje zakończenia w aplikacji docelowej.
 
-Pozostaje oprogramowanie firmowe **1.1.1**. Akceptowanie automatycznej oferty oprogramowania firmowego teraz poprawnie otwiera menedżera oprogramowania firmowego; poprzednia ochrona modalna uniemożliwiła przekazanie go. Istniejąca identyfikacja oprogramowania firmowego, bicie serca, ponowne podłączenie i kontrola flash pozostają na miejscu. Nowe funkcje przestrzeni roboczej nie potrzebują błysku firmware.
+Pozostaje oprogramowanie firmowe **1.1.1**. Akceptowanie automatycznej oferty oprogramowania firmowego teraz poprawnie otwiera menedżera oprogramowania firmowego; poprzednia ochrona modalna uniemożliwiła przekazanie go. Istniejąca tożsamość oprogramowania firmowego, bicie serca, ponowne podłączenie i kontrola flash pozostają na miejscu. Nowe funkcje przestrzeni roboczej nie wymagają błysku firmware.
 
 <a id="microphone-noise-suppression-220"></a>
 ## tłumienie szumów mikrofonów (2.2.0)

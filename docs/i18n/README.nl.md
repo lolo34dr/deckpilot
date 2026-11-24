@@ -57,7 +57,7 @@ DeckPilot configureert Arduino Leonardo-compatibele macropads die al verzenden *
 - **Geleidende kalibratie:** alles te identificeren 12 fysieke knoppen zonder uw macropad opnieuw te draaien.
 - **Geïnstalleerde applicatiepicker:** zoeken Start menu snelkoppelingen en de Windows-applicatiecatalogus, inclusief Microsoft Store-items. Handmatige bestandsselectie blijft beschikbaar.
 - **Aangepaste acties:** start toepassingen, open mappen of websites, stuur snelkoppelingen en controlemedia.
-- **Vrije toetsen:** houden F13_F24 beschikbaar voor snelkoppelingen die direct in een spel of een andere toepassing zijn geconfigureerd.
+- **Vrije toetsen:** Houd F13_F24 beschikbaar in toetsenbordmodus voor sneltoetsen die direct in een spel of een andere toepassing zijn ingesteld. DeckPilot modus, niet toegewezen sleutels blijven inactief.
 - **Lokale profielen:** Maak, dupliceer, hernoem, verwijder en selecteer profielen. Kalibratie wordt gedeeld over profielen.
 - **Soundboard:** mix lokale MP3/WAV clips met uw microfoon; nieuwe en vervangen clips worden gekopieerd in DeckPilotSounds-map is beheerd.
 - **Gereedgemaakte profielen:** Begin met Muziek, Productiviteit of Creatie templates, en pas ze aan. Schakel over naar een specifiek, volgend of vorig profiel vanuit een fysieke sleutel.
@@ -86,7 +86,8 @@ De gepubliceerde downloads omvatten de .NET runtime. **U hoeft .NET niet te inst
 2. Met het installatiesysteem kunt u kiezen of DeckPilot begint met Windows, controleert automatisch op updates van de app, en vermindert animaties. Opstarten en update controles zijn standaard aan; verminderde animaties zijn uitgeschakeld. Het controleert ook voor de ondertekende VB-CABLE bestuurder vereist door de Soundboard en installeert het automatisch als het ontbreekt. Een internetverbinding is vereist voor die driver check.
 3. Het installatieprogramma voegt DeckPilot naar Windows **Geïnstalleerde apps** en maakt een sneltoets voor het menu Start aan. Standaard wordt een sneltoets voor het bureaublad geselecteerd.
 4. Verbind uw macropad en open DeckPilot van de kortere weg.
-5. Volg kalibratie van links naar rechts over **vier kolommen**, dan de volgende rij, voor **drie rijen**Elke knop moet een andere F13.F24 sleutel sturen.
+5. Open **Macropads**, klik op een fysieke sleutel in de apparaatkaart, en kies een actie uit de bibliotheek. Op firmware 1.2.0 of nieuwer, de eerste keuze maakt DeckPilot modus voor dat apparaat.
+6. Als de posities op het scherm niet overeenkomen met uw fysieke sleutels, kies **Kalibrator les touchs** Op dat apparaat. Voor oudere F13/F24 firmware, gebruik de **Acties** tab en kalibreer de 3 × 4 raster voordat u snelkoppelingen toewijst.
 
 Bij het upgraden van de eerste 4-rijindeling, DeckPilot behoudt profielen/acties en vraagt om een nieuwe kalibratie voor de gecorrigeerde posities. Het installeren over een bestaande draagbare setup behoudt ook de instellingen in `%APPDATA%\DeckPilot`; stop de oude kopie als de setup je vraagt.
 
@@ -99,13 +100,13 @@ De single-file uitvoerbaar haalt zijn gebundelde afhankelijkheden in de gebruike
 <a id="configure-a-key"></a>
 ### Een sleutel configureren
 
-1. Selecteer een sleutel in het raster.
-2. Kies een actie in de rechter zijbalk.
-3. Configureer de instellingen onder het raster en sla op. Schakelen van sleutels of profielen slaat ook de instellingen van de huidige sleutel op.
+1. Open **Macropads** en selecteer de sleutel om te personaliseren. Met twee apparaten, kies eerst de juiste apparaatkaart.
+2. Klik of zoek naar een actie in de bibliotheek. Bij smalle vensters verschijnt de bibliotheek onder het sleutelvoorbeeld.
+3. Als de actie een bestemming of snelkoppeling nodig heeft, vul dan de instellingen onder het voorbeeld in. Wijzigingen worden opgeslagen wanneer u van sleutel wisselt of terugkeert naar het macropad.
 
 | Actie | Gedrag |
 | --- | --- |
-| Vrije toets | Passeert F13.F24 door normaal. Geef het direct in uw spel of toepassing. |
+| Vrije toets | Passeert F13/F24 in toetsenbordmodus. In DeckPilot Een niet toegewezen sleutel doet niets. |
 | Toepassing | Start een geïnstalleerde toepassing of een handmatig geselecteerde programma of snelkoppeling. |
 | Map | Opent een map in Windows Explorer. |
 | Site | Opent een HTTP- of HTTPS-adres in uw standaard browser. |
@@ -308,12 +309,12 @@ Opstart firmware controles zijn standaard ingeschakeld. Nadat de app update cont
 
 Firmware **1.1.2** rapporteert alle twaalf F13_F24-toetsen onafhankelijk met behoud van sessie-identificatie, gecorreleerde hartslag antwoorden, begrensde berichten en fysieke key-state gebeurtenissen. Deze gebeurtenissen animeren de in kaart gebrachte knoppen en bijwerken diagnostiek; ze nooit oproepen acties een tweede keer. De eerste fysieke-board validatie is nog steeds nodig, hoewel firmware 1.0.0 en de oorspronkelijke flitsprocedure werd bevestigd op het referentiebord. Zie de [Protocol- en compatibiliteitsdocumentatie](FIRMWARE.nl.md).
 
-<a id="two-macropads-with-independent-profiles"></a>
-### Twee macropads met onafhankelijke profielen
+<a id="one-or-two-macropads-with-independent-profiles"></a>
+### Een of twee macropads met onafhankelijke profielen
 
-Flash firmware **1.2.0** Openen op elk compatibel macropad, één tegelijk. **Macropads** om één toetsenbord per aangesloten apparaat te zien. Klik op een sleutel op het apparaat dat u wilt configureren en kies vervolgens een actie uit de bibliotheek. Schakel apparaten rechtstreeks van de editor met behulp van hun COM-sneltoetsen. De editor toont welke sleutel en apparaat u bewerkt, terwijl het toetsenbordprofiel zelfstandig blijft. De eerste configuratie maakt het mogelijk DeckPilot modus en wijst een onafhankelijk profiel toe. Als een eerdere instelling een profiel gedeeld heeft tussen apparaten, **Séparer et configurer** kopieert zijn acties naar een onafhankelijk profiel. **Kalibrator les touchs** op een apparaat als de fysieke knopvolgorde verschilt. **Opties** opent zijn profiel, toetsenbord modus en firmware instellingen.
+Flash firmware **1.2.0** Openen op elk compatibel macropad, één tegelijk. **Macropads** om één toetsenbord per aangesloten apparaat te zien. Met één apparaat begint u vanaf **Votre macropad**: klik op een toets, kies een actie in de bibliotheek, keer terug naar de kaart. Met twee apparaten, elke kaart noemt zijn poort en profiel; de editor biedt ook een directe schakelaar tussen apparaten. De eerste configuratie maakt het mogelijk DeckPilot modus. Het eerste apparaat kan uw bestaande toetsenbordprofiel hergebruiken, terwijl andere apparaten onafhankelijke profielen ontvangen. Het bewerken van een apparaat verandert het actieve toetsenbordprofiel niet. Als een eerdere instelling een profiel deelt tussen apparaten, **Séparer et configurer les touchs** kopieert zijn acties naar een onafhankelijk profiel. **Kalibrator les touchs** op een apparaat als de fysieke knopvolgorde verschilt. **Réglages du macropad** opent zijn profiel, toetsenbord modus en firmware instellingen.
 
-In DeckPilot modus, vrije knoppen zijn inactief en profiel acties veranderen alleen het profiel toegewezen aan het oorspronkelijke apparaat. Schakel de modus uit om F13_F24 te gebruiken als sneltoetsen opnieuw. Als identieke boards ontbreken een uniek USB-serienummer, houd elk op zijn eigen USB-socket of controleer de profieltoewijzing na het verplaatsen. Zie de [hybride modus en hardware teststappen](../../firmware/README.md#hybrid-input-mode-120).
+In DeckPilot modus, vrije knoppen zijn inactief en profiel acties veranderen alleen het profiel toegewezen aan het oorspronkelijke apparaat. Schakel de modus uit om F13_F24 te gebruiken als sneltoetsen opnieuw. Als identieke boards ontbreken een uniek USB-serienummer, houd elk op zijn eigen USB-socket of verifieer de profieltoewijzing na het verplaatsen. Zie de [hybride modus en hardware teststappen](../../firmware/README.md#hybrid-input-mode-120).
 
 <a id="keypad-interface-140"></a>
 ## Toetsenbordinterface (1.4.0)

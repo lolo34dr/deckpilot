@@ -57,7 +57,7 @@ DeckPilot configura macropads compatíveis com o Arduino Leonardo que já enviam
 - **Calibração guiada:** identificar todos 12 botões físicos sem religar o seu macropad.
 - **Recolhedor de aplicativos instalado:** procurar Iniciar atalhos de menu e o catálogo de aplicativos do Windows, incluindo entradas da Microsoft Store. A seleção manual de arquivos permanece disponível.
 - **Acções personalizadas:** lançar aplicativos, abrir pastas ou sites, enviar atalhos e controlar mídia.
-- **Teclas livres:** Mantenha F13–F24 disponível para atalhos configurados diretamente em um jogo ou outra aplicação.
+- **Teclas livres:** Mantenha F13-F24 disponível no modo teclado para atalhos configurados diretamente em um jogo ou outra aplicação. DeckPilot modo, as chaves não atribuídas permanecem inativas.
 - **Perfis locais:** criar, duplicar, renomear, excluir e selecionar perfis. Calibração é compartilhada entre perfis.
 - **Soundboard:** misturar clipes MP3/WAV locais com seu microfone; clipes novos e substituídos são copiados para DeckPilotA pasta gerenciada de Sons.
 - **Perfis prontos:** comece com modelos de Música, Produtividade ou Criação, então personalize-os. Mude para um perfil específico, próximo ou anterior a partir de uma chave física.
@@ -86,7 +86,8 @@ Os downloads publicados incluem o tempo de execução .NET. **Você não precisa
 2. O instalador permite- lhe escolher se DeckPilot começa com o Windows, verifica as atualizações automaticamente e reduz as animações. As verificações de inicialização e atualização são feitas por padrão; animações reduzidas estão desligadas. VB-CABLE Condutor exigido pelo Soundboard e instala-o automaticamente se faltar. É necessária uma ligação à Internet para a verificação do condutor.
 3. O instalador adiciona DeckPilot para as janelas **Aplicações instaladas** e cria um atalho de menu Iniciar. Um atalho de área de trabalho é selecionado por padrão.
 4. Conecte seu macropad e abra DeckPilot do seu atalho.
-5. Siga a calibração da esquerda para a direita através **quatro colunas**, em seguida, a próxima linha, para **três linhas**. Cada botão deve enviar uma chave F13–F24 diferente.
+5. Abrir **Macropads**, clique em uma chave física no cartão do dispositivo e escolha uma ação na biblioteca. 1.2.0 ou mais recente, a primeira opção permite DeckPilot modo para esse dispositivo.
+6. Se as posições na tela não corresponderem às suas chaves físicas, escolha **Calibrar os toques** para firmware F13-F24 mais antigo, use o **Acções** aba e calibrar o 3 × 4 grade antes de atribuir atalhos.
 
 Ao atualizar a partir do primeiro 4- disposição da linha, DeckPilot preserva perfis/ações e solicita uma nova calibração para as posições corrigidas. Instalar sobre uma configuração portátil existente também preserva as configurações em `%APPDATA%\DeckPilot`; saia da cópia antiga se a configuração lhe pedir.
 
@@ -99,13 +100,13 @@ O executável de arquivo único extrai suas dependências agrupadas no cache .NE
 <a id="configure-a-key"></a>
 ### Configurar uma chave
 
-1. Selecione uma chave na grade.
-2. Escolha uma ação na barra lateral direita.
-3. Configure suas configurações abaixo da grade e salve. A mudança de chaves ou perfis também salva as configurações da chave atual.
+1. Abrir **Macropads** e selecione a chave para personalizar. Com dois dispositivos, primeiro escolha o cartão de dispositivo correto.
+2. Carregue ou procure por uma acção na biblioteca. Nas janelas estreitas, a biblioteca aparece por baixo da antevisão da chave.
+3. Se a ação precisar de um destino ou atalho, complete suas configurações abaixo da visualização. As alterações são salvas quando você alterna as teclas ou retorna para o macropad.
 
 | Acção | Comportamento |
 | --- | --- |
-| Tecla livre | Passa F13-F24 através normalmente. Atribua-o diretamente em seu jogo ou aplicação. |
+| Tecla livre | Passa F13-F24 através do modo teclado. DeckPilot modo, uma chave não atribuída não faz nada. |
 | Aplicação | Lança uma aplicação instalada ou um programa ou atalho manualmente seleccionado. |
 | Pasta | Abre uma pasta no Windows Explorer. |
 | Sítio Web | Abre um endereço HTTP ou HTTPS em seu navegador padrão. |
@@ -214,7 +215,7 @@ A consola verifica a saída com um estado não zero na primeira asserção mal- 
 
 A verificação de bloqueio de arquivos é executada apenas no Windows.
 
-As Acções do GitHub também são executadas `tests/windows-update-smoke.ps1` contra o executável autónomo. Ele inicia o helper de atualização, sai do processo original, verifica a substituição e a confirmação de inicialização, verifica a preservação das configurações, então abre o coletor de aplicativos instalado através da UI Automation e salva uma seleção. Ele também exercita executáveis renomeados e caminhos contendo espaços. Este script é reservado para a conta de teste GitHub Actions descartável. CI também executa `tests/windows-installer-smoke.ps1`: instalação de arquivos de programa reais, atalhos de menu desktop/Iniciar, inicialização padrão, atualização com o aplicativo aberto, preservação de inicialização desativada e desinstalação sem excluir perfis.
+As Acções do GitHub também são executadas `tests/windows-update-smoke.ps1` contra o executável autónomo. Ele inicia o helper de atualização, sai do processo original, verifica a substituição e a confirmação de inicialização, verifica a preservação das configurações, então abre o coletor de aplicativos instalado através da UI Automation e salva uma seleção. Ele também exercita executáveis renomeados e caminhos contendo espaços. Este script é reservado para a conta de teste GitHub Actions descartável. CI também executa `tests/windows-installer-smoke.ps1`: instalação real de arquivos de programa, atalhos de menu desktop/Iniciar, inicialização padrão, atualização com o aplicativo aberto, preservação de inicialização desativada e desinstalação sem excluir perfis.
 
 <a id="publish-a-standalone-windows-folder"></a>
 ### Publicar uma pasta do Windows independente
@@ -308,10 +309,10 @@ As verificações de firmware de inicialização estão habilitadas por padrão.
 
 Firmware **1.1.2** relata todas as doze teclas F13–F24 de forma independente enquanto mantém a identificação da sessão, as respostas cardíacas correlacionadas, as mensagens delimitadas e os eventos físicos de estado-chave. Estes eventos animam os botões mapeados e atualizam os diagnósticos; eles nunca invocam as ações uma segunda vez. Sua primeira validação de placa física ainda é necessária, embora o firmware 1.0.0 e o procedimento de flash original foi confirmado no quadro de referência. [documentação de protocolo e compatibilidade](FIRMWARE.pt-BR.md).
 
-<a id="two-macropads-with-independent-profiles"></a>
-### Dois macropads com perfis independentes
+<a id="one-or-two-macropads-with-independent-profiles"></a>
+### Um ou dois macropads com perfis independentes
 
-firmware Flash **1.2.0** em cada macropad compatível, um de cada vez. **Macropads** para ver um teclado por dispositivo conectado. Clique em uma tecla no dispositivo que deseja configurar e então escolha uma ação na biblioteca. Alterne os dispositivos diretamente do editor usando seus atalhos COM. O editor mostra qual tecla e dispositivo você está editando, enquanto o perfil do teclado permanece ativo por conta própria. A primeira configuração habilita DeckPilot mode e atribui um perfil independente. Se uma configuração anterior partilhou um perfil entre dispositivos, **Séparer et configurator** copia suas ações para um perfil independente. Use **Calibrar os toques** num dispositivo se a sua ordem física de botões for diferente. **Opções** abre o seu perfil, modo de teclado e configurações de firmware.
+firmware Flash **1.2.0** em cada macropad compatível, um de cada vez. **Macropads** para ver um teclado por dispositivo conectado. Com um dispositivo, comece de **Votre macropad**: clique em uma chave, escolha uma ação na biblioteca e então retorne para o cartão. Com dois dispositivos, cada cartão nomeia sua porta e perfil; o editor também oferece um switch direto entre dispositivos. DeckPilot modo. O primeiro dispositivo pode reutilizar o seu perfil de teclado existente, enquanto outros dispositivos recebem perfis independentes. A edição de um dispositivo não muda o perfil de teclado activo. Se uma configuração anterior partilhou um perfil entre dispositivos, **Séparer et configurator les touchs** copia suas ações para um perfil independente. Use **Calibrar os toques** num dispositivo se a sua ordem física de botões for diferente. **Réglages du macropad** abre o seu perfil, modo de teclado e configurações de firmware.
 
 In DeckPilot modo, os botões livres são inativos e as ações do perfil alteram apenas o perfil atribuído ao dispositivo original. Desligue o modo para usar F13-F24 como atalhos de teclado novamente. Se as placas idênticas não possuem um número de série USB único, mantenha cada uma em seu próprio soquete USB ou verifique a atribuição do perfil após movê-lo. [Passos de teste de modo híbrido e hardware](../../firmware/README.md#hybrid-input-mode-120).
 
@@ -390,7 +391,7 @@ Construir e liberar fluxos de trabalho use Node.js 24 ações. O compilador Ardu
 
 As configurações lidas nos testes do Windows permitem explicitamente o compartilhamento de leitura/escrita/delete e a análise de UTF-8 depois de fechar o leitor. Isto impede que o teste em si negue a substituição de arquivos atômicos do aplicativo. O teste de histórico mantém um instantâneo antigo aberto durante três ciclos de desfazer/refazer e verifica se ele permanece intacto enquanto as configurações ao vivo mudam.
 
-No Windows, os arquivos de configurações existentes são comprometidos com `File.Replace` em vez de substituir o modo `File.Move`. Isto suporta os leitores que permitem a exclusão enquanto retém um instantâneo antigo completo. O conjunto principal testa três substituições com um leitor mantido aberto; as verificações do núcleo do Windows são executadas antes da compilação de firmware e da publicação, de modo que as falhas de persistência são detectadas precocemente.
+No Windows, os arquivos de configurações existentes são comprometidos com `File.Replace` em vez de substituir o modo `File.Move`. Isto suporta os leitores que permitem a exclusão enquanto retém um instantâneo antigo completo. O conjunto principal testa três substituições com um leitor aberto; as verificações do núcleo do Windows são executadas antes da compilação de firmware e da publicação, de modo que as falhas de persistência são detectadas precocemente.
 
 Um leitor de instantâneo de teste pode esperar até 500 ms para o compartilhamento/bloqueio de violações do Windows enquanto `ReplaceFile` commits. A espera aplica- se apenas à abertura do instantâneo, nunca à execução ou re- execução de uma acção de aplicação. Outros erros, JSON malformados e bloqueios persistentes permanecem falhas.
 

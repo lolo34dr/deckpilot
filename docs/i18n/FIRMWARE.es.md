@@ -32,7 +32,7 @@ Prueba física en Windows:
 1. Flash y verificar cada tabla individualmente con **Firmware du macropad…**, luego enchufa ambas tablas.
 2. Abierto **Macropads** y haga clic en el primer botón en la tarjeta de cada dispositivo. Asignar una acción diferente a cada botón. Compruebe que el editor nombre el puerto COM seleccionado y que cada tarjeta muestra su propio perfil.
 3. Presione la misma posición en ambas cubiertas juntos, luego repita con prensas cortas y largas. Cada acción debe ejecutarse una vez en su perfil asignado.
-4. Unplug una cubierta mientras sostiene un botón, verifique el otro todavía responde, y vuelva a conectar el primero a su toma USB original. DeckPilot de la bandeja del sistema y confirmar una prensa fresca envía la tecla F13-F24 correspondiente.
+4. Unplug una cubierta mientras sostiene un botón, verifique el otro todavía responde, y vuelva a conectar el primero a su toma USB original. Quit DeckPilot de la bandeja del sistema y confirmar una prensa fresca envía la tecla F13-F24 correspondiente.
 
 <a id="install-from-deckpilot"></a>
 ## Instalar desde DeckPilot
@@ -63,7 +63,7 @@ dotnet build DeckPilot.sln -c Release -p:RequireFirmwareBundle=true
 dotnet run --project tests/DeckPilot.Checks -c Release --no-build
 ```
 
-El script pins Arduino AVR core **1.8.6**, Teclado **1.0.6**, y aguas arriba AVRDUDE **8.0**. Los paquetes gestionados por CLI utilizan la validación del paquete de Arduino; AVRDUDE binario/source archives have explicit SHA-256 Pins en el guión. `artifacts/firmware/DeckPilot-firmware.zip` contiene el DeckPilot HEX, ha generado el reajuste de la zona de aplicación HEX y su generador, sumas de comprobación, herramienta de Windows, licencia y el correspondiente archivo de origen de AVRDUDE. La publicación CI requiere el paquete; un desarrollador ordinario construye sin que pueda ejecutar la aplicación pero no puede flashear o restablecer una tabla.
+El script pins Arduino AVR core **1.8.6**, Teclado **1.0.6**, y aguas arriba AVRDUDE **8.0**. Los paquetes gestionados por CLI utilizan la validación del paquete de Arduino; AVRDUDE binario/source archives have explicit SHA-256 Pins en el guión. `artifacts/firmware/DeckPilot-firmware.zip` contiene el DeckPilot HEX, ha generado el reseteo de la zona de aplicación HEX y su generador, sumas de comprobación, herramienta de Windows, licencia y el correspondiente archivo de origen de AVRDUDE. Publicación CI requiere el paquete; un desarrollador ordinario construir sin que pueda ejecutar la aplicación pero no puede flashear o restablecer una tabla.
 
 El original 12- el boceto de botones fue adaptado de David Madison **Flujo barato** proyecto, derechos de autor 2018, MIT. Su aviso permanece en `DeckPilot.ino`. DeckPilot Las adiciones usan la licencia del repositorio MIT. **AVRDUDE es software separado bajo GPL-2.0- O-later**, con su aviso/licencia y fuente empaquetados; la licencia del repositorio MIT no sustituye esa licencia. https://github.com/avrdudes/avrdude/tree/v8.0 for upstream build instructions and dependency notices.
 

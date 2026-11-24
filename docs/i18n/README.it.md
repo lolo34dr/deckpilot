@@ -57,7 +57,7 @@ DeckPilot configura macropad Arduino Leonardo compatibili che già invia **F13�
 - **Calibrazione guidata:** identificare tutti 12 pulsanti fisici senza cambiare il macropad.
 - **Picker di applicazione installato:** ricerca Avviare le scorciatoie del menu e il catalogo delle applicazioni di Windows, comprese le voci di Microsoft Store.
 - **Azioni personalizzate:** lanciare applicazioni, aprire cartelle o siti web, inviare scorciatoie e controllare i supporti.
-- **Tasti liberi:** tenere F13-F24 disponibile per le scorciatoie configurate direttamente in un gioco o in un'altra applicazione.
+- **Tasti liberi:** tenere F13-F24 disponibile in modalità tastiera per le scorciatoie configurate direttamente in un gioco o in un'altra applicazione. DeckPilot modalità, i tasti non firmati rimangono inattivi.
 - **Profili locali:** creare, duplicare, rinominare, eliminare e selezionare i profili. La calibrazione è condivisa tra i profili.
 - **Soundboard:** mescolare le clip locali MP3/WAV con il microfono; le clip nuove e sostituite vengono copiate DeckPilot’s gestito cartella Suoni.
 - **Profili preconfezionati:** avviare con i modelli di musica, produttività o creazione, quindi personalizzarli. Passare a un profilo specifico, successivo o precedente da una chiave fisica.
@@ -86,7 +86,8 @@ I download pubblicati includono il runtime .NET. **Non è necessario installare 
 2. L'installatore ti permette di scegliere se DeckPilot inizia con Windows, controlla gli aggiornamenti delle app automaticamente e riduce le animazioni. I controlli di avvio e di aggiornamento sono accesi per impostazione predefinita; le animazioni ridotte sono spente. VB-CABLE autista richiesto dal Soundboard e lo installa automaticamente se mancante. È necessaria una connessione internet per il controllo del driver.
 3. Il programma di installazione aggiunge DeckPilot a Windows **App installate** e crea una scorciatoia del menu Start. Una scorciatoia del desktop è selezionata per impostazione predefinita.
 4. Collegare il macropad e aprire DeckPilot dalla sua scorciatoia.
-5. Seguire la calibrazione da sinistra a destra **quattro colonne**, poi la riga successiva, per **tre righe**. Ogni pulsante deve inviare una chiave diversa F13–F24.
+5. Aprire **Macropads**, fare clic su una chiave fisica nella scheda del dispositivo e scegliere un'azione dalla libreria. 1.2.0 o più recente, la prima scelta consente DeckPilot modalità per quel dispositivo.
+6. Se le posizioni sullo schermo non corrispondono alle tue chiavi fisiche, scegli **Calibrer les touchs** su quel dispositivo. Per il firmware F13–F24 più vecchio, utilizzare **Azioni** scheda e tarare 3 × 4 griglia prima di assegnare scorciatoie.
 
 Quando si aggiorna dall'ex 4- layout freccia, DeckPilot conserva profili/azioni e richiede una nuova calibrazione per le posizioni corrette. L'installazione su una configurazione portatile esistente preserva anche le impostazioni in `%APPDATA%\DeckPilot`; lasciare la vecchia copia se la configurazione ti chiede di farlo.
 
@@ -99,13 +100,13 @@ L'eseguibile single-file estrae le sue dipendenze in bundle nella cache .NET del
 <a id="configure-a-key"></a>
 ### Configurare una chiave
 
-1. Selezionare una chiave nella griglia.
-2. Scegli un'azione nella barra laterale destra.
-3. Configurare le impostazioni sotto la griglia e salvare. La commutazione di tasti o profili consente anche di salvare le impostazioni della chiave corrente.
+1. Aprire **Macropads** e selezionare la chiave per personalizzare. Con due dispositivi, prima scegliere la scheda del dispositivo corretta.
+2. Fare clic o cercare un'azione in biblioteca. Su finestre strette, la libreria appare sotto l'anteprima chiave.
+3. Se l'azione ha bisogno di una destinazione o di una scorciatoia, completa le sue impostazioni sotto l'anteprima. Le modifiche vengono salvate quando si passano i tasti o si ritorna al macropad.
 
 | Azione | Comportamento |
 | --- | --- |
-| Tasto libero | Passa F13-F24 attraverso normalmente. Assegnalo direttamente nel tuo gioco o applicazione. |
+| Tasto libero | Passa F13-F24 attraverso in modalità tastiera. In DeckPilot modalità, una chiave non firmata non fa nulla. |
 | Applicazione | Avvia un'applicazione installata o un programma selezionato manualmente o una scorciatoia. |
 | Cartella | Apre una cartella in Windows Explorer. |
 | Sito web | Apre un indirizzo HTTP o HTTPS nel browser predefinito. |
@@ -308,10 +309,10 @@ I controlli firmware di avvio sono abilitati per impostazione predefinita. Dopo 
 
 Firmware **1.1.2** segnala tutti i dodici tasti F13-F24 indipendentemente mantenendo l'identificazione della sessione, correlato risposte battito cardiaco, messaggi legati e eventi fisici key-state. Questi eventi animano i pulsanti mappati e la diagnostica di aggiornamento; non invocano mai le azioni una seconda volta. 1.0.0 e la procedura flash originale sono stati confermati sulla scheda di riferimento. [documentazione di protocollo e compatibilità](FIRMWARE.it.md).
 
-<a id="two-macropads-with-independent-profiles"></a>
-### Due macropad con profili indipendenti
+<a id="one-or-two-macropads-with-independent-profiles"></a>
+### Uno o due macropad con profili indipendenti
 
-firmware flash **1.2.0** su ogni macropad compatibile, uno alla volta. Apri **Macropads** Fare clic su una chiave sul dispositivo che si desidera configurare, quindi scegliere un'azione dalla libreria. Accendere i dispositivi direttamente dall'editor utilizzando le scorciatoie COM. L'editor mostra quale chiave e dispositivo si sta modificando, mentre il profilo della tastiera rimane attivo da solo. La prima configurazione consente DeckPilot modalità e assegna un profilo indipendente. Se una configurazione precedente ha condiviso un profilo tra i dispositivi, **Separatore et configuratore** copia le sue azioni a un profilo indipendente. **Calibrer les touchs** su un dispositivo se il suo ordine del pulsante fisico differisce. **Opzioni** apre il suo profilo, la modalità tastiera e le impostazioni del firmware.
+firmware flash **1.2.0** su ogni macropad compatibile, uno alla volta. Apri **Macropads** per vedere una tastiera per dispositivo collegato. Con un solo dispositivo, partire da **Votre macropad**: fare clic su una chiave, scegliere un'azione nella libreria, quindi tornare alla scheda. Con due dispositivi, ogni scheda nomina la sua porta e il suo profilo; l'editor offre anche un interruttore diretto tra i dispositivi. La prima configurazione consente DeckPilot mode. Il primo dispositivo può riutilizzare il profilo della tastiera esistente, mentre altri dispositivi ricevono profili indipendenti. La modifica di un dispositivo non cambia il profilo della tastiera attiva. Se una configurazione precedente ha condiviso un profilo tra i dispositivi, **Separer et configurar les touchs** copia le sue azioni a un profilo indipendente. **Calibrer les touchs** su un dispositivo se il suo ordine del pulsante fisico differisce. **Reglages du macropad** apre il suo profilo, la modalità tastiera e le impostazioni del firmware.
 
 In DeckPilot la modalità, i pulsanti liberi sono inattivi e le azioni del profilo cambiano solo il profilo assegnato al dispositivo originario. Attivare la modalità di disattivazione per utilizzare F13-F24 come scorciatoie da tastiera di nuovo. Se le schede identiche non hanno un numero di serie USB unico, tenere ciascuno sulla propria presa USB o verificare l'assegnazione del profilo dopo averlo spostato. [modalità ibride e fasi di test hardware](../../firmware/README.md#hybrid-input-mode-120).
 

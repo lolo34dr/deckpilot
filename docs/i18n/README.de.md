@@ -57,7 +57,7 @@ DeckPilot konfiguriert Arduino Leonardo-kompatible Makropads, die bereits senden
 - **Geführte Kalibrierung:** Kennzeichnen Sie alle 12 physische Tasten, ohne Ihr Makropad neu zu verkabeln.
 - **Installierter Application Picker:** Suchen Sie nach Startmenükürzeln und dem Windows-Anwendungskatalog, einschließlich Microsoft Store-Einträgen. Die manuelle Dateiauswahl bleibt verfügbar.
 - **Zollverfahren:** Anwendungen starten, Ordner oder Websites öffnen, Verknüpfungen senden und Medien steuern.
-- **Freie Tasten:** Halten Sie F13-F24 für Verknüpfungen verfügbar, die direkt in einem Spiel oder einer anderen Anwendung konfiguriert sind.
+- **Freie Tasten:** Halten Sie F13-F24 im Tastaturmodus für Verknüpfungen verfügbar, die direkt in einem Spiel oder einer anderen Anwendung konfiguriert sind. DeckPilot Modus, nicht zugewiesene Schlüssel bleiben inaktiv.
 - **Lokale Profile:** Profile erstellen, duplizieren, umbenennen, löschen und auswählen.
 - **Soundboard:** Mischen Sie lokale MP3/WAV-Clips mit Ihrem Mikrofon; neue und ersetzte Clips werden in DeckPilotDer verwaltete Sounds-Ordner
 - **Fertige Profile:** Beginnen Sie mit Musik-, Produktivitäts- oder Erstellungsvorlagen und passen Sie sie dann an. Wechseln Sie von einem physischen Schlüssel zu einem bestimmten, nächsten oder vorherigen Profil.
@@ -86,7 +86,8 @@ Die veröffentlichten Downloads beinhalten die .NET Runtime. **Sie müssen .NET 
 2. Der Installateur lässt Sie wählen, ob DeckPilot Sie beginnt mit Windows, sucht automatisch nach App-Updates und reduziert Animationen. Start- und Update-Checks sind standardmäßig aktiviert; reduzierte Animationen sind ausgeschaltet. VB-CABLE vom Fahrer geforderte Soundboard und installiert sie automatisch, falls sie fehlt.
 3. Der Installateur fügt hinzu DeckPilot für Windows **Installierte Apps** und erstellt eine Startmenü-Verknüpfung. Eine Desktop-Verknüpfung wird standardmäßig ausgewählt.
 4. Verbinden Sie Ihr Makropad und öffnen DeckPilot Aus seiner Abkürzung.
-5. Folgen Sie der Kalibrierung von links nach rechts quer **vier Spalten**dann die nächste Reihe, für **drei Reihen**Jede Taste muss eine andere F13-F24-Taste senden.
+5. Offen **Macropads**Klicken Sie auf einen physischen Schlüssel in der Gerätekarte und wählen Sie eine Aktion aus der Bibliothek. 1.2.0 oder neuer, die erste Wahl ermöglicht DeckPilot Modus für dieses Gerät.
+6. Wenn die Bildschirmpositionen nicht mit Ihren physischen Schlüsseln übereinstimmen, wählen Sie **Kalibrer les touches** Für ältere F13-F24-Firmware verwenden Sie die **Aktionen** Tab und kalibrieren die 3 × 4 Raster vor der Zuweisung von Shortcuts.
 
 Beim Upgrade von der ehemaligen 4-Zeilenlayout, DeckPilot bewahrt Profile/Aktionen und fordert eine neue Kalibrierung für die korrigierten Positionen an. `%APPDATA%\DeckPilot`Beenden Sie die alte Kopie, wenn das Setup Sie auffordert.
 
@@ -99,13 +100,13 @@ Die ausführbare Einzeldatei extrahiert ihre gebündelten Abhängigkeiten beim e
 <a id="configure-a-key"></a>
 ### Konfigurieren eines Schlüssels
 
-1. Wählen Sie einen Schlüssel im Raster aus.
-2. Wählen Sie eine Aktion in der rechten Seitenleiste.
-3. Konfigurieren Sie die Einstellungen unterhalb des Rasters und speichern Sie. Durch das Wechseln von Tasten oder Profilen werden auch die Einstellungen des aktuellen Schlüssels gespeichert.
+1. Offen **Macropads** Wählen Sie mit zwei Geräten zuerst die richtige Gerätekarte.
+2. Klicken oder Suchen nach einer Aktion in der Bibliothek. In engen Fenstern wird die Bibliothek unter der Tastenvorschau angezeigt.
+3. Wenn die Aktion ein Ziel oder eine Verknüpfung benötigt, vervollständigen Sie die Einstellungen unterhalb der Vorschau. Änderungen werden gespeichert, wenn Sie die Tasten wechseln oder zum Makropad zurückkehren.
 
 | Aktion | Verhalten |
 | --- | --- |
-| Freie Taste | Führt F13-F24 normal durch und weist es direkt in Ihrem Spiel oder Ihrer Anwendung zu. |
+| Freie Taste | Übergibt F13-F24 im Tastaturmodus. DeckPilot Modus, ein nicht zugewiesener Schlüssel tut nichts. |
 | Antragstellung | Startet eine installierte Anwendung oder ein manuell ausgewähltes Programm oder eine Verknüpfung. |
 | Ordner | Öffnet einen Ordner im Windows Explorer. |
 | Website | Öffnet eine HTTP- oder HTTPS-Adresse in Ihrem Standardbrowser. |
@@ -308,10 +309,10 @@ Nachdem die Überprüfung und Kalibrierung der App-Aktualisierung aus dem Weg ge
 
 Firmware **1.1.2** alle zwölf F13-F24-Tasten unabhängig voneinander meldet, wobei die Sitzungsidentifikation, korrelierte Herzschlagantworten, begrenzte Nachrichten und physische Schlüsselzustandsereignisse beibehalten werden. Diese Ereignisse beleben die abgebildeten Tasten und aktualisieren die Diagnose; sie rufen niemals Aktionen ein zweites Mal auf. Seine erste Validierung auf der physischen Platine ist immer noch erforderlich, obwohl Firmware 1.0.0 und das ursprüngliche Flash-Verfahren wurde auf der Referenztafel bestätigt. [Protokoll und Kompatibilitätsdokumentation](FIRMWARE.de.md).
 
-<a id="two-macropads-with-independent-profiles"></a>
-### Zwei Makropads mit unabhängigen Profilen
+<a id="one-or-two-macropads-with-independent-profiles"></a>
+### Ein oder zwei Makropads mit unabhängigen Profilen
 
-Flash-Firmware **1.2.0** auf jedem kompatiblen Makropad, einzeln. Öffnen **Macropads** Um eine Tastatur pro angeschlossenem Gerät zu sehen. Klicken Sie auf eine Taste auf dem Gerät, das Sie konfigurieren möchten, und wählen Sie dann eine Aktion aus der Bibliothek. Wechseln Sie die Geräte direkt aus dem Editor mit ihren COM-Verknüpfungen. Der Editor zeigt an, welche Taste und welches Gerät Sie bearbeiten, während das Tastaturprofil selbstständig aktiv bleibt. Die erste Konfiguration ermöglicht DeckPilot moderiert und weist ein unabhängiges Profil zu: Wenn ein früheres Setup ein Profil zwischen Geräten geteilt hat, **Séparer und Konfigurator** kopiert seine Aktionen in ein unabhängiges Profil. **Kalibrer les touches** auf einem Gerät, wenn seine physische Tastenreihenfolge unterschiedlich ist. **Optionen** öffnet sein Profil, den Tastaturmodus und die Firmware-Einstellungen.
+Flash-Firmware **1.2.0** auf jedem kompatiblen Makropad, einzeln. Öffnen **Macropads** um eine Tastatur pro angeschlossenem Gerät zu sehen. **Votre macropad**: Klicken Sie auf eine Taste, wählen Sie eine Aktion in der Bibliothek aus, kehren Sie dann zur Karte zurück. Bei zwei Geräten benennt jede Karte ihren Port und ihr Profil; der Editor bietet auch einen direkten Wechsel zwischen Geräten. Die erste Konfiguration ermöglicht DeckPilot Modus. Das erste Gerät kann Ihr vorhandenes Tastaturprofil wiederverwenden, während weitere Geräte unabhängige Profile erhalten. Das Bearbeiten eines Geräts schaltet das aktive Tastaturprofil nicht um. **Séparer et configurationr les touches** kopiert seine Aktionen in ein unabhängiges Profil. **Kalibrer les touches** auf einem Gerät, wenn seine physische Tastenreihenfolge unterschiedlich ist. **Réglages du macropad** öffnet sein Profil, den Tastaturmodus und die Firmware-Einstellungen.
 
 In DeckPilot Modus, freie Tasten sind inaktiv und Profilaktionen ändern nur das Profil, das dem ursprünglichen Gerät zugewiesen ist. Schalten Sie den Modus aus, um F13-F24 als Tastenkombinationen wieder zu verwenden. Wenn identische Boards keine eindeutige USB-Seriennummer haben, behalten Sie jede auf ihrer eigenen USB-Buchse oder überprüfen Sie die Profilzuweisung nach dem Verschieben. [Hybrid-Modus und Hardware-Testschritte](../../firmware/README.md#hybrid-input-mode-120).
 
@@ -358,7 +359,7 @@ Die Integration der OBS/Streamlabs-Steuerung wurde entfernt. 2.3 Profile bleiben
 
 Ziehen Sie eine Aktion aus dem Katalog oder den Suchergebnissen auf einen Schlüssel, um sie zuzuweisen. Ziehen Sie einen konfigurierten Schlüssel auf einen anderen, um **tauschen ihre Aktionen aus**; die physikalische Kalibrierung bleibt unverändert. `.exe`, `.lnk`, `.appref-ms`, Ordner oder HTTP(S)-URL auf einen Schlüssel. Dropping konfiguriert nur den Schlüssel und führt die Aktion niemals aus. Vervollständigen Sie alle fehlenden Einstellungen im Editor.
 
-Windows-Startup behält nun eine explizite Präferenz pro Benutzer bei, repariert einen veralteten oder fehlenden Run-Eintrag und meldet bekannte Windows-Start-Deaktivierungsflags. Normale Starts respektieren Windows-Deaktivierung; ausdrücklich aktivieren **Lancer avec Windows** Räumt das Bekannte DeckPilot Deaktivieren Sie das Flag für den aktuellen Benutzer. Hintergrundstarts bleiben noch vor der Kalibrierung verborgen, und doppelte Hintergrundstarts verlassen leise. Nach der Aktualisierung öffnen **Préférences de l’application**, überprüfen Sie den Startstatus und reaktivieren Sie die Option, wenn Windows sie blockiert hat. Eine echte Anmeldung / Anmeldung auf dem PC des Benutzers bleibt die letzte Prüfung für Windows-Richtlinien oder maschinenspezifische Einschränkungen.
+Windows-Startup behält nun eine explizite Präferenz pro Benutzer bei, repariert einen veralteten oder fehlenden Run-Eintrag und meldet bekannte Windows-Start-Deaktivierungs-Flags. **Lancer avec Windows** Räumt das Bekannte DeckPilot Deaktivieren Sie das Flag für den aktuellen Benutzer. Hintergrundstarts bleiben noch vor der Kalibrierung verborgen, und doppelte Hintergrundstarts verlassen leise. Nach der Aktualisierung öffnen **Préférences de l’application**, überprüfen Sie den Startstatus und reaktivieren Sie die Option, wenn Windows sie blockiert hat. Eine echte Anmeldung / Anmeldung auf dem PC des Benutzers bleibt die letzte Prüfung für Windows-Richtlinien oder maschinenspezifische Einschränkungen.
 
 <a id="sharp-keypad-rendering-profile-recovery-and-audio-controls-161"></a>
 ## Sharp Keypad Rendering, Profilwiederherstellung und Audio-Steuerelemente ()1.6.1)
