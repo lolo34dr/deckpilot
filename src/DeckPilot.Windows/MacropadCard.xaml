@@ -9,6 +9,7 @@
     <StackPanel>
      <TextBlock x:Name="CardTitle" FontSize="21" FontWeight="SemiBold" TextWrapping="Wrap"/>
      <TextBlock x:Name="CardProfile" Margin="0,4,0,0" TextWrapping="Wrap" Foreground="{DynamicResource MutedBrush}"/>
+     <TextBlock x:Name="CardProgress" Margin="0,4,0,0" TextWrapping="Wrap" FontSize="12" Foreground="#C7BEDD"/>
     </StackPanel>
     <Border Grid.Column="1" Background="#302C3C" CornerRadius="7" Padding="9,5" VerticalAlignment="Top" Margin="12,0,0,0">
      <TextBlock x:Name="CardPort" Foreground="#E0D8F4" FontSize="12" FontWeight="SemiBold"/>
@@ -20,6 +21,8 @@
      <TextBlock x:Name="CardStatus" TextWrapping="Wrap" FontWeight="Medium"/>
     </DockPanel>
    </Border>
+   <TextBlock x:Name="CardModeCompact" Visibility="Collapsed" TextWrapping="Wrap"
+              Foreground="{DynamicResource MutedBrush}" FontSize="12" Margin="0,0,0,12"/>
    <Grid x:Name="CardBody">
     <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition x:Name="GuideColumn" Width="0"/></Grid.ColumnDefinitions>
     <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition x:Name="GuideRow" Height="Auto"/></Grid.RowDefinitions>
@@ -29,8 +32,7 @@
     <Border x:Name="CardGuide" Grid.Row="1" Background="#23222B" BorderBrush="#484450" BorderThickness="1" CornerRadius="12" Padding="15" Margin="0,12,0,0">
      <StackPanel>
       <TextBlock Text="Configurer vos touches" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap"/>
-      <TextBlock x:Name="CardProgress" Margin="0,7,0,14" TextWrapping="Wrap" Foreground="#C7BEDD"/>
-      <TextBlock Text="1  Cliquez sur la touche à personnaliser." TextWrapping="Wrap" Margin="0,0,0,9"/>
+      <TextBlock Text="1  Cliquez sur la touche à personnaliser." TextWrapping="Wrap" Margin="0,14,0,9"/>
       <TextBlock Text="2  Choisissez une action. Elle est enregistrée sur ce PC." TextWrapping="Wrap"/>
       <TextBlock x:Name="CardModeHint" Margin="0,14,0,0" TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource MutedBrush}"/>
      </StackPanel>

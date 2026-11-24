@@ -54,7 +54,7 @@ DeckPilot configures Arduino Leonardo-compatible macropads that already send **F
 - **Guided calibration:** identify all 12 physical buttons without rewiring your macropad.
 - **Installed application picker:** search Start menu shortcuts and the Windows application catalog, including Microsoft Store entries. Manual file selection remains available.
 - **Custom actions:** launch applications, open folders or websites, send shortcuts, and control media.
-- **Free keys:** keep F13–F24 available for shortcuts configured directly in a game or another application.
+- **Free keys:** keep F13–F24 available in keyboard mode for shortcuts configured directly in a game or another application. In DeckPilot mode, unassigned keys stay inactive.
 - **Local profiles:** create, duplicate, rename, delete, and select profiles. Calibration is shared across profiles.
 - **Soundboard:** mix local MP3/WAV clips with your microphone; new and replaced clips are copied into DeckPilot’s managed Sounds folder.
 - **Ready-made profiles:** start with Music, Productivity or Creation templates, then customize them. Switch to a specific, next or previous profile from a physical key.
@@ -80,7 +80,8 @@ The published downloads include the .NET runtime. **You do not need to install .
 2. The installer lets you choose whether DeckPilot starts with Windows, checks for app updates automatically, and reduces animations. Startup and update checks are on by default; reduced animations are off. It also checks for the signed VB-CABLE driver required by the Soundboard and installs it automatically if missing. An internet connection is required for that driver check.
 3. The installer adds DeckPilot to Windows **Installed apps** and creates a Start menu shortcut. A desktop shortcut is selected by default.
 4. Connect your macropad and open DeckPilot from its shortcut.
-5. Follow calibration from left to right across **four columns**, then the next row, for **three rows**. Every button must send a different F13–F24 key.
+5. Open **Macropads**, click a physical key in the device card, and choose an action from the library. On firmware 1.2.0 or newer, the first choice enables DeckPilot mode for that device.
+6. If the on-screen positions do not match your physical keys, choose **Calibrer les touches** on that device. For older F13–F24 firmware, use the **Actions** tab and calibrate the 3 × 4 grid before assigning shortcuts.
 
 When upgrading from the former 4-row layout, DeckPilot preserves profiles/actions and requests one new calibration for the corrected positions. Installing over an existing portable setup also preserves the settings in `%APPDATA%\DeckPilot`; quit the old copy if setup asks you to.
 
@@ -92,13 +93,13 @@ The single-file executable extracts its bundled dependencies into the user's .NE
 
 ### Configure a key
 
-1. Select a key in the grid.
-2. Choose an action in the right sidebar.
-3. Configure its settings below the grid and save. Switching keys or profiles also saves the current key's settings.
+1. Open **Macropads** and select the key to personalize. With two devices, first choose the correct device card.
+2. Click or search for an action in the library. On narrow windows, the library appears below the key preview.
+3. If the action needs a destination or shortcut, complete its settings below the preview. Changes are saved when you switch keys or return to the macropad.
 
 | Action | Behavior |
 | --- | --- |
-| Free key | Passes F13–F24 through normally. Assign it directly in your game or application. |
+| Free key | Passes F13–F24 through in keyboard mode. In DeckPilot mode, an unassigned key does nothing. |
 | Application | Launches an installed application or a manually selected program or shortcut. |
 | Folder | Opens a folder in Windows Explorer. |
 | Website | Opens an HTTP or HTTPS address in your default browser. |
@@ -284,9 +285,9 @@ Startup firmware checks are enabled by default. After the app update check and c
 
 Firmware **1.1.2** reports all twelve F13–F24 keys independently while retaining session identification, correlated heartbeat replies, bounded messages and physical key-state events. These events animate the mapped buttons and update diagnostics; they never invoke actions a second time. Its first physical-board validation is still required, although firmware 1.0.0 and the original flash procedure were confirmed on the reference board. See the [protocol and compatibility documentation](firmware/README.md).
 
-### Two macropads with independent profiles
+### One or two macropads with independent profiles
 
-Flash firmware **1.2.0** on each compatible macropad, one at a time. Open **Macropads** to see one keypad per connected device. Click a key on the device you want to configure, then choose an action from the library. Switch devices directly from the editor using their COM shortcuts. The editor shows which key and device you are editing, while the keyboard profile stays active on its own. The first configuration enables DeckPilot mode and assigns an independent profile. If an earlier setup shared a profile between devices, **Séparer et configurer** copies its actions to an independent profile. Use **Calibrer les touches** on a device if its physical button order differs. **Options** opens its profile, keyboard mode and firmware settings.
+Flash firmware **1.2.0** on each compatible macropad, one at a time. Open **Macropads** to see one keypad per connected device. With one device, start from **Votre macropad**: click a key, choose an action in the library, then return to the card. With two devices, each card names its port and profile; the editor also offers a direct switch between devices. The first configuration enables DeckPilot mode. The first device can reuse your existing keyboard profile, while further devices receive independent profiles. Editing a device does not switch the active keyboard profile. If an earlier setup shared a profile between devices, **Séparer et configurer les touches** copies its actions to an independent profile. Use **Calibrer les touches** on a device if its physical button order differs. **Réglages du macropad** opens its profile, keyboard mode and firmware settings.
 
 In DeckPilot mode, free buttons are inactive and profile actions change only the profile assigned to the originating device. Turn the mode off to use F13–F24 as keyboard shortcuts again. If identical boards lack a unique USB serial number, keep each on its own USB socket or verify the profile assignment after moving it. See the [hybrid mode and hardware test steps](firmware/README.md#hybrid-input-mode-120).
 

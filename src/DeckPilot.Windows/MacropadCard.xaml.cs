@@ -40,6 +40,8 @@ internal partial class MacropadCard : UserControl
         Grid.SetColumn(CardGuide, wide ? 1 : 0);
         Grid.SetRow(CardGuide, wide ? 0 : 1);
         CardGuide.Margin = wide ? new Thickness(14, 0, 0, 0) : new Thickness(0, 12, 0, 0);
+        CardGuide.Visibility = wide ? Visibility.Visible : Visibility.Collapsed;
+        CardModeCompact.Visibility = wide ? Visibility.Collapsed : Visibility.Visible;
     }
 
     public void Refresh(BoardLinkState board, BoardBinding? binding, Profile? profile, bool shared,
@@ -47,7 +49,7 @@ internal partial class MacropadCard : UserControl
     {
         Board = board;
         CardTitle.Text = title;
-        CardProfile.Text = profile == null ? "Aucun profil attribué" : $"Profil de touches · {profile.Name}";
+        CardProfile.Text = profile == null ? "Profil de touches · attribué au premier choix" : $"Profil de touches · {profile.Name}";
         CardPort.Text = board.Device.Port;
         if (editing) CardFrame.SetResourceReference(Border.BorderBrushProperty, "AccentBrush");
         else CardFrame.BorderBrush = DefaultFrameBrush;
@@ -72,6 +74,10 @@ internal partial class MacropadCard : UserControl
             : binding?.Enabled != true ? "Au premier choix d’une touche, le mode DeckPilot sera activé pour cet appareil. Les touches libres n’enverront alors plus F13 à F24."
             : shared ? "Ce profil est utilisé par plusieurs macropads. La première modification en créera une copie pour celui-ci."
             : "Chaque modification est enregistrée automatiquement. Les autres macropads gardent leurs propres actions.";
+        CardModeCompact.Text = firmwareRequired ? "Firmware compatible requis avant de configurer les touches."
+            : binding?.Enabled != true ? "Premier choix : active le mode DeckPilot ; les touches libres n’enverront plus F13 à F24."
+            : shared ? "Profil partagé · La prochaine modification en fera une copie pour cet appareil."
+            : "Cliquez une touche pour modifier son action ; les changements sont enregistrés sur ce PC.";
         bool editable = !firmwareOpen && !firmwareRequired && (supported || binding?.Enabled == true && profile != null);
         ConfigureButton.Content = firmwareRequired ? "Mettre à jour le firmware" : shared ? "Séparer et configurer les touches"
             : assigned == 0 ? "Configurer la touche 01" : "Modifier la touche 01";

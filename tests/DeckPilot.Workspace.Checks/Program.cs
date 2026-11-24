@@ -54,6 +54,13 @@ internal static class Program
             CaptureOverview(window, capturePrefix, "two-overview-wide", 1440, 900);
             CaptureOverview(window, capturePrefix, "two-overview-narrow", 720, 820);
             CaptureOverview(window, capturePrefix, "two-settings", 1440, 900, showSettings: true);
+            LayoutWindow(window, 1440, 900);
+            var viewport = Find<ScrollViewer>(window, "DeviceScroll");
+            var overview = Find<StackPanel>(window, "BoardOverviewPanel");
+            Expect(viewport.ViewportWidth > 1100 && overview.ActualWidth >= viewport.ViewportWidth - 30 && cards.Columns == 2,
+                "Two macropads must use the available width and appear side by side.");
+            LayoutWindow(window, 720, 820);
+            Expect(cards.Columns == 1, "A narrow window must place the macropads in one column.");
             Invoke(window, "ResizeBoardCards", 1100d);
             Expect(cards.Columns == 2, "Wide view needs two cards per row.");
             Invoke(window, "ResizeBoardCards", 620d);
@@ -82,8 +89,17 @@ internal static class Program
             Expect(saved.BoardBindings.Values.All(binding => binding.Enabled), "Both boards must enter DeckPilot mode.");
 
             tabs.SelectedItem = deviceTab;
+            var activeA = a with { Message = "Mode DeckPilot actif", SerialInput = true };
+            var activeB = b with { Message = "Mode DeckPilot actif", SerialInput = true };
+            Invoke(window, "OnBoardStateChanged", state with
+            {
+                Message = activeA.Message, SerialInput = true, Boards = [activeA, activeB]
+            });
             CaptureOverview(window, capturePrefix, "two-configured", 1440, 900);
-            Invoke(window, "OnBoardStateChanged", singleState);
+            Invoke(window, "OnBoardStateChanged", singleState with
+            {
+                Message = activeA.Message, SerialInput = true, Boards = [activeA]
+            });
             Expect(cards.Children.Count == 1 && CardKeys(cards, 0).Children.Count == 12,
                 "The remaining deck keeps its twelve keys after disconnect.");
             CaptureOverview(window, capturePrefix, "one-configured", 1180, 900);
@@ -142,14 +158,7 @@ internal static class Program
     private static void CaptureWindow(MainWindow window, string? prefix, string name, int width, int height, Action? afterLayout = null)
     {
         if (prefix == null) return;
-        var root = Find<Grid>(window, "WindowContent");
-        root.Background = window.Background;
-        root.Width = width;
-        root.Height = height;
-        var size = new Size(width, height);
-        root.Measure(size);
-        root.Arrange(new Rect(size));
-        root.UpdateLayout();
+        var root = LayoutWindow(window, width, height);
         afterLayout?.Invoke();
         root.UpdateLayout();
 
@@ -163,6 +172,19 @@ internal static class Program
         using var output = File.Create(path);
         encoder.Save(output);
         Console.WriteLine($"CAPTURE {path} ({width} × {height})");
+    }
+
+    private static Grid LayoutWindow(MainWindow window, int width, int height)
+    {
+        var root = Find<Grid>(window, "WindowContent");
+        root.Background = window.Background;
+        root.Width = width;
+        root.Height = height;
+        var size = new Size(width, height);
+        root.Measure(size);
+        root.Arrange(new Rect(size));
+        root.UpdateLayout();
+        return root;
     }
 
     private static UniformGrid CardKeys(UniformGrid cards, int index) =>

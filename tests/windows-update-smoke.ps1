@@ -87,7 +87,15 @@ function Invoke-Control($Element) {
 }
 function Find-ButtonLike($Root, [string]$Name) {
     $type = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::Button)
-    return @($Root.FindAll([System.Windows.Automation.TreeScope]::Descendants, $type) | Where-Object { $_.Current.Name -like $Name }) | Select-Object -First 1
+    try { $buttons = $Root.FindAll([System.Windows.Automation.TreeScope]::Descendants, $type) }
+    catch [System.Runtime.InteropServices.COMException] { return $null }
+    catch [System.Windows.Automation.ElementNotAvailableException] { return $null }
+    foreach ($button in $buttons) {
+        try { if ($button.Current.Name -like $Name) { return $button } }
+        catch [System.Runtime.InteropServices.COMException] { continue }
+        catch [System.Windows.Automation.ElementNotAvailableException] { continue }
+    }
+    return $null
 }
 Add-Type -TypeDefinition @'
 using System;
