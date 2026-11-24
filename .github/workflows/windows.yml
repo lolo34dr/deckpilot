@@ -31,6 +31,9 @@ jobs:
           DECKPILOT_REQUIRE_RNNOISE: '1'
       - name: Verify the macropad workspace with two simulated devices
         run: dotnet run --project tests/DeckPilot.Workspace.Checks -c Release -p:DeckPilotBeta=true
+      - name: Capture the initial macropad workspace on Windows
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/design/')
+        run: dotnet run --project tests/DeckPilot.Workspace.Checks -c Release -p:DeckPilotBeta=true -- --capture-prefix=before
       - name: Install verified Arduino CLI 1.2.2
         shell: pwsh
         run: ./firmware/tools/install-cli.ps1
@@ -130,3 +133,38 @@ jobs:
           name: DeckPilot-Setup
           path: artifacts/installer/DeckPilot-Setup.exe
           if-no-files-found: error
+  publish-design-captures:
+    if: always() && github.event_name == 'push' && startsWith(github.ref, 'refs/heads/design/')
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v6
+        with:
+          name: DeckPilot-interface
+          path: ${{ runner.temp }}/deckpilot-ui
+      - name: Keep Windows captures on a separate design branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          capture_ref=design/macropad-ux-captures
+          capture_dir="$RUNNER_TEMP/deckpilot-captures"
+          if git ls-remote --exit-code --heads origin "$capture_ref" >/dev/null; then
+            git fetch origin "refs/heads/$capture_ref:refs/remotes/origin/$capture_ref"
+            git worktree add -B "$capture_ref" "$capture_dir" "origin/$capture_ref"
+          else
+            git worktree add --orphan -b "$capture_ref" "$capture_dir"
+          fi
+          mkdir -p "$capture_dir/ui"
+          find "$RUNNER_TEMP/deckpilot-ui" -type f -name '*.png' -exec cp -f '{}' "$capture_dir/ui/" \;
+          git -C "$capture_dir" add ui
+          if git -C "$capture_dir" diff --cached --quiet; then
+            echo 'Windows captures are already up to date.'
+            exit 0
+          fi
+          git -C "$capture_dir" config user.name 'github-actions[bot]'
+          git -C "$capture_dir" config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -C "$capture_dir" commit -m "Save Windows macropad design captures ($GITHUB_RUN_ID)"
+          git -C "$capture_dir" push origin "HEAD:refs/heads/$capture_ref"
