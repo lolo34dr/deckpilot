@@ -6,459 +6,73 @@
 <h1 align="center">DeckPilot</h1>
 
 <p align="center">
-  A Windows companion for your 12-key DIY macropad.<br>
-  Configure your keys, launch applications, control media, and switch profiles.
+  A Windows companion to my DIY macropad.<br>
+  I made it to turn twelve physical keys into actions I can change whenever I need.
 </p>
 
 <p align="center">
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest">Download the latest release</a>
   &nbsp;·&nbsp;
-  <a href="#getting-started">Getting started</a>
+  <a href="#quick-start">Quick start</a>
   &nbsp;·&nbsp;
-  <a href="#development">Development</a>
+  <a href="https://github.com/lolo34dr/deckpilot/issues">Issues and ideas</a>
 </p>
 
 <p align="center">
   <a href="https://github.com/lolo34dr/deckpilot/releases/latest"><img src="https://img.shields.io/github/v/release/lolo34dr/deckpilot?style=flat-square&amp;color=78b7a0" alt="Latest release"></a>
-  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe"><img src="https://img.shields.io/badge/Download-Windows_x64-0078D4?style=flat-square&amp;logo=windows" alt="Download for Windows x64"></a>
-  <a href="https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe"><img src="https://img.shields.io/badge/Download-DeckPilot_Atelier-16856A?style=flat-square&amp;logo=windows" alt="Download DeckPilot Atelier"></a>
-  <a href="https://github.com/lolo34dr/deckpilot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/lolo34dr/deckpilot?style=flat-square" alt="MIT license"></a>
   <a href="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml"><img src="https://github.com/lolo34dr/deckpilot/actions/workflows/windows.yml/badge.svg?branch=main" alt="Windows build status"></a>
-  <a href="https://github.com/lolo34dr/deckpilot/releases"><img src="https://img.shields.io/github/downloads/lolo34dr/deckpilot/total?style=flat-square&amp;color=70a7e8" alt="GitHub release downloads"></a>
+  <a href="https://github.com/lolo34dr/deckpilot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/lolo34dr/deckpilot?style=flat-square" alt="MIT license"></a>
 </p>
 
 <p align="center">
   <a href="README.md">🇬🇧 English</a> ·
-  <a href="docs/i18n/README.fr.md">🇫🇷 Français</a> ·
-  <a href="docs/i18n/README.de.md">🇩🇪 Deutsch</a> ·
-  <a href="docs/i18n/README.es.md">🇪🇸 Español</a> ·
-  <a href="docs/i18n/README.it.md">🇮🇹 Italiano</a> ·
-  <a href="docs/i18n/README.pt-BR.md">🇧🇷 Português brasileiro</a> ·
-  <a href="docs/i18n/README.nl.md">🇳🇱 Nederlands</a> ·
-  <a href="docs/i18n/README.pl.md">🇵🇱 Polski</a> ·
-  <a href="docs/i18n/README.ru.md">🇷🇺 Русский</a> ·
-  <a href="docs/i18n/README.ja.md">🇯🇵 日本語</a> ·
-  <a href="docs/i18n/README.ko.md">🇰🇷 한국어</a> ·
-  <a href="docs/i18n/README.zh-CN.md">🇨🇳 简体中文</a> ·
-  <a href="docs/i18n/README.ar.md">🇸🇦 العربية</a>
+  <a href="docs/i18n/README.fr.md">🇫🇷 Français</a>
 </p>
 
 ---
 
-DeckPilot configures Arduino Leonardo-compatible macropads that already send **F13–F24** as USB keyboard inputs, arranged in **3 rows of 4 keys**. The physical key order can be arbitrary: a guided calibration maps each button to its position.
+## Why I made it
 
-**The F13–F24 keyboard features need no additional driver or firmware changes. Soundboard mixing requires the signed VB-CABLE audio driver, installed by Setup when missing.** The application interface is currently in French. Choose a language above for a complete translated README, including the technical reference and version history. Translations are generated automatically; this English original is the reference.
+I wanted to configure a small DIY macropad in Windows without hard-coding each key to one application. DeckPilot lets me choose what a key does, keep different layouts in profiles, and change them from the macropad itself.
 
-## Features
+It works with compatible Arduino Leonardo or Pro Micro boards that send **F13–F24**. Firmware **1.2.0** can keep up to two macropads on separate profiles. The Windows interface is currently in French.
 
-- **Guided calibration:** identify all 12 physical buttons without rewiring your macropad.
-- **Installed application picker:** search Start menu shortcuts and the Windows application catalog, including Microsoft Store entries. Manual file selection remains available.
-- **Custom actions:** launch applications, open folders or websites, send shortcuts, and control media.
-- **Free keys:** keep F13–F24 available in keyboard mode for shortcuts configured directly in a game or another application. In DeckPilot mode, unassigned keys stay inactive.
-- **Local profiles:** create, duplicate, rename, delete, and select profiles. Calibration is shared across profiles.
-- **Soundboard:** mix local MP3/WAV clips with your microphone; new and replaced clips are copied into DeckPilot’s managed Sounds folder.
-- **Ready-made profiles:** start with Music, Productivity or Creation templates, then customize them. Switch to a specific, next or previous profile from a physical key.
-- **Faster editing:** copy/cut/paste/reset complete keys, record keyboard shortcuts, choose key accent colors, and undo changes.
-- **Windows tools:** open sound, display, Bluetooth and network settings, Task Manager, or lock the session.
-- **Compact dark interface:** vector icons, application icons where available, and subtle animations that respect Windows animation preferences.
-- **Background operation:** keep DeckPilot in the notification area, with startup at Windows sign-in enabled by default (can be disabled).
-- **Automatic updates:** approve a new release, then let DeckPilot download, verify, replace, and restart itself.
+## Quick start
 
-## Getting started
+1. Download and run **[DeckPilot-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)**. The .NET runtime is included.
+2. Connect the macropad, start DeckPilot and open **Macropads**.
+3. Select the device, click a key, then choose an action. If the on-screen key order does not match the physical buttons, use **Calibrer les touches**.
+4. With firmware 1.2.0, the first assigned action enables DeckPilot mode for that device. Unassigned keys stop sending F13–F24 until you switch back to keyboard mode.
 
-### Requirements
+## What it looks like
 
-- Windows 10 or Windows 11, **x64**.
-- An Arduino Leonardo-compatible macropad sending 12 distinct keys from **F13 to F24**.
-- A USB data connection.
+I captured these screens on Windows during the 2.4.9 beta review. The COM ports and empty keys are from that test setup.
 
-The published downloads include the .NET runtime. **You do not need to install .NET to use DeckPilot.**
+![DeckPilot configuration page with one macropad](docs/media/macropad-one.png)
 
-### Install and launch
+<details>
+<summary>See the two-macropad layout</summary>
 
-1. Download **[DeckPilot-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Setup.exe)** and run the installer. Windows asks for administrator permission to install into **Program Files\DeckPilot**.
-2. The installer lets you choose whether DeckPilot starts with Windows, checks for app updates automatically, and reduces animations. Startup and update checks are on by default; reduced animations are off. It also checks for the signed VB-CABLE driver required by the Soundboard and installs it automatically if missing. An internet connection is required for that driver check.
-3. The installer adds DeckPilot to Windows **Installed apps** and creates a Start menu shortcut. A desktop shortcut is selected by default.
-4. Connect your macropad and open DeckPilot from its shortcut.
-5. Open **Macropads**, click a physical key in the device card, and choose an action from the library. On firmware 1.2.0 or newer, the first choice enables DeckPilot mode for that device.
-6. If the on-screen positions do not match your physical keys, choose **Calibrer les touches** on that device. For older F13–F24 firmware, use the **Actions** tab and calibrate the 3 × 4 grid before assigning shortcuts.
+![DeckPilot configuration page with two macropads](docs/media/macropad-two.png)
+</details>
 
-When upgrading from the former 4-row layout, DeckPilot preserves profiles/actions and requests one new calibration for the corrected positions. Installing over an existing portable setup also preserves the settings in `%APPDATA%\DeckPilot`; quit the old copy if setup asks you to.
+## Optional extras
 
-A portable [DeckPilot.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot.exe) and [ZIP](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-win-x64.zip) remain available for compatibility. For portable use, keep the executable in a writable personal folder.
+The app also has a soundboard and microphone filter, plus **DeckPilot Atelier** for flashing and checking boards. They are optional parts of the project, so I keep their instructions separate:
 
-Uninstall from Windows **Installed apps**. Uninstallation removes the program and its shortcuts, while retaining personal profiles so a later reinstall can reuse them.
+- [Soundboard and microphone guide](docs/SOUNDBOARD.md)
+- [Guide utilisateur en français](docs/USER_GUIDE.fr.md)
+- [Atelier workshop guide](docs/FACTORY.md)
+- [Firmware wiring, compatibility and recovery](firmware/README.md)
+- [User guide](docs/USER_GUIDE.md)
+- [Roadmap](ROADMAP.md)
+- [Release history](CHANGELOG.md)
+- [Contributing and issue reports](CONTRIBUTING.md)
 
-The single-file executable extracts its bundled dependencies into the user's .NET cache on first launch, which can take a little longer. Published executables are currently unsigned, so Windows may display a SmartScreen warning.
+## A couple of things to know
 
-### Configure a key
+Setup needs administrator approval to install under **Program Files**. The published installers are unsigned, so Windows SmartScreen may show a warning. Setup also checks for the signed third-party VB-CABLE driver and installs it if it is missing; this needs an internet connection and administrator approval. VB-CABLE is only needed for soundboard mixing.
 
-1. Open **Macropads** and select the key to personalize. With two devices, first choose the correct device card.
-2. Click or search for an action in the library. On narrow windows, the library appears below the key preview.
-3. If the action needs a destination or shortcut, complete its settings below the preview. Changes are saved when you switch keys or return to the macropad.
+While DeckPilot is running, it listens for F13–F24 globally in the current Windows session so macropad actions work while another app is active. Physical F13–F24 keys on that PC use the same configuration.
 
-| Action | Behavior |
-| --- | --- |
-| Free key | Passes F13–F24 through in keyboard mode. In DeckPilot mode, an unassigned key does nothing. |
-| Application | Launches an installed application or a manually selected program or shortcut. |
-| Folder | Opens a folder in Windows Explorer. |
-| Website | Opens an HTTP or HTTPS address in your default browser. |
-| Keyboard shortcut | Sends a key combination to the active window. |
-| Media | Controls playback, tracks, volume, or mute. |
-| Spotify | Controls Spotify playback and adjusts only Spotify's Windows audio-session volume. |
-| Deezer | Controls the Deezer Windows media session and adjusts only its Windows audio-session volume. |
-| Application — DeckPilot | Shows the existing DeckPilot window, including when it is running in the notification area. |
-
-For application actions, open the application picker and search by name. The manual file selector remains available, with optional program arguments under advanced options. Enter arguments according to the target application's syntax.
-
-Holding a button triggers a configured action only once until release. In free-key mode, normal keyboard repeat events remain available.
-
-### Manage profiles
-
-Open the profile management section in the right sidebar to create, duplicate, rename, or delete a profile. Use the selector above the key grid to choose the active profile. At least one profile must remain.
-
-Calibration applies to all profiles and can be repeated from the sidebar.
-
-### Background operation
-
-Closing the window hides DeckPilot while keeping its actions active. Double-click its notification-area icon near the clock to reopen it, or right-click the icon and choose the quit command to stop it completely.
-
-Windows startup is enabled by default for the current user. You can disable it with **Lancer avec Windows**; later app updates preserve that choice. Installation and subsequent launches refresh an enabled entry to the current executable path.
-
-## Installed applications
-
-The picker reads shortcuts from the current user's and system-wide Start menus, then supplements them with `Get-StartApps` results from the Windows application catalog.
-
-Search ignores case and accents. Duplicate names are grouped, with Start menu entries taking priority. Portable applications and programs without registered shortcuts can still be selected manually. If the Windows catalog is unavailable, readable Start menu shortcuts remain usable.
-
-Windows launches the selected shortcuts. Catalog entries use `shell:AppsFolder`. Optional arguments apply to file-based programs and shortcuts; they are hidden for AppsFolder entries. Listing applications does not launch them.
-
-## Automatic updates
-
-Available since **0.2.0**, automatic update checks run at startup after calibration, then every six hours. They can be disabled in the sidebar. A manual check remains available.
-
-When a newer stable GitHub release is found, DeckPilot asks whether to update. **Installed copies** download and SHA-256 verify `DeckPilot-Setup.exe`, then launch the installer with the current startup, automatic-update and reduced-motion preferences preselected. You can change them during the update. Windows asks for administrator permission to update Program Files. The installer closes DeckPilot gracefully when ready, preserves profiles and configuration, checks and installs the signed VB-CABLE driver if missing, and relaunches the app. Cancelling the installer leaves the app open. Setup refuses to interrupt an open firmware session.
-
-**Portable copies** retain the existing update mechanism. After confirmation, it:
-
-1. Downloads the executable with progress reporting and cancellation support.
-2. Verifies its SHA-256 hash against `SHA256SUMS.txt` from the same GitHub release.
-3. Saves your settings and prepares the update helper.
-4. Exits, replaces the executable, and restarts.
-5. Keeps the previous executable until the new process confirms successful initialization; if startup fails, it restores and relaunches the previous version.
-
-Choosing to update later postpones automatic prompts for 24 hours. Manual checks bypass that postponement.
-
-Downloads use HTTPS, with redirects restricted to the expected GitHub hosts. Temporary files are stored in `%LOCALAPPDATA%\DeckPilot\Updates`; downloads older than seven days are cleaned up. The Windows startup entry continues to use the same executable path after an update.
-
-Portable copies require a writable personal folder. Installed copies use the installer for protected directories; the DeckPilot app itself continues to run without administrator rights.
-
-**Upgrading from 0.1.x?** Quit the old version from the notification area and manually replace the executable with the latest release once. Those older versions do not contain the updater. Later updates can be installed from within DeckPilot.
-
-### Repository rename compatibility
-
-Version **1.0.1** prepares the move from `lolo34dr/streamdeck-diy` to `lolo34dr/deckpilot`. The repository is now `lolo34dr/deckpilot`. Update checks use the new name and retain compatibility with the original name. Release downloads are validated against these two exact repository paths.
-
-Use **1.0.1 or later** with the renamed repository. Versions 0.2.0 and 1.0.0 strictly validate the original asset paths and may need a manual update. Download the current executable from the releases page if an older version cannot update itself.
-
-## Settings and backups
-
-Profiles and calibration are stored outside the application folder:
-
-```text
-%APPDATA%\DeckPilot\settings.json
-```
-
-Quit DeckPilot before copying this file to back up or restore your configuration. If a settings file cannot be read, DeckPilot preserves a copy with a `.backup-<date>` suffix before using a fresh configuration.
-
-No account is required. Update checks contact GitHub and can be disabled in the interface.
-
-## Development
-
-Install the **.NET 8 SDK**, version 8.0.415 or a newer compatible version allowed by `global.json`. Visual Studio 2022 with the .NET desktop development workload is optional.
-
-Run these commands from the repository root:
-
-```powershell
-dotnet restore DeckPilot.sln
-dotnet build DeckPilot.sln -c Release --no-restore
-dotnet run --project tests/DeckPilot.Checks -c Release
-dotnet run --project src/DeckPilot.Windows -c Release
-```
-
-The core library and console checks also run on Linux. The WPF interface and Windows input APIs require Windows.
-
-### Validation
-
-The console checks exit with a nonzero status on the first failed assertion. They cover:
-
-- Key mapping, held-key repeats, releases, profile switching, and action copying.
-- Settings validation, persistence, and migration from older configurations.
-- Application search and target handling.
-- Release selection, checksums, truncated or corrupted downloads, redirects, and cancellation.
-- Executable replacement, backup preservation, and rollback.
-
-The file-lock check runs only on Windows.
-
-GitHub Actions also runs `tests/windows-update-smoke.ps1` against the standalone executable. It starts the update helper, exits the original process, verifies replacement and startup confirmation, checks settings preservation, then opens the installed application picker through UI Automation and saves a selection. It also exercises renamed executables and paths containing spaces. This script is reserved for the disposable GitHub Actions test account. CI also runs `tests/windows-installer-smoke.ps1`: real Program Files installation, desktop/Start menu shortcuts, default startup, upgrade with the app open, disabled-startup preservation, and uninstallation without deleting profiles.
-
-### Publish a standalone Windows folder
-
-```powershell
-dotnet publish src/DeckPilot.Windows -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o artifacts/win-x64
-Compress-Archive -Path artifacts/win-x64/* -DestinationPath artifacts/DeckPilot-win-x64.zip -Force
-```
-
-Distribute the complete archive. The Windows build workflow also produces this package.
-
-### Publish a GitHub release
-
-Update the application version and `.github/release-notes.md`, then push a matching `v*` tag, such as `v1.0.0`. The release workflow checks that the tag matches the project version and runs validation before publishing:
-
-| Download | Contents |
-| --- | --- |
-| `DeckPilot.exe` | Self-contained, single-file Windows x64 application. |
-| `DeckPilot-win-x64.zip` | Complete self-contained application folder. |
-| `SHA256SUMS.txt` | SHA-256 hashes for both downloads. |
-
-For Windows ARM64, publish separately with `-r win-arm64` and validate on the target machine.
-
-## Hardware checks on Windows
-
-With the Leonardo connected:
-
-- Calibrate all 12 positions in an arbitrary F13–F24 order. Confirm duplicate keys are rejected and canceling preserves the previous mapping.
-- Assign a free key in a game and check that the game receives it normally.
-- Launch a configured program, then hold the button: it should launch once until release. Include paths containing spaces and optional arguments.
-- Test a folder, a website, a shortcut in an ordinary application, and media controls.
-- Send F13–F24 through a shortcut action and confirm there is no loop of DeckPilot actions.
-- Create two profiles with different actions, switch between them, quit, and relaunch. Profiles and calibration should persist.
-- Close the window, trigger an action, then reopen and quit through the notification-area icon. Once DeckPilot exits, all keys should pass through normally.
-- Enable Windows startup and test after signing in again; disable it afterward if unwanted.
-
-## Current limitations
-
-- Key listening is global to the Windows session. Physical F13–F24 keys from another keyboard follow the same configuration. Software-injected keyboard events are ignored to prevent action loops.
-- Some games, anti-cheat systems, or programs using direct device input may still receive intercepted keys. Free-key mode remains available. The sign-in screen, secure desktop, and other sessions are outside the application's control.
-- Windows may block shortcuts sent to applications running with administrator privileges. DeckPilot runs without administrator rights and does not bypass this restriction.
-- Release Ctrl, Alt, Shift, and Windows before triggering a shortcut action. Combinations such as Alt+Tab remain subject to Windows behavior.
-- Disconnect detection, automatic per-game profiles, and a signed installer are future improvements. Profiles are currently selected manually.
-
-## Project structure
-
-| Path | Purpose |
-| --- | --- |
-| `src/DeckPilot.Core` | Settings, key state, search, GitHub release validation, verified downloads, and replacement transactions. |
-| `src/DeckPilot.Windows` | WPF interface, application catalog, icons, Windows actions, notification-area integration, and update helper. |
-| `tests/DeckPilot.Checks` | Executable checks without an external test framework. |
-| `tests/windows-update-smoke.ps1` | Native Windows update and application-picker smoke test used by CI. |
-| `deckpilotlogo.png` | Application logo. |
-| `deckpilotbanner.png` | Project banner. |
-
-## License and credit
-
-DeckPilot is released under the **[MIT License](LICENSE)**. You may use, copy, modify, and redistribute it, including commercially, as long as you retain the copyright and license notices required by the license. The bundled RNNoise audio denoiser is a separate third-party component under its BSD-style license; see [`third-party/RNNoise/COPYING`](third-party/RNNoise/COPYING) and [`third-party/RNNoise/NOTICE.md`](third-party/RNNoise/NOTICE.md).
-
-If you build on DeckPilot, a small visible credit and a link to this repository would be appreciated. This additional credit is optional; keeping the MIT notices is still required.
-
-Suggested credit:
-
-> Based on [DeckPilot](https://github.com/lolo34dr/deckpilot) by [lolo34dr](https://github.com/lolo34dr).
-
-## Macropad firmware updates
-
-For device preparation and workshop quality checks, install the separate [DeckPilot Atelier](docs/FACTORY.md) tool. Its installer is published as **[DeckPilot-Atelier-Setup.exe](https://github.com/lolo34dr/deckpilot/releases/latest/download/DeckPilot-Atelier-Setup.exe)** alongside the main application. It can flash the included firmware to a Leonardo/Caterina board, then check short and long presses on all 12 physical keys and export a report.
-
-DeckPilot 1.1.0 includes a **Firmware du macropad…** dialog and firmware 1.0.0 for the Pro Micro ATmega32U4 **5 V / 16 MHz**, using the Leonardo/Caterina configuration confirmed by the owner's upload log. The bundled Windows flashing tool does not require Arduino IDE. Device selection and confirmation are mandatory; app updates never silently flash the board. Existing F13–F24 mappings, profiles and calibration remain compatible.
-
-**The owner has confirmed successful in-app flashing, firmware 1.0.0 identification and all 12 buttons on the reference board.** Keep the original sketch and access to RST/GND for recovery. Firmware flashing cannot be rolled back automatically. See [firmware documentation](firmware/README.md) for compatibility, validation, recovery, build steps and third-party licenses. Per-button USB modes and native media controls are not part of this firmware release.
-
-### Building the Windows installer
-
-After producing `artifacts/standalone/DeckPilot.exe` with the embedded firmware bundle, install Inno Setup 6 and run `./installer/build.ps1` from the repository root. The output is `artifacts/installer/DeckPilot-Setup.exe`. CI builds and tests this installer before attaching it to a release. The installer uses a stable application ID so future versions upgrade the same installation.
-
-## Connection dashboard and firmware checks (1.3.0)
-
-The **Votre macropad** card shows connection state, the detected firmware and any available bundled update. **Connexion et diagnostic** exposes board selection when several Leonardos are connected, the live USB link status, physical button counts, firmware-notification preferences and a copyable diagnostic summary. Diagnostics do not copy profile actions or USB serial identifiers. The monitor reconnects after unplugging and gives up its serial port automatically while the firmware manager is open. F13–F24 keyboard actions continue to work with firmware 1.0.0 and without the diagnostic link.
-
-Startup firmware checks are enabled by default. After the app update check and calibration are out of the way, an older identified firmware can prompt to open installation; postponing delays reminders for 24 hours. Unknown boards and multiple unselected candidates are not flashed automatically. Firmware releases are bundled with app updates from GitHub, rather than fetched from an independent firmware feed.
-
-Firmware **1.1.2** reports all twelve F13–F24 keys independently while retaining session identification, correlated heartbeat replies, bounded messages and physical key-state events. These events animate the mapped buttons and update diagnostics; they never invoke actions a second time. Its first physical-board validation is still required, although firmware 1.0.0 and the original flash procedure were confirmed on the reference board. See the [protocol and compatibility documentation](firmware/README.md).
-
-### One or two macropads with independent profiles
-
-Flash firmware **1.2.0** on each compatible macropad, one at a time. Open **Macropads** to see one keypad per connected device. With one device, start from **Votre macropad**: click a key, choose an action in the library, then return to the card. With two devices, each card names its port and profile; the editor also offers a direct switch between devices. The first configuration enables DeckPilot mode. The first device can reuse your existing keyboard profile, while further devices receive independent profiles. Editing a device does not switch the active keyboard profile. If an earlier setup shared a profile between devices, **Séparer et configurer les touches** copies its actions to an independent profile. Use **Calibrer les touches** on a device if its physical button order differs. **Réglages du macropad** opens its profile, keyboard mode and firmware settings.
-
-In DeckPilot mode, free buttons are inactive and profile actions change only the profile assigned to the originating device. Turn the mode off to use F13–F24 as keyboard shortcuts again. If identical boards lack a unique USB serial number, keep each on its own USB socket or verify the profile assignment after moving it. See the [hybrid mode and hardware test steps](firmware/README.md#hybrid-input-mode-120).
-
-## Keypad interface (1.4.0)
-
-The larger 3 × 4 keypad follows the physical enclosure and black keycaps. Each key shows its main icon, label, F13–F24 mapping and a small action-type icon; tooltips retain the full label and position. Press feedback, running actions, successful dispatch and errors have distinct appearances, including symbols rather than color alone. Animations follow the Windows animation preference.
-
-Choose a key to edit it. **Options avancées · fichier et arguments** keeps manual application paths and launch arguments collapsed by default, while essential folder and website destinations remain expanded. Collapsing settings does not clear their values. **Tester l’action** saves and dispatches the selected action on the current PC; a success indicator confirms dispatch, not completion inside another app. Keyboard shortcuts target the active window. Free F13–F24 keys have no test action.
-
-When the macropad is disconnected, **Hors ligne** and the accompanying hint explain that profiles can still be edited and actions tested. Configuration is stored on the PC and remains available throughout disconnects and reconnects. These interface improvements work with the existing firmware and require no additional flash.
-
-The notification-area menu now switches profiles directly. **Ctrl+S** saves the current button configuration. Invalid configuration files are backed up before a fresh configuration is used. App installation, desktop/Start menu icons, startup preferences and the existing automatic updater are retained.
-
-For manual Arduino IDE uploads, **quit DeckPilot from its tray menu** to free the serial port. Closing the main window keeps it running in the background.
-
-## Spotify, action search and drag-and-drop (1.5.0)
-
-**Spotify** is separate from **Multimédia**. Its play/pause, next and previous commands address the Spotify desktop app's Windows media session, even while a browser is playing YouTube. Spotify volume +/− adjusts Spotify's Windows audio session in 5% steps, leaving the master volume and other players unchanged. Spotify must be open and have an available playback session; start a track once if necessary. Spotify in a browser is not supported. Missing Spotify sessions produce an error, with no fallback to global media keys or another player. No Spotify account authorization, Premium subscription or stored token is needed by DeckPilot. Windows 10 version 2004 or later, or Windows 11, is required by this build.
-
-## Soundboard, profile and device reliability (2.4.6)
-
-Adding or replacing an MP3/WAV sound copies it into `%APPDATA%\DeckPilot\Sounds`, so playback remains available if the original file is moved or deleted. To copy a sound already in the library, choose its file again from the **…** menu. Profile imports leave the current configuration intact if saving fails, repeated imports reuse managed audio, and large automatic backups retain clip entries when audio cannot fit within the package limit.
-
-Rapid Spotify and Deezer volume commands are applied in order, and the Music profile template includes Deezer play/pause. DeckPilot Atelier 1.0.13 keeps hardware operations responsive and matches recovery to the board’s USB location. Bundled firmware 1.1.2 reports all twelve F13–F24 keys independently. App updates never flash a connected macropad automatically; a firmware install still requires confirmation.
-
-## Deezer playback and per-app volume (2.4.3, refined in 2.4.4)
-
-**Deezer** sits beside **Spotify** in the action library. Play/pause and track changes use the Windows media-session API; volume +/− adjusts only Deezer's Windows audio session in 5% steps through Windows Core Audio. This uses the same local Windows APIs as Spotify and needs no Deezer account token. Open the Deezer desktop app and start playback so Windows exposes its media and audio sessions. Deezer in a browser is not supported; a missing Deezer session reports an error instead of controlling another player or the master volume. The action library and assigned keys show a dedicated Deezer SVG mark.
-
-Use **Rechercher une action ou une application** for queries such as `volume`, `skip`, `Spotify`, `Deezer` or an installed app's name. The installed-app index loads on the first search and is cached for five minutes; manual file selection remains available. Click a result to configure the selected key or drag it onto another key.
-
-## Control panel and exact colours (2.4.0)
-
-The configuration panel has four tabs. Use **Actions** to assign keys, **Macropad** to check the USB connection, calibrate or manage firmware, **Audio** to manage microphones and soundboard clips, and **Réglages** for profiles and preferences. The header shows the connection status and opens the Macropad tab. Narrow windows stack the panels and let you resize them with the divider. The 3 × 4 keypad keeps its original appearance and behavior.
-
-Under **Réglages → Couleurs de l’interface**, use **Palette…** to choose an exact background, panel or accent colour with the Windows colour picker. The editable `#RRGGBB` field and adjacent swatch show the selected value. **Appliquer les couleurs** validates and saves the three colours; cancelling the picker keeps the current value.
-
-The OBS/Streamlabs control integration has been removed. Existing 2.3 profiles remain readable and keep their stored actions, but retired streaming actions do not execute. Select a replacement action from the library to reassign those keys. Other actions, profiles and calibration are preserved. No firmware flash is required.
-
-Drag an action from the catalog or search results onto a key to assign it. Drag one configured key onto another to **swap their actions**; the physical calibration stays unchanged. You can also drop one `.exe`, `.lnk`, `.appref-ms`, folder or HTTP(S) URL onto a key. Dropping only configures the key and never executes the action. Complete any missing settings in the editor.
-
-Windows startup now keeps an explicit per-user preference, repairs a stale or missing Run entry, and reports known Windows startup disable flags. Normal launches respect Windows disabling; explicitly enabling **Lancer avec Windows** clears the known DeckPilot disable flag for the current user. Background launches remain hidden even before calibration, and duplicate background launches exit quietly. After updating, open **Préférences de l’application**, check the startup status and reactivate the option if Windows blocked it. A real sign-out/sign-in on the user's PC remains the final check for Windows policies or machine-specific restrictions.
-
-## Sharp keypad rendering, profile recovery and audio controls (1.6.1)
-
-The keypad now renders at native WPF sizes instead of scaling text through a Viewbox. Parent/key shadow effects and text scale animations were removed; smaller windows scroll rather than shrinking the keypad. The app declares per-monitor DPI awareness and uses larger Windows shell icons for desktop applications.
-
-**Annuler / Rétablir** restores profile edits, including drag-and-drop swaps, action settings, imports and profile creation/deletion. History keeps 50 edits during the app session. Ctrl+Z / Ctrl+Y operate on profiles outside text fields; text fields retain their own undo/redo. Calibration, startup preferences and executed actions are not undone.
-
-Under **Gérer les profils**, export the current profile or all profiles as `.deckpilot.json`, import profiles as new copies, or restore a backup of all profiles. Import never executes actions and never replaces the PC's calibration. Profiles contain action paths, arguments and audio endpoint IDs, which may need adjusting on another PC. Unknown formats, oversized files and malformed gesture configurations are refused.
-
-Before saving changed profiles, DeckPilot keeps the previous profiles in `%APPDATA%\DeckPilot\Backups` (20 versions, content-deduplicated). Preference-only saves do not create profile backups. A backup failure prevents overwriting the current settings. Restore replaces profiles after confirmation and can itself be undone; calibration remains unchanged.
-
-**Microphone Windows** toggles mute on all currently active Windows capture endpoints. The persistent status bar and Audio Windows card show active/muted/mixed/unavailable status, refreshed every two seconds and after app commands. A failed multi-endpoint update attempts to restore previous mute states. These indicators describe Windows endpoint state, not a hardware switch or an application's own mute button.
-
-**Changer de sortie audio** alternates between two selected, connected output devices, for Windows console, multimedia and communications defaults. A missing target gives an error without choosing another device. Applications with their own fixed output may not follow Windows' default. Imported endpoint IDs are shown as unavailable until adapted to the current PC. Failed routing changes attempt to restore the previous defaults.
-
-To configure **appui court / appui long**, first choose a configured action, enable the two-action option, select the gesture to edit and set a threshold from 200 to 3000 ms. Without this mode, actions retain immediate key-down behavior. With it, short actions run on release before the threshold; long actions run once at the threshold (or on release if the timer has not yet run). A long action never also runs the short one. Free F13–F24 passthrough keys cannot use dual-action mode. Pending gestures are cancelled on profile/configuration changes, calibration, firmware operations, session changes and suspend. No firmware flash is needed; the existing keyboard's key-down/key-up reports supply the gestures.
-
-Core checks cover repeat/release boundaries, simultaneous holds, cancellation, profile history/exchange/backups and audio rollback using fake endpoints. Windows UI checks exercise actual drag undo/redo, configuring a long action and threshold, native keypad dimensions after resizing and the microphone indicator. Actual microphone drivers, headset/speaker switching and physical holds still need validation on the owner's PC.
-
-## Search and CI reliability fixes (1.6.4)
-
-Equivalent search results keep their existing WPF buttons. The installed-app catalog and debounce timer defer result replacement while a search button is captured or a drag is in progress. This prevents a source button from being removed during an interaction.
-
-Windows smoke checks continue to perform native mouse drags and validate saved assignments, swaps, undo/redo and both press gestures. The test client uses physical cursor coordinates to match UI Automation bounds regardless of DPI, focuses before measuring, and scans all scroll percentages. A regression check also verifies that equivalent searches preserve the same accessible button. Background-startup assertions wait for WPF's Loaded handler and require five consecutive hidden-window observations while the app remains alive. Failures report the phase, cursor targets, DPI and last scroll geometry.
-
-Build and release workflows use Node.js 24 actions. The Arduino compiler remains at CLI 1.2.2; CI downloads its Windows archive with a pinned SHA-256 checksum. The firmware and its toolchain versions are unchanged.
-
-Settings reads in Windows tests explicitly allow read/write/delete sharing and parse UTF-8 after closing the reader. This prevents the test itself from denying the app’s atomic file replacement. The history test keeps an old snapshot open across three undo/redo cycles and verifies that it remains intact while the live settings change.
-
-On Windows, existing settings files are committed with `File.Replace` rather than overwrite-mode `File.Move`. This supports readers that allow deletion while retaining a complete old snapshot. The core suite tests three replacements with a reader held open; Windows core checks run before firmware compilation and publishing so persistence failures are detected early.
-
-A test snapshot reader may wait up to 500 ms for Windows sharing/lock violations while `ReplaceFile` commits. The wait applies only to opening the snapshot, never to executing or re-executing an application action. Other errors, malformed JSON and persistent locks remain failures.
-
-## Runtime and editing optimizations (1.7.0)
-
-Saving identical settings checks the current file but skips replacement and backup work. External edits/deletion and failed writes are still detected. `ButtonAction` has value equality (including the long action); editor dirty checks avoid JSON serialization. History keeps detached model snapshots, validates new states, and avoids JSON parsing during undo/redo. The 50-edit limit and 20 profile backups remain.
-
-Search and picker share an immutable installed-app catalog for five minutes (15 seconds for a partial result). Concurrent consumers share one scan; closing one picker does not cancel another consumer. Refresh bypasses the cache, and each picker has its own filter/view. Scanning and catalog parsing run off the UI thread; picker filtering is debounced by 120 ms. Action search rechecks this cache after its debounce and when returning from the picker, so a refreshed catalog is available there too.
-
-Board UI updates now follow connection notifications instead of waking every 100 ms. Ordered disconnect notifications still cancel pending holds. Keyboard hooks queue visual work, while suppression and gesture timing remain synchronous. Hidden/minimized windows stop feedback animations and use a ten-second audio polling interval instead of two seconds; reopening or issuing an audio command requests fresh state immediately. Pending audio refreshes share a loop and include requests arriving during an existing read. Unchanged audio snapshots and frozen brushes avoid repeated UI allocations. Process wrappers returned by launching an app are disposed without closing the launched program.
-
-These changes reduce specified work; they do not establish a machine-independent CPU/RAM percentage. Native hardware audio switching and physical key behavior still require validation on a Windows PC with the macropad.
-
-## Workspace tools and refreshed interface (1.8.0)
-
-The charcoal interface puts the action library first, separates profile controls from the crisp native-size 3 × 4 keypad, and groups action settings in a card. Key accents distinguish your own categories; selection, keyboard focus and action feedback remain separate. **Réduire les animations** in preferences supplements the Windows animation setting. Smaller windows retain scroll access instead of shrinking key text.
-
-- **Profile templates:** under **Gérer les profils**, add Music and audio, Desktop and productivity, or Creation. Each template creates a separate editable profile and never executes its actions. Existing profiles and physical calibration are retained. Keyboard shortcuts use the active application, whose bindings may differ.
-- **Profile keys:** assign **Changer de profil**, then select a named profile or cycle forward/backward. References between profiles are remapped when importing a set or duplicating a self-referencing profile. A missing destination reports an error and can be replaced in the editor.
-- **Windows commands:** use **Commandes Windows** to open common settings or Task Manager, or explicitly lock the PC. Commands come from a fixed list, with no script to enter. The lock action requires signing back into Windows.
-- **Complete-key clipboard:** right-click a key to copy, cut, paste or reset it, including the long action and accent. Ctrl+C/X/V and Delete work while a deck key has keyboard focus; ordinary text fields keep their editing shortcuts. The key clipboard stays inside DeckPilot and is cleared on exit. These edits support undo/redo.
-- **Shortcut recorder:** select a keyboard action and click **Enregistrer un raccourci**. Press a supported combination, then save it. Escape cancels; F13–F24 is reserved for the macropad while recording. Windows-reserved combinations can still require the manual controls.
-- **Quick access:** Ctrl+K or the Library button focuses action search. **Activité récente** keeps the last 30 dispatched/failed actions in memory for this session, without storing program arguments or target paths. It can be cleared at any time. A successful dispatch does not guarantee completion in the target app.
-
-The firmware remains **1.1.1**. Accepting an automatic firmware offer now correctly opens the firmware manager; the previous modal guard prevented that handoff. Existing firmware identity, heartbeat, reconnect and flash checks remain in place. New workspace features do not need a firmware flash.
-
-## Microphone noise suppression (2.2.0)
-
-**Soundboard · micro virtuel** now includes local RNNoise noise suppression for the selected physical microphone. Enable **Filtrer le bruit du microphone** and adjust **Intensité**. DeckPilot filters the voice before mixing in soundboard clips, so clips remain unchanged and do not get removed by the noise filter. The filter works for any program that uses **CABLE Output** as its microphone, including games and voice-chat apps; programs set to use the physical microphone directly do not pass through DeckPilot.
-
-Audio is processed locally in DeckPilot. It is not recorded or sent over the network. RNNoise works in 10 ms, 48 kHz mono frames; this frame size is not an end-to-end latency guarantee, which also depends on Windows, the devices and VB-CABLE. This update does not require a firmware flash. The native RNNoise component is covered by its own BSD-style license, noted above.
-
-## Soundboard return and on-screen sound notifications (2.1.9)
-
-In **Soundboard · micro virtuel**, enable **Entendre aussi les sons du soundboard** to hear clips through your headset or speakers as well as the virtual microphone. Choose the physical output and set the separate return volume from 0 to 100%. This return is off by default and saved on this PC. It plays **only soundboard clips**; your physical microphone is never added to the speaker output. The virtual microphone still sends your voice and clips to VB-CABLE.
-
-Changing the volume does not interrupt the virtual microphone. If your selected speaker disconnects, the return stops while the virtual microphone continues. Reconnect it, refresh the device list, or choose another output. Headphones help prevent your physical microphone from picking up clips acoustically.
-
-The speaker return now uses the selected device's advertised Windows audio format, including extensible formats used by some USB headsets, and falls back from event-driven playback if a driver rejects it. Starting a soundboard clip also displays its name in the same configurable, click-through overlay as profile changes. The overlay preference and position apply to both notices.
-
-DeckPilot Atelier remains at 1.0.12 and firmware remains 1.1.1. No firmware flash is needed. Actual speaker routing still depends on the Windows audio device and should be checked on the owner's PC.
-
-## Soundboard speaker return (2.1.8)
-
-In **Soundboard · micro virtuel**, enable **Entendre aussi les sons du soundboard** to hear clips through your headset or speakers as well as the virtual microphone. Choose the physical output and set the separate return volume from 0 to 100%. This return is off by default and saved on this PC. It plays **only soundboard clips**; your physical microphone is never added to the speaker output. The virtual microphone still sends your voice and clips to VB-CABLE.
-
-Changing the volume does not interrupt the virtual microphone. If your selected speaker disconnects, the return stops while the virtual microphone continues. Reconnect it, refresh the device list, or choose another output. Headphones help prevent your physical microphone from picking up clips acoustically.
-
-## Open DeckPilot and profile notifications (2.1.7)
-
-Under **Ouvrir une application**, choose the built-in **DeckPilot** entry or click **Affecter « Ouvrir DeckPilot »**. This action brings the existing DeckPilot window to the front; its target stays valid after an app update or reinstall. It is also available in action search.
-
-Changing profiles shows a brief, click-through notification with the active profile name. In **Préférences de l’application**, you can disable it, choose any corner, or set a custom horizontal and vertical position. **Enregistrer et prévisualiser** shows the result immediately. The notification follows the screen containing the foreground app and also appears while DeckPilot is hidden. It can appear over borderless/windowed games; exclusive full-screen games may cover normal Windows overlays.
-
-## DeckPilot 2.1.0: fixed signed virtual microphone routing
-
-DeckPilot now uses a deep black interface by default. In **Préférences de l’application**, change the background, panel and accent colors using `#RRGGBB` values; your theme is saved on this PC.
-
-The **Soundboard · micro virtuel** panel lets you select your physical microphone and MP3/WAV clips. DeckPilot automatically routes the mix to the VB-Audio VB-CABLE playback endpoint; in Discord or a game, choose **`CABLE Output`** as the microphone. During installation and updates, DeckPilot checks for VB-CABLE and installs it when missing. It downloads the official package over HTTPS and verifies the Authenticode publisher before running the driver's silent installer. This requires an internet connection and administrator permission. DeckPilot does not bundle or redistribute VB-Audio files. If the driver is missing later, you can start the same signature-checked installer from the Soundboard panel. The audio engine uses NAudio (MIT; see [third-party notice](third-party/NAudio-LICENSE.txt)). VB-CABLE is a separately licensed, signed Windows driver, not an MIT component.
-
-## DeckPilot Atelier (1.9.0)
-
-Atelier now checks the selected board and firmware before flashing, compares installed and bundled versions, and offers a verified retry after interrupted writes. **Mode atelier en série…** diagnoses and flashes all detected boards sequentially and can export a batch report. The 12-key test verifies the physical 01→12 layout, records the F13–F24 mapping, and includes firmware and per-key results in the quality report.
-
-
-The separate **DeckPilot Atelier** Windows installer prepares new DIY macropads. It detects Leonardo/Caterina boards, validates and flashes the bundled firmware without overwriting the bootloader, then guides a physical 3×4 check of all 12 buttons. Each button must pass a short press and a hold of at least 700 ms. The tool records which F13–F24 signal belongs to each physical position, flags multiple or inconsistent signals, and exports a timestamped report. Download `DeckPilot-Atelier-Setup.exe` from the releases page. A Caterina bootloader must already be present; the tool does not install a missing bootloader.
-
-DeckPilot Atelier checks GitHub for app and bundled-firmware updates on startup and on demand. Updates require confirmation and use the release SHA-256 manifest. Firmware is never flashed by an update automatically; after Atelier updates, choose the firmware action when you are ready to program the connected board.
-
-Atelier 1.0.7 adds a confirmed **Effacer le programme DeckPilot** action. It clears the 28 KiB application area with a verified safe stop instruction, so the board stops acting as a keyboard while preserving Caterina for recovery and future flashing. It leaves the bootloader, EEPROM and Windows profiles untouched.
-
-Version 1.9.1 fixes launching Atelier after installation by starting it in the signed-in Windows session. Its updater can install a newer Atelier package or firmware bundle, then relaunch the app. The Windows release pipeline checks first launch, upgrade and uninstall for the Atelier installer.
-
-Version 1.9.2 improves the Atelier Windows packaging step and reports its exact failure location in CI.
-
-Version 1.9.3 corrects how the Windows package reads the included firmware version, so Atelier's update check tracks the firmware shipped in the installer.
-
-The Atelier release check now reports startup diagnostics if Windows fails to open its installed window.
-
-DeckPilot 1.9.6 fixes Atelier's Windows DPI manifest so the installed application launches correctly on Windows 10 and 11.
-
-DeckPilot 1.9.7 fixes uninstalling Atelier while it is running. The Windows release test also verifies launch, in-place update and uninstall.
-
-DeckPilot 1.9.8 adds an explicit, confirmed Atelier reset that replaces the board's user program with a verified empty sketch and preserves the Caterina bootloader.
-
-Validation covers legacy settings, accent validation, profile navigation and reference remapping, portable templates, native Windows template/undo/redo and profile switching, shortcut recording, copy/paste/reset, settings persistence, installation/update, layout resizing and an actual UI capture. Hardware-specific behavior still requires the macropad and audio devices on a Windows PC.
-
-### Profile sound files and workshop safety
-
-Profile exports include the referenced MP3/WAV clips (up to 32 MiB of audio per package). Imports copy embedded audio into DeckPilot’s managed Sounds folder and remap identifiers without replacing existing clips. Automatic profile backups use the same format; unavailable audio is recorded as missing rather than silently replaced. Keep the source files if you exceed the export limit. Legacy profile files remain supported. Removing a clip that is still assigned to a short or long action is blocked.
-
-Adding or replacing a sound copies it to `%APPDATA%\DeckPilot\Sounds`, so DeckPilot can play it even if the original is moved or removed. Existing sounds can be copied into this folder using their **…** button. When an automatic backup reaches the audio size limit, it retains the clip entries for the audio it could not embed.
-
-Atelier accepts boards that do not yet answer the DeckPilot protocol, while still checking the USB location, Caterina bootloader and ATmega32U4 signature before programming. Each test session starts with empty results, and its report stays associated with the tested board. Closing the application during a flash or reset is blocked until writing and verification finish.
-
-### Live microphone latency
-
-DeckPilot 2.1.3 processes live audio in small, output-driven blocks. It requests 20 ms event-driven microphone capture and 40 ms playback buffers. The microphone queue is bounded to 100 ms and discards older complete frames if playback stalls; this avoids building seconds of delayed speech. These are software buffer settings, not a measured end-to-end latency guarantee. Windows, the microphone, VB-CABLE and the receiving app also contribute delay. Discord voice isolation settings are unchanged and may suppress soundboard clips because it receives the mixed signal.
-
-### Automatic virtual microphone startup
-
-DeckPilot 2.1.4 automatically activates the virtual microphone when the selected physical microphone and VB-CABLE are available. This also works in the background after Windows sign-in when **Start with Windows** is enabled. Missing devices are retried every five seconds. Stopping the virtual microphone explicitly saves automatic startup as disabled; re-enable it in the Soundboard panel. Clips are only played when requested.
+The project is under the [MIT License](LICENSE). The French overview is maintained by hand. The issue list is the place to report a reproducible problem or suggest what I should improve next.

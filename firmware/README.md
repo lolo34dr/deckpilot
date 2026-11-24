@@ -1,6 +1,6 @@
 # DeckPilot firmware
 
-For the tested hardware configuration only: **Pro Micro ATmega32U4, 5 V / 16 MHz**, using the **Arduino Leonardo** board profile and a **Caterina / AVR109** bootloader. USB-C describes the connector, not board compatibility. The owner's original sketch was successfully uploaded with the 1200-baud reset and AVR109 at 57600 baud. The owner has also confirmed successful in-app flashing, firmware 1.0.0 identification and operation of all 12 buttons on that reference board.
+My confirmed reference board is a **Pro Micro ATmega32U4, 5 V / 16 MHz**, using the **Arduino Leonardo** board profile and a **Caterina / AVR109** bootloader. On that board, I uploaded the original sketch using the 1200-baud reset and AVR109 at 57600 baud, then confirmed in-app flashing, firmware 1.0.0 identification and all 12 buttons. I have not validated every Leonardo-compatible board. USB-C describes only the connector, not board compatibility.
 
 ## Wiring and behavior
 
@@ -36,7 +36,7 @@ Physical test on Windows:
 3. Open **Firmware du macropad…**, choose the correct device and confirm the board and wiring. An unidentified original sketch can be installed over only after explicit confirmation.
 4. Confirm installation and leave the USB cable connected until completion. Keyboard actions are suspended in DeckPilot while the firmware dialog is open; ordinary F13–F24 events still reach Windows.
 
-The firmware and Windows AVRDUDE 8.0 are bundled inside the published app. No Arduino IDE or separate driver installation is performed by DeckPilot. Windows must already expose the board's USB serial port, as it did for the owner's successful upload. New firmware versions are delivered with app updates from GitHub; updating the app does **not** automatically flash hardware. Each flash requires confirmation.
+The firmware and Windows AVRDUDE 8.0 are bundled inside the published app. No Arduino IDE or separate driver installation is performed by DeckPilot. Windows must already expose the board's USB serial port, as it did during my successful upload. New firmware versions arrive with app updates from GitHub; updating the app does **not** automatically flash hardware. I confirm each flash before it starts.
 
 DeckPilot Atelier keeps **Effacer le firmware de la carte** under collapsed advanced operations. It requires typing `EFFACER`, clears all 28 KiB of application flash with a verified reset loop, and stops F13–F24 and normal USB enumeration. Caterina remains available, but the card will not appear in Atelier again until it is manually put into bootloader mode. Keep it connected, briefly connect **RST** to **GND twice quickly**, then select its temporary Arduino Leonardo / bootloader COM port and use Atelier's recovery action to reinstall DeckPilot. Atelier displays these instructions and keeps recovery enabled after erasure or an interrupted flash. The bootloader and EEPROM are preserved; this is not a full-chip erase. Profile data stays on the PC.
 
@@ -62,7 +62,7 @@ The original 12-button sketch was adapted from David Madison's **Stream Cheap** 
 
 ## Firmware 1.1.1 and USB protocol 2
 
-Firmware 1.1.1 adds a read-only diagnostic link while retaining the same F13–F24 keyboard mapping and pin-1 startup failsafe. **The owner's physical test covered firmware 1.0.0. Firmware 1.1.1 has automated protocol tests and an AVR build, but still needs its first test on the actual board.** Profiles and calibration remain on the PC and do not need to be recreated for this firmware update.
+Firmware 1.1.1 adds a read-only diagnostic link while retaining the same F13–F24 keyboard mapping and pin-1 startup failsafe. **My physical test covered firmware 1.0.0. Firmware 1.1.1 has automated protocol checks and an AVR build, but I have not confirmed it on the reference board.** Profiles and calibration remain on the PC and do not need to be recreated for this firmware update.
 
 The new app identifies the connected card, keeps its serial port open, reconnects after unplugging, and checks its firmware version at startup and after reconnection. Firmware updates are delivered with app releases: startup checks compare the connected firmware with the validated bundle included in the installed app. App update checks still obtain newer releases from GitHub. There is no separate firmware-only download channel.
 

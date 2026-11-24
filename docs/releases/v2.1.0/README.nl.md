@@ -1,3 +1,0 @@
-> Dit is een automatische vertaling van de volledige release notes. Het Engelse origineel is de referentie.
-
-DeckPilot 2.1.0 houdt de diepe zwarte interface en aanpasbare kleuren, en routeert de soundboard door VB-Audio VB-CABLE automatisch. Gebruikers selecteren alleen hun fysieke microfoon; het virtuele afspeeleindpunt is vastgesteld zodat spraak en MP3/WAV-clips niet per ongeluk naar luidsprekers kunnen worden verzonden. DeckPilot installateur kan de officiële downloaden VB-CABLE pakket, verifieer de Authenticode uitgever, en start de driver setup van de verkoper; het pakket wordt niet herverdeeld. In Discord of een spel, selecteer CABLE Output als de microfoon. Atelier blijft op versie 1.0.10.

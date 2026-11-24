@@ -1,8 +1,8 @@
-"""Translate complete Markdown documents with Argos models; retain executable syntax."""
-import argparse, hashlib, html, json, os, re, shutil, tempfile, time, urllib.error, urllib.request, zipfile
+"""Translate French release notes with Argos while preserving Markdown syntax."""
+import argparse, html, json, os, re, tempfile, time, urllib.error, urllib.request, zipfile
 from pathlib import Path
 
-LANGUAGES = {'fr':'fr','de':'de','es':'es','it':'it','pt-BR':'pt','nl':'nl','pl':'pl','ru':'ru','ja':'ja','ko':'ko','zh-CN':'zh','ar':'ar'}
+LANGUAGES = {'fr':'fr'}
 MARKER = '<!-- deckpilot-translations:start -->'
 
 def request(url):
@@ -25,9 +25,6 @@ def releases():
         result.extend(r for r in batch if not r['draft'])
         if len(batch)<100:return result
     raise RuntimeError('Release pagination exceeded limit')
-
-def slug(text):
-    return re.sub(r'[^\w\- ]','',text.lower()).replace(' ','-')
 
 def release_notes_for_tag(tag,body):
     body=(body or '').partition(MARKER)[0].strip()
@@ -53,10 +50,6 @@ def release_notes_for_tag(tag,body):
 
 def prepare(out):
     out.mkdir(parents=True,exist_ok=True)
-    source=Path('README.md').read_bytes()
-    (out/'README.md').write_bytes(source)
-    firmware=Path('firmware/README.md').read_bytes()
-    (out/'firmware.md').write_bytes(firmware)
     notes=[]
     for r in releases():
         tag=r['tag_name']
@@ -64,7 +57,6 @@ def prepare(out):
         body=release_notes_for_tag(tag,r['body'])
         notes.append({'tag':tag,'body':body,'id':r['id']})
     (out/'releases.json').write_text(json.dumps(notes,ensure_ascii=False),encoding='utf-8')
-    (out/'manifest.json').write_text(json.dumps({'readme_sha256':hashlib.sha256(source).hexdigest(),'firmware_sha256':hashlib.sha256(firmware).hexdigest()}))
 
 # Markdown controls, exact code, URLs, link destinations and existing French UI labels.
 PROTECTED=re.compile(r'(`+[^`\n]*`+|!?\[[^\]\n]*\]\([^\)\n]*\)|<[^>]+>|https?://[^\s<>]+|DeckPilot|\b\d+(?:[.,]\d+)*\b|\*\*|\*|\||&[a-zA-Z#0-9]+;)')
@@ -72,14 +64,7 @@ UI=['CABLE Output','CABLE Input','Soundboard · micro virtuel','VB-Audio Virtual
 
 
 
-FREE_KEYS = {
- 'fr': ('Touche libre','Touches libres'), 'de': ('Freie Taste','Freie Tasten'),
- 'es': ('Tecla libre','Teclas libres'), 'it': ('Tasto libero','Tasti liberi'),
- 'pt-BR': ('Tecla livre','Teclas livres'), 'nl': ('Vrije toets','Vrije toetsen'),
- 'pl': ('Wolny klawisz','Wolne klawisze'), 'ru': ('Свободная клавиша','Свободные клавиши'),
- 'ja': ('未割り当てキー','未割り当てキー'), 'ko': ('미지정 키','미지정 키'),
- 'zh-CN': ('未分配按键','未分配按键'), 'ar': ('مفتاح حر','مفاتيح حرة')
-}
+FREE_KEYS = {'fr': ('Touche libre', 'Touches libres')}
 
 def clean_prose(text,language):
     text=text.replace('▁',' ')
@@ -91,19 +76,6 @@ def clean_prose(text,language):
         text=re.sub(r'\bclé\b','touche',text,flags=re.I)
         text=re.sub(r'touches? gratuites?',lambda m:'touches libres' if m[0].lower().startswith('touches') else 'touche libre',text,flags=re.I)
         text=text.replace('redynamiser','recâbler').replace("Récupérateur d'application installé",'Sélecteur d’applications installées').replace('Fonctionnement de fond','Fonctionnement en arrière-plan')
-    replacements={
-      'de': [('Freie Schlüssel','Freie Tasten'),('Freier Schlüssel','Freie Taste'),('Kostenlose Tasten','Freie Tasten'),('Kostenlose Taste','Freie Taste')],
-      'es': [('Teclas gratuitas','Teclas libres'),('Tecla gratuita','Tecla libre')],
-      'it': [('Tasti gratuiti','Tasti liberi'),('Tasto gratuito','Tasto libero')],
-      'pt-BR': [('Teclas gratuitas','Teclas livres'),('Tecla gratuita','Tecla livre')],
-      'nl': [('Gratis toetsen','Vrije toetsen'),('Gratis toets','Vrije toets')],
-      'pl': [('Darmowe klawisze','Wolne klawisze'),('Darmowy klawisz','Wolny klawisz')],
-      'ru': [('Бесплатные ключи','Свободные клавиши'),('Бесплатная клавиша','Свободная клавиша')],
-      'ja': [('無料キー','未割り当てキー')], 'ko': [('무료 키','미지정 키')],
-      'zh-CN': [('免费按键','未分配按键'),('免费密钥','未分配按键')],
-      'ar': [('مفاتيح مجانية','مفاتيح حرة'),('مفتاح مجاني','مفتاح حر')]
-    }
-    for old,new in replacements.get(language,[]):text=text.replace(old,new)
     return text
 
 def repair_markdown(source,language):
@@ -120,27 +92,13 @@ def repair_markdown(source,language):
         line=''.join(pieces)
         line=re.sub(r'^(#{1,6})[ \t]+',r'\1 ',line)
         lines.append(line)
-    if '<a id="features"></a>' in source and '<a id="configure-a-key"></a>' in source:
-        in_features=False;features=0;first_table=False
-        for index,line in enumerate(lines):
-            if line=='<a id="features"></a>':in_features=True
-            if line=='<a id="getting-started"></a>':in_features=False
-            if in_features and line.startswith('- **'):
-                features+=1
-                if features==4:lines[index]=re.sub(r'^- \*\*.*?\*\*','- **'+FREE_KEYS[language][1]+':**',line,count=1)
-            if not first_table and re.fullmatch(r'\|[ |:\-]+\|',line):
-                cells=lines[index+1].split('|')
-                if len(cells)>=4:
-                    cells[1]=' '+FREE_KEYS[language][0]+' '
-                    lines[index+1]='|'.join(cells)
-                first_table=True
     result='\n'.join(lines)+'\n'
     if re.findall(r'```[\s\S]*?```',source)!=re.findall(r'```[\s\S]*?```',result):raise RuntimeError('Repair changed code')
     if re.findall(r'`[^`\n]+`',source)!=re.findall(r'`[^`\n]+`',result):raise RuntimeError('Repair changed inline code')
     return result
 
 class BPEProcessor:
-    """Argos also supplies BPE packages (including Polish), not just SentencePiece."""
+    """Read Argos translation packages that use BPE tokenization."""
     def __init__(self,path,code):
         from sacremoses import MosesTokenizer, MosesDetokenizer, MosesPunctNormalizer
         from subword_nmt.apply_bpe import BPE
@@ -246,7 +204,7 @@ class Engine:
                 result.append(''.join(b if j%2 else self.text(b) for j,b in enumerate(bits)))
         return ''.join(result)
 
-    def markdown(self,source,readme=False):
+    def markdown(self,source):
         output=[];fence=False
         for line in source.splitlines():
             if line.startswith('```'):
@@ -255,7 +213,6 @@ class Engine:
                 output.append(line);continue
             m=re.match(r'^(#{1,6} |\d+\. |- |> )?(.*)$',line)
             prefix=m[1] or '';body=m[2]
-            if readme and prefix.startswith('#'):output.append(f'<a id="{slug(body)}"></a>')
             output.append(prefix+self.inline(body))
         if fence:raise ValueError('Unclosed Markdown fence')
         result='\n'.join(output)+'\n'
@@ -264,39 +221,16 @@ class Engine:
         if len(re.findall(r'^#{1,6} ',source,re.M))!=len(re.findall(r'^#{1,6} ',result,re.M)):raise RuntimeError('Section omitted during translation')
         return result
 
-def rebase_readme_links(text,language):
-    def target(match):
-        url=match[1]
-        if url.startswith(('http:', 'https:', '#', '/', 'mailto:')):return match[0]
-        if url=='firmware/README.md':return f'](FIRMWARE.{language}.md)'
-        return '](../../'+url+')'
-    return re.sub(r'\]\(([^)]+)\)',target,text)
-
 def translate(language,source,out,cache):
     engine=Engine(language,cache)
-    dest=out/'docs/i18n';dest.mkdir(parents=True,exist_ok=True)
-    original=(source/'README.md').read_text()
-    original=original.replace('src="deckpilot','src="../../deckpilot')
-    original=original.replace('href="README.md"','href="../../README.md"')
-    original=re.sub(r'href="docs/i18n/(README\.[^"]+)"',r'href="\1"',original)
-    original=rebase_readme_links(original,language)
-    documents=[original]+[r['body'] for r in json.loads((source/'releases.json').read_text())]
-    if (source/'firmware.md').exists():documents.append((source/'firmware.md').read_text())
-    engine.prefill(documents)
-    notice=engine.text('This is an automatic translation of the complete README. The English original is the reference. Application interface labels and commands are preserved exactly.')
-    translated=engine.markdown(original,True)
-    (dest/f'README.{language}.md').write_text('> '+notice+'\n\n'+translated,encoding='utf-8')
-    if (source/'firmware.md').exists():
-        firmware=(source/'firmware.md').read_text()
-        firmware=re.sub(r'(\]\()([^):#]+)(\))',lambda m:m[1]+'../../firmware/'+m[2]+m[3],firmware)
-        note=engine.text('This is an automatic translation of the complete firmware documentation. The English original is the reference. Commands and identifiers are preserved exactly.')
-        (dest/f'FIRMWARE.{language}.md').write_text('> '+note+'\n\n'+engine.markdown(firmware,True),encoding='utf-8')
+    releases=json.loads((source/'releases.json').read_text())
+    engine.prefill([release['body'] for release in releases])
     release_notice=engine.text('This is an automatic translation of the complete release notes. The English original is the reference.')
-    for release in json.loads((source/'releases.json').read_text()):
+    for release in releases:
         directory=out/'docs/releases'/release['tag'];directory.mkdir(parents=True,exist_ok=True)
         body=release['body']
         (directory/f'README.{language}.md').write_text('> '+release_notice+'\n\n'+engine.markdown(body) if body else engine.text('No release notes were provided.')+'\n',encoding='utf-8')
-    print(f'Completed {language}: full README and all published release notes',flush=True)
+    print(f'Completed {language}: release notes',flush=True)
 
 def release_body(tag,english,localized,max_bytes=120000):
     contents=[english,'',MARKER,'']
@@ -305,20 +239,16 @@ def release_body(tag,english,localized,max_bytes=120000):
     full='\n'.join(contents)
     if len(full.encode('utf-8'))<=max_bytes:return full
 
-    # GitHub limits release body size. Keep every complete translation in the
-    # repository and link to it, rather than truncating or omitting a language.
+    # GitHub limits release body size. Keep the complete French translation in
+    # the repository and link to it rather than truncating it.
     links=[english,'',MARKER,'','Complete translations of these release notes:','']
     links += [f'- [{lang}](https://github.com/lolo34dr/deckpilot/blob/main/docs/releases/{tag}/README.{lang}.md)' for lang in localized]
     compact='\n'.join(links)+'\n'
     if len(compact.encode('utf-8'))>max_bytes:
-        raise RuntimeError('English release notes exceed GitHub body size; full translations remain in docs/releases')
+        raise RuntimeError('English release notes exceed GitHub body size; the full French translation remains in docs/releases')
     return compact
 
 def publish(source):
-    expected=json.loads((source/'manifest.json').read_text())['readme_sha256']
-    if hashlib.sha256(Path('README.md').read_bytes()).hexdigest()!=expected:raise RuntimeError('README changed during translation; rerun against current source')
-    manifest=json.loads((source/'manifest.json').read_text())
-    if 'firmware_sha256' in manifest and hashlib.sha256(Path('firmware/README.md').read_bytes()).hexdigest()!=manifest['firmware_sha256']:raise RuntimeError('Firmware documentation changed during translation')
     for release in json.loads((source/'releases.json').read_text()):
         directory=Path('docs/releases')/release['tag'];directory.mkdir(parents=True,exist_ok=True)
         (directory/'README.en.md').write_text(release['body']+'\n',encoding='utf-8')
@@ -338,15 +268,12 @@ def main():
     elif a.command=='translate':translate(a.language,a.source,a.out,a.cache)
     elif a.command=='repair':
         for lang in LANGUAGES:
-            for file in list(Path('docs/i18n').glob('*.'+lang+'.md'))+list(Path('docs/releases').glob('*/README.'+lang+'.md')):
+            for file in Path('docs/releases').glob('*/README.'+lang+'.md'):
                 file.write_text(repair_markdown(file.read_text(),lang),encoding='utf-8')
     elif a.command=='all':
-        from concurrent.futures import ThreadPoolExecutor
-        with ThreadPoolExecutor(max_workers=2) as pool:
-            futures={lang:pool.submit(translate,lang,a.source,a.out,a.cache) for lang in LANGUAGES}
-            for lang,future in futures.items():
-                future.result()
-                print('::notice title=Translation progress::'+lang+' completed',flush=True)
+        for lang in LANGUAGES:
+            translate(lang,a.source,a.out,a.cache)
+            print('::notice title=Translation progress::'+lang+' completed',flush=True)
     else:publish(a.source)
 
 if __name__ == '__main__':

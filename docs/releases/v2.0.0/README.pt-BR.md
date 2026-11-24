@@ -1,3 +1,0 @@
-> Esta é uma tradução automática das notas de lançamento completas. O original em inglês é a referência.
-
-DeckPilot 2.0.0 introduz uma interface preta profunda com cores de fundo, painel e sotaque salvos. A nova placa de som aceita clipes MP3/WAV, permite aos usuários escolher um microfone físico e uma saída de cabo virtual, e mistura voz com clipes para uso como microfone em jogos ou chamadas. Os clipes podem ser iniciados a partir da aplicação ou atribuídos a uma tecla macropad. Um cabo de áudio virtual como VB-CABLE deve ser instalado separadamente no Windows; Atelier permanece na versão 1.0.10.

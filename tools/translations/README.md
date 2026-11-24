@@ -1,11 +1,11 @@
-# Full documentation translations
+# French release-note translations
 
-The workflow translates the entire root README, including development, limitations and historical sections, into all 12 configured languages. Code, link destinations, language navigation and exact French UI labels are retained. Stable heading IDs preserve links.
+The English root README, French overview, user guide and firmware summary are maintained as project documentation. The workflow only translates release notes into French; English remains the canonical release text. Code, Markdown formatting, technical names and exact French interface labels are preserved where possible.
 
-Every published release is also translated. Its original English body is preserved, and full translations are saved under docs/releases/<tag>. The GitHub release page embeds them when they fit; longer releases link to every complete translation in the repository. Tags, binaries and assets are never modified. Concurrent edits are protected.
+When the workflow refreshes release pages, it keeps the original English text and embeds the French translation when it fits. If a release body is too long, it links to the complete French note in the repository. Tags, binaries and assets are never modified. Concurrent edits are protected.
 
-Translations are automatic and labelled accordingly. English remains the reference; technical wording should be reviewed. The application UI stays French. LICENSE remains the original MIT legal text.
+French release translations are automatic and marked as such. The README, user guides and firmware summary are maintained by hand. The application UI stays French. LICENSE remains the original MIT legal text.
 
-Triggers: README/tooling changes, release publication/edits, manual dispatch, and successful completion of the Windows release workflow. The latter covers releases created using GitHub Actions tokens. No additional secret or paid service is required. Generated documentation commits use [skip ci].
+Triggers: release-note or translation-tool changes, release publication/edits, manual dispatch, and successful completion of the Windows release workflow. The latter covers releases created using GitHub Actions tokens. No additional secret or paid service is required. Generated translation commits use [skip ci].
 
-CTranslate2 and SentencePiece run official Argos English-to-target models locally on isolated runners. All 12 languages must finish before publishing. Changes to the source during a run cause publication to fail rather than publish stale text.
+CTranslate2 and SentencePiece run the official Argos English-to-French model locally on an isolated runner. Changes to release notes during a run are checked before publication so stale text is not sent to GitHub.

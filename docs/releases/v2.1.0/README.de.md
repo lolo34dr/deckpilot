@@ -1,3 +1,0 @@
-> Dies ist eine automatische Übersetzung der vollständigen Release Notes. Das englische Original ist die Referenz.
-
-DeckPilot 2.1.0 behält das tiefschwarze Interface und die anpassbaren Farben bei und leitet den Resonanzboden durch VB-Audio VB-CABLE Benutzer wählen nur ihr physisches mikrofon aus; der virtuelle wiedergabe-endpunkt ist behoben, so dass sprach- und mp3/wav-clips nicht versehentlich an lautsprecher gesendet werden können. DeckPilot Installateur kann das offizielle herunterladen VB-CABLE Paket, überprüfen Sie den Authenticode-Publisher und starten Sie das Treiber-Setup des Anbieters; das Paket wird nicht neu verteilt. CABLE Output Atelier bleibt in der Version 1.0.10.

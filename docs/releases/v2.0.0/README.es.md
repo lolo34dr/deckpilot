@@ -1,3 +1,0 @@
-> Esta es una traducción automática de las notas de liberación completas. El original inglés es la referencia.
-
-DeckPilot 2.0.0 introduce una profunda interfaz negra con colores de fondo guardado, panel y acento. La nueva tabla de sonido acepta clips MP3/WAV, permite a los usuarios elegir un micrófono físico y una salida de cable virtual, y mezcla la voz con clips para usar como micrófono en juegos o llamadas. Los clips se pueden iniciar desde la aplicación o se asigna a una tecla macropad. Un cable de audio virtual como VB-CABLE debe instalarse por separado en Windows; Atelier permanece en versión 1.0.10.

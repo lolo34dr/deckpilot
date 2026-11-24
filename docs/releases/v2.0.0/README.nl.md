@@ -1,3 +1,0 @@
-> Dit is een automatische vertaling van de volledige release notes. Het Engelse origineel is de referentie.
-
-DeckPilot 2.0.0 introduceert een diep zwart interface met opgeslagen achtergrond, paneel en accent kleuren. De nieuwe soundboard accepteert MP3/WAV clips, laat gebruikers kiezen voor een fysieke microfoon en een virtuele kabel uitgang, en mengt stem met clips voor gebruik als microfoon in games of oproepen. Clips kunnen worden gestart vanuit de app of toegewezen aan een macropad sleutel. Een virtuele audio-kabel zoals VB-CABLE moet afzonderlijk worden geïnstalleerd op Windows; Atelier blijft op versie 1.0.10.

@@ -1,0 +1,46 @@
+name: Bug report
+description: Report a problem that can be reproduced
+title: "Bug: "
+body:
+  - type: input
+    id: deckpilot_version
+    attributes:
+      label: DeckPilot version
+      placeholder: "2.4.9"
+    validations:
+      required: true
+  - type: input
+    id: windows_version
+    attributes:
+      label: Windows version
+      placeholder: "Windows 11 24H2"
+    validations:
+      required: true
+  - type: input
+    id: hardware
+    attributes:
+      label: Board and firmware
+      description: Include the board model and DeckPilot firmware version, or write "not applicable".
+      placeholder: "Pro Micro ATmega32U4, firmware 1.2.0"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: "1. Open…\n2. Select…\n3. Press…"
+    validations:
+      required: true
+  - type: textarea
+    id: expected_actual
+    attributes:
+      label: Expected and actual result
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Screenshot or relevant log
+      description: Remove personal file paths or other private details before posting.
+    validations:
+      required: false

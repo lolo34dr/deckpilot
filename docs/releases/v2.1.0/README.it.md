@@ -1,3 +1,0 @@
-> Questa è una traduzione automatica delle note di rilascio complete. L'originale inglese è il riferimento.
-
-DeckPilot 2.1.0 mantiene l'interfaccia nera profonda e colori personalizzabili, e percorre la soundboard attraverso VB-Audio VB-CABLE Gli utenti selezionano solo il loro microfono fisico; l'endpoint di riproduzione virtuale viene fissato in modo che le clip vocali e MP3/WAV non possano essere inviate accidentalmente ai diffusori. DeckPilot installer può scaricare il funzionario VB-CABLE pacchetto, verifica il suo editore Authenticode e avvia la configurazione del driver del fornitore; il pacchetto non viene ridistribuito. CABLE Output come il microfono. Atelier rimane in versione 1.0.10.

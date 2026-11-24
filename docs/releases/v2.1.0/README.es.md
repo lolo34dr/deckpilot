@@ -1,3 +1,0 @@
-> Esta es una traducción automática de las notas de liberación completas. El original inglés es la referencia.
-
-DeckPilot 2.1.0 mantiene la profunda interfaz negra y colores personalizables, y recorre la tabla de sonar a través de VB-Audio VB-CABLE automáticamente. Los usuarios seleccionan sólo su micrófono físico; el punto final de reproducción virtual se fija por lo que los clips MP3/WAV no se pueden enviar accidentalmente a los altavoces. DeckPilot instalador puede descargar el oficial VB-CABLE paquete, verificar su editor de Authenticode, y lanzar la configuración del controlador del proveedor; el paquete no se redistribuye. En Discord o un juego, seleccione CABLE Output como el micrófono. Atelier permanece en versión 1.0.10.

@@ -1,5 +1,5 @@
 import unittest
-from translate import Engine, MARKER, clean_prose, rebase_readme_links, release_body, release_notes_for_tag
+from translate import Engine, MARKER, clean_prose, release_body, release_notes_for_tag
 
 class FakeEngine(Engine):
     def __init__(self):
@@ -39,14 +39,11 @@ class DocumentationTests(unittest.TestCase):
         short=release_body('v2.1.7','English notes',{'fr':'Notes françaises'},1000)
         self.assertIn('<summary>fr</summary>',short)
         self.assertIn('Notes françaises',short)
-        long=release_body('v2.1.7','English notes',{'fr':'F'*800,'de':'D'*800},1000)
+        long=release_body('v2.1.7','English notes',{'fr':'F'*800},1000)
         self.assertIn(MARKER,long)
         self.assertIn('docs/releases/v2.1.7/README.fr.md',long)
-        self.assertIn('docs/releases/v2.1.7/README.de.md',long)
         self.assertNotIn('F'*800,long)
 
-    def test_readme_links_are_rebased(self):
-        self.assertEqual(rebase_readme_links('[Atelier](docs/FACTORY.md) [License](third-party/NAudio-LICENSE.txt) [Firmware](firmware/README.md) [Web](https://example.com) [Section](#features)', 'fr'), '[Atelier](../../docs/FACTORY.md) [License](../../third-party/NAudio-LICENSE.txt) [Firmware](FIRMWARE.fr.md) [Web](https://example.com) [Section](#features)')
     def test_device_names_and_ui_labels_are_preserved(self):
         class DestructiveEngine(FakeEngine):
             def text(self, text): return text.replace('CABLE', 'wrong').replace('Soundboard', 'wrong')
